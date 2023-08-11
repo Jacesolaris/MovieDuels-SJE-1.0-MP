@@ -42,9 +42,9 @@ option(BuildMPGame "Whether to create projects for the MP server-side gamecode (
 option(BuildMPCGame "Whether to create projects for the MP clientside gamecode (MovieDuels-cgamex86.dll)" ON)
 option(BuildMPUI "Whether to create projects for the MP UI code (MovieDuels-uix86.dll)" ON)
 
-option(BuildSPEngine "Whether to create projects for the SP engine (MovieDuels-SP.exe)" ON)
-option(BuildSPGame "Whether to create projects for the SP gamecode (MovieDuels-gamex86.dll)" ON)
-option(BuildSPRdVanilla "Whether to create projects for the SP default renderer (MovieDuels-rdsp_x86.dll)" ON)
+option(BuildSPEngine "Whether to create projects for the SP engine (MovieDuels-SP.exe)" OFF)
+option(BuildSPGame "Whether to create projects for the SP gamecode (MovieDuels-gamex86.dll)" OFF)
+option(BuildSPRdVanilla "Whether to create projects for the SP default renderer (MovieDuels-rdsp_x86.dll)" OFF)
 
 option(BuildJK2SPEngine "Whether to create projects for the jk2 SP engine (SerenityJediEngineJO2023-SP.exe)" OFF)
 option(BuildJK2SPGame "Whether to create projects for the jk2 sp gamecode mod (SerenityJediEngineJO2023-gamex86.dll)" OFF)
