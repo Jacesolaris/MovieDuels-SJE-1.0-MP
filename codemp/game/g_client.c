@@ -1848,7 +1848,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 				gla_name[0] = 0;
 				trap->G2API_GetGLAName(ent->ghoul2, 0, gla_name);
 
-				if (!gla_name[0] || !strstr(gla_name, "players/_humanoid/") && ent->s.number < MAX_CLIENTS && !
+				if (!gla_name[0] || !strstr(gla_name, "players/_humanoid_mp/") && ent->s.number < MAX_CLIENTS && !
 					G_PlayerHasCustomSkeleton(ent))
 				{
 					//a bad model
@@ -1899,7 +1899,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 
 	if (!bgpa_ftext_loaded)
 	{
-		if (bg_parse_animation_file("models/players/_humanoid/animation.cfg", bgHumanoidAnimations, qtrue) == -1)
+		if (bg_parse_animation_file("models/players/_humanoid_mp/animation.cfg", bgHumanoidAnimations, qtrue) == -1)
 		{
 			Com_Printf("Failed to load humanoid animation file\n");
 			return;
@@ -1914,7 +1914,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 		trap->G2API_GetGLAName(ent->ghoul2, 0, gla_name);
 
 		if (gla_name[0] &&
-			!strstr(gla_name, "players/_humanoid/"))
+			!strstr(gla_name, "players/_humanoid_mp/"))
 		{
 			//it doesn't use humanoid anims.
 			char* slash = Q_strrchr(gla_name, '/');
@@ -5065,12 +5065,12 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 	if (client->pers.SJE_clientplugin)
 	{
 		//send this client the MOTD for clients using the right version of sje.
-		TextWrapCenterPrint(SJE_clientMOTD.string, motd);
+		TextWrapCenterPrint(MovieDuels_clientMOTD.string, motd);
 	}
 	else
 	{
 		//send this client the MOTD for clients aren't running sje or just not the right version.
-		TextWrapCenterPrint(SJE_MOTD.string, motd);
+		TextWrapCenterPrint(MovieDuels_MOTD.string, motd);
 	}
 
 	trap->SendServerCommand(client_num, va("cp \"%s\n\"", motd));
@@ -8126,6 +8126,11 @@ qboolean G_StandardHumanoid(gentity_t* self)
 
 	if (gla_name)
 	{
+		if (!Q_stricmpn("models/players/_humanoid_mp", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
 		if (!Q_stricmpn("models/players/_humanoid", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these

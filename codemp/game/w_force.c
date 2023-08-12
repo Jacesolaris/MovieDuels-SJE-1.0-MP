@@ -2549,30 +2549,12 @@ void ForceSpeedDash(gentity_t* self)
 	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
 	{
 		vec3_t dir;
-		if (self->client->ps.fd.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_2)
-		{
-			AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 7;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 7;
 
-			ForceDashAnimDash(self);
-		}
-		else if (self->client->ps.fd.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_1)
-		{
-			AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
+		AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
+		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
+		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
 
-			ForceDashAnimDash(self);
-		}
-		else
-		{
-			AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 3;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 3;
-
-			ForceDashAnimDash(self);
-		}
+		ForceDashAnimDash(self);
 	}
 	else if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
@@ -7687,14 +7669,7 @@ int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers
 			//need to release before we can use nonhold powers again
 			break;
 		}
-		if (self->client->ps.communicatingflags & 1 << DASHING)
-		{
-			ForceSpeedDash(self);
-		}
-		else
-		{
-			ForceSpeed(self, 0);
-		}
+		ForceSpeed(self, 0);
 		self->client->ps.fd.forceButtonNeedRelease = 1;
 		break;
 	case FP_GRIP:

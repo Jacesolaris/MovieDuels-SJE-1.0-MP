@@ -301,7 +301,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		//Looks like it has not yet been loaded. Allocate space for the anim set if we need to, and continue along.
 		if (!animset)
 		{
-			if (strstr(filename, "players/_humanoid/"))
+			if (strstr(filename, "players/_humanoid_mp/"))
 			{
 				//then use the static humanoid set.
 				animset = uiHumanoidAnimations;
@@ -10602,7 +10602,7 @@ static void UI_BuildPlayerModel_List(qboolean inGameLoad)
 		if (strcmp(dirptr, ".") == 0 || strcmp(dirptr, "..") == 0)
 			continue;
 
-		Com_sprintf(fpath, sizeof fpath, "models/players/%s/PlayerChoice.txt", dirptr);
+		Com_sprintf(fpath, sizeof fpath, "models/players/%s/PlayerChoice_mp.txt", dirptr);
 
 		int filelen = trap->FS_Open(fpath, &f, FS_READ);
 

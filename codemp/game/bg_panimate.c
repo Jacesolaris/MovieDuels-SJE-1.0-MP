@@ -5577,7 +5577,7 @@ int bg_parse_animation_file(const char* filename, animation_t* anim_set, const q
 		//Looks like it has not yet been loaded. Allocate space for the anim set if we need to, and continue along.
 		if (!anim_set)
 		{
-			if (strstr(filename, "players/_humanoid/"))
+			if (strstr(filename, "players/_humanoid_mp/"))
 			{
 				//then use the static humanoid set.
 				anim_set = bgHumanoidAnimations;
