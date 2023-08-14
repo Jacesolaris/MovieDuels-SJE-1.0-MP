@@ -3382,7 +3382,6 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	s->surrenderstartTime = ps->surrenderstartTime;
 	s->surrenderlaststartTime = ps->surrenderlaststartTime;
 
-	s->dashtimeplayer = ps->dashtimeplayer;
 	s->dashstartTime = ps->dashstartTime;
 	s->dashlaststartTime = ps->dashlaststartTime;
 
@@ -3597,7 +3596,6 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 	s->cloakCharcgestartTime = ps->cloakCharcgestartTime;
 	s->cloakchargelaststartTime = ps->cloakchargelaststartTime;
 
-	s->dashtimeplayer = ps->dashtimeplayer;
 	s->dashstartTime = ps->dashstartTime;
 	s->dashlaststartTime = ps->dashlaststartTime;
 
@@ -3692,7 +3690,7 @@ int BG_ModelCache(const char* model_name, const char* skin_name)
 	return trap->R_RegisterModel(model_name);
 #endif // _CGAME
 #endif // _GAME
-	}
+}
 
 #if defined(_GAME)
 #define MAX_POOL_SIZE	3000000 //1024000

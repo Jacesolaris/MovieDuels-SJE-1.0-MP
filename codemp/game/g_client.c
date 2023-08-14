@@ -1848,7 +1848,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 				gla_name[0] = 0;
 				trap->G2API_GetGLAName(ent->ghoul2, 0, gla_name);
 
-				if (!gla_name[0] || !strstr(gla_name, "players/_humanoid_mp/") && ent->s.number < MAX_CLIENTS && !
+				if (!gla_name[0] || !strstr(gla_name, "players/_humanoid/") && ent->s.number < MAX_CLIENTS && !
 					G_PlayerHasCustomSkeleton(ent))
 				{
 					//a bad model
@@ -1899,7 +1899,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 
 	if (!bgpa_ftext_loaded)
 	{
-		if (bg_parse_animation_file("models/players/_humanoid_mp/animation.cfg", bgHumanoidAnimations, qtrue) == -1)
+		if (bg_parse_animation_file("models/players/_humanoid/animation.cfg", bgHumanoidAnimations, qtrue) == -1)
 		{
 			Com_Printf("Failed to load humanoid animation file\n");
 			return;
@@ -1914,7 +1914,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 		trap->G2API_GetGLAName(ent->ghoul2, 0, gla_name);
 
 		if (gla_name[0] &&
-			!strstr(gla_name, "players/_humanoid_mp/"))
+			!strstr(gla_name, "players/_humanoid/"))
 		{
 			//it doesn't use humanoid anims.
 			char* slash = Q_strrchr(gla_name, '/');
@@ -8141,12 +8141,127 @@ qboolean G_StandardHumanoid(gentity_t* self)
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_sbd", gla_name, 24)) ///_humanoid", gla_name, 36) )
+		if (!Q_stricmpn("models/players/_humanoid_ani/", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid_yoda", gla_name, 24)) ///_humanoid", gla_name, 36) )
+		if (!Q_stricmpn("models/players/_humanoid_bdroid/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_ben/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_df2/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_cal/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_clo/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_dooku/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_galen/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_gon/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_grievous/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_jango/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_kotor/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_luke/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_mace/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_maul/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_md/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_obi/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_obi3/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_pal/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_ren/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_rey/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_deka/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_vader/", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_sbd", gla_name, 24))
+		{
+			//only _humanoid skeleton is expected to have these
+			return qtrue;
+		}
+		if (!Q_stricmpn("models/players/_humanoid_yoda", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;

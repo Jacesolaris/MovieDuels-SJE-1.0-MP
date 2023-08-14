@@ -301,7 +301,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		//Looks like it has not yet been loaded. Allocate space for the anim set if we need to, and continue along.
 		if (!animset)
 		{
-			if (strstr(filename, "players/_humanoid_mp/"))
+			if (strstr(filename, "players/_humanoid/"))
 			{
 				//then use the static humanoid set.
 				animset = uiHumanoidAnimations;
