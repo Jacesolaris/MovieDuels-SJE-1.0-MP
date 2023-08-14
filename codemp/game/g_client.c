@@ -3140,6 +3140,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Wolverine")
 			|| Class_Model(model, "SD_tmnt")
 			|| Class_Model(model, "jedi_hm")
+			|| Class_Model(model, "jedi_hm_mp")
 			|| Class_Model(model, "ExileMaleLightSide")
 			|| Class_Model(model, "ExileMaleLightSideUR")
 			|| Class_Model(model, "Kavar")
@@ -8126,12 +8127,12 @@ qboolean G_StandardHumanoid(gentity_t* self)
 
 	if (gla_name)
 	{
-		if (!Q_stricmpn("models/players/_humanoid_mp", gla_name, 24))
+		if (!Q_stricmpn("models/players/_humanoid", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;
 		}
-		if (!Q_stricmpn("models/players/_humanoid", gla_name, 24))
+		if (!Q_stricmpn("models/players/_humanoid_mp", gla_name, 24))
 		{
 			//only _humanoid skeleton is expected to have these
 			return qtrue;

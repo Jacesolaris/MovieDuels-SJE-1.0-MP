@@ -1542,13 +1542,6 @@ void G2_TransformBone(const int index, CBoneCache& cb)
 #if DEBUG_G2_TIMING
 		printTiming = true;
 #endif
-		/*
-		if ((r_Ghoul2NoLerp->integer)||((boneList[boneListIndex].flags) & (BONE_ANIM_NO_LERP)))
-		{
-			TB.backlerp = 0.0f;
-		}
-		*/
-		//rwwFIXMEFIXME: Use?
 	}
 	// figure out where the location of the bone animation data is
 	assert(TB.newFrame >= 0 && TB.newFrame < cb.header->numFrames);
@@ -2425,8 +2418,8 @@ void G2_ProcessGeneratedSurfaceBolts(CGhoul2Info& ghoul2, const mdxaBone_v& bone
 			{
 				G2_ProcessSurfaceBolt(bone_ptr, nullptr, boltNum, ghoul2.mBltlist, &ghoul2.mSlist[i], mod_t);
 			}
-		}
 	}
+}
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2Time_G2_ProcessGeneratedSurfaceBolts += G2PerformanceTimer_G2_ProcessGeneratedSurfaceBolts.End();
 #endif
@@ -3399,13 +3392,13 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 			}
 			RenderSurfaces(RS);
 		}
-	}
+		}
 	HackadelicOnClient = false;
 
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2Time_R_AddGHOULSurfaces += G2PerformanceTimer_R_AddGHOULSurfaces.End();
 #endif
-}
+	}
 
 #ifdef _G2_LISTEN_SERVER_OPT
 qboolean G2API_OverrideServerWithClientData(CGhoul2Info_v& ghoul2, int model_index);
@@ -3486,11 +3479,11 @@ void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, const 
 				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], frameNum, checkForNewOrigin);
 			}
 		}
-	}
+			}
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2Time_G2_ConstructGhoulSkeleton += G2PerformanceTimer_G2_ConstructGhoulSkeleton.End();
 #endif
-}
+		}
 
 static float G2_GetVertBoneWeightNotSlow(const mdxmVertex_t* pVert, const int iWeightNum)
 {
@@ -3656,7 +3649,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		*tessIndexes++ = baseVertex + *triangles++;
 		*tessIndexes++ = baseVertex + *triangles++;
 		*tessIndexes++ = baseVertex + *triangles++;
-	}
+}
 	tess.num_indexes += indexes * 3;
 #endif
 
@@ -4423,16 +4416,16 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 					{
 						boneRef[j] = 0;
 					}
-				}
-			}
+		}
+	}
 			// find the next surface
 			surf = (mdxmSurface_t*)((byte*)surf + surf->ofsEnd);
-		}
+	}
 		// find the next LOD
 		lod = (mdxmLOD_t*)((byte*)lod + lod->ofsEnd);
-	}
-	return qtrue;
 }
+	return qtrue;
+	}
 
 //#define CREATE_LIMB_HIERARCHY
 

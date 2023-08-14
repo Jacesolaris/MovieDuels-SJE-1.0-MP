@@ -3000,10 +3000,11 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 qboolean WP_SaberValidForPlayerInMP(const char* saberName)
 {
 	char allowed[8] = { 0 };
+	
 	if (!WP_SaberParseParm(saberName, "notInMP", allowed))
 	{
 		//not defined, default is yes
-		return qtrue;
+		return qfalse;
 	}
 	if (!allowed[0])
 	{
@@ -3029,15 +3030,6 @@ void WP_RemoveSaber(saberInfo_t* sabers, const int saber_num)
 	//ent->client->ps.dualSabers = qfalse;
 	BG_SI_Deactivate(&sabers[saber_num]);
 	BG_SI_SetLength(&sabers[saber_num], 0.0f);
-	//	if ( ent->weaponModel[saber_num] > 0 )
-	//	{
-	//		trap->G2API_RemoveGhoul2Model( ent->ghoul2, ent->weaponModel[saber_num] );
-	//		ent->weaponModel[saber_num] = -1;
-	//	}
-	//	if ( saber_num == 1 )
-	//	{
-	//		ent->client->ps.dualSabers = qfalse;
-	//	}
 }
 
 void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saberName)

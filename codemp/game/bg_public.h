@@ -1980,7 +1980,7 @@ qboolean PM_InBackFlip(int anim);
 qboolean BG_DirectFlippingAnim(int anim);
 qboolean PM_SaberInAttack(int move);
 qboolean PM_SaberInSpecial(int move);
-qboolean PM_KickMove(int move);
+qboolean PM_kick_move(int move);
 qboolean PM_SaberInIdle(int move);
 qboolean PM_FlippingAnim(int anim);
 qboolean PM_SpinningSaberAnim(int anim);
