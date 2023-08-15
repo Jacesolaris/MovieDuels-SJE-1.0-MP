@@ -66,9 +66,8 @@ extern qboolean in_camera;
 extern qboolean PM_RunningAnim(int anim);
 extern void g_reflect_missile_auto(const gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void g_reflect_missile_bot(const gentity_t* ent, gentity_t* missile, vec3_t forward);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, const int channel, const char* sound_path);
 extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
-int IsPressingDashButton(const gentity_t* self);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_SaberCanInterruptMove(int move, int anim);
 extern void Boba_FireWristMissile(gentity_t* self, int whichMissile);
@@ -280,66 +279,11 @@ float forceSpeedValue[NUM_FORCE_POWER_LEVELS] =
 	0.25f
 };
 
-#define SK_DP_FORFORCE		.5f	//determines the number of DP points players get for each skill point dedicated to Force Powers.
-
-#define SK_DP_FORMERC		1/6.0f	//determines the number of DP points get for each skill point dedicated to gunner/merc skills.
-
 void DetermineDodgeMax(const gentity_t* ent)
 {
 	//sets the maximum number of dodge points this player should have.  This is based on their skill point allocation.
-	int i;
-	int skillCount;
-	float dodgeMax = 0;
 
-	assert(ent && ent->client);
-
-	if (ent->client->ps.isJediMaster)
-	{
-		//jedi masters have much more DP and don't actually have skills.
-		ent->client->ps.stats[STAT_MAX_DODGE] = 100;
-		return;
-	}
-	if (ent->s.number < MAX_CLIENTS)
-	{
-		//players get a initial DP bonus.
-		dodgeMax = 50;
-	}
-
-	//force powers
-	for (i = 0; i < NUM_FORCE_POWERS; i++)
-	{
-		if (ent->client->ps.fd.forcePowerLevel[i])
-		{
-			//has points in this skill
-			for (skillCount = FORCE_LEVEL_1; skillCount <= ent->client->ps.fd.forcePowerLevel[i]; skillCount++)
-			{
-				dodgeMax += bgForcePowerCost[i][skillCount] * SK_DP_FORFORCE;
-			}
-		}
-	}
-
-	//additional skills
-	for (i = 0; i < NUM_SKILLS; i++)
-	{
-		if (ent->client->skillLevel[i])
-		{
-			//has points in this skill
-			for (skillCount = FORCE_LEVEL_1; skillCount <= ent->client->skillLevel[i]; skillCount++)
-			{
-				if (i >= SK_BLUESTYLE && i <= SK_STAFFSTYLE)
-				{
-					//styles count as force powers
-					dodgeMax += bgForcePowerCost[i + NUM_FORCE_POWERS][skillCount] * SK_DP_FORFORCE;
-				}
-				else
-				{
-					dodgeMax += bgForcePowerCost[i + NUM_FORCE_POWERS][skillCount] * SK_DP_FORMERC;
-				}
-			}
-		}
-	}
-
-	ent->client->ps.stats[STAT_MAX_DODGE] = (int)dodgeMax;
+	ent->client->ps.stats[STAT_MAX_DODGE] = 100;
 }
 
 void WP_InitForcePowers(const gentity_t* ent)
@@ -2320,7 +2264,8 @@ int IsPressingDashButton(const gentity_t* self)
 		&& !self->client->hookhasbeenfired
 		&& (!(self->client->buttons & BUTTON_KICK))
 		&& (!(self->client->buttons & BUTTON_USE))
-		&& self->client->buttons & BUTTON_DASH)
+		&& self->client->buttons & BUTTON_DASH
+		&& self->client->ps.pm_flags & PMF_DASH_HELD)
 	{
 		return qtrue;
 	}
@@ -2502,6 +2447,12 @@ void ForceSpeedDash(gentity_t* self)
 	{
 		return;
 	}
+
+	if (PM_InSlopeAnim(self->client->ps.legsAnim))
+	{
+		return;
+	}
+
 	if (self->client->ps.fd.forcePowerDebounce[FP_SPEED] > level.time)
 	{
 		//stops it while using it and also after using it, up to 3 second delay
@@ -2527,8 +2478,7 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
-	if (self->client->ps.forceAllowDeactivateTime < level.time && self->client->ps.fd.forcePowersActive & 1 <<
-		FP_SPEED)
+	if (self->client->ps.forceAllowDeactivateTime < level.time && self->client->ps.fd.forcePowersActive & 1 << FP_SPEED)
 	{
 		WP_ForcePowerStop(self, FP_SPEED);
 		return;
@@ -2547,6 +2497,22 @@ void ForceSpeedDash(gentity_t* self)
 	}
 
 	if (self->client->ps.saberLockTime > level.time)
+	{
+		return;
+	}
+
+	if (!IsPressingDashButton(self))
+	{
+		//it's already turned on.  turn it off.
+		return;
+	}
+
+	if (!(self->client->ps.communicatingflags & 1 << DASHING))
+	{
+		return;
+	}
+
+	if (!(self->client->ps.pm_flags & PMF_DASH_HELD))
 	{
 		return;
 	}
@@ -2901,7 +2867,6 @@ void ForceLightning(gentity_t* self)
 	if (self->client->ps.fd.forcePowerLevel[FP_LIGHTNING] < FORCE_LEVEL_2)
 	{
 		//short burst
-		//G_SoundOnEnt(self, CHAN_BODY, "sound/weapons/force/lightning3.mp3");
 	}
 	else
 	{
@@ -8649,7 +8614,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	else if (ucmd->upmove < 10 && self->client->ps.groundEntityNum == ENTITYNUM_NONE && self->client->ps.fd.forceJumpCharge)
 	{
 		self->client->ps.pm_flags &= ~(PMF_JUMP_HELD);
-	}
+}
 #endif
 
 	if (!(self->client->ps.pm_flags & PMF_JUMP_HELD) && self->client->ps.fd.forceJumpCharge)
@@ -9010,7 +8975,7 @@ powersetcheck:
 
 		self->client->ps.fd.forcePower = prepower - dif;
 	}
-}
+	}
 
 void WP_BlockPointsUpdate(const gentity_t* self)
 {

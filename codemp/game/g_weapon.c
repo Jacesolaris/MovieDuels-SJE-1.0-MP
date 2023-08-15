@@ -840,7 +840,6 @@ DISRUPTOR
 ======================================================================
 */
 extern int WP_SaberBlockCost(gentity_t* defender, const gentity_t* attacker, vec3_t hit_loc);
-extern qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int hit_loc, int* dmg, int mod);
 //---------------------------------------------------------
 static void WP_DisruptorMainFire(gentity_t* ent)
 //---------------------------------------------------------

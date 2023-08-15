@@ -5250,6 +5250,11 @@ static const char* g_bindCommands[] = {
 	"+button13",
 	"+button14",
 	"+button15",
+	"+button16",
+	"+button17",
+	"+button18",
+	"+button19",
+	"+button20",
 	"weather",
 	"saberdown",
 	//emotes

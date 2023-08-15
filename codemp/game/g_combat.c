@@ -5893,6 +5893,19 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 		//racc - check to see if an NPC should get conventently kicked off a nearby cliff.
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
+		if (!self->client->ps.saberHolstered)
+		{
+			if (self->client->saber[0].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[0].soundOff);
+			}
+			if (self->client->saber[1].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
+			}
+			self->client->ps.saberHolstered = 2;
+		}
+
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
 			&& !PM_InKnockDown(&self->client->ps))
 		{
@@ -6027,6 +6040,19 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 			NPC_Pain(self, attacker, 0);
 		}
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
+
+		if (!self->client->ps.saberHolstered)
+		{
+			if (self->client->saber[0].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[0].soundOff);
+			}
+			if (self->client->saber[1].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
+			}
+			self->client->ps.saberHolstered = 2;
+		}
 
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
 			&& !PM_InKnockDown(&self->client->ps))
@@ -8249,37 +8275,23 @@ void add_npc_block_point_bonus(const gentity_t* self)
 	}
 }
 
-void G_DodgeDrain(const gentity_t* victim, const gentity_t* attacker, int amount)
+void G_DodgeDrain(const gentity_t* dodger, const gentity_t* attacker, int amount)
 {
-	//drains DP from victim.  Also awards experience points to the attacker.
-	gclient_t* client = victim->client;
+	//drains DP from victim.  Also awards experience points to the attacker
 
-	if (!g_friendlyFire.integer && OnSameTeam(victim, attacker))
+	if (!g_friendlyFire.integer && OnSameTeam(dodger, attacker))
 	{
 		//don't drain DP if we're hit by a team member
 		return;
 	}
 
-	if (victim->flags & FL_GODMODE)
+	if (dodger->flags & FL_GODMODE)
 		return;
 
-	if (client && client->ps.fd.forcePowersActive & 1 << FP_PROTECT)
-	{
-		amount /= 2;
-		if (amount < 1)
-			amount = 1;
-	}
+	dodger->client->ps.stats[STAT_DODGE] -= amount;
 
-	client->ps.stats[STAT_DODGE] -= amount;
-
-	if (attacker->client && attacker->client->ps.torsoAnim == saberMoveData[16].animToUse)
+	if (dodger->client->ps.stats[STAT_DODGE] < 0)
 	{
-		//In DFA?
-		client->ps.saberFatigueChainCount += MISHAPLEVEL_OVERLOAD;
-	}
-
-	if (client->ps.stats[STAT_DODGE] < 0)
-	{
-		client->ps.stats[STAT_DODGE] = 0;
+		dodger->client->ps.stats[STAT_DODGE] = 0;
 	}
 }
