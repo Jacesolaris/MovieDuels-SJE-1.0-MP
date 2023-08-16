@@ -6134,7 +6134,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
 {
 	int dodge_anim = -1;
-	int dpcost = BasicWeaponBlockCosts[mod];
+	int dpcost = BasicWeaponBlockCosts[MOD_SABER];
 	const int saved_dmg = *dmg;
 	qboolean no_action = qfalse;
 
@@ -6247,22 +6247,35 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		return qfalse;
 	}
 
-	if ((dodger->r.svFlags & SVF_BOT
-		&& dodger->client->ps.weapon == WP_SABER
-		&& dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
-		|| (dodger->r.svFlags & SVF_BOT
-			&& (dodger->client->ps.weapon != WP_SABER &&
-				dodger->client->botclass != BCLASS_MANDOLORIAN &&
-				dodger->client->botclass != BCLASS_MANDOLORIAN1 &&
-				dodger->client->botclass != BCLASS_MANDOLORIAN2 &&
-				dodger->client->botclass != BCLASS_BOBAFETT)
-			|| dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT))
-		// if your not a mando or jedi or low FP then you cant dodge
+	if (dodger->r.svFlags & SVF_BOT //A bot
+		&& dodger->client->ps.weapon == WP_SABER // with a saber
+		&& (dodger->client->ps.fd.blockPoints <= FATIGUE_DODGEINGBOT ||
+			dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT ||
+			dodger->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY))// if your low then you cant dodge
 	{
 		return qfalse;
 	}
 
-	if (dodger->client->ps.fd.forcePower < dpcost && !(dodger->r.svFlags & SVF_BOT)) //player
+	if ((dodger->r.svFlags & SVF_BOT
+		&& dodger->client->ps.weapon != WP_SABER
+		&& dodger->client->botclass != BCLASS_MANDOLORIAN
+		&& dodger->client->botclass != BCLASS_MANDOLORIAN1
+		&& dodger->client->botclass != BCLASS_MANDOLORIAN2
+		&& dodger->client->botclass != BCLASS_BOBAFETT))// if your not a mando or jedi then you cant dodge
+	{
+		return qfalse;
+	}
+
+	if (dodger->r.svFlags & SVF_BOT
+		&& dodger->client->botclass == BCLASS_MANDOLORIAN
+		&& dodger->client->botclass == BCLASS_MANDOLORIAN1
+		&& dodger->client->botclass == BCLASS_MANDOLORIAN2
+		&& dodger->client->botclass == BCLASS_BOBAFETT && dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT)// if your a mando low FP then you cant dodge
+	{
+		return qfalse;
+	}
+
+	if (dodger->client->ps.fd.forcePower < dpcost + FATIGUE_DODGEING && !(dodger->r.svFlags & SVF_BOT)) //player
 	{
 		//Not enough dodge
 		return qfalse;
@@ -6294,16 +6307,11 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 			|| PM_SaberInAttack(dodger->client->ps.saber_move)
 			|| PM_SaberInStart(dodger->client->ps.saber_move))
 		{
-			if (dodger->NPC)
-			{
-				//can't Dodge saber swings while running or in swing.
-				return qtrue;
-			}
 			return qfalse;
 		}
 	}
 
-	if (*dmg <= DODGE_MINDAM && mod != MOD_REPEATER)
+	if (*dmg <= DODGE_MINDAM && mod == MOD_SABER)
 	{
 		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM));
 		no_action = qtrue;
@@ -7201,16 +7209,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 
 		gentity_t* victim = &g_entities[tr.entity_num];
 
-		if (dmg <= SABER_NONATTACK_DAMAGE)
+		if (dmg <= SABER_NONATTACK_DAMAGE || (G_DoSaberDodge(victim, self, tr.endpos, -1, &dmg, MOD_SABER)))
 		{
 			self->client->ps.saberIdleWound = level.time + 350;
 
-			//add saber impact debounce
-			DebounceSaberImpact(self, blocker, r_saber_num, r_blade_num, sabimpactentitynum);
-			return qtrue;
-		}
-		if (G_DoSaberDodge(victim, self, tr.endpos, -1, &dmg, MOD_SABER))
-		{
 			//add saber impact debounce
 			DebounceSaberImpact(self, blocker, r_saber_num, r_blade_num, sabimpactentitynum);
 			return qtrue;
@@ -9824,7 +9826,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render
 
 		VectorCopy(self->client->ps.origin, ri->eyePoint);
 		ri->eyePoint[2] += self->client->ps.viewheight;
-	}
+}
 }
 
 #define STAFF_KICK_RANGE 16
@@ -11702,7 +11704,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 		!g2SaberInstance)
 	{
 		return;
-	}
+}
 
 #ifndef FINAL_BUILD
 	viewlock = self->client->ps.userInt1;

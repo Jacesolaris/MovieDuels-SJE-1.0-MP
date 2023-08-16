@@ -66,7 +66,7 @@ extern qboolean in_camera;
 extern qboolean PM_RunningAnim(int anim);
 extern void g_reflect_missile_auto(const gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void g_reflect_missile_bot(const gentity_t* ent, gentity_t* missile, vec3_t forward);
-extern void G_SoundOnEnt(gentity_t* ent, const int channel, const char* sound_path);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_SaberCanInterruptMove(int move, int anim);
@@ -95,6 +95,7 @@ extern int PM_InGrappleMove(int anim);
 extern void WP_BlockPointsDrain(const gentity_t* self, int fatigue);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
 extern void G_StasisMissile(gentity_t* ent, gentity_t* missile, vec3_t forward);
+extern qboolean PM_InSlopeAnim(int anim);
 
 void G_LetGoOfLedge(const gentity_t* ent)
 {

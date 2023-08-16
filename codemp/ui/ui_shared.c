@@ -9127,8 +9127,7 @@ static void Item_ApplyHacks(itemDef_t* item)
 		}
 	}
 
-	if (item->type == ITEM_TYPE_EDITFIELD && item->cvar && (!Q_stricmp(item->cvar, "ui_Name") || !Q_stricmp(
-		item->cvar, "ui_findplayer")))
+	if (item->type == ITEM_TYPE_EDITFIELD && item->cvar && (!Q_stricmp(item->cvar, "ui_Name") || !Q_stricmp(item->cvar, "ui_findplayer")))
 	{
 		editFieldDef_t* editField = item->typeData.edit;
 
