@@ -686,7 +686,20 @@ void CG_AddScorePlum(localEntity_t* le)
 		re->shaderRGBA[0] = 0xff;
 		re->shaderRGBA[1] = 0xff;
 		re->shaderRGBA[2] = 0xff;
-		if (score >= 50)
+
+		if (score >= 300)
+		{
+			re->shaderRGBA[1] = 0;
+		}
+		else if (score >= 200)
+		{
+			re->shaderRGBA[0] = re->shaderRGBA[1] = 0;
+		}
+		else if (score >= 100)
+		{
+			re->shaderRGBA[2] = 0;
+		}
+		else if (score >= 50)
 		{
 			re->shaderRGBA[1] = 0;
 		}

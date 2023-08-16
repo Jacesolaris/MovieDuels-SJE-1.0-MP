@@ -296,6 +296,12 @@ qboolean Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
 		ent->client->ps.m_iVehicleNum)
 		return qfalse;
 
+	//I cannot allow ppl dueling to jump in a vehicle!
+	if (ent->client->ps.duelInProgress) 
+	{
+		return qfalse;
+	}
+
 	// Bucking so we can't do anything (NOTE: Should probably be a better name since fighters don't buck...).
 	if (p_veh->m_ulFlags & VEH_BUCKING)
 		return qfalse;

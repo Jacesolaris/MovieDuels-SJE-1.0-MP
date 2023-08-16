@@ -973,8 +973,6 @@ void UI_SetActiveMenu(uiMenuCommand_t menu)
 		{
 			//	trap->Cvar_Set( "sv_killserver", "1" );
 			trap->Key_SetCatcher(KEYCATCH_UI);
-			//	trap->S_StartLocalSound( trap_S_RegisterSound("sound/misc/menu_background.wav", qfalse) , CHAN_LOCAL_SOUND );
-			//	trap->S_StartBackgroundTrack("sound/misc/menu_background.wav", NULL);
 			if (uiInfo.inGameLoad)
 				UI_LoadNonIngame();
 

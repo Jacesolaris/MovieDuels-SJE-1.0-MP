@@ -336,6 +336,7 @@ int GetPairedValue(char* buf, const char* key, char* outbuf)
 	return 1;
 }
 
+int G_CountHumanPlayers(int ignoreClientNum, int team);
 int BotDoChat(bot_state_t* bs, const char* section, const int always)
 {
 	gentity_t* cobject;
@@ -359,6 +360,12 @@ int BotDoChat(bot_state_t* bs, const char* section, const int always)
 
 	if (Q_irand(1, 10) > bs->chatFrequency && !always)
 	{
+		return 0;
+	}
+	//don't talk unless there are human players in the game.
+	//Otherwise, we're just clogging up the games.log with crap
+	if (!G_CountHumanPlayers(-1, -1))
+	{//no humans in the game.  don't chat.
 		return 0;
 	}
 

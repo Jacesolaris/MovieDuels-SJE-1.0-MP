@@ -4627,36 +4627,36 @@ void ClientThink_real(gentity_t* ent)
 		}
 	}
 
-	if (ent->client->ps.duelInProgress)
+	if (client->ps.duelInProgress)
 	{
-		gentity_t* duelAgainst = &g_entities[ent->client->ps.duelIndex];
+		gentity_t* duelAgainst = &g_entities[client->ps.duelIndex];
 
 		//Keep the time updated, so once this duel ends this player can't engage in a duel for another
 		//10 seconds. This will give other people a chance to engage in duels in case this player wants
 		//to engage again right after he's done fighting and someone else is waiting.
-		ent->client->ps.fd.privateDuelTime = level.time + 10000;
+		client->ps.fd.privateDuelTime = level.time + 10000;
 
-		if (ent->client->ps.duelTime < level.time)
+		if (client->ps.duelTime < level.time)
 		{
 			//Bring out the sabers
-			if (ent->client->ps.weapon == WP_SABER
-				&& ent->client->ps.saberHolstered
-				&& ent->client->ps.duelTime)
+			if (client->ps.weapon == WP_SABER
+				&& client->ps.saberHolstered
+				&& client->ps.duelTime)
 			{
-				ent->client->ps.saberHolstered = 0;
+				client->ps.saberHolstered = 0;
 
-				if (ent->client->saber[0].soundOn)
+				if (client->saber[0].soundOn)
 				{
 					G_Sound(ent, CHAN_AUTO, ent->client->saber[0].soundOn);
 				}
-				if (ent->client->saber[1].soundOn)
+				if (client->saber[1].soundOn)
 				{
 					G_Sound(ent, CHAN_AUTO, ent->client->saber[1].soundOn);
 				}
 
 				G_AddEvent(ent, EV_PRIVATE_DUEL, 2);
 
-				ent->client->ps.duelTime = 0;
+				client->ps.duelTime = 0;
 			}
 
 			if (duelAgainst
@@ -5515,10 +5515,10 @@ void ClientThink_real(gentity_t* ent)
 	{
 		pmove.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;
 	}
-	else if (ent->r.svFlags & SVF_BOT)
+	/*else if (ent->r.svFlags & SVF_BOT)
 	{
 		pmove.tracemask = MASK_PLAYERSOLID | CONTENTS_MONSTERCLIP;
-	}
+	}*/
 	else
 	{
 		pmove.tracemask = MASK_PLAYERSOLID;

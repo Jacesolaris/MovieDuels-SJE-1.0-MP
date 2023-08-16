@@ -321,6 +321,32 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		trap->CM_TransformedTrace(&trace, start, end, mins, maxs, cmodel, mask, origin, angles, 0);
 		trace.entity_num = trace.fraction != 1.0 ? ent->number : ENTITYNUM_NONE;
 
+		if (trace.fraction < 1.0 && ent->number < MAX_CLIENTS)
+		{ //trace hit a client
+			if (cg.snap->ps.duelInProgress &&
+				cg.snap->ps.duelIndex != ent->number)
+			{ // if you are dueling and this client is not your partner, skip it
+				continue;
+			}
+			if (!cg.snap->ps.duelInProgress &&
+				ent->bolt1)
+			{ // if the entity is dueling -- but not with you, skip it
+			  // NB. bolt1 contains the duelinprogress info
+				continue;
+			}
+		}
+		else if (trace.fraction < 1.0 && cg.snap->ps.duelInProgress)
+		{
+			if (ent->weapon == WP_TURRET || ent->modelindex == HI_SHIELD)
+			{ // this is a sentrygun or portable shield, check for owner info
+				if (ent->otherEntityNum != cg.snap->ps.client_num &&
+					ent->otherEntityNum != cg.snap->ps.duelIndex)
+				{ // not part of your duel
+					continue;
+				}
+			}
+		}
+
 		if (g2_check || ignored && ignored->currentState.m_iVehicleNum)
 		{
 			//keep these older variables around for a bit, incase we need to replace them in the Ghoul2 Collision check

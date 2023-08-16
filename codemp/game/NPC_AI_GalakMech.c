@@ -812,7 +812,7 @@ void NPC_BSGM_Attack(void)
 						if (trace_ent && trace_ent->takedamage)
 						{
 							//damage it
-							G_SoundAtLoc(trace.endpos, CHAN_AUTO, G_SoundIndex("sound/weapons/galak/laserdamage.wav"));
+							G_SoundAtLoc(NPCS.NPC, trace.endpos, CHAN_AUTO, G_SoundIndex("sound/weapons/galak/laserdamage.wav"));
 							G_Damage(trace_ent, NPCS.NPC, NPCS.NPC, NPCS.NPC->client->renderInfo.muzzleDir, trace.endpos,
 								10, 0, MOD_UNKNOWN);
 						}
@@ -823,7 +823,7 @@ void NPC_BSGM_Attack(void)
 					}
 					if (!Q_irand(0, 5))
 					{
-						G_SoundAtLoc(trace.endpos, CHAN_AUTO, G_SoundIndex("sound/weapons/galak/laserdamage.wav"));
+						G_SoundAtLoc(NPCS.NPC, trace.endpos, CHAN_AUTO, G_SoundIndex("sound/weapons/galak/laserdamage.wav"));
 					}
 				}
 			}

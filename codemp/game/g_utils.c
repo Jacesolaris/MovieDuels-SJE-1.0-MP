@@ -1619,11 +1619,12 @@ void G_Sound(gentity_t* ent, const int channel, const int soundIndex)
 G_SoundAtLoc
 =============
 */
-void G_SoundAtLoc(vec3_t loc, const int channel, const int soundIndex)
+void G_SoundAtLoc(gentity_t* ent, vec3_t loc, const int channel, const int soundIndex)
 {
 	gentity_t* te = G_TempEntity(loc, EV_GENERAL_SOUND);
 	te->s.eventParm = soundIndex;
 	te->s.saberEntityNum = channel;
+	te->s.otherEntityNum = ent->s.number; // mark with owner info for duel NoX
 }
 
 /*
@@ -1636,6 +1637,7 @@ void G_EntitySound(gentity_t* ent, soundChannel_t channel, const int soundIndex)
 	gentity_t* te = G_TempEntity(ent->r.currentOrigin, EV_ENTITY_SOUND);
 	te->s.eventParm = soundIndex;
 	te->s.client_num = ent->s.number;
+	te->s.otherEntityNum = ent->s.number; //mark owner for duel nox
 	te->s.trickedentindex = channel;
 }
 

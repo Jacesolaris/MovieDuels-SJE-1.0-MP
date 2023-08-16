@@ -1488,7 +1488,7 @@ gentity_t* G_ScreenShake(vec3_t org, const gentity_t* target, float intensity, i
 gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, float intensity, int duration);
 void G_MuteSound(int entnum, int channel);
 void G_Sound(gentity_t* ent, int channel, int soundIndex);
-void G_SoundAtLoc(vec3_t loc, int channel, int soundIndex);
+void G_SoundAtLoc(gentity_t* ent, vec3_t loc, int channel, int soundIndex);
 void G_EntitySound(gentity_t* ent, soundChannel_t channel, int soundIndex);
 void TryUse(gentity_t* ent);
 void G_SendG2KillQueue(void);

@@ -1376,30 +1376,8 @@ void Com_Init(char* commandLine)
 			{
 				if (com_bootlogo->integer)
 				{
-					/*int OpenVid = rand() % 5;
-
-					switch (OpenVid)
-					{
-					case 0:
-						Cbuf_AddText("cinematic openinglogos.roq\n");
-						break;
-					case 1:
-						Cbuf_AddText("cinematic openinglogos2.roq\n");
-						break;
-					case 2:
-						Cbuf_AddText("cinematic openinglogos3.roq\n");
-						break;
-					case 3:
-						Cbuf_AddText("cinematic openinglogos4.roq\n");
-						break;
-					case 4:
-						Cbuf_AddText("cinematic openinglogos5.roq\n");
-						break;
-					default:
-						Cbuf_AddText("cinematic openinglogos.roq\n");
-						break;
-					}*/
-					Cbuf_AddText("cinematic openinglogos.roq\n");
+					//Cbuf_AddText("cinematic openinglogos.roq\n");
+					Cbuf_AddText("cinematic openinglogosMP.roq\n");
 				}
 			}
 		}

@@ -2045,7 +2045,8 @@ qboolean BG_CanUseFPNow(const int gametype, const playerState_t* ps, const int t
 
 	if (ps->duelInProgress)
 	{
-		if (power != FP_SABER_OFFENSE && power != FP_SABER_DEFENSE && /*power != FP_SABERTHROW &&*/
+		if (power != FP_SABER_OFFENSE &&
+			power != FP_SABER_DEFENSE &&
 			power != FP_LEVITATION)
 		{
 			if (!ps->saberLockFrame || power != FP_PUSH)

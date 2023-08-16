@@ -189,12 +189,24 @@ void TurretClientRun(centity_t* ent)
 		vec3_t muzzle_org, muzzle_dir;
 		mdxaBone_t bolt_matrix;
 
+		int doit = 1;
+
 		trap->G2API_GetBoltMatrix(ent->ghoul2, 0, ent->torsoBolt, &bolt_matrix, /*ent->lerpAngles*/vec3_origin,
 			ent->lerpOrigin, cg.time, cgs.game_models, ent->modelScale);
 		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, muzzle_org);
 		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, muzzle_dir);
 
-		trap->FX_PlayEffectID(cgs.effects.mTurretMuzzleFlash, muzzle_org, muzzle_dir, -1, -1, qfalse);
+		if (cg.snap->ps.duelInProgress)
+		{ // this client is dueling
+			if (ent->currentState.otherEntityNum != cg.snap->ps.client_num && ent->currentState.otherEntityNum != cg.snap->ps.duelIndex)
+			{	// turret not owned by one of the duelers
+				doit = 0;
+			}
+		}
+		if (doit)
+		{
+			trap->FX_PlayEffectID(cgs.effects.mTurretMuzzleFlash, muzzle_org, muzzle_dir, -1, -1, qfalse);
+		}
 
 		ent->bolt4 = ent->currentState.fireflag;
 	}

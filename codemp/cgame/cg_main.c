@@ -1408,6 +1408,7 @@ static void CG_RegisterGraphics(void)
 	cgs.effects.mSparks = trap->FX_RegisterEffect("sparks/spark_nosnd.efx"); //sparks/spark.efx
 	cgs.effects.mboil = trap->FX_RegisterEffect("saber/boil.efx");
 	cgs.effects.mSaberCut = trap->FX_RegisterEffect("saber/saber_cut.efx");
+	cgs.effects.mSaberCut_AMD = trap->FX_RegisterEffect("saber/saber_cut_AMD.efx");
 	cgs.effects.mDroidCut = trap->FX_RegisterEffect("saber/saber_cut_droid.efx");
 	cgs.effects.mDroidtouch = trap->FX_RegisterEffect("saber/saber_touch_droid.efx");
 	cgs.effects.mSaberBlock = trap->FX_RegisterEffect("saber/saber_block.efx");

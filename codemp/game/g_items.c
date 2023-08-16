@@ -3047,6 +3047,11 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 	if (other->health < 1)
 		return; // dead people can't pickup
 
+	if (other->client->ps.duelInProgress)
+	{
+		return;
+	}
+
 	if (ent->item->giType == IT_POWERUP &&
 		(ent->item->giTag == PW_FORCE_ENLIGHTENED_LIGHT || ent->item->giTag == PW_FORCE_ENLIGHTENED_DARK))
 	{

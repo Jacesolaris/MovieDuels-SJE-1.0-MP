@@ -5838,8 +5838,7 @@ float cg_draw_radar(float y)
 							{
 								actual_dist = RADAR_MISSILE_RANGE;
 							}
-							VectorMA(cg.refdef.vieworg, -500.0f * (actual_dist / RADAR_MISSILE_RANGE), dir_player,
-								sound_org);
+							VectorMA(cg.refdef.vieworg, -500.0f * (actual_dist / RADAR_MISSILE_RANGE), dir_player,sound_org);
 							trap->S_StartSound(sound_org, ENTITYNUM_WORLD, CHAN_AUTO, alarm_sound);
 						}
 					}

@@ -121,15 +121,18 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const polyVert_t* verts, const int num_polys) {
+void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const polyVert_t* verts, const int num_polys)
+{
 	int			fogIndex;
 
-	if (!tr.registered) {
+	if (!tr.registered) 
+	{
 		return;
 	}
 
-	if (!h_shader) {
-		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: RE_AddPolyToScene: NULL poly shader\n");
+	if (!h_shader) 
+	{
+		ri->Printf(PRINT_DEVELOPER, S_COLOR_YELLOW  "WARNING: RE_AddPolyToScene: NULL poly shader\n");
 		return;
 	}
 

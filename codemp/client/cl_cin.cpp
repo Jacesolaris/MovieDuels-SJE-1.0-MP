@@ -1622,8 +1622,8 @@ int CIN_PlayCinematic(const char* arg, const int x, const int y, const int w, co
 
 	FS_Read(cin.file, 16, cinTable[currentHandle].iFile);
 
-	const unsigned short RoQID = static_cast<unsigned short>(cin.file[0]) + static_cast<unsigned short>(cin.file[1]) *
-		256;
+	const unsigned short RoQID = static_cast<unsigned short>(cin.file[0]) + static_cast<unsigned short>(cin.file[1]) *256;
+	
 	if (RoQID == 0x1084)
 	{
 		RoQ_init();
@@ -1781,6 +1781,7 @@ void CL_PlayCinematic_f(void)
 
 	const char* arg = Cmd_Argv(1);
 	const char* s = Cmd_Argv(2);
+	const char* ps_audio_file = nullptr;
 
 	int bits = CIN_system;
 	if ((s && s[0] == '1') || Q_stricmp(arg, "demoend.roq") == 0 || Q_stricmp(arg, "end.roq") == 0)
@@ -1795,6 +1796,7 @@ void CL_PlayCinematic_f(void)
 	S_StopAllSounds();
 
 	CL_handle = CIN_PlayCinematic(arg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, bits);
+
 	if (CL_handle >= 0)
 	{
 		do

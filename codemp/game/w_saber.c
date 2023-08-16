@@ -930,6 +930,16 @@ qboolean G_CanBeEnemy(const gentity_t* self, const gentity_t* enemy)
 	if (!self->inuse || !enemy->inuse || !self->client || !enemy->client)
 		return qfalse;
 
+	if (self->client->ps.duelInProgress && self->client->ps.duelIndex != enemy->s.number)
+	{ //dueling but not with this person
+		return qfalse;
+	}
+
+	if (enemy->client->ps.duelInProgress && enemy->client->ps.duelIndex != self->s.number)
+	{ //other guy dueling but not with me
+		return qfalse;
+	}
+
 	if (level.gametype < GT_TEAM)
 		return qtrue;
 

@@ -1742,6 +1742,11 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 			continue;
 		}
 
+		if (gent->client && gent->client->ps.duelInProgress && my_owner->client->ps.duelIndex != gent->client->ps.client_num)
+		{ // lmo: client entity in a duel and the owner of this weapon is not opponent
+			continue;
+		}
+
 		// find the distance from the edge of the bounding box
 		for (i = 0; i < 3; i++)
 		{
@@ -4184,37 +4189,37 @@ void WP_FireMelee(gentity_t* ent, qboolean alt_fire)
 				//do a tad bit more damage on the second swing
 				dmg = MELEE_SWING2_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_GRAN)
+			if (ent->client && ent->client->botclass == BCLASS_GRAN)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_EXTRA_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_CHEWIE)
+			if (ent->client && ent->client->botclass == BCLASS_CHEWIE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_WOOKIE)
+			if (ent->client && ent->client->botclass == BCLASS_WOOKIE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_WOOKIEMELEE)
+			if (ent->client && ent->client->botclass == BCLASS_WOOKIEMELEE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_SBD)
+			if (ent->client && ent->client->botclass == BCLASS_SBD)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_EXTRA_DAMAGE;
 			}
-			if (ent->client->ps.torsoAnim == BOTH_WOOKIE_SLAP)
+			if (ent->client && ent->client->ps.torsoAnim == BOTH_WOOKIE_SLAP)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client->ps.torsoAnim == BOTH_MELEEUP)
+			if (ent->client && ent->client->ps.torsoAnim == BOTH_MELEEUP)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_EXTRA_DAMAGE;

@@ -284,6 +284,7 @@ typedef struct itemDef_s {
 	const char* mouseEnter;				// mouse enter script
 	const char* mouseExit;					// mouse exit script
 	const char* action;					// select script
+	const char* exec; // Exec command
 	//JLFACCEPT MPMOVED
 	const char* accept;
 	//JLFDPADSCRIPT

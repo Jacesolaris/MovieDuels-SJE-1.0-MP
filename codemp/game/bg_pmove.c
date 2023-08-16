@@ -13185,6 +13185,8 @@ void PM_Weapon(void)
 			pm->cmd.buttons &= ~BUTTON_ALT_ATTACK;
 			pm->cmd.buttons &= ~BUTTON_GRAPPLE;
 			pm->cmd.buttons &= ~BUTTON_KICK;
+			pm->cmd.buttons &= ~BUTTON_BLOCK;
+			pm->cmd.buttons &= ~BUTTON_DASH;
 		}
 	}
 

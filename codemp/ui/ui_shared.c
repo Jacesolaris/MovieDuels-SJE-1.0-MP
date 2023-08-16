@@ -2060,9 +2060,25 @@ qboolean Script_SetCvarToCvar(itemDef_t* item, char** args)
 	return qtrue;
 }
 
+qboolean initialLoad = qtrue;
+qboolean AlsoLoad = qtrue;
+
 qboolean Script_Exec(itemDef_t* item, char** args)
 {
 	char* val;
+
+	if (initialLoad)
+	{
+		item->exec = "menumusic";
+		initialLoad = qfalse;
+	}
+
+	if (AlsoLoad)
+	{
+		item->exec = "totgmapmusic";
+		AlsoLoad = qfalse;
+	}
+
 	if (String_Parse(args, &val))
 	{
 		char* s = strstr(val, "vstr");

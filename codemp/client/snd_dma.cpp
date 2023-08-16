@@ -47,6 +47,8 @@ static void S_SoundList_f(void);
 static void S_Music_f(void);
 static void S_StopMusic_f(void);
 static void S_SetDynamicMusic_f(void);
+static void S_MenuMusic_f();
+static void S_totgmapmusic_f();
 
 void S_Update_();
 void S_StopAllSounds(void);
@@ -496,6 +498,8 @@ void S_Init(void)
 	Cmd_AddCommand("soundstop", S_StopAllSounds, "Stops all sounds including music");
 	Cmd_AddCommand("mp3_calcvols", S_MP3_CalcVols_f);
 	Cmd_AddCommand("s_dynamic", S_SetDynamicMusic_f, "Change dynamic music state");
+	Cmd_AddCommand("menumusic", S_MenuMusic_f, "Play the menumusic");
+	Cmd_AddCommand("totgmapmusic", S_totgmapmusic_f, "Play the totgmapmusic");
 
 #ifdef USE_OPENAL
 	cv = Cvar_Get("s_UseOpenAL", "0", CVAR_ARCHIVE | CVAR_LATCH);
@@ -3870,6 +3874,64 @@ static void S_SetDynamicMusic_f(void)
 	DynamicMusicInfoPrint();
 }
 
+static void S_MenuMusic_f()
+{
+	const int music_pick = rand() % 9;
+
+	switch (music_pick)
+	{
+	case 0:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu.mp3", "music/mainMenu/main/md_menu.mp3", qfalse);
+		break;
+	case 1:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_both.mp3", "music/mainMenu/main/md_menu_both.mp3", qfalse);
+		break;
+	case 2:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_padme.mp3", "music/mainMenu/main/md_menu_padme.mp3",
+			qfalse);
+		break;
+	case 3:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_boc.mp3", "music/mainMenu/main/md_menu_boc.mp3", qfalse);
+		break;
+	case 4:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_rotsgame.mp3", "music/mainMenu/main/md_menu_rotsgame.mp3", qfalse);
+		break;
+	case 5:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_rogueshadow.mp3", "music/mainMenu/main/md_menu_rogueshadow.mp3", qfalse);
+		break;
+	case 6:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_goodbyeoldfriend.mp3", "music/mainMenu/main/md_menu_goodbyeoldfriend.mp3", qfalse);
+		break;
+	case 7:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_starwars.mp3", "music/mainMenu/main/md_menu_starwars.mp3", qfalse);
+		break;
+	case 8:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu_podracing.mp3", "music/mainMenu/main/md_menu_podracing.mp3", qfalse);
+		break;
+	default:
+		S_StartBackgroundTrack("music/mainMenu/main/md_menu.mp3", "music/mainMenu/main/md_menu.mp3", qfalse);
+		break;
+	}
+}
+
+static void S_totgmapmusic_f()
+{
+	const int music_pick = rand() % 2;
+
+	switch (music_pick)
+	{
+	case 0:
+		S_StartBackgroundTrack("music/totgMenu/MapMusic1.mp3", "music/totgMenu/MapMusic1.mp3", qfalse);
+		break;
+	case 1:
+		S_StartBackgroundTrack("music/totgMenu/MapMusic2.mp3", "music/totgMenu/MapMusic2.mp3", qfalse);
+		break;
+	default:
+		S_StartBackgroundTrack("music/totgMenu/MapMusic1.mp3", "music/totgMenu/MapMusic1.mp3", qfalse);
+		break;
+	}
+}
+
 // this table needs to be in-sync with the typedef'd enum "SoundCompressionMethod_t"...	-ste
 //
 static const char* sSoundCompressionMethodStrings[ct_NUMBEROF] =
@@ -4163,8 +4225,7 @@ void S_UnCacheDynamicMusic(void)
 	}
 }
 
-static qboolean S_StartBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qboolean qbDynamic, const char* intro,
-	const char* loop)
+static qboolean S_StartBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qboolean qbDynamic, const char* intro, const char* loop)
 {
 	int len;
 	char dump[16];
@@ -4679,8 +4740,7 @@ void S_StartBackgroundTrack(const char* intro, const char* loop, const qboolean 
 		// strstr() check avoids extra file-exists check at runtime if reverting from streamed music to dynamic since literal files all need at least one slash in their name (eg "music/blah")
 	{
 		const char* psLoopName = S_FileExists(sNameLoop) ? sNameLoop : sNameIntro;
-		Com_DPrintf("S_StartBackgroundTrack: Found/using non-dynamic music track '%s' (loop: '%s')\n", sNameIntro,
-			psLoopName);
+		Com_DPrintf("S_StartBackgroundTrack: Found/using non-dynamic music track '%s' (loop: '%s')\n", sNameIntro,psLoopName);
 		S_StartBackgroundTrack_Actual(&tMusic_Info[eBGRNDTRACK_NONDYNAMIC], bMusic_IsDynamic, sNameIntro, psLoopName);
 	}
 	else

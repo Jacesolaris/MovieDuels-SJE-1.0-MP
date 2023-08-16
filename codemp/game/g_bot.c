@@ -652,7 +652,7 @@ int G_RemoveRandomBot(const int team)
 G_CountHumanPlayers
 ===============
 */
-int G_CountHumanPlayers(const int team)
+int G_CountHumanPlayers(int ignoreClientNum, const int team)
 {
 	int num = 0;
 	for (int i = 0; i < sv_maxclients.integer; i++)
@@ -667,6 +667,15 @@ int G_CountHumanPlayers(const int team)
 			continue;
 		}
 		if (team >= 0 && cl->sess.sessionTeam != team)
+		{
+			continue;
+		}
+		//don't count as a human player (for the bot_minplayers stuff) until
+		//the player isn't a specator.
+		if (level.gametype != GT_DUEL && level.gametype != GT_POWERDUEL
+			//human players in the game are specators while not in the duel.  Don't
+			//use this rule for those gametypes.
+			&& cl->sess.sessionTeam == TEAM_SPECTATOR)
 		{
 			continue;
 		}
@@ -757,7 +766,7 @@ void G_CheckMinimumPlayers(void)
 		minplayers = sv_maxclients.integer;
 	}
 
-	const int humanplayers = G_CountHumanPlayers(-1);
+	const int humanplayers = G_CountHumanPlayers(-1, -1);
 	const int botplayers = G_CountBotPlayers(-1);
 
 	if (humanplayers + botplayers < minplayers)

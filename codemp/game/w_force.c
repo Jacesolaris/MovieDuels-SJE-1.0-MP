@@ -7960,7 +7960,7 @@ void SeekerDroneUpdate(gentity_t* self)
 				VectorNormalize(endir);
 
 				WP_FireGenericBlasterMissile(self, org, endir, 0, 15, 2000, MOD_BLASTER);
-				G_SoundAtLoc(org, CHAN_WEAPON, G_SoundIndex("sound/weapons/bryar/fire.wav"));
+				G_SoundAtLoc(self,org, CHAN_WEAPON, G_SoundIndex("sound/weapons/bryar/fire.wav"));
 
 				self->client->ps.droneFireTime = level.time + Q_irand(400, 700);
 			}

@@ -3199,8 +3199,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	//Use any target we had
 	G_UseTargets(self, self);
 
-	if (g_slowmoDuelEnd.integer && (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL) && attacker && attacker
-		->inuse && attacker->client)
+	if (g_slowmoDuelEnd.integer && (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL) && attacker && attacker->inuse && attacker->client)
 	{
 		if (!gDoSlowMoDuel)
 		{
@@ -8050,6 +8049,10 @@ qboolean g_radius_damage(vec3_t origin, gentity_t* attacker, const float damage,
 			continue;
 		if (!ent->takedamage)
 			continue;
+		if (ent != attacker && ent->client && ent->client->ps.duelInProgress && attacker->client && ent->client->ps.duelIndex != attacker->client->ps.client_num)
+		{ // client entity in a duel and the attacker is not opponent or you!
+			continue;
+		}
 
 		// find the distance from the edge of the bounding box
 		for (i = 0; i < 3; i++)
