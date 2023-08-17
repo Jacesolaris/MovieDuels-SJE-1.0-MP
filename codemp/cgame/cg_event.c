@@ -2700,8 +2700,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		}
 		break;
 
-	case EV_altFire:
-		DEBUGNAME("EV_altFire");
+	case EV_ALTFIRE:
+		DEBUGNAME("EV_ALTFIRE");
 		{
 			int doit = 1; // lmo consider duel nonx
 
@@ -2741,7 +2741,6 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				}
 			}
 		}
-
 		break;
 
 	case EV_SABER_ATTACK:
@@ -4217,28 +4216,45 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		{
 			centity_t* effect_on = &cg_entities[es->owner];
 
-			if (!effect_on->ghoul2) // don't play bolted effect if no ghoul on the entity
-				break;
+			int doit = 1;
 
-			e_id = 0;
-
-			//if the effect is already registered go ahead grab it
-			if (cgs.gameEffects[es->eventParm])
-				e_id = cgs.gameEffects[es->eventParm];
-			else
-			{
-				//else it must be registered before using it
-				s = CG_ConfigString(CS_EFFECTS + es->eventParm);
-				if (s && s[0])
-					e_id = trap->FX_RegisterEffect(s);
+			if (cg.snap->ps.duelInProgress)
+			{ // this client is dueling
+				// note special encoding:
+				//  otherentityNum has owner number
+				//  if owner num is ENTITYNUM_NONE then always play it
+				if (es->otherEntityNum != ENTITYNUM_NONE &&
+					es->otherEntityNum != cg.snap->ps.client_num &&
+					es->otherEntityNum != cg.snap->ps.duelIndex)
+				{
+					doit = 0;
+				}
 			}
+			if (doit)
+			{
+				if (!effect_on->ghoul2) // don't play bolted effect if no ghoul on the entity
+					break;
 
-			if (es->bolt1 == -1 || !e_id) //we don't have this particular bone or effect so can't play it
-				break;
+				e_id = 0;
 
-			//attach the effect on the entity
-			trap->FX_PlayBoltedEffectID(e_id, es->origin, effect_on->ghoul2,
-				es->generic1, es->owner, 0, 0, qtrue);
+				//if the effect is already registered go ahead grab it
+				if (cgs.gameEffects[es->eventParm])
+					e_id = cgs.gameEffects[es->eventParm];
+				else
+				{
+					//else it must be registered before using it
+					s = CG_ConfigString(CS_EFFECTS + es->eventParm);
+					if (s && s[0])
+						e_id = trap->FX_RegisterEffect(s);
+				}
+
+				if (es->bolt1 == -1 || !e_id) //we don't have this particular bone or effect so can't play it
+					break;
+
+				//attach the effect on the entity
+				trap->FX_PlayBoltedEffectID(e_id, es->origin, effect_on->ghoul2,
+					es->generic1, es->owner, 0, 0, qtrue);
+			}
 		}
 		break;
 

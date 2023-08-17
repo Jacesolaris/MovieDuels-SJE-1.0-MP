@@ -78,7 +78,7 @@ extern bot_state_t* botstates[MAX_CLIENTS];
 extern void Touch_Button(gentity_t* ent, gentity_t* other, trace_t* trace);
 extern void player_Freeze(const gentity_t* self);
 extern void Player_CheckFreeze(const gentity_t* self);
-extern float manual_saberblocking(const gentity_t* defender);
+extern qboolean manual_saberblocking(const gentity_t* defender);
 extern qboolean PM_ForceUsingSaberAnim(int anim);
 extern qboolean PM_SaberInSpecial(int move);
 extern qboolean BG_SabersOff(const playerState_t* ps);
@@ -96,6 +96,10 @@ extern void WP_BlockPointsDrain(const gentity_t* self, int fatigue);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
 extern void G_StasisMissile(gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern qboolean PM_InSlopeAnim(int anim);
+extern qboolean PM_SaberInnonblockableAttack(int anim);
+extern qboolean PM_KnockDownAnim(int anim);
+extern qboolean PM_InForceGetUp(const playerState_t* ps);
+extern qboolean PM_InGetUp(const playerState_t* ps);
 
 void G_LetGoOfLedge(const gentity_t* ent)
 {
@@ -2265,6 +2269,7 @@ int IsPressingDashButton(const gentity_t* self)
 		&& !self->client->hookhasbeenfired
 		&& (!(self->client->buttons & BUTTON_KICK))
 		&& (!(self->client->buttons & BUTTON_USE))
+		&& (!(self->client->buttons & BUTTON_WALKING))
 		&& self->client->buttons & BUTTON_DASH
 		&& self->client->ps.pm_flags & PMF_DASH_HELD)
 	{
@@ -2523,8 +2528,8 @@ void ForceSpeedDash(gentity_t* self)
 		vec3_t dir;
 
 		AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
-		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
+		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 4;
+		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 4;
 
 		ForceDashAnimDash(self);
 	}
@@ -5211,6 +5216,33 @@ void ForceThrow(gentity_t* self, qboolean pull)
 	if (PM_SaberInKata(self->client->ps.saber_move))
 	{
 		return;
+	}
+
+	if (PM_SaberInnonblockableAttack(self->client->ps.torsoAnim))
+	{
+		return;
+	}
+
+	if (PM_InGetUp(&self->client->ps)
+		|| PM_InForceGetUp(&self->client->ps)
+		|| PM_InKnockDown(&self->client->ps)
+		|| PM_KnockDownAnim(self->client->ps.legsAnim)
+		|| PM_KnockDownAnim(self->client->ps.torsoAnim)
+		|| PM_StaggerAnim(self->client->ps.torsoAnim))
+	{
+		return;
+	}
+
+	if (self->client->ps.saberLockTime > level.time)
+	{
+		if (pull || self->client->ps.fd.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
+		{
+			//this can be a way to break out
+			return;
+		}
+		//else, I'm breaking my half of the saberlock
+		self->client->ps.saberLockTime = 0;
+		self->client->ps.saberLockEnemy = ENTITYNUM_NONE;
 	}
 
 	if (pull)

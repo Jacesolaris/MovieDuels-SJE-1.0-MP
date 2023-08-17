@@ -2854,7 +2854,7 @@ const char* eventnames[] = {
 	"EV_NOAMMO",
 	"EV_CHANGE_WEAPON",
 	"EV_FIRE_WEAPON",
-	"EV_altFire",
+	"EV_ALTFIRE",
 	"EV_SABER_ATTACK",
 	"EV_SABER_HIT",
 	"EV_SABER_BLOCK",

@@ -711,7 +711,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 	if (PM_SaberInnonblockableAttack(attacker->client->ps.torsoAnim))
 	{
 		//perfect Blocking
-		if (m_blocking) // A perfectly timed block
+		if (m_blocking) // A perfectly timed block  This is what the attacker does
 		{
 			sab_beh_saber_should_be_disarmed_attacker(attacker, blocker);
 			//just so attacker knows that he was blocked
@@ -930,9 +930,9 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					//WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
 					WP_SaberMBlockDirection(blocker, hit_loc, qfalse);
 
-					if (blocker->client->ps.fd.blockPoints <= BLOCKPOINTS_FATIGUE)
+					if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_THIRTEEN)
 					{
-						sab_beh_saber_should_be_disarmed_attacker(attacker, blocker);
+						sab_beh_add_mishap_attacker(attacker, blocker);
 					}
 					else
 					{
@@ -951,8 +951,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					{
 						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 					}
-					G_Sound(blocker, CHAN_AUTO,
-						G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+					G_Sound(blocker, CHAN_AUTO,G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 					if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 					{
@@ -1165,8 +1164,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 			blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;
 
-			G_Sound(blocker, CHAN_AUTO,
-				G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+			G_Sound(blocker, CHAN_AUTO,G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 			if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 			{

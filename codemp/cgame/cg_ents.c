@@ -1965,8 +1965,7 @@ static void CG_General(centity_t* cent)
 		}
 	}
 
-	if (cent->currentState.time == -1 && cent->currentState.weapon == WP_TRIP_MINE && cent->currentState.eFlags &
-		EF_FIRING)
+	if (cent->currentState.time == -1 && cent->currentState.weapon == WP_TRIP_MINE && cent->currentState.eFlags &EF_FIRING)
 	{
 		vec3_t beam_org;
 		int beam_id;

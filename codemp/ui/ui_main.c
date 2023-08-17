@@ -11349,31 +11349,28 @@ void UI_DrawConnectScreen(qboolean overlay)
 	{
 		trap->SE_GetStringTextString("MENUS_LOADING_MAPNAME", sStringEdTemp, sizeof sStringEdTemp);
 		Text_PaintCenter(centerPoint, yStart, scale, colorWhite,
-			va(/*"Loading %s"*/sStringEdTemp, Info_ValueForKey(info, "mapname")), 0, FONT_MEDIUM);
+			va(sStringEdTemp, Info_ValueForKey(info, "mapname")), 0, FONT_SMALL2);
 	}
 
 	if (!Q_stricmp(cstate.servername, "localhost"))
 	{
 		trap->SE_GetStringTextString("MENUS_STARTING_UP", sStringEdTemp, sizeof sStringEdTemp);
-		Text_PaintCenter(centerPoint, yStart + 48, scale, colorWhite, sStringEdTemp, ITEM_TEXTSTYLE_SHADOWEDMORE,
-			FONT_MEDIUM);
+		Text_PaintCenter(centerPoint, yStart + 48, scale, colorWhite, sStringEdTemp, ITEM_TEXTSTYLE_SHADOWEDMORE, FONT_SMALL2);
 	}
 	else
 	{
 		char text[256];
 		trap->SE_GetStringTextString("MENUS_CONNECTING_TO", sStringEdTemp, sizeof sStringEdTemp);
 		Q_strncpyz(text, va(/*"Connecting to %s"*/sStringEdTemp, cstate.servername), sizeof text);
-		Text_PaintCenter(centerPoint, yStart + 48, scale, colorWhite, text, ITEM_TEXTSTYLE_SHADOWEDMORE,
-			FONT_MEDIUM);
+		Text_PaintCenter(centerPoint, yStart + 48, scale, colorWhite, text, ITEM_TEXTSTYLE_SHADOWEDMORE, FONT_SMALL2);
 	}
 
 	// display global MOTD at bottom
-	Text_PaintCenter(centerPoint, 425, scale, colorWhite, Info_ValueForKey(cstate.updateInfoString, "motd"), 0,
-		FONT_MEDIUM);
+	Text_PaintCenter(centerPoint, 425, scale, colorWhite, Info_ValueForKey(cstate.updateInfoString, "motd"), 0, FONT_SMALL2);
 	// print any server info (server full, bad version, etc)
 	if (cstate.connState < CA_CONNECTED)
 	{
-		Text_PaintCenter(centerPoint, yStart + 176, scale, colorWhite, cstate.messageString, 0, FONT_MEDIUM);
+		Text_PaintCenter(centerPoint, yStart + 176, scale, colorWhite, cstate.messageString, 0, FONT_SMALL2);
 	}
 
 	switch (cstate.connState)
@@ -11381,13 +11378,13 @@ void UI_DrawConnectScreen(qboolean overlay)
 	case CA_CONNECTING:
 	{
 		trap->SE_GetStringTextString("MENUS_AWAITING_CONNECTION", sStringEdTemp, sizeof sStringEdTemp);
-		s = va(/*"Awaiting connection...%i"*/sStringEdTemp, cstate.connectPacketCount);
+		s = va(sStringEdTemp, cstate.connectPacketCount);
 	}
 	break;
 	case CA_CHALLENGING:
 	{
 		trap->SE_GetStringTextString("MENUS_AWAITING_CHALLENGE", sStringEdTemp, sizeof sStringEdTemp);
-		s = va(/*"Awaiting challenge...%i"*/sStringEdTemp, cstate.connectPacketCount);
+		s = va(sStringEdTemp, cstate.connectPacketCount);
 	}
 	break;
 	case CA_CONNECTED:
@@ -11397,12 +11394,12 @@ void UI_DrawConnectScreen(qboolean overlay)
 		trap->Cvar_VariableStringBuffer("cl_downloadName", downloadName, sizeof downloadName);
 		if (*downloadName)
 		{
-			UI_DisplayDownloadInfo(downloadName, centerPoint, yStart, scale, FONT_MEDIUM);
+			UI_DisplayDownloadInfo(downloadName, centerPoint, yStart, scale, FONT_SMALL2);
 			return;
 		}
 	}
 	trap->SE_GetStringTextString("MENUS_AWAITING_GAMESTATE", sStringEdTemp, sizeof sStringEdTemp);
-	s = /*"Awaiting gamestate..."*/sStringEdTemp;
+	s = sStringEdTemp;
 	break;
 	case CA_LOADING:
 		return;
@@ -11414,7 +11411,7 @@ void UI_DrawConnectScreen(qboolean overlay)
 
 	if (Q_stricmp(cstate.servername, "localhost"))
 	{
-		Text_PaintCenter(centerPoint, yStart + 80, scale, colorWhite, s, 0, FONT_MEDIUM);
+		Text_PaintCenter(centerPoint, yStart + 80, scale, colorWhite, s, 0, FONT_SMALL2);
 	}
 	// password required / connection rejected information goes here
 }

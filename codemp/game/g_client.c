@@ -6396,7 +6396,7 @@ void ClientSpawn(gentity_t* ent)
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_THERMAL;
 					client->skillLevel[SK_THERMAL] = FORCE_LEVEL_3;
 					client->skillLevel[SK_FLASHGRENADE] = FORCE_LEVEL_3;
-					client->ps.ammo[AMMO_THERMAL] = 4;
+					client->ps.ammo[AMMO_THERMAL] = 1;
 					client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
 					break;
 				case BCLASS_JAWA:
@@ -6510,7 +6510,7 @@ void ClientSpawn(gentity_t* ent)
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_THERMAL;
 					client->skillLevel[SK_THERMAL] = FORCE_LEVEL_3;
 					client->skillLevel[SK_FLASHGRENADE] = FORCE_LEVEL_3;
-					client->ps.ammo[AMMO_THERMAL] = 4;
+					client->ps.ammo[AMMO_THERMAL] = 1;
 					break;
 				case BCLASS_ROCKETTROOPER:
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
@@ -6674,7 +6674,7 @@ void ClientSpawn(gentity_t* ent)
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_THERMAL;
 					client->skillLevel[SK_THERMAL] = FORCE_LEVEL_3;
 					client->skillLevel[SK_FLASHGRENADE] = FORCE_LEVEL_3;
-					client->ps.ammo[AMMO_THERMAL] = 4;
+					client->ps.ammo[AMMO_THERMAL] = 1;
 					client->skillLevel[SK_GRAPPLE] = FORCE_LEVEL_3;
 					client->skillLevel[SK_FLAMETHROWER] = FORCE_LEVEL_3;
 					break;
