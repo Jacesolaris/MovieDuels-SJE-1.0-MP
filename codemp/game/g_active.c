@@ -1540,7 +1540,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 			}
 			else
 			{
-				if (level.gametype == GT_SIEGE &&
+				if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 					delta > 60)
 				{
 					//longer falls hurt more
@@ -1607,7 +1607,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 			}
 			else
 			{
-				if (level.gametype == GT_SIEGE &&
+				if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 					delta > 60)
 				{
 					//longer falls hurt more
@@ -1892,7 +1892,7 @@ void G_UpdateClientBroadcasts(gentity_t* self)
 		vectoangles(angles, angles);
 
 		// broadcast jedi master to everyone if we are in distance/field of view
-		if (level.gametype == GT_JEDIMASTER && self->client->ps.isJediMaster)
+		if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && self->client->ps.isJediMaster)
 		{
 			if (dist < maxJediMasterDistance
 				&& in_field_of_vision(other->client->ps.viewangles, maxJediMasterFOV, angles))
@@ -4014,7 +4014,7 @@ void ClientThink_real(gentity_t* ent)
 
 	if (!isFollowing)
 	{
-		if (level.gametype == GT_SIEGE &&
+		if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 			client->siegeClass != -1 &&
 			bgSiegeClasses[client->siegeClass].saberStance)
 		{
@@ -4533,7 +4533,7 @@ void ClientThink_real(gentity_t* ent)
 		client->ps.speed = g_speed.value;
 
 		//Check for a siege class speed multiplier
-		if (level.gametype == GT_SIEGE &&
+		if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 			client->siegeClass != -1)
 		{
 			client->ps.speed *= bgSiegeClasses[client->siegeClass].speed;
@@ -5686,8 +5686,8 @@ void ClientThink_real(gentity_t* ent)
 	{
 		ent->client->ps.saberLockFrame = 0;
 		//check for taunt
-		if (pmove.cmd.generic_cmd == GENCMD_ENGAGE_DUEL && (level.gametype == GT_DUEL || level.gametype ==
-			GT_POWERDUEL))
+		if (pmove.cmd.generic_cmd == GENCMD_ENGAGE_DUEL && (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype ==
+			GT_MOVIEDUELS_POWERDUEL))
 		{
 			//already in a duel, make it a taunt command
 			pmove.cmd.buttons |= BUTTON_GESTURE;
@@ -5853,7 +5853,7 @@ void ClientThink_real(gentity_t* ent)
 			Cmd_ToggleSaber_f(ent);
 			break;
 		case GENCMD_ENGAGE_DUEL:
-			if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+			if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 			{
 				//already in a duel, made it a taunt command
 			}
@@ -6123,7 +6123,7 @@ void ClientThink_real(gentity_t* ent)
 			Weapon_HookFree(client->hook);
 		}
 	}
-	else if (level.gametype == GT_SINGLE_PLAYER && ent->client->ps.weapon == WP_MELEE)
+	else if (level.gametype == GT_MOVIEDUELS_MISSIONS && ent->client->ps.weapon == WP_MELEE)
 	{
 		if (ucmd->buttons & BUTTON_GRAPPLE && !(ucmd->buttons & BUTTON_WALKING) && !
 			PM_RunningAnim(ent->client->ps.legsAnim) && !PM_WalkingAnim(ent->client->ps.legsAnim)
@@ -6363,11 +6363,11 @@ void ClientThink_real(gentity_t* ent)
 			// forcerespawn is to prevent users from waiting out powerups
 			int forceRes = g_forceRespawn.integer;
 
-			if (level.gametype == GT_POWERDUEL)
+			if (level.gametype == GT_MOVIEDUELS_POWERDUEL)
 			{
 				forceRes = 1;
 			}
-			else if (level.gametype == GT_SIEGE && g_siegeRespawn.integer)
+			else if (level.gametype == GT_MOVIEDUELS_SIEGE && g_siegeRespawn.integer)
 			{
 				//wave respawning on
 				forceRes = 1;

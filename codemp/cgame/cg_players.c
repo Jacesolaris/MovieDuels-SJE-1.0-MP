@@ -324,7 +324,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 		}
 	}
 
-	if (cgs.gametype >= GT_TEAM || com_buildScript.integer)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM || com_buildScript.integer)
 	{
 		//siege only
 		for (i = 0; i < MAX_CUSTOM_SIEGE_SOUNDS; i++)
@@ -337,8 +337,8 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 		}
 	}
 
-	/*if (cgs.gametype == GT_DUEL
-		|| cgs.gametype == GT_POWERDUEL
+	/*if (cgs.gametype == GT_MOVIEDUELS_DUEL
+		|| cgs.gametype == GT_MOVIEDUELS_POWERDUEL
 		|| com_buildScript.integer)*/
 	{
 		//Duel only
@@ -552,7 +552,7 @@ retryModel:
 		skin_name = "default";
 	}
 
-	if (cgs.gametype >= GT_TEAM && !cgs.jediVmerc && cgs.gametype != GT_SIEGE)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM && !cgs.jediVmerc && cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//We won't force colors for siege.
 		BG_ValidateSkinForTeam(ci->modelName, ci->skinName, ci->team, ci->colorOverride);
@@ -994,7 +994,7 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 	}
 	else
 	{
-		if (cgs.gametype != GT_SIEGE)
+		if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 			is_female = ci->gender == GENDER_FEMALE;
 		else
 			is_female = qfalse;
@@ -1042,7 +1042,7 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 		}
 	}
 
-	if (cgs.gametype >= GT_TEAM || com_buildScript.integer)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM || com_buildScript.integer)
 	{
 		//load the siege sounds then
 		for (i = 0; i < MAX_CUSTOM_SIEGE_SOUNDS; i++)
@@ -1088,8 +1088,8 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 		}
 	}
 
-	if (cgs.gametype == GT_DUEL
-		|| cgs.gametype == GT_POWERDUEL
+	if (cgs.gametype == GT_MOVIEDUELS_DUEL
+		|| cgs.gametype == GT_MOVIEDUELS_POWERDUEL
 		|| com_buildScript.integer)
 	{
 		//load the Duel sounds then
@@ -1165,7 +1165,7 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 	ci->deferred = qfalse;
 
 	teamname[0] = 0;
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		if (ci->team == TEAM_BLUE)
 		{
@@ -1181,7 +1181,7 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 		strcat(teamname, "/");
 	}
 	qboolean modelloaded = qtrue;
-	if (cgs.gametype == GT_SIEGE &&
+	if (cgs.gametype == GT_MOVIEDUELS_SIEGE &&
 		(ci->team == TEAM_SPECTATOR || ci->siegeIndex == -1))
 	{
 		//yeah.. kind of a hack I guess. Don't care until they are actually ingame with a valid class.
@@ -1199,7 +1199,7 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 			//Give it a chance to load default model for this client instead.
 
 			// fall back to default team name
-			if (cgs.gametype >= GT_TEAM)
+			if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 			{
 				// keep skin name
 				if (ci->team == TEAM_BLUE)
@@ -1267,7 +1267,7 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 	}
 
 	// sounds
-	if (cgs.gametype == GT_SIEGE && (ci->team == TEAM_SPECTATOR || ci->siegeIndex == -1))
+	if (cgs.gametype == GT_MOVIEDUELS_SIEGE && (ci->team == TEAM_SPECTATOR || ci->siegeIndex == -1))
 	{
 		//don't need to load sounds
 	}
@@ -1450,7 +1450,7 @@ static qboolean CG_ScanForExistingClientInfo(clientInfo_t* ci, const int client_
 			&& !Q_stricmp(ci->skinName, match->skinName)
 			&& !Q_stricmp(ci->saberName, match->saberName)
 			&& !Q_stricmp(ci->saber2Name, match->saber2Name)
-			&& (cgs.gametype < GT_TEAM || ci->team == match->team)
+			&& (cgs.gametype < GT_MOVIEDUELS_TEAM || ci->team == match->team)
 			&& ci->siegeIndex == match->siegeIndex
 			&& match->ghoul2Model
 			&& match->bolt_head) //if the bolts haven't been initialized, this "match" is useless to us
@@ -1584,7 +1584,7 @@ static void CG_SetDeferredClientInfo(clientInfo_t* ci)
 			Q_stricmp(ci->modelName, match->modelName) ||
 			//			 Q_stricmp( ci->headModelName, match->headModelName ) ||
 			//			 Q_stricmp( ci->headSkinName, match->headSkinName ) ||
-			cgs.gametype >= GT_TEAM && ci->team != match->team && ci->team != TEAM_SPECTATOR)
+			cgs.gametype >= GT_MOVIEDUELS_TEAM && ci->team != match->team && ci->team != TEAM_SPECTATOR)
 		{
 			continue;
 		}
@@ -1603,7 +1603,7 @@ static void CG_SetDeferredClientInfo(clientInfo_t* ci)
 	}
 
 	// if we are in teamplay, only grab a model if the skin is correct
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		for (i = 0; i < cgs.maxclients; i++)
 		{
@@ -1614,7 +1614,7 @@ static void CG_SetDeferredClientInfo(clientInfo_t* ci)
 			}
 			if (ci->team != TEAM_SPECTATOR &&
 				(Q_stricmp(ci->skinName, match->skinName) ||
-					cgs.gametype >= GT_TEAM && ci->team != match->team))
+					cgs.gametype >= GT_MOVIEDUELS_TEAM && ci->team != match->team))
 			{
 				continue;
 			}
@@ -1856,7 +1856,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		Q_strncpyz(new_info.skinName, skin, sizeof new_info.skinName);
 		Q_strncpyz(new_info.modelName, model_str, sizeof new_info.modelName);
 
-		if (cgs.gametype >= GT_TEAM)
+		if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 		{
 			// keep skin name
 			slash = strchr(v, '/');
@@ -1884,7 +1884,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		}
 	}
 
-	if (cgs.gametype == GT_SIEGE)
+	if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//entries only sent in siege mode
 		//siege desired team
@@ -2050,7 +2050,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 	v = Info_ValueForKey(configstring, "forcepowers");
 	Q_strncpyz(new_info.forcePowers, v, sizeof new_info.forcePowers);
 
-	if (cgs.gametype >= GT_TEAM && !cgs.jediVmerc && cgs.gametype != GT_SIEGE)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM && !cgs.jediVmerc && cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//We won't force colors for siege.
 		BG_ValidateSkinForTeam(new_info.modelName, new_info.skinName, new_info.team, new_info.colorOverride);
@@ -2070,7 +2070,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 			//rww - don't defer your own client info ever
 			CG_LoadClientInfo(&new_info);
 		}
-		else if (cg_deferPlayers.integer && cgs.gametype != GT_SIEGE && !com_buildScript.integer && !cg.loading)
+		else if (cg_deferPlayers.integer && cgs.gametype != GT_MOVIEDUELS_SIEGE && !com_buildScript.integer && !cg.loading)
 		{
 			// keep whatever they had if it won't violate team skins
 			CG_SetDeferredClientInfo(&new_info);
@@ -12004,8 +12004,8 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 
 	if ((team_sabercolours.integer < 1
 		|| team_sabercolours.integer == 1 && cg.snap && cg.snap->ps.client_num != cent->currentState.number) &&
-		cgs.gametype >= GT_TEAM &&
-		cgs.gametype != GT_SIEGE &&
+		cgs.gametype >= GT_MOVIEDUELS_TEAM &&
+		cgs.gametype != GT_MOVIEDUELS_SIEGE &&
 		!cgs.jediVmerc &&
 		cent->currentState.eType != ET_NPC)
 	{
@@ -17642,7 +17642,7 @@ void CG_Player(centity_t* cent)
 
 	team = ci->team;
 
-	if (cgs.gametype >= GT_TEAM && cg_drawFriend.integer &&
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM && cg_drawFriend.integer &&
 		cent->currentState.number != cg.snap->ps.client_num &&
 		cent->currentState.eType != ET_NPC)
 	{
@@ -17650,7 +17650,7 @@ void CG_Player(centity_t* cent)
 		if ((cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR || cg.snap->ps.persistant[PERS_TEAM] == team) &&
 			!(cent->currentState.eFlags & EF_DEAD))
 		{
-			if (cgs.gametype == GT_SIEGE)
+			if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 			{
 				//check for per-map team shaders
 				if (team == SIEGETEAM_TEAM1)
@@ -17692,7 +17692,7 @@ void CG_Player(centity_t* cent)
 			}
 		}
 	}
-	else if (cgs.gametype == GT_POWERDUEL && cg_drawFriend.integer &&
+	else if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL && cg_drawFriend.integer &&
 		cent->currentState.number != cg.snap->ps.client_num)
 	{
 		if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR &&
@@ -17713,7 +17713,7 @@ void CG_Player(centity_t* cent)
 		}
 	}
 
-	if (cgs.gametype == GT_JEDIMASTER && cg_drawFriend.integer &&
+	if (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER && cg_drawFriend.integer &&
 		cent->currentState.number != cg.snap->ps.client_num)
 		// Don't show a sprite above a player's own head in 3rd person.
 	{
@@ -18521,7 +18521,7 @@ SkipTrueView:
 		}
 	}
 
-	if (cgs.gametype == GT_HOLOCRON && cent->currentState.time2 &&
+	if (cgs.gametype == GT_MOVIEDUELS_HOLOCRON && cent->currentState.time2 &&
 		(cg.renderingThirdPerson || cg_trueguns.integer || cg.predicted_player_state.weapon == WP_SABER || cg.
 			predicted_player_state.weapon == WP_MELEE
 			|| cg.snap->ps.client_num != cent->currentState.number))
@@ -18675,14 +18675,14 @@ SkipTrueView:
 	}
 
 	if (cent->currentState.powerups & 1 << PW_YSALAMIRI ||
-		cgs.gametype == GT_CTY && (cent->currentState.powerups & 1 << PW_REDFLAG ||
+		cgs.gametype == GT_MOVIEDUELS_CTY && (cent->currentState.powerups & 1 << PW_REDFLAG ||
 			cent->currentState.powerups & 1 << PW_BLUEFLAG))
 	{
-		if (cgs.gametype == GT_CTY && cent->currentState.powerups & 1 << PW_REDFLAG)
+		if (cgs.gametype == GT_MOVIEDUELS_CTY && cent->currentState.powerups & 1 << PW_REDFLAG)
 		{
 			CG_DrawPlayerSphere(cent, cent->lerpOrigin, 1.4f, cgs.media.ysaliredShader);
 		}
-		else if (cgs.gametype == GT_CTY && cent->currentState.powerups & 1 << PW_BLUEFLAG)
+		else if (cgs.gametype == GT_MOVIEDUELS_CTY && cent->currentState.powerups & 1 << PW_BLUEFLAG)
 		{
 			CG_DrawPlayerSphere(cent, cent->lerpOrigin, 1.4f, cgs.media.ysaliblueShader);
 		}
@@ -19941,7 +19941,7 @@ stillDoSaber:
 			legs.shaderRGBA[1] = 255;
 			legs.shaderRGBA[2] = 0;
 		}
-		else if (cgs.gametype == GT_SIEGE)
+		else if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 		{
 			// A team game
 			if (ci->team == TEAM_SPECTATOR || ci->team == TEAM_FREE)
@@ -19966,7 +19966,7 @@ stillDoSaber:
 				legs.shaderRGBA[2] = 50;
 			}
 		}
-		else if (cgs.gametype >= GT_TEAM)
+		else if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 		{
 			// A team game
 			switch (ci->team)
@@ -19984,7 +19984,7 @@ stillDoSaber:
 			default:;
 			}
 		}
-		else if (cgs.gametype == GT_FFA)
+		else if (cgs.gametype == GT_MOVIEDUELS_FFA)
 		{
 			// Not a team game
 			if (cent->currentState.botclass == BCLASS_DESANN

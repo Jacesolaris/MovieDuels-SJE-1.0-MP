@@ -940,7 +940,7 @@ qboolean G_CanBeEnemy(const gentity_t* self, const gentity_t* enemy)
 		return qfalse;
 	}
 
-	if (level.gametype < GT_TEAM)
+	if (level.gametype < GT_MOVIEDUELS_TEAM)
 		return qtrue;
 
 	if (g_friendlyFire.integer)
@@ -1042,13 +1042,13 @@ static QINLINE int g_saber_attack_power(gentity_t* ent, const qboolean attacking
 		base_level = 16;
 	}
 
-	if (level.gametype == GT_POWERDUEL &&
+	if (level.gametype == GT_MOVIEDUELS_POWERDUEL &&
 		ent->client->sess.duelTeam == DUELTEAM_LONE)
 	{
 		//get more power then
 		return base_level * 2;
 	}
-	if (attacking && level.gametype == GT_SIEGE)
+	if (attacking && level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//in siege, saber battles should be quicker and more biased toward the attacker
 		return base_level * 3;
@@ -1250,7 +1250,7 @@ static QINLINE void SetSaberBoxSize(gentity_t* saberent)
 
 	if (!owner || !owner->inuse || !owner->client)
 	{
-		if (level.gametype == GT_SINGLE_PLAYER)
+		if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 		{
 		}
 		else
@@ -7031,7 +7031,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		dmg *= 2;
 	}
 
-	if (dmg > SABER_NONATTACK_DAMAGE && level.gametype == GT_SIEGE &&
+	if (dmg > SABER_NONATTACK_DAMAGE && level.gametype == GT_MOVIEDUELS_SIEGE &&
 		self->client->siegeClass != -1 && bgSiegeClasses[self->client->siegeClass].classflags & 1 <<
 		CFL_MORESABERDMG)
 	{
@@ -8319,7 +8319,7 @@ void MakeDeadSaber(const gentity_t* ent)
 	//trace stuct used for determining if it's safe to spawn at current location
 	trace_t tr;
 
-	if (level.gametype == GT_JEDIMASTER)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		return;
 	}
@@ -12619,8 +12619,8 @@ nextStep:
 							skip_saber_trace = qtrue;
 						}
 						else if (g_saberTraceSaberFirst.integer >= 2 &&
-							level.gametype != GT_DUEL &&
-							level.gametype != GT_POWERDUEL &&
+							level.gametype != GT_MOVIEDUELS_DUEL &&
+							level.gametype != GT_MOVIEDUELS_POWERDUEL &&
 							!self->client->ps.duelInProgress)
 						{
 							//if value is >= 2, and not in a duel, skip
@@ -15077,13 +15077,13 @@ qboolean HasSetSaberOnly(void)
 	int i = 0;
 	int w_disable;
 
-	if (level.gametype == GT_JEDIMASTER)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		//set to 0
 		return qfalse;
 	}
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		w_disable = g_duelWeaponDisable.integer;
 	}

@@ -1099,7 +1099,7 @@ void SP_misc_holocron(gentity_t* ent)
 	vec3_t dest;
 	trace_t tr;
 
-	if (level.gametype != GT_HOLOCRON)
+	if (level.gametype != GT_MOVIEDUELS_HOLOCRON)
 	{
 		G_FreeEntity(ent);
 		return;
@@ -1351,7 +1351,7 @@ void shield_power_converter_use(gentity_t* self, const gentity_t* other, gentity
 		return;
 	}
 
-	if (level.gametype == GT_SIEGE
+	if (level.gametype == GT_MOVIEDUELS_SIEGE
 		&& other
 		&& other->client
 		&& other->client->siegeClass)
@@ -1374,7 +1374,7 @@ void shield_power_converter_use(gentity_t* self, const gentity_t* other, gentity
 		}
 		self->setTime = level.time + 100;
 
-		if (level.gametype == GT_SIEGE
+		if (level.gametype == GT_MOVIEDUELS_SIEGE
 			&& other
 			&& other->client
 			&& other->client->siegeClass != -1)
@@ -1623,12 +1623,12 @@ void ammo_generic_power_converter_use(gentity_t* self, gentity_t* other, gentity
 				(activator->client->ps.ammo[i] < ammoData[i].max))
 			{
 				gaveSome = qtrue;
-				if (level.gametype == GT_SIEGE && i == AMMO_ROCKETS && activator->client->ps.ammo[i] >= 10)
+				if (level.gametype == GT_MOVIEDUELS_SIEGE && i == AMMO_ROCKETS && activator->client->ps.ammo[i] >= 10)
 				{ //this stuff is already a freaking mess, so..
 					gaveSome = qfalse;
 				}
 				activator->client->ps.ammo[i] += add;
-				if (level.gametype == GT_SIEGE && i == AMMO_ROCKETS && activator->client->ps.ammo[i] >= 10)
+				if (level.gametype == GT_MOVIEDUELS_SIEGE && i == AMMO_ROCKETS && activator->client->ps.ammo[i] >= 10)
 				{	// fixme - this should SERIOUSLY be externed.
 					activator->client->ps.ammo[i] = 10;
 				}
@@ -1795,10 +1795,10 @@ void SP_misc_shield_floor_unit(gentity_t* ent)
 	vec3_t dest;
 	trace_t tr;
 
-	if (level.gametype != GT_CTF &&
-		level.gametype != GT_CTY &&
-		level.gametype != GT_SIEGE &&
-		level.gametype != GT_SINGLE_PLAYER)
+	if (level.gametype != GT_MOVIEDUELS_CTF &&
+		level.gametype != GT_MOVIEDUELS_CTY &&
+		level.gametype != GT_MOVIEDUELS_SIEGE &&
+		level.gametype != GT_MOVIEDUELS_MISSIONS)
 	{
 		G_FreeEntity(ent);
 		return;
@@ -2930,7 +2930,7 @@ void Use_Target_Escapetrig(const gentity_t* ent, gentity_t* other, const gentity
 
 void SP_target_escapetrig(gentity_t* ent)
 {
-	if (level.gametype != GT_SINGLE_PLAYER)
+	if (level.gametype != GT_MOVIEDUELS_MISSIONS)
 	{
 		G_FreeEntity(ent);
 		return;
@@ -3059,7 +3059,7 @@ void maglock_link(gentity_t* self)
 
 	trap->LinkEntity((sharedEntity_t*)self);
 
-	if (level.gametype != GT_SIEGE)
+	if (level.gametype != GT_MOVIEDUELS_SIEGE)
 	{// Screw maglocks in non-siege games. Trigger it on map load...
 		maglock_die(self, self, self, 10000, MOD_SABER);
 		trap->Print("Destroyed a siege/sp maglock.\n");

@@ -878,7 +878,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 	else
 	{
 		//for siege, want "bad" npc's allied with the "bad" team
-		if (level.gametype == GT_SIEGE && ent->s.NPC_class != CLASS_VEHICLE)
+		if (level.gametype == GT_MOVIEDUELS_SIEGE && ent->s.NPC_class != CLASS_VEHICLE)
 		{
 			if (ent->client->enemyTeam == NPCTEAM_PLAYER)
 			{
@@ -1509,7 +1509,7 @@ void NPC_Begin(gentity_t* ent)
 
 	//MCG - Begin: NPC hacks
 	//FIXME: Set the team correctly
-	if (ent->s.NPC_class != CLASS_VEHICLE || level.gametype != GT_SIEGE)
+	if (ent->s.NPC_class != CLASS_VEHICLE || level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		ent->client->ps.persistant[PERS_TEAM] = ent->client->playerTeam;
 	}
@@ -2147,7 +2147,7 @@ gentity_t* NPC_Spawn_Do(gentity_t* ent)
 	newent->teamnodmg = ent->teamnodmg;
 
 	//allow the NPC's default team to override if the team isn't set and you're in CoOp mode
-	if (ent->s.teamowner != TEAM_FREE || level.gametype != GT_SINGLE_PLAYER)
+	if (ent->s.teamowner != TEAM_FREE || level.gametype != GT_MOVIEDUELS_MISSIONS)
 	{
 		newent->s.teamowner = ent->s.teamowner;
 	}
@@ -2395,7 +2395,7 @@ void SP_NPC_spawner(gentity_t* self)
 {
 	int t;
 
-	if (level.gametype == GT_SINGLE_PLAYER && !g_allowNPC.integer) //singleplayer npcs turned off
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS && !g_allowNPC.integer) //singleplayer npcs turned off
 	{
 		// exceptions so scripts can run
 		if (!(Q_stricmp(self->NPC_type, "ImpOfficer") == 0
@@ -2445,7 +2445,7 @@ void SP_NPC_spawner(gentity_t* self)
 	}
 	else
 	{
-		if (level.gametype != GT_SINGLE_PLAYER) //not single player so no npcs
+		if (level.gametype != GT_MOVIEDUELS_MISSIONS) //not single player so no npcs
 		{
 			self->think = G_FreeEntity;
 			self->nextthink = level.time;

@@ -585,7 +585,7 @@ void SVC_Info(const netadr_t from)
 
 	// ignore if we are in single player
 	/*
-	if ( Cvar_VariableValue( "g_gametype" ) == GT_SINGLE_PLAYER || Cvar_VariableValue("ui_singlePlayerActive")) {
+	if ( Cvar_VariableValue( "g_gametype" ) == GT_MOVIEDUELS_MISSIONS || Cvar_VariableValue("ui_singlePlayerActive")) {
 		return;
 	}
 	*/
@@ -653,7 +653,7 @@ void SVC_Info(const netadr_t from)
 	Info_SetValueForKey(infostring, "gametype", va("%i", sv_gametype->integer));
 	Info_SetValueForKey(infostring, "needpass", va("%i", sv_needpass->integer));
 	Info_SetValueForKey(infostring, "truejedi", va("%i", Cvar_VariableIntegerValue("g_jediVmerc")));
-	if (sv_gametype->integer == GT_DUEL || sv_gametype->integer == GT_POWERDUEL)
+	if (sv_gametype->integer == GT_MOVIEDUELS_DUEL || sv_gametype->integer == GT_MOVIEDUELS_POWERDUEL)
 	{
 		wDisable = Cvar_VariableIntegerValue("g_duelWeaponDisable");
 	}

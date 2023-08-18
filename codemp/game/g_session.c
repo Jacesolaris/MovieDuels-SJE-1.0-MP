@@ -156,7 +156,7 @@ void G_InitSessionData(gclient_t* client, const char* userinfo, const qboolean i
 	client->sess.siegeDesiredTeam = TEAM_FREE;
 
 	// initial team determination
-	if (level.gametype >= GT_SINGLE_PLAYER)
+	if (level.gametype >= GT_MOVIEDUELS_MISSIONS)
 	{
 		if (g_teamAutoJoin.integer && !(g_entities[client - level.clients].r.svFlags & SVF_BOT))
 		{
@@ -204,8 +204,9 @@ void G_InitSessionData(gclient_t* client, const char* userinfo, const qboolean i
 			{
 			default:
 			case GT_FFA:
-			case GT_HOLOCRON:
-			case GT_JEDIMASTER:
+			case GT_MOVIEDUELS_FFA:
+			case GT_MOVIEDUELS_HOLOCRON:
+			case GT_MOVIEDUELS_JEDIMASTER:
 				if (g_maxGameClients.integer > 0 &&
 					level.numNonSpectatorClients >= g_maxGameClients.integer)
 				{
@@ -216,7 +217,7 @@ void G_InitSessionData(gclient_t* client, const char* userinfo, const qboolean i
 					sess->sessionTeam = TEAM_FREE;
 				}
 				break;
-			case GT_DUEL:
+			case GT_MOVIEDUELS_DUEL:
 				// if the game is full, go into a waiting mode
 				if (level.numNonSpectatorClients >= 2)
 				{
@@ -227,7 +228,7 @@ void G_InitSessionData(gclient_t* client, const char* userinfo, const qboolean i
 					sess->sessionTeam = TEAM_FREE;
 				}
 				break;
-			case GT_POWERDUEL:
+			case GT_MOVIEDUELS_POWERDUEL:
 				//sess->duelTeam = DUELTEAM_LONE; //default
 			{
 				int loners = 0;

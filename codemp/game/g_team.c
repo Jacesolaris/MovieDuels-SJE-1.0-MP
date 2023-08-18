@@ -45,8 +45,8 @@ void Team_InitGame(void)
 
 	switch (level.gametype)
 	{
-	case GT_CTF:
-	case GT_CTY:
+	case GT_MOVIEDUELS_CTF:
+	case GT_MOVIEDUELS_CTY:
 		teamgame.redStatus = -1; // Invalid to force update
 		Team_SetFlagStatus(TEAM_RED, FLAG_ATBASE);
 		teamgame.blueStatus = -1; // Invalid to force update
@@ -137,8 +137,8 @@ void PrintCTFMessage(int plIndex, int teamIndex, const int ctfMessage)
 ==============
 AddTeamScore
 
- used for gametype > GT_TEAM
- for gametype GT_TEAM the level.teamScores is updated in AddScore in g_combat.c
+ used for gametype > GT_MOVIEDUELS_TEAM
+ for gametype GT_MOVIEDUELS_TEAM the level.teamScores is updated in AddScore in g_combat.c
 ==============
 */
 void AddTeamScore(vec3_t origin, const int team, const int score)
@@ -199,7 +199,7 @@ qboolean OnSameTeam(const gentity_t* ent1, const gentity_t* ent2)
 		return qfalse;
 	}
 
-	if (level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		if (ent1->client->sess.duelTeam == ent2->client->sess.duelTeam)
 		{
@@ -209,7 +209,7 @@ qboolean OnSameTeam(const gentity_t* ent1, const gentity_t* ent2)
 		return qfalse;
 	}
 
-	if (level.gametype < GT_SINGLE_PLAYER)
+	if (level.gametype < GT_MOVIEDUELS_MISSIONS)
 	{
 		return qfalse;
 	}
@@ -296,7 +296,7 @@ void Team_SetFlagStatus(const int team, const flagStatus_t status)
 	{
 		char st[4];
 
-		if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+		if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 		{
 			st[0] = ctfFlagStatusRemap[teamgame.redStatus];
 			st[1] = ctfFlagStatusRemap[teamgame.blueStatus];
@@ -562,7 +562,7 @@ gentity_t* Team_ResetFlag(const int team)
 
 void Team_ResetFlags(void)
 {
-	if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+	if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 	{
 		Team_ResetFlag(TEAM_RED);
 		Team_ResetFlag(TEAM_BLUE);
@@ -978,7 +978,7 @@ int Pickup_Team(gentity_t* ent, const gentity_t* other)
 		//		PrintMsg ( other, "Don't know what team the flag is on.\n");
 		return 0;
 	}
-	// GT_CTF
+	// GT_MOVIEDUELS_CTF
 	if (team == cl->sess.sessionTeam)
 	{
 		return Team_TouchOurFlag(ent, other, team);
@@ -1072,7 +1072,7 @@ gentity_t* SelectRandomTeamSpawnPoint(const int teamstate, const team_t team, co
 	char* classname;
 	qboolean mustBeEnabled = qfalse;
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		if (team == SIEGETEAM_TEAM1)
 		{
@@ -1129,7 +1129,7 @@ gentity_t* SelectRandomTeamSpawnPoint(const int teamstate, const team_t team, co
 			break;
 	}
 
-	if (!count && level.gametype != GT_SIEGE && teamstate == TEAM_BEGIN)
+	if (!count && level.gametype != GT_MOVIEDUELS_SIEGE && teamstate == TEAM_BEGIN)
 	{// Try using other type...
 		count = 0;
 
@@ -1164,7 +1164,7 @@ gentity_t* SelectRandomTeamSpawnPoint(const int teamstate, const team_t team, co
 		return G_Find(NULL, FOFS(classname), classname);
 	}
 
-	if (level.gametype == GT_SIEGE && siegeClass >= 0 &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && siegeClass >= 0 &&
 		bgSiegeClasses[siegeClass].name[0])
 	{
 		//out of the spots found, see if any have an idealclass to match our class name

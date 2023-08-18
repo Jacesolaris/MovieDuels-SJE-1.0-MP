@@ -207,7 +207,7 @@ static void SV_Map_f(void)
 		cheat = qtrue;
 		kill_bots = qtrue;
 	}
-	else if (Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER)
+	else if (Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_MISSIONS)
 	{
 		cheat = qtrue;
 		kill_bots = qtrue;
@@ -1474,7 +1474,7 @@ static void SV_WeaponToggle_f(void)
 	int i;
 	const char* cvar_str;
 
-	if (sv_gametype->integer == GT_DUEL || sv_gametype->integer == GT_POWERDUEL)
+	if (sv_gametype->integer == GT_MOVIEDUELS_DUEL || sv_gametype->integer == GT_MOVIEDUELS_POWERDUEL)
 	{
 		cvar_str = "g_duelWeaponDisable";
 		bits = Cvar_VariableIntegerValue("g_duelWeaponDisable");

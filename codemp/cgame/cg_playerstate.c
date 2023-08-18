@@ -396,15 +396,15 @@ void CG_CheckLocalSounds(const playerState_t* ps, const playerState_t* ops)
 	}
 
 	// fraglimit warnings
-	if (cgs.fraglimit > 0 && cgs.gametype < GT_CTF
-		&& cgs.gametype != GT_DUEL
-		&& cgs.gametype != GT_POWERDUEL
-		&& cgs.gametype != GT_SIEGE
-		&& cgs.gametype != GT_SINGLE_PLAYER
+	if (cgs.fraglimit > 0 && cgs.gametype < GT_MOVIEDUELS_CTF
+		&& cgs.gametype != GT_MOVIEDUELS_DUEL
+		&& cgs.gametype != GT_MOVIEDUELS_POWERDUEL
+		&& cgs.gametype != GT_MOVIEDUELS_SIEGE
+		&& cgs.gametype != GT_MOVIEDUELS_MISSIONS
 		&& cgAnnouncerTime < cg.time)
 	{
 		int highScore = cgs.scores1;
-		if (cgs.gametype == GT_TEAM && cgs.scores2 > highScore)
+		if (cgs.gametype == GT_MOVIEDUELS_TEAM && cgs.scores2 > highScore)
 			highScore = cgs.scores2;
 
 		if (!(cg.fraglimitWarnings & 4) && highScore == cgs.fraglimit - 1)

@@ -828,15 +828,15 @@ void bot_select_weapon(const int client, const int weapon)
 
 void BotReportStatus(const bot_state_t* bs)
 {
-	if (level.gametype == GT_TEAM)
+	if (level.gametype == GT_MOVIEDUELS_TEAM)
 	{
 		trap->EA_SayTeam(bs->client, teamplayStateDescriptions[bs->teamplayState]);
 	}
-	else if (level.gametype == GT_SIEGE)
+	else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		trap->EA_SayTeam(bs->client, siegeStateDescriptions[bs->siegeState]);
 	}
-	else if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+	else if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 	{
 		trap->EA_SayTeam(bs->client, ctfStateDescriptions[bs->ctfState]);
 	}
@@ -863,22 +863,22 @@ void bot_order(gentity_t* ent, const int client_num, const int ordernum)
 		return;
 	}
 
-	if (level.gametype != GT_CTF && level.gametype != GT_CTY && level.gametype != GT_SIEGE && level.gametype != GT_TEAM)
+	if (level.gametype != GT_MOVIEDUELS_CTF && level.gametype != GT_MOVIEDUELS_CTY && level.gametype != GT_MOVIEDUELS_SIEGE && level.gametype != GT_MOVIEDUELS_TEAM)
 	{
 		return;
 	}
 
-	if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+	if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 	{
 		state_min = CTFSTATE_NONE;
 		state_max = CTFSTATE_MAXCTFSTATES;
 	}
-	else if (level.gametype == GT_SIEGE)
+	else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		state_min = SIEGESTATE_NONE;
 		state_max = SIEGESTATE_MAXSIEGESTATES;
 	}
-	else if (level.gametype == GT_TEAM)
+	else if (level.gametype == GT_MOVIEDUELS_TEAM)
 	{
 		state_min = TEAMPLAYSTATE_NONE;
 		state_max = TEAMPLAYSTATE_MAXTPSTATES;
@@ -985,7 +985,7 @@ int bot_mind_tricked(const int bot_client, const int enemy_client)
 
 int is_teamplay(void)
 {
-	if (level.gametype < GT_TEAM)
+	if (level.gametype < GT_MOVIEDUELS_TEAM)
 	{
 		return 0;
 	}
@@ -1670,7 +1670,7 @@ int bot_ai_setup_client(const int client, const struct bot_settings_s* settings)
 
 	BotUtilizePersonality(bs);
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		bs->botWeaponWeights[WP_SABER] = 13;
 	}
@@ -1978,7 +1978,7 @@ extern float rand_float(float min, float max);
 qboolean carrying_cap_objective(const bot_state_t* bs)
 {
 	//Carrying the Capture Objective?
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		if (bs->tacticEntity && bs->client == bs->tacticEntity->genericValue8)
 			return qtrue;
@@ -2932,7 +2932,7 @@ qboolean use_forceon_local(bot_state_t* bs, vec3_t origin, const qboolean pull)
 
 	if (test)
 	{
-		if (level.gametype == GT_SIEGE && test->idealclass && test->idealclass[0])
+		if (level.gametype == GT_MOVIEDUELS_SIEGE && test->idealclass && test->idealclass[0])
 		{
 			if (!G_NameInTriggerClassList(bgSiegeClasses[g_entities[bs->client].client->siegeClass].name,
 				test->idealclass))
@@ -3079,7 +3079,7 @@ int favorite_weapon(bot_state_t* bs, const gentity_t* target, const qboolean hav
 		}
 	}
 
-	if (/*level.gametype == GT_SIEGE
+	if (/*level.gametype == GT_MOVIEDUELS_SIEGE
 		&&*/ bestweapon == WP_NONE
 		&& target && target->flags & FL_DMG_BY_HEAVY_WEAP_ONLY)
 	{
@@ -4288,7 +4288,7 @@ qboolean attack_local_breakables(bot_state_t* bs)
 					//but for now just defend this area.
 					siege_defend_from_attackers(bs);
 				}
-				else if (level.gametype == GT_SIEGE)
+				else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 				{
 					//ok, check to see if we should switch classes if noone else can blast this
 					should_switcha_siege_classes(bs, qfalse);
@@ -4746,7 +4746,7 @@ void wp_constant_routine(bot_state_t* bs)
 //check if our ctf state is to guard the base
 qboolean BotCTFGuardDuty(const bot_state_t* bs)
 {
-	if (level.gametype != GT_CTF && level.gametype != GT_CTY)
+	if (level.gametype != GT_MOVIEDUELS_CTF && level.gametype != GT_MOVIEDUELS_CTY)
 	{
 		return qfalse;
 	}
@@ -5219,7 +5219,7 @@ int pass_standard_enemy_checks(const bot_state_t* bs, const gentity_t* en)
 		return 0;
 	}
 
-	if (level.gametype == GT_JEDIMASTER && !en->client->ps.isJediMaster && !bs->cur_ps.isJediMaster &&
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && !en->client->ps.isJediMaster && !bs->cur_ps.isJediMaster &&
 		G_ThereIsAMaster())
 	{
 		//rules for attacking non-JM in JM mode
@@ -5474,7 +5474,7 @@ int pass_loved_one_check(const bot_state_t* bs, const gentity_t* ent)
 		return 1;
 	}
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//There is no love in 1-on-1
 		return 1;
@@ -5616,7 +5616,7 @@ int scan_for_enemies(bot_state_t* bs)
 		}
 	}
 
-	if (level.gametype == GT_JEDIMASTER)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		if (G_ThereIsAMaster() && !bs->cur_ps.isJediMaster)
 		{
@@ -5715,7 +5715,7 @@ int scan_for_enemies(bot_state_t* bs)
 
 					request_siege_assistance(bs, Q_irand(REPLY_YES, REPLY_COMING));
 			}
-			else if (level.gametype != GT_FFA && g_entities[i].client->ps.weapon == g_entities[bs->client].client->ps.
+			else if (level.gametype != GT_MOVIEDUELS_FFA && g_entities[i].client->ps.weapon == g_entities[bs->client].client->ps.
 				weapon)
 			{
 				//We have the same weapon. Split up.
@@ -5972,7 +5972,7 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 
 					request_siege_assistance(bs, Q_irand(REPLY_YES, REPLY_COMING));
 			}
-			else if (level.gametype != GT_FFA && g_entities[i].client->ps.weapon == g_entities[bs->client].client->ps.
+			else if (level.gametype != GT_MOVIEDUELS_FFA && g_entities[i].client->ps.weapon == g_entities[bs->client].client->ps.
 				weapon)
 			{
 				//We have the same weapon. Split up.
@@ -6100,13 +6100,13 @@ int bot_is_a_chicken_wuss(bot_state_t* bs)
 		return 0;
 	}
 
-	if (level.gametype == GT_SINGLE_PLAYER)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		//"missions" (not really)
 		return 0;
 	}
 
-	if (level.gametype == GT_JEDIMASTER && !bs->cur_ps.isJediMaster)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && !bs->cur_ps.isJediMaster)
 	{
 		//Then you may know no fear.
 		//Well, unless he's strong.
@@ -6121,7 +6121,7 @@ int bot_is_a_chicken_wuss(bot_state_t* bs)
 		return 0;
 	}
 
-	if (level.gametype == GT_CTF && bs->currentEnemy && bs->currentEnemy->client)
+	if (level.gametype == GT_MOVIEDUELS_CTF && bs->currentEnemy && bs->currentEnemy->client)
 	{
 		if (bs->currentEnemy->client->ps.powerups[PW_REDFLAG] ||
 			bs->currentEnemy->client->ps.powerups[PW_BLUEFLAG])
@@ -6143,7 +6143,7 @@ jmPass:
 		return 0;
 	}
 
-	if (level.gametype == GT_JEDIMASTER && !bs->cur_ps.isJediMaster)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && !bs->cur_ps.isJediMaster)
 	{
 		//be frightened of the jedi master? I guess in this case.
 		return 1;
@@ -6709,7 +6709,7 @@ int ctf_takes_priority(bot_state_t* bs)
 	trap->Print("CTFSTATE: %s\n", ctfStateNames[bs->ctfState]);
 #endif
 
-	if (level.gametype != GT_CTF && level.gametype != GT_CTY)
+	if (level.gametype != GT_MOVIEDUELS_CTF && level.gametype != GT_MOVIEDUELS_CTY)
 	{
 		return 0;
 	}
@@ -7144,7 +7144,7 @@ int siege_takes_priority(bot_state_t* bs)
 	vec3_t dif;
 	trace_t tr;
 
-	if (level.gametype != GT_SIEGE)
+	if (level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		return 0;
 	}
@@ -7307,7 +7307,7 @@ int jm_takes_priority(bot_state_t* bs)
 	int i = 0;
 	gentity_t* the_important_entity;
 
-	if (level.gametype != GT_JEDIMASTER)
+	if (level.gametype != GT_MOVIEDUELS_JEDIMASTER)
 	{
 		return 0;
 	}
@@ -7749,7 +7749,7 @@ void get_ideal_destination(bot_state_t* bs)
 			{
 				bs->wpDestination = gWPArray[temp_int];
 
-				if (level.gametype == GT_SINGLE_PLAYER)
+				if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 				{
 					//be more aggressive
 					bs->wpDestSwitchTime = level.time + Q_irand(300, 1000);
@@ -8129,15 +8129,15 @@ void commander_bot_teamplay_ai(bot_state_t* bs)
 //pick which commander ai to use based on gametype
 void commander_bot_ai(bot_state_t* bs)
 {
-	if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+	if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 	{
 		commander_bot_ctfai(bs);
 	}
-	else if (level.gametype == GT_SIEGE)
+	else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		commander_bot_siege_ai(bs);
 	}
-	else if (level.gametype == GT_TEAM)
+	else if (level.gametype == GT_MOVIEDUELS_TEAM)
 	{
 		commander_bot_teamplay_ai(bs);
 	}
@@ -9608,7 +9608,7 @@ int get_love_level(const bot_state_t* bs, const bot_state_t* love)
 {
 	int i = 0;
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//There is no love in 1-on-1
 		return 0;
@@ -9658,7 +9658,7 @@ void bot_loved_one_died(bot_state_t* bs, const bot_state_t* loved, const int lov
 		return;
 	}
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//There is no love in 1-on-1
 		return;
@@ -10815,7 +10815,7 @@ void standard_bot_ai(bot_state_t* bs)
 		return;
 	}
 
-	if (level.gametype == GT_SIEGE && level.time - level.startTime < 10000)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && level.time - level.startTime < 10000)
 	{
 		//make sure that the bots aren't all on the same team after map changes.
 		select_best_siege_class(bs->client, qfalse);
@@ -10826,7 +10826,7 @@ void standard_bot_ai(bot_state_t* bs)
 	{
 		//in intermission
 		//Mash the button to prevent the game from sticking on one level.
-		if (level.gametype == GT_SIEGE)
+		if (level.gametype == GT_MOVIEDUELS_SIEGE)
 		{
 			//hack to get the bots to spawn into seige games after the game has started
 			if (g_entities[bs->client].client->sess.siegeDesiredTeam != SIEGETEAM_TEAM1
@@ -10982,16 +10982,16 @@ void standard_bot_ai(bot_state_t* bs)
 			{
 				//already have a tactic, use it.
 			}
-			else if (level.gametype == GT_SIEGE)
+			else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 			{
 				//hack do objectives
 				bs->currentTactic = BOTORDER_OBJECTIVE;
 			}
-			else if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+			else if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 			{
 				determine_ctf_goal(bs);
 			}
-			else if (level.gametype == GT_SINGLE_PLAYER)
+			else if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 			{
 				gentity_t* player = find_closest_human_player(bs->origin, NPCTEAM_PLAYER);
 				if (player)
@@ -11007,7 +11007,7 @@ void standard_bot_ai(bot_state_t* bs)
 					bs->tacticEntity = NULL;
 				}
 			}
-			else if (level.gametype == GT_JEDIMASTER)
+			else if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 			{
 				bs->currentTactic = BOTORDER_JEDIMASTER;
 			}
@@ -12143,7 +12143,7 @@ void standard_bot_ai(bot_state_t* bs)
 				}
 			}
 
-			if (level.gametype == GT_SINGLE_PLAYER)
+			if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 			{
 				saber_range *= 3;
 			}
@@ -12357,7 +12357,7 @@ void standard_bot_ai(bot_state_t* bs)
 		bs->forceWeaponSelect = 0;
 	}
 
-	if (level.gametype == GT_JEDIMASTER && !bs->cur_ps.isJediMaster && bs->jmState == -1 && gJMSaberEnt && gJMSaberEnt->
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && !bs->cur_ps.isJediMaster && bs->jmState == -1 && gJMSaberEnt && gJMSaberEnt->
 		inuse)
 	{
 		vec3_t saber_len;
@@ -12565,7 +12565,7 @@ void standard_bot_ai(bot_state_t* bs)
 			}
 		}
 	}
-	else if (level.gametype >= GT_TEAM)
+	else if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		//still check for anyone to help..
 		friend_in_lof = check_for_friend_in_lof(bs);

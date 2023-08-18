@@ -2339,7 +2339,7 @@ void CG_DrawAutoMap(void)
 		return;
 	}
 
-	if (cgs.gametype < GT_TEAM)
+	if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 	{
 		//don't show in non-team gametypes
 		return;
@@ -2586,7 +2586,7 @@ void CG_DrawActiveFrame(const int serverTime, const stereoFrame_t stereoView, co
 	{
 		trap->Cvar_Set("ui_myteam", va("%i", cg.snap->ps.persistant[PERS_TEAM]));
 	}
-	if (cgs.gametype == GT_SIEGE &&
+	if (cgs.gametype == GT_MOVIEDUELS_SIEGE &&
 		cg.snap &&
 		cg_siegeClassIndex != cgs.clientinfo[cg.snap->ps.client_num].siegeIndex)
 	{

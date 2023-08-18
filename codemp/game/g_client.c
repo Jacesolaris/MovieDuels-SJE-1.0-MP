@@ -232,7 +232,7 @@ void SP_info_player_siegeteam1(gentity_t* ent)
 {
 	int soff = 0;
 
-	if (level.gametype != GT_SIEGE)
+	if (level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//turn into a DM spawn if not in siege game mode
 		ent->classname = "info_player_deathmatch";
@@ -271,7 +271,7 @@ void SP_info_player_siegeteam2(gentity_t* ent)
 {
 	int soff = 0;
 
-	if (level.gametype != GT_SIEGE)
+	if (level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//turn into a DM spawn if not in siege game mode
 		ent->classname = "info_player_deathmatch";
@@ -551,7 +551,7 @@ gentity_t* gJMSaberEnt = NULL;
 */
 void SP_info_jedimaster_start(gentity_t* ent)
 {
-	if (level.gametype != GT_JEDIMASTER)
+	if (level.gametype != GT_MOVIEDUELS_JEDIMASTER)
 	{
 		gJMSaberEnt = NULL;
 		G_FreeEntity(ent);
@@ -747,7 +747,7 @@ gentity_t* SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3
 	gentity_t* spot = NULL;
 
 	//in Team DM, look for a team start spot first, if any
-	if (level.gametype == GT_TEAM
+	if (level.gametype == GT_MOVIEDUELS_TEAM
 		&& team != TEAM_FREE
 		&& team != TEAM_SPECTATOR)
 	{
@@ -1280,7 +1280,7 @@ void ClientRespawn(gentity_t* ent)
 {
 	MaintainBodyQueue(ent);
 
-	if (gEscaping || level.gametype == GT_POWERDUEL)
+	if (gEscaping || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		ent->client->sess.sessionTeam = TEAM_SPECTATOR;
 		ent->client->sess.spectatorState = SPECTATOR_FREE;
@@ -1300,7 +1300,7 @@ void ClientRespawn(gentity_t* ent)
 		//playing LMS and we're DEAD!  Just start chillin in tempSpec.
 		g_Spectator(ent);
 	}
-	else if (g_gametype.integer == GT_FFA || g_gametype.integer == GT_TEAM || g_gametype.integer == GT_CTF)
+	else if (g_gametype.integer == GT_MOVIEDUELS_FFA || g_gametype.integer == GT_MOVIEDUELS_TEAM || g_gametype.integer == GT_MOVIEDUELS_CTF)
 	{
 		if (g_ffaRespawnTimer.integer)
 		{
@@ -1332,7 +1332,7 @@ void ClientRespawn(gentity_t* ent)
 			ent->lives--;
 		}
 	}
-	else if (level.gametype == GT_SIEGE)
+	else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		if (g_siegeRespawn.integer)
 		{
@@ -1397,7 +1397,7 @@ int TeamCount(const int ignoreclient_num, const team_t team)
 		{
 			count++;
 		}
-		else if (level.gametype == GT_SIEGE &&
+		else if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 			level.clients[i].sess.siegeDesiredTeam == team)
 		{
 			count++;
@@ -1959,7 +1959,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 						strcpy(skin, "default");
 					}
 
-					if (level.gametype >= GT_TEAM && level.gametype != GT_SIEGE && !g_jediVmerc.integer)
+					if (level.gametype >= GT_MOVIEDUELS_TEAM && level.gametype != GT_MOVIEDUELS_SIEGE && !g_jediVmerc.integer)
 					{
 						float colorOverride[3];
 
@@ -1977,7 +1977,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 
 						//BG_ValidateSkinForTeam( truncModelName, skin, ent->client->sess.sessionTeam, NULL );
 					}
-					else if (level.gametype == GT_SIEGE)
+					else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 					{
 						//force skin for class if appropriate
 						if (ent->client->siegeClass != -1)
@@ -2604,7 +2604,7 @@ qboolean client_userinfo_changed(const int client_num)
 
 	// load class system
 	if (ent->s.eType != ET_NPC // no npcs,handled in npc.cfg
-		&& level.gametype != GT_SIEGE)
+		&& level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		if (Class_Model(model, "model_siege")
 			|| Class_Model(model, "atst")
@@ -2644,6 +2644,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "ani3d/main3")
 			|| Class_Model(model, "ani3d/")
 			|| Class_Model(model, "Jerec2")
+			|| Class_Model(model, "darthmaul_mp")
 			|| Class_Model(model, "Maula/main")
 			|| Class_Model(model, "Maula")
 			|| Class_Model(model, "maulb")
@@ -2657,14 +2658,15 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Sith_Stalker/blue")
 			|| Class_Model(model, "Sith_Stalker/robe")
 			|| Class_Model(model, "Sith_Stalker/robehood")
-			|| Class_Model(model, "Sith_Stalker/siege"))
+			|| Class_Model(model, "Sith_Stalker/siege")
+			|| Class_Model(model, "dooku_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHWORRIOR1;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2685,8 +2687,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2701,8 +2703,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_LARGE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2724,8 +2726,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2766,8 +2768,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2779,6 +2781,7 @@ qboolean client_userinfo_changed(const int client_num)
 		else if (Class_Model(model, "trooper3/default")
 			|| Class_Model(model, "MandoloriansPac/default_")
 			|| Class_Model(model, "Bountyhunter3/default")
+			|| Class_Model(model, "boba_fett_mp")
 			|| Class_Model(model, "boba_fett")
 			|| Class_Model(model, "boba_fett/main")
 			|| Class_Model(model, "boba_fett/main2")
@@ -2791,8 +2794,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2809,8 +2812,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2833,8 +2836,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_CHEWIE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2849,8 +2852,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_CHEWIE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2866,8 +2869,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_WOOKIEMELEE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2882,8 +2885,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_WOOKIE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2903,8 +2906,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_WOOKIE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2931,8 +2934,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_WOOKIE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2950,8 +2953,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2972,8 +2975,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_DESANN;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -2996,8 +2999,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_UNSTABLESABER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3014,8 +3017,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3036,8 +3039,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3058,8 +3061,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3077,8 +3080,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_TALL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3098,8 +3101,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_LARGE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3116,8 +3119,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_LARGER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3135,8 +3138,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3154,8 +3157,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3171,8 +3174,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3189,8 +3192,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3229,8 +3232,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3248,8 +3251,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_JAWA;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3354,14 +3357,16 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "cal_kestis/cape7")
 			|| Class_Model(model, "cal_kestis/default2")
 			|| Class_Model(model, "cal_kestis/default3")
-			|| Class_Model(model, "cal_kestis/default4"))
+			|| Class_Model(model, "cal_kestis/default4")
+			|| Class_Model(model, "ezrabridger_mp")
+			|| Class_Model(model, "kanan_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_JEDI;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3387,8 +3392,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_JEDI;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3403,8 +3408,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3421,8 +3426,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3460,14 +3465,17 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "noQuiGonVM3/main")
 			|| Class_Model(model, "noQuiGonVM3/main2")
 			|| Class_Model(model, "moMace_Windu/main")
-			|| Class_Model(model, "muwindu/main"))
+			|| Class_Model(model, "muwindu/main")
+			|| Class_Model(model, "obiwan_ot_mp")
+			|| Class_Model(model, "obiwan_ep3_mp")
+			|| Class_Model(model, "macewindu_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_KYLE;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3485,8 +3493,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_SMALL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3504,8 +3512,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3515,6 +3523,8 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "luke")
+			|| Class_Model(model, "luke_esb_mp")
+			|| Class_Model(model, "luke_rotj_mp")
 			|| Class_Model(model, "luke/")
 			|| Class_Model(model, "lukejka")
 			|| Class_Model(model, "lukejka/")
@@ -3560,8 +3570,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3576,8 +3586,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3596,8 +3606,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3614,8 +3624,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3632,8 +3642,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_LARGE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3652,8 +3662,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3669,8 +3679,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_R2D2;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3685,8 +3695,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3701,8 +3711,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3718,8 +3728,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3737,8 +3747,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3763,8 +3773,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3781,8 +3791,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3799,8 +3809,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_LARGER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3819,8 +3829,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3837,8 +3847,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3855,8 +3865,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3873,8 +3883,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3930,8 +3940,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3947,8 +3957,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3968,8 +3978,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -3993,8 +4003,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4016,8 +4026,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4043,8 +4053,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4060,8 +4070,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_SMALL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4076,8 +4086,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_LARGER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4094,8 +4104,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_UGNAUGHT;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4110,8 +4120,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4129,8 +4139,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4145,8 +4155,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_LARGER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4158,6 +4168,7 @@ qboolean client_userinfo_changed(const int client_num)
 		else if (Class_Model(model, "SBD/default")
 			|| Class_Model(model, "SBD")
 			|| Class_Model(model, "SBD2")
+			|| Class_Model(model, "sbd_mp")
 			|| Class_Model(model, "Super_Battle_Droid")
 			|| Class_Model(model, "Super Battle Droid")
 			|| Class_Model(model, "superbattledroid")
@@ -4167,8 +4178,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4193,8 +4204,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4212,8 +4223,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4229,8 +4240,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4245,14 +4256,15 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "yoda/main")
 			|| Class_Model(model, "jedi_yoda")
 			|| Class_Model(model, "yoda")
+			|| Class_Model(model, "yoda_mp")
 			|| Class_Model(model, "yodavm"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLEST;
 			client->pers.nextbotclass = BCLASS_YODA;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4271,8 +4283,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_JEDI;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4287,8 +4299,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_JEDI;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4303,8 +4315,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_SMUGGLER1;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4320,8 +4332,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_SOILDER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4338,8 +4350,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4361,8 +4373,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4378,8 +4390,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4389,6 +4401,7 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "vader")
+			|| Class_Model(model, "darthvader_mp")
 			|| Class_Model(model, "vaderVM")
 			|| Class_Model(model, "vader/")
 			|| Class_Model(model, "vader/main")
@@ -4406,8 +4419,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_LORDVADER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4438,14 +4451,15 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "darkjedi")
 			|| Class_Model(model, "darthrevan")
 			|| Class_Model(model, "darthsion")
+			|| Class_Model(model, "palpatine_mp")
 			|| Class_Model(model, "darthtraya"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHLORD;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4460,8 +4474,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_TALL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4484,8 +4498,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_GRIEVOUS;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4508,8 +4522,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_SITH;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4531,8 +4545,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.nextbotclass = BCLASS_SITH;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4546,8 +4560,8 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
 				{
 					client->ps.stats[STAT_HEALTH] = ent->health = 0;
 					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
@@ -4599,7 +4613,7 @@ qboolean client_userinfo_changed(const int client_num)
 	Q_strncpyz(forcePowers, Info_ValueForKey(userinfo, "forcepowers"), sizeof forcePowers);
 
 	// update our customRGBA for team colors.
-	if (level.gametype >= GT_TEAM && level.gametype != GT_SIEGE && !g_jediVmerc.integer)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM && level.gametype != GT_MOVIEDUELS_SIEGE && !g_jediVmerc.integer)
 	{
 		char skin[MAX_QPATH] = { 0 };
 		vec3_t colorOverride = { 0.0f };
@@ -4612,7 +4626,7 @@ qboolean client_userinfo_changed(const int client_num)
 	}
 
 	// bots set their team a few frames later
-	if (level.gametype >= GT_TEAM && g_entities[client_num].r.svFlags & SVF_BOT)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM && g_entities[client_num].r.svFlags & SVF_BOT)
 	{
 		s = Info_ValueForKey(userinfo, "team");
 		if (!Q_stricmp(s, "red") || !Q_stricmp(s, "r"))
@@ -4629,7 +4643,7 @@ qboolean client_userinfo_changed(const int client_num)
 	team = client->sess.sessionTeam;
 
 	//Set the siege class
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		Q_strncpyz(className, client->sess.siegeClass, sizeof className);
 
@@ -4694,7 +4708,7 @@ qboolean client_userinfo_changed(const int client_num)
 	}
 
 	// set max health
-	if (level.gametype == GT_SIEGE && client->siegeClass != -1)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && client->siegeClass != -1)
 	{
 		const siegeClass_t* scl = &bgSiegeClasses[client->siegeClass];
 
@@ -4711,7 +4725,7 @@ qboolean client_userinfo_changed(const int client_num)
 		client->pers.maxHealth = 100;
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 
-	if (level.gametype >= GT_TEAM)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM)
 		client->pers.teamInfo = qtrue;
 	else
 	{
@@ -4796,23 +4810,23 @@ qboolean client_userinfo_changed(const int client_num)
 		Q_strcat(buf, sizeof buf, va("skill\\%s\\", Info_ValueForKey(userinfo, "skill")));
 	}
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		Q_strcat(buf, sizeof buf, va("w\\%i\\", client->sess.wins));
 		Q_strcat(buf, sizeof buf, va("l\\%i\\", client->sess.losses));
 	}
 
-	if (level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		Q_strcat(buf, sizeof buf, va("dt\\%i\\", client->sess.duelTeam));
 	}
 
-	if (level.gametype >= GT_TEAM)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		Q_strcat(buf, sizeof buf, va("tl\\%d\\", team_leader));
 	}
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		Q_strcat(buf, sizeof buf, va("siegeclass\\%s\\", className));
 		Q_strcat(buf, sizeof buf, va("sdt\\%i\\", client->sess.siegeDesiredTeam));
@@ -4899,7 +4913,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 	{
 		//LMS mode, set up lives.
 		ent->lives = g_lmslives.integer >= 1 ? g_lmslives.integer : 1;
-		if (level.gametype == GT_SINGLE_PLAYER)
+		if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 		{
 			//LMS mode, playing missions, setup liveExp
 			ent->liveExp = 0;
@@ -4997,14 +5011,14 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 	}
 	G_ReadSessionData(client);
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		(firstTime || level.newSession))
 	{
 		//if this is the first time then auto-assign a desired siege team and show briefing for that team
 		client->sess.siegeDesiredTeam = 0; //PickTeam(ent->s.number);
 	}
 
-	if (level.gametype == GT_SIEGE && client->sess.sessionTeam != TEAM_SPECTATOR)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
 		if (firstTime || level.newSession)
 		{
@@ -5013,7 +5027,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 			client->sess.sessionTeam = TEAM_SPECTATOR;
 		}
 	}
-	else if (level.gametype == GT_POWERDUEL && client->sess.sessionTeam != TEAM_SPECTATOR)
+	else if (level.gametype == GT_MOVIEDUELS_POWERDUEL && client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
 		client->sess.sessionTeam = TEAM_SPECTATOR;
 	}
@@ -5055,7 +5069,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 			G_GetStringEdString("MP_SVGAME", "PLCONNECT")));
 	}
 
-	if (level.gametype >= GT_TEAM &&
+	if (level.gametype >= GT_MOVIEDUELS_TEAM &&
 		client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
 		BroadcastTeamChange(client, -1);
@@ -5103,7 +5117,7 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 
 	gentity_t* ent = g_entities + client_num;
 
-	if (ent->r.svFlags & SVF_BOT && level.gametype >= GT_TEAM)
+	if (ent->r.svFlags & SVF_BOT && level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		if (allowTeamReset)
 		{
@@ -5214,12 +5228,12 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 	if (ent->ghoul2 && ent->client)
 		ent->client->renderInfo.lastG2 = NULL; //update the renderinfo bolts next update.
 
-	if (level.gametype == GT_POWERDUEL && client->sess.sessionTeam != TEAM_SPECTATOR && client->sess.duelTeam ==
+	if (level.gametype == GT_MOVIEDUELS_POWERDUEL && client->sess.sessionTeam != TEAM_SPECTATOR && client->sess.duelTeam ==
 		DUELTEAM_FREE)
 		SetTeam(ent, "s");
 	else
 	{
-		if (level.gametype == GT_SIEGE && (!gSiegeRoundBegun || gSiegeRoundEnded))
+		if (level.gametype == GT_MOVIEDUELS_SIEGE && (!gSiegeRoundBegun || gSiegeRoundEnded))
 		{
 			SetTeamQuick(ent, TEAM_SPECTATOR, qfalse);
 		}
@@ -5250,7 +5264,7 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 			gentity_t* tent = G_TempEntity(ent->client->ps.origin, EV_PLAYER_TELEPORT_IN);
 			tent->s.client_num = ent->s.client_num;
 		}
-		if (level.gametype != GT_DUEL || level.gametype == GT_POWERDUEL)
+		if (level.gametype != GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 		{
 			trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s\n\"", client->pers.netname,
 				G_GetStringEdString("MP_SVGAME", "PLENTER")));
@@ -5782,7 +5796,7 @@ void ClientSpawn(gentity_t* ent)
 
 	ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel;
 
-	if (g_gametype.integer != GT_SIEGE)
+	if (g_gametype.integer != GT_MOVIEDUELS_SIEGE)
 	{
 		//let's just make sure the styles we chose are cool
 		if (!G_ValidSaberStyle(ent, ent->client->ps.fd.saber_anim_level))
@@ -5819,29 +5833,29 @@ void ClientSpawn(gentity_t* ent)
 	{
 		spawnPoint = SelectSpectatorSpawnPoint(spawn_origin, spawn_angles);
 	}
-	else if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+	else if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 	{
 		// all base oriented team games use the CTF spawn points
 		spawnPoint = SelectCTFSpawnPoint(client->sess.sessionTeam, client->pers.teamState.state, spawn_origin,
 			spawn_angles, !!(ent->r.svFlags & SVF_BOT));
 	}
-	else if (level.gametype == GT_SIEGE)
+	else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		spawnPoint = SelectSiegeSpawnPoint(client->siegeClass, client->sess.sessionTeam, client->pers.teamState.state,
 			spawn_origin, spawn_angles, !!(ent->r.svFlags & SVF_BOT));
 	}
-	else if (level.gametype == GT_SINGLE_PLAYER)
+	else if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		spawnPoint = SelectSPSpawnPoint(spawn_origin, spawn_angles);
 	}
 	else
 	{
-		if (level.gametype == GT_POWERDUEL)
+		if (level.gametype == GT_MOVIEDUELS_POWERDUEL)
 		{
 			spawnPoint = SelectDuelSpawnPoint(client->sess.duelTeam, client->ps.origin, spawn_origin, spawn_angles,
 				!!(ent->r.svFlags & SVF_BOT));
 		}
-		else if (level.gametype == GT_DUEL)
+		else if (level.gametype == GT_MOVIEDUELS_DUEL)
 		{
 			// duel
 			spawnPoint = SelectDuelSpawnPoint(DUELTEAM_SINGLE, client->ps.origin, spawn_origin, spawn_angles,
@@ -5924,7 +5938,7 @@ void ClientSpawn(gentity_t* ent)
 
 	client->ps.customRGBA[3] = 255;
 
-	if (level.gametype >= GT_TEAM && level.gametype != GT_SIEGE && !g_jediVmerc.integer)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM && level.gametype != GT_MOVIEDUELS_SIEGE && !g_jediVmerc.integer)
 	{
 		char skin[MAX_QPATH] = { 0 }, model[MAX_QPATH] = { 0 };
 		vec3_t colorOverride = { 0.0f };
@@ -5979,7 +5993,7 @@ void ClientSpawn(gentity_t* ent)
 	client->airOutTime = level.time + 12000;
 
 	// set max health
-	if (level.gametype == GT_SIEGE && client->siegeClass != -1)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && client->siegeClass != -1)
 	{
 		siegeClass_t* scl = &bgSiegeClasses[client->siegeClass];
 		maxHealth = 100;
@@ -6026,7 +6040,7 @@ void ClientSpawn(gentity_t* ent)
 	//give default weapons
 	client->ps.stats[STAT_WEAPONS] = 1 << WP_NONE;
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		wDisable = g_duelWeaponDisable.integer;
 	}
@@ -6052,13 +6066,13 @@ void ClientSpawn(gentity_t* ent)
 		client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
 	}
 
-	if (level.gametype != GT_HOLOCRON
-		&& level.gametype != GT_JEDIMASTER
+	if (level.gametype != GT_MOVIEDUELS_HOLOCRON
+		&& level.gametype != GT_MOVIEDUELS_JEDIMASTER
 		&& !HasSetSaberOnly()
 		&& !AllForceDisabled(g_forcePowerDisable.integer)
 		&& g_jediVmerc.integer)
 	{
-		if (level.gametype >= GT_TEAM && (client->sess.sessionTeam == TEAM_BLUE || client->sess.sessionTeam ==
+		if (level.gametype >= GT_MOVIEDUELS_TEAM && (client->sess.sessionTeam == TEAM_BLUE || client->sess.sessionTeam ==
 			TEAM_RED))
 		{
 			//In Team games, force one side to be merc and other to be jedi
@@ -6164,7 +6178,7 @@ void ClientSpawn(gentity_t* ent)
 		//jediVmerc is incompatible with this gametype, turn it off!
 		trap->Cvar_Set("g_jediVmerc", "0");
 		trap->Cvar_Update(&g_jediVmerc);
-		if (level.gametype == GT_HOLOCRON)
+		if (level.gametype == GT_MOVIEDUELS_HOLOCRON)
 		{
 			//always get free saber level 1 in holocron
 			if (!wDisable || !(wDisable & 1 << WP_SABER))
@@ -6172,7 +6186,7 @@ void ClientSpawn(gentity_t* ent)
 				client->ps.stats[STAT_WEAPONS] |= 1 << WP_SABER;
 			}
 		}
-		else if (g_gametype.integer == GT_JEDIMASTER || g_gametype.integer == GT_HOLOCRON)
+		else if (g_gametype.integer == GT_MOVIEDUELS_JEDIMASTER || g_gametype.integer == GT_MOVIEDUELS_HOLOCRON)
 		{
 			//don't have selectable starting weapons, but we do have max max gun skills so
 			//people can actually fight well, when they get a gun.
@@ -6189,7 +6203,7 @@ void ClientSpawn(gentity_t* ent)
 		{
 			//New class system
 			if (ent->s.eType != ET_NPC && // no npcs,handled in npc.cfg
-				level.gametype != GT_SIEGE)
+				level.gametype != GT_MOVIEDUELS_SIEGE)
 			{
 				//use class-specified weapons
 				switch (client->pers.botclass)
@@ -6844,9 +6858,9 @@ void ClientSpawn(gentity_t* ent)
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
 					break;
 				default:
-					if (g_gametype.integer != GT_SIEGE)
+					if (g_gametype.integer != GT_MOVIEDUELS_SIEGE)
 					{
-						if (g_gametype.integer == GT_JEDIMASTER)
+						if (g_gametype.integer == GT_MOVIEDUELS_JEDIMASTER)
 						{
 							if (!wDisable || !(wDisable & 1 << WP_BRYAR_PISTOL))
 							{
@@ -6885,9 +6899,9 @@ void ClientSpawn(gentity_t* ent)
 			}
 			else
 			{
-				if (g_gametype.integer != GT_SIEGE)
+				if (g_gametype.integer != GT_MOVIEDUELS_SIEGE)
 				{
-					if (g_gametype.integer == GT_JEDIMASTER)
+					if (g_gametype.integer == GT_MOVIEDUELS_JEDIMASTER)
 					{
 						if (!wDisable || !(wDisable & 1 << WP_BRYAR_PISTOL))
 						{
@@ -6928,7 +6942,7 @@ void ClientSpawn(gentity_t* ent)
 			//some joker disabled all the weapons.  Give everyone Melee
 			client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
 			Com_Printf("ERROR:  The game doesn't like it when you disable ALL the weapons.\nReenabling Melee.\n");
-			if (g_gametype.integer == GT_DUEL || g_gametype.integer == GT_POWERDUEL)
+			if (g_gametype.integer == GT_MOVIEDUELS_DUEL || g_gametype.integer == GT_MOVIEDUELS_POWERDUEL)
 			{
 				trap->Cvar_Set("g_duelWeaponDisable", va("%i", WP_MELEEONLY));
 			}
@@ -6938,7 +6952,7 @@ void ClientSpawn(gentity_t* ent)
 			}
 		}
 
-		if (level.gametype == GT_JEDIMASTER)
+		if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 		{
 			client->ps.stats[STAT_WEAPONS] &= ~(1 << WP_SABER);
 
@@ -6968,7 +6982,7 @@ void ClientSpawn(gentity_t* ent)
 		}
 	}
 
-	if (level.gametype == GT_SIEGE && client->siegeClass != -1 &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && client->siegeClass != -1 &&
 		client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
 		//well then, we will use a custom weaponset for our class
@@ -7006,7 +7020,7 @@ void ClientSpawn(gentity_t* ent)
 				if (m >= WP_BRYAR_PISTOL)
 				{
 					//Max his ammo out for all the weapons he has.
-					if (level.gametype == GT_SIEGE
+					if (level.gametype == GT_MOVIEDUELS_SIEGE
 						&& m == WP_ROCKET_LAUNCHER)
 					{
 						//don't give full ammo!
@@ -7023,7 +7037,7 @@ void ClientSpawn(gentity_t* ent)
 					}
 					else
 					{
-						if (level.gametype == GT_SIEGE
+						if (level.gametype == GT_MOVIEDUELS_SIEGE
 							&& client->siegeClass != -1
 							&& bgSiegeClasses[client->siegeClass].classflags & 1 << CFL_EXTRA_AMMO)
 						{
@@ -7042,7 +7056,7 @@ void ClientSpawn(gentity_t* ent)
 		}
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		client->siegeClass != -1 &&
 		client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
@@ -7584,7 +7598,7 @@ void ClientSpawn(gentity_t* ent)
 		}
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		client->siegeClass != -1 &&
 		bgSiegeClasses[client->siegeClass].powerups &&
 		client->sess.sessionTeam != TEAM_SPECTATOR)
@@ -7895,17 +7909,17 @@ void ClientSpawn(gentity_t* ent)
 	}
 
 	// health will count down towards max_health
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		client->siegeClass != -1 &&
 		bgSiegeClasses[client->siegeClass].starthealth)
 	{
 		//class specifies a start health, so use it
 		ent->health = client->ps.stats[STAT_HEALTH] = bgSiegeClasses[client->siegeClass].starthealth;
 	}
-	else if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	else if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//only start with 100 health in Duel
-		if (level.gametype == GT_POWERDUEL && client->sess.duelTeam == DUELTEAM_LONE)
+		if (level.gametype == GT_MOVIEDUELS_POWERDUEL && client->sess.duelTeam == DUELTEAM_LONE)
 		{
 			if (duel_fraglimit.integer)
 			{
@@ -7937,14 +7951,14 @@ void ClientSpawn(gentity_t* ent)
 	}
 
 	// Start with a small amount of armor as well.
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		client->siegeClass != -1 /*&&
 		bgSiegeClasses[client->siegeClass].startarmor*/)
 	{
 		//class specifies a start armor amount, so use it
 		client->ps.stats[STAT_ARMOR] = bgSiegeClasses[client->siegeClass].startarmor;
 	}
-	else if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	else if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//no armor in duel
 		client->ps.stats[STAT_ARMOR] = 0;
@@ -8031,7 +8045,7 @@ void ClientSpawn(gentity_t* ent)
 	}
 
 	//set teams for NPCs to recognize
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//Imperial (team1) team is allied with "enemy" NPCs in this mode
 		if (client->sess.sessionTeam == SIEGETEAM_TEAM1)
@@ -8073,7 +8087,7 @@ void ClientSpawn(gentity_t* ent)
 	{
 		//we want to use all the spawnpoint's triggers if we're not in intermission.
 		G_UseTargets(spawnPoint, ent);
-		if (level.gametype == GT_SINGLE_PLAYER && spawnPoint)
+		if (level.gametype == GT_MOVIEDUELS_MISSIONS && spawnPoint)
 		{
 			//remove the target of the spawnpoint to prevent multiple target firings
 			spawnPoint->target = NULL;
@@ -8223,7 +8237,7 @@ void ClientDisconnect(const int client_num)
 		ent->client->pers.netname);
 
 	// if we are playing in tourney mode, give a win to the other player and clear his frags for this round
-	if (level.gametype == GT_DUEL && !level.intermissiontime && !level.warmupTime)
+	if (level.gametype == GT_MOVIEDUELS_DUEL && !level.intermissiontime && !level.warmupTime)
 	{
 		if (level.sortedClients[1] == client_num)
 		{
@@ -8239,7 +8253,7 @@ void ClientDisconnect(const int client_num)
 		}
 	}
 
-	if (level.gametype == GT_DUEL && ent->client->sess.sessionTeam == TEAM_FREE && level.intermissiontime)
+	if (level.gametype == GT_MOVIEDUELS_DUEL && ent->client->sess.sessionTeam == TEAM_FREE && level.intermissiontime)
 	{
 		trap->SendConsoleCommand(EXEC_APPEND, "map_restart 0\n");
 		level.restarted = qtrue;
@@ -8505,7 +8519,7 @@ qboolean LMS_EnoughPlayers()
 		return qfalse;
 	}
 
-	if (level.gametype >= GT_TEAM
+	if (level.gametype >= GT_MOVIEDUELS_TEAM
 		&& (TeamCount(-1, TEAM_RED) == 0 || TeamCount(-1, TEAM_BLUE) == 0))
 	{
 		//have to have at least one player on each team to be able to play LMS

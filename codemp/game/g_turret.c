@@ -708,7 +708,7 @@ void SP_misc_turret(gentity_t* base)
 	//are checked for the value of 5 to spawn the turbo turrets, but in mp it checks for
 	//a spawn flag of 8 in sp_misc_turretg2, so setting to 8 before spawning.  No hoth style
 	//turrets can be found in sp so far.
-	if (level.gametype == GT_SINGLE_PLAYER && g_allowturret.integer)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS && g_allowturret.integer)
 	{
 		//SP uses this same map entity name for the ceiling turrets.  Override to use them
 		if (base->spawnflags & 5)
@@ -820,7 +820,7 @@ qboolean turret_base_spawn_top(gentity_t* base)
 	base->r.ownerNum = top->s.number;
 	top->r.ownerNum = base->s.number;
 
-	if (base->team && base->team[0] && //level.gametype == GT_SIEGE &&
+	if (base->team && base->team[0] && //level.gametype == GT_MOVIEDUELS_SIEGE &&
 		!base->teamnodmg)
 	{
 		base->teamnodmg = atoi(base->team);

@@ -81,7 +81,7 @@ void CG_RegisterItemVisuals(const int item_num)
 
 	if (item->giType == IT_TEAM &&
 		(item->giTag == PW_REDFLAG || item->giTag == PW_BLUEFLAG) &&
-		cgs.gametype == GT_CTY)
+		cgs.gametype == GT_MOVIEDUELS_CTY)
 	{
 		//in CTY the flag model is different
 		itemInfo->models[0] = trap->R_RegisterModel(item->world_model[1]);

@@ -738,7 +738,7 @@ static void CG_TouchItem(centity_t* cent)
 	// Special case for flags.
 	// We don't predict touching our own flag
 	// Make sure the item type is also a flag too
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTY)
+	if (cgs.gametype == GT_MOVIEDUELS_CTF || cgs.gametype == GT_MOVIEDUELS_CTY)
 	{
 		if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_RED &&
 			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)

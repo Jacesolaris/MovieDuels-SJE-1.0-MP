@@ -66,7 +66,7 @@ static void UI_OpenMenu_f(void) {
 }
 
 static void UI_OpenSiegeMenu_f(void) {
-	if (trap->Cvar_VariableValue("g_gametype") == GT_SIEGE) {
+	if (trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_SIEGE) {
 		Menus_CloseAll();
 		if (Menus_ActivateByName(UI_Argv(1)))
 			trap->Key_SetCatcher(KEYCATCH_UI);

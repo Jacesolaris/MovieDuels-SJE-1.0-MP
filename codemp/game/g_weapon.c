@@ -854,7 +854,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 	const vec3_t shot_maxs = { DISRUPTOR_SHOT_SIZE, DISRUPTOR_SHOT_SIZE, DISRUPTOR_SHOT_SIZE };
 	const vec3_t shot_mins = { -DISRUPTOR_SHOT_SIZE, -DISRUPTOR_SHOT_SIZE, -DISRUPTOR_SHOT_SIZE };
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		damage = DISRUPTOR_MAIN_DAMAGE_SIEGE;
 	}
@@ -1575,7 +1575,7 @@ static void WP_RepeaterAltFire(gentity_t* ent)
 	missile->splashMethodOfDeath = MOD_REPEATER_ALT_SPLASH;
 	missile->clipmask = MASK_SHOT;
 	missile->splashDamage = REPEATER_ALT_SPLASH_DAMAGE;
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 		// we've been having problems with this being too hyper-potent because of it's radius
 	{
 		missile->splashRadius = REPEATER_ALT_SPLASH_RAD_SIEGE;
@@ -2414,7 +2414,7 @@ static void WP_FireRocket(gentity_t* ent, const qboolean alt_fire)
 
 	if (ent->client && ent->client->ps.rocketLockIndex != ENTITYNUM_NONE)
 	{
-		const float lock_time_interval = (level.gametype == GT_SIEGE ? 2400.0f : 1200.0f) / 16.0f;
+		const float lock_time_interval = (level.gametype == GT_MOVIEDUELS_SIEGE ? 2400.0f : 1200.0f) / 16.0f;
 		float r_time = ent->client->ps.rocketLockTime;
 
 		if (r_time == -1)

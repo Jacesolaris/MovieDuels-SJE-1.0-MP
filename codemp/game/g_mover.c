@@ -2967,7 +2967,7 @@ void SP_func_breakable(gentity_t* self)
 
 	self->touch = funcBBrushTouch;
 
-	if (self->team && self->team[0] && level.gametype == GT_SIEGE &&
+	if (self->team && self->team[0] && level.gametype == GT_MOVIEDUELS_SIEGE &&
 		!self->teamnodmg)
 	{
 		self->teamnodmg = atoi(self->team);

@@ -168,14 +168,14 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 		return;
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		!gSiegeRoundBegun)
 	{
 		//nothing can be used til the round starts.
 		return;
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		activator && activator->client &&
 		ent->alliedTeam &&
 		activator->client->sess.sessionTeam != ent->alliedTeam)
@@ -184,7 +184,7 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 		return;
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		ent->idealclass && ent->idealclass[0])
 	{
 		//only certain classes can activate it
@@ -203,7 +203,7 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 		}
 	}
 
-	if (level.gametype == GT_SIEGE && ent->genericValue1)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && ent->genericValue1)
 	{
 		halt_trigger = qtrue;
 
@@ -263,7 +263,7 @@ void multi_trigger(gentity_t* ent, gentity_t* activator)
 		int new_owning_team;
 		int entity_list[MAX_GENTITIES];
 
-		if (level.gametype != GT_SIEGE)
+		if (level.gametype != GT_MOVIEDUELS_SIEGE)
 		{
 			return;
 		}
@@ -501,7 +501,7 @@ void Touch_Multi(gentity_t* self, gentity_t* other, trace_t* trace)
 		if (self->genericValue7)
 		{
 			//we have to be holding the use key in this trigger for x milliseconds before firing
-			if (level.gametype == GT_SIEGE &&
+			if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 				self->idealclass && self->idealclass[0])
 			{
 				//only certain classes can activate it
@@ -1400,7 +1400,7 @@ void hurt_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	int dflags;
 
-	if (level.gametype == GT_SIEGE && self->team && self->team[0])
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && self->team && self->team[0])
 	{
 		const int team = atoi(self->team);
 

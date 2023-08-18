@@ -128,8 +128,8 @@ typedef struct playerInfo_s {
 // new ui stuff
 #define MAX_ALIASES				64
 #define MAX_TEAMS				64
-#define MAX_GAMETYPES			16
-#define MAX_MAPS				1024
+#define MAX_GAMETYPES			32
+#define MAX_MAPS				2048
 #define PLAYERS_PER_TEAM		8 //5
 #define MAX_PINGREQUESTS		32
 #define MAX_DISPLAY_SERVERS		2048

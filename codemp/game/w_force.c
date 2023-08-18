@@ -341,7 +341,7 @@ void WP_InitForcePowers(const gentity_t* ent)
 	ent->client->ps.fd.forceSide = 0;
 
 	// if in siege, then use the powers for this class, and skip all this nonsense.
-	if (level.gametype == GT_SIEGE && ent->client->siegeClass != -1)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && ent->client->siegeClass != -1)
 	{
 		for (i = 0; i < NUM_FORCE_POWERS; i++)
 		{
@@ -424,7 +424,7 @@ void WP_InitForcePowers(const gentity_t* ent)
 	ent->client->ps.fd.forceSide = atoi(readBuf);
 	i++;
 
-	if (level.gametype != GT_SIEGE && ent->r.svFlags & SVF_BOT && ent->client->ps.weapon == WP_SABER && botstates[ent
+	if (level.gametype != GT_MOVIEDUELS_SIEGE && ent->r.svFlags & SVF_BOT && ent->client->ps.weapon == WP_SABER && botstates[ent
 		->s.number])
 	{
 		// hmm..I'm going to cheat here.
@@ -501,7 +501,7 @@ void WP_InitForcePowers(const gentity_t* ent)
 		}
 		i = oldI;
 	}
-	else if (level.gametype != GT_SIEGE && level.gametype == GT_TEAM && ent->r.svFlags & SVF_BOT && ent->client->ps.
+	else if (level.gametype != GT_MOVIEDUELS_SIEGE && level.gametype == GT_MOVIEDUELS_TEAM && ent->r.svFlags & SVF_BOT && ent->client->ps.
 		weapon == WP_SABER && botstates[ent->s.number])
 	{
 		// hmm..I'm going to cheat here.
@@ -639,7 +639,7 @@ void WP_InitForcePowers(const gentity_t* ent)
 
 	if (ent->s.eType == ET_NPC || ent->r.svFlags & SVF_BOT)
 		ent->client->sess.setForce = qtrue;
-	else if (level.gametype == GT_SIEGE)
+	else if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		if (!ent->client->sess.setForce)
 		{
@@ -653,7 +653,7 @@ void WP_InitForcePowers(const gentity_t* ent)
 		if (warn_client || !ent->client->sess.setForce)
 		{
 			// the client's rank is too high for the server and has been autocapped, so tell them
-			if (level.gametype != GT_HOLOCRON && level.gametype != GT_JEDIMASTER)
+			if (level.gametype != GT_MOVIEDUELS_HOLOCRON && level.gametype != GT_MOVIEDUELS_JEDIMASTER)
 			{
 				did_event = qtrue;
 
@@ -756,7 +756,7 @@ void WP_SpawnInitForcePowers(gentity_t* ent)
 		i++;
 	}
 
-	if (level.gametype == GT_HOLOCRON)
+	if (level.gametype == GT_MOVIEDUELS_HOLOCRON)
 	{
 		i = 0;
 		while (i < NUM_FORCE_POWERS)
@@ -817,7 +817,7 @@ void WP_SpawnInitForcePowers(gentity_t* ent)
 		i++;
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		ent->client->siegeClass != -1)
 	{
 		//Then use the powers for this class.
@@ -1030,7 +1030,7 @@ int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const 
 	}
 
 	if (other && other->client && other->s.eType == ET_NPC &&
-		level.gametype == GT_SIEGE)
+		level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//can't use powers at all on npc's normally in siege...
 		return 0;
@@ -2495,6 +2495,7 @@ void ForceSpeedDash(gentity_t* self)
 		if (PM_RunningAnim(self->client->ps.legsAnim))
 		{
 			ForceDashAnim(self);
+			WP_ForcePowerStop(self, FP_SPEED);
 		}
 		else
 		{
@@ -4878,7 +4879,7 @@ qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* th
 		return 0;
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		pull &&
 		thrower && thrower->client)
 	{
@@ -7992,7 +7993,7 @@ void SeekerDroneUpdate(gentity_t* self)
 				VectorNormalize(endir);
 
 				WP_FireGenericBlasterMissile(self, org, endir, 0, 15, 2000, MOD_BLASTER);
-				G_SoundAtLoc(self,org, CHAN_WEAPON, G_SoundIndex("sound/weapons/bryar/fire.wav"));
+				G_SoundAtLoc(self, org, CHAN_WEAPON, G_SoundIndex("sound/weapons/bryar/fire.wav"));
 
 				self->client->ps.droneFireTime = level.time + Q_irand(400, 700);
 			}
@@ -8289,7 +8290,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		self->client->ps.fd.saber_anim_level = FORCE_LEVEL_1;
 	}
 
-	if (level.gametype != GT_SIEGE)
+	if (level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		if (!(self->client->ps.fd.forcePowersKnown & 1 << FP_LEVITATION))
 		{
@@ -8435,11 +8436,11 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		}
 	}
 
-	if (level.gametype == GT_HOLOCRON)
+	if (level.gametype == GT_MOVIEDUELS_HOLOCRON)
 	{
 		HolocronUpdate(self);
 	}
-	if (level.gametype == GT_JEDIMASTER)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		JediMasterUpdate(self);
 	}
@@ -8647,7 +8648,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	else if (ucmd->upmove < 10 && self->client->ps.groundEntityNum == ENTITYNUM_NONE && self->client->ps.fd.forceJumpCharge)
 	{
 		self->client->ps.pm_flags &= ~(PMF_JUMP_HELD);
-}
+	}
 #endif
 
 	if (!(self->client->ps.pm_flags & PMF_JUMP_HELD) && self->client->ps.fd.forceJumpCharge)
@@ -8839,13 +8840,13 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		//when not using the force, regenerate at 1 point per half second
 		while (self->client->ps.fd.forcePowerRegenDebounceTime < level.time)
 		{
-			if (level.gametype != GT_HOLOCRON || g_maxHolocronCarry.value)
+			if (level.gametype != GT_MOVIEDUELS_HOLOCRON || g_maxHolocronCarry.value)
 			{
 				if (self->client->ps.powerups[PW_FORCE_BOON])
 				{
 					wp_force_power_regenerate(self, 6);
 				}
-				else if (self->client->ps.isJediMaster && level.gametype == GT_JEDIMASTER)
+				else if (self->client->ps.isJediMaster && level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 				{
 					wp_force_power_regenerate(self, 4); //jedi master regenerates 4 times as fast
 				}
@@ -8902,7 +8903,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 				wp_force_power_regenerate(self, holoregen);
 			}
 
-			if (level.gametype == GT_SIEGE)
+			if (level.gametype == GT_MOVIEDUELS_SIEGE)
 			{
 				if (self->client->holdingObjectiveItem && g_entities[self->client->holdingObjectiveItem].inuse &&
 					g_entities[self->client->holdingObjectiveItem].genericValue15)
@@ -8916,7 +8917,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 			}
 			else
 			{
-				if (level.gametype == GT_POWERDUEL && self->client->sess.duelTeam == DUELTEAM_LONE)
+				if (level.gametype == GT_MOVIEDUELS_POWERDUEL && self->client->sess.duelTeam == DUELTEAM_LONE)
 				{
 					if (duel_fraglimit.integer)
 						self->client->ps.fd.forcePowerRegenDebounceTime += Q_max(
@@ -9008,7 +9009,7 @@ powersetcheck:
 
 		self->client->ps.fd.forcePower = prepower - dif;
 	}
-	}
+}
 
 void WP_BlockPointsUpdate(const gentity_t* self)
 {

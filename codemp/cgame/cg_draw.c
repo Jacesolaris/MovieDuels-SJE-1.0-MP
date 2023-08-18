@@ -3472,7 +3472,7 @@ void CG_DrawHUD(const centity_t* cent)
 			}
 		}
 
-		if (cgs.gametype == GT_DUEL)
+		if (cgs.gametype == GT_MOVIEDUELS_DUEL)
 		{
 			//A duel that requires more than one kill to knock the current enemy back to the queue
 			//show current kills out of how many needed
@@ -3496,7 +3496,7 @@ void CG_DrawHUD(const centity_t* cent)
 
 				itemDef_t* focus_item;
 
-				if (cgs.gametype != GT_POWERDUEL)
+				if (cgs.gametype != GT_MOVIEDUELS_POWERDUEL)
 				{
 					focus_item = Menu_FindItemByName(menu_hud, "score_line");
 
@@ -3618,7 +3618,7 @@ void CG_DrawHUD(const centity_t* cent)
 
 				itemDef_t* focus_item;
 
-				if (cgs.gametype != GT_POWERDUEL)
+				if (cgs.gametype != GT_MOVIEDUELS_POWERDUEL)
 				{
 					focus_item = Menu_FindItemByName(menu_hud, "score_line");
 
@@ -5008,13 +5008,13 @@ static float CG_DrawMiniScoreboard(float y)
 		return y;
 	}
 
-	if (cgs.gametype == GT_SIEGE)
+	if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//don't bother with this in siege
 		return y;
 	}
 
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		const int x_offset = 0;
 		char temp[MAX_QPATH];
@@ -5062,13 +5062,13 @@ static float CG_DrawEnemyInfo(float y)
 		return y;
 	}
 
-	if (cgs.gametype == GT_POWERDUEL)
+	if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//just get out of here then
 		return y;
 	}
 
-	if (cgs.gametype == GT_JEDIMASTER)
+	if (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		//title = "Jedi Master";
 		title = CG_GetStringEdString("MP_INGAME", "MASTERY7");
@@ -5099,7 +5099,7 @@ static float CG_DrawEnemyInfo(float y)
 		title = CG_GetStringEdString("MP_INGAME", "DUELING");
 		client_num = cg.snap->ps.duelIndex;
 	}
-	else if (cgs.gametype == GT_DUEL && cgs.clientinfo[cg.snap->ps.client_num].team != TEAM_SPECTATOR)
+	else if (cgs.gametype == GT_MOVIEDUELS_DUEL && cgs.clientinfo[cg.snap->ps.client_num].team != TEAM_SPECTATOR)
 	{
 		title = CG_GetStringEdString("MP_INGAME", "DUELING");
 		if (cg.snap->ps.client_num == cgs.duelist1)
@@ -5158,7 +5158,7 @@ static float CG_DrawEnemyInfo(float y)
 	CG_Text_Paint(630 - CG_Text_Width(title, 1.0f, FONT_SMALL2) + x_offset, y, 1.0f, colorWhite, title, 0, 0, 0,
 		FONT_SMALL2);
 
-	if ((cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL) && cgs.clientinfo[cg.snap->ps.client_num].team !=
+	if ((cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL) && cgs.clientinfo[cg.snap->ps.client_num].team !=
 		TEAM_SPECTATOR)
 	{
 		//also print their score
@@ -5366,12 +5366,17 @@ float cg_draw_radar(float y)
 		VectorCopy(g_color_table[ColorIndex(COLOR_RED)], team_color);
 		team_color[3] = 1.0f;
 	}
-	else if (cgs.gametype == GT_TEAM || cgs.gametype == GT_CTF)
+	else if (cgs.gametype == GT_MOVIEDUELS_FFA)
+	{
+		VectorCopy(g_color_table[ColorIndex(COLOR_RED)], team_color);
+		team_color[3] = 1.0f;
+	}
+	else if (cgs.gametype == GT_MOVIEDUELS_TEAM || cgs.gametype == GT_MOVIEDUELS_CTF)
 	{
 		VectorCopy(g_color_table[ColorIndex(COLOR_ORANGE)], team_color);
 		team_color[3] = 1.0f;
 	}
-	else if (cgs.gametype == GT_SINGLE_PLAYER)
+	else if (cgs.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		VectorCopy(g_color_table[ColorIndex(COLOR_RED)], team_color);
 		team_color[3] = 1.0f;
@@ -6237,7 +6242,7 @@ static void CG_DrawPowerupIcons(int y)
 				const int x_offset = 0;
 				const int ico_size = 64;
 				int ico_shader;
-				if (cgs.gametype == GT_CTY && (j == PW_REDFLAG || j == PW_BLUEFLAG))
+				if (cgs.gametype == GT_MOVIEDUELS_CTY && (j == PW_REDFLAG || j == PW_BLUEFLAG))
 				{
 					if (j == PW_REDFLAG)
 					{
@@ -6282,7 +6287,7 @@ static void CG_DrawUpperRight(void)
 
 	trap->R_SetColor(colorTable[CT_WHITE]);
 
-	if (cgs.gametype >= GT_SINGLE_PLAYER && cg_drawTeamOverlay.integer == 1)
+	if (cgs.gametype >= GT_MOVIEDUELS_MISSIONS && cg_drawTeamOverlay.integer == 1)
 	{
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
@@ -6946,7 +6951,7 @@ void CG_DrawHealthBar(const centity_t* cent, const float ch_x, const float ch_y,
 	}
 
 	//color of the bar
-	if (!cent->currentState.teamowner || cgs.gametype < GT_TEAM)
+	if (!cent->currentState.teamowner || cgs.gametype < GT_MOVIEDUELS_TEAM)
 	{
 		//not owned by a team or teamplay
 		a_color[0] = 1.0f;
@@ -7251,7 +7256,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			}
 			else if (cross_ent->currentState.number < MAX_CLIENTS)
 			{
-				if (cgs.gametype >= GT_TEAM &&
+				if (cgs.gametype >= GT_MOVIEDUELS_TEAM &&
 					cgs.clientinfo[cross_ent->currentState.number].team == cgs.clientinfo[cg.snap->ps.client_num].team)
 				{
 					//Allies are green
@@ -7261,7 +7266,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				}
 				else
 				{
-					if (cgs.gametype == GT_POWERDUEL &&
+					if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL &&
 						cgs.clientinfo[cross_ent->currentState.number].duelTeam == cgs.clientinfo[cg.snap->ps.
 						client_num].
 						duelTeam)
@@ -7313,7 +7318,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				if (cross_ent->currentState.eType == ET_NPC)
 				{
 					int pl_team;
-					if (cgs.gametype == GT_SIEGE)
+					if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 					{
 						pl_team = cg.predicted_player_state.persistant[PERS_TEAM];
 					}
@@ -7340,7 +7345,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 								//base color on who is pilotting this thing
 								const clientInfo_t* ci = &cgs.clientinfo[cross_ent->currentState.owner];
 
-								if (cgs.gametype >= GT_TEAM && ci->team == cg.predicted_player_state.persistant[
+								if (cgs.gametype >= GT_MOVIEDUELS_TEAM && ci->team == cg.predicted_player_state.persistant[
 									PERS_TEAM])
 								{
 									//friendly
@@ -7389,7 +7394,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				else if (cross_ent->currentState.teamowner == TEAM_RED
 					|| cross_ent->currentState.teamowner == TEAM_BLUE)
 				{
-					if (cgs.gametype < GT_TEAM)
+					if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 					{
 						//not teamplay, just neutral then
 						ecolor[0] = 1.0f; //R
@@ -7412,7 +7417,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 					}
 				}
 				else if (cross_ent->currentState.owner == cg.snap->ps.client_num ||
-					cgs.gametype >= GT_TEAM && cross_ent->currentState.teamowner == cgs.clientinfo[cg.snap->ps.
+					cgs.gametype >= GT_MOVIEDUELS_TEAM && cross_ent->currentState.teamowner == cgs.clientinfo[cg.snap->ps.
 					client_num]
 					.team)
 				{
@@ -7421,7 +7426,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 					ecolor[2] = 0.0f; //B
 				}
 				else if (cross_ent->currentState.teamowner == 16 ||
-					cgs.gametype >= GT_TEAM && cross_ent->currentState.teamowner && cross_ent->currentState.teamowner !=
+					cgs.gametype >= GT_MOVIEDUELS_TEAM && cross_ent->currentState.teamowner && cross_ent->currentState.teamowner !=
 					cgs.clientinfo[cg.snap->ps.client_num].team)
 				{
 					ecolor[0] = 1.0f; //R
@@ -7443,7 +7448,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			else if (cross_ent->currentState.eType == ET_MOVER && cross_ent->currentState.teamowner)
 			{
 				//a team owns this - if it's my team green, if not red, if not teamplay then yellow
-				if (cgs.gametype < GT_TEAM)
+				if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 				{
 					ecolor[0] = 1.0f; //R
 					ecolor[1] = 1.0f; //G
@@ -7466,7 +7471,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			}
 			else if (cross_ent->currentState.health)
 			{
-				if (!cross_ent->currentState.teamowner || cgs.gametype < GT_TEAM)
+				if (!cross_ent->currentState.teamowner || cgs.gametype < GT_MOVIEDUELS_TEAM)
 				{
 					//not owned by a team or teamplay
 					ecolor[0] = 1.0f;
@@ -7620,7 +7625,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 	}
 	else if (cross_ent && cross_ent->currentState.number < MAX_CLIENTS)
 	{
-		if (cgs.gametype == GT_SIEGE)
+		if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 		{
 			CG_DrawSiegeInfo(cross_ent, ch_x, ch_y, w, h);
 			ch_y += HEALTH_HEIGHT * 4;
@@ -7896,7 +7901,7 @@ void CG_BracketEntity(centity_t* cent, const float radius)
 		&& cent->currentState.m_iVehicleNum - 1 < MAX_CLIENTS
 		&& cgs.clientinfo[cent->currentState.m_iVehicleNum - 1].infoValid)
 	{
-		if (cgs.gametype < GT_TEAM)
+		if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 		{
 			//ffa?
 			is_enemy = qtrue;
@@ -7914,7 +7919,7 @@ void CG_BracketEntity(centity_t* cent, const float radius)
 	}
 	else if (cent->currentState.teamowner)
 	{
-		if (cgs.gametype < GT_TEAM)
+		if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 		{
 			//ffa?
 			is_enemy = qtrue;
@@ -8220,7 +8225,7 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 	vec3_t org;
 	const centity_t* cent = &cg_entities[lock_ent_num];
 	vec4_t color = { 0.0f, 0.0f, 0.0f, 0.0f };
-	float lock_time_interval = (cgs.gametype == GT_SIEGE ? 2400.0f : 1200.0f) / 16.0f;
+	float lock_time_interval = (cgs.gametype == GT_MOVIEDUELS_SIEGE ? 2400.0f : 1200.0f) / 16.0f;
 	//FIXME: if in a vehicle, use the vehicle's lockOnTime...
 	int dif = (cg.time - cg.snap->ps.rocketLockTime) / lock_time_interval;
 
@@ -8294,12 +8299,12 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 		{
 			if (ci->team == cgs.clientinfo[cg.snap->ps.client_num].team)
 			{
-				if (cgs.gametype >= GT_TEAM)
+				if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 				{
 					return;
 				}
 			}
-			else if (cgs.gametype >= GT_TEAM)
+			else if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 			{
 				const centity_t* hit_ent = &cg_entities[cg.snap->ps.rocketLockIndex];
 				if (hit_ent->currentState.eType == ET_NPC &&
@@ -9100,7 +9105,7 @@ static void CG_DrawCrosshairNames(void)
 		}
 		else
 		{
-			if (cgs.gametype == GT_FFA)
+			if (cgs.gametype == GT_MOVIEDUELS_FFA)
 			{
 				CG_DrawSmallStringColor(320 - w / 2, 170, name, colorTable[CT_RED]);
 			}
@@ -9147,14 +9152,14 @@ CG_DrawSpectator
 //static void CG_DrawSpectator(void)
 //{
 //	const char* s = CG_GetStringEdString("MP_INGAME", "SPECTATOR");
-//	if ((cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL) &&
+//	if ((cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL) &&
 //		cgs.duelist1 != -1 &&
 //		cgs.duelist2 != -1)
 //	{
 //		char text[1024];
 //		const int size = 64;
 //
-//		if (cgs.gametype == GT_POWERDUEL && cgs.duelist3 != -1)
+//		if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL && cgs.duelist3 != -1)
 //		{
 //			Com_sprintf(text, sizeof text, "%s^7 %s %s^7 %s %s", cgs.clientinfo[cgs.duelist1].name,
 //				CG_GetStringEdString("MP_INGAME", "SPECHUD_VERSUS"), cgs.clientinfo[cgs.duelist2].name,
@@ -9179,7 +9184,7 @@ CG_DrawSpectator
 //		}
 //
 //		// nmckenzie: DUEL_HEALTH
-//		if (cgs.gametype == GT_DUEL)
+//		if (cgs.gametype == GT_MOVIEDUELS_DUEL)
 //		{
 //			if (cgs.showDuelHealths >= 1)
 //			{
@@ -9189,7 +9194,7 @@ CG_DrawSpectator
 //			}
 //		}
 //
-//		if (cgs.gametype != GT_POWERDUEL)
+//		if (cgs.gametype != GT_MOVIEDUELS_POWERDUEL)
 //		{
 //			Com_sprintf(text, sizeof text, "%i/%i", cgs.clientinfo[cgs.duelist1].score, cgs.fraglimit);
 //			CG_Text_Paint(42 - CG_Text_Width(text, 1.0f, 2) / 2, SCREEN_HEIGHT - size * 1.5 + 64, 1.0f, colorWhite,
@@ -9200,7 +9205,7 @@ CG_DrawSpectator
 //				1.0f, colorWhite, text, 0, 0, 0, 2);
 //		}
 //
-//		if (cgs.gametype == GT_POWERDUEL && cgs.duelist3 != -1)
+//		if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL && cgs.duelist3 != -1)
 //		{
 //			if (cgs.clientinfo[cgs.duelist3].modelIcon)
 //			{
@@ -9214,12 +9219,12 @@ CG_DrawSpectator
 //		CG_Text_Paint(320 - CG_Text_Width(s, 1.0f, 3) / 2, 420, 1.0f, colorWhite, s, 0, 0, 0, 3);
 //	}
 //
-//	if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+//	if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 //	{
 //		s = CG_GetStringEdString("MP_INGAME", "WAITING_TO_PLAY"); // "waiting to play";
 //		CG_Text_Paint(320 - CG_Text_Width(s, 1.0f, 3) / 2, 440, 1.0f, colorWhite, s, 0, 0, 0, 3);
 //	}
-//	else //if ( cgs.gametype >= GT_TEAM )
+//	else //if ( cgs.gametype >= GT_MOVIEDUELS_TEAM )
 //	{
 //		//s = "press ESC and use the JOIN menu to play";
 //		s = CG_GetStringEdString("MP_INGAME", "SPEC_CHOOSEJOIN");
@@ -9263,20 +9268,17 @@ static void CG_DrawVote(void)
 	{
 		trap->SE_GetStringTextString("MENUS_GAME_TYPE", s_cmd, sizeof s_cmd);
 
-		if (!Q_stricmp("Free For All", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "FREE_FOR_ALL");
-		else if (!Q_stricmp("Duel", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "DUEL");
-		else if (!Q_stricmp("Holocron FFA", cgs.voteString + 11)) s_parm =
-			CG_GetStringEdString("MENUS", "HOLOCRON_FFA");
-		else if (!Q_stricmp("Power Duel", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "POWERDUEL");
-		else if (!Q_stricmp("Team FFA", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "TEAM_FFA");
-		else if (!Q_stricmp("Siege", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "SIEGE");
-		else if (!Q_stricmp("Capture the Flag", cgs.voteString + 11))
-			s_parm = CG_GetStringEdString(
-				"MENUS", "CAPTURE_THE_FLAG");
-		else if (!Q_stricmp("Capture the Ysalamiri", cgs.voteString + 11))
-			s_parm = CG_GetStringEdString(
-				"MENUS", "CAPTURE_THE_YSALIMARI");
-		else if (!Q_stricmp("Single Player", cgs.voteString + 11)) s_parm = CG_GetStringEdString("OJP_MENUS", "COOP");
+		if (!Q_stricmp("Free For All", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "OLD_FREE_FOR_ALL");
+		else if (!Q_stricmp("MovieDuels Free For All", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "FREE_FOR_ALL");
+		else if (!Q_stricmp("MovieDuels Holocron", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "HOLOCRON_FFA");
+		else if (!Q_stricmp("MovieDuels Jedi Master", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "JEDIMASTER");
+		else if (!Q_stricmp("MovieDuels Duel", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "DUEL");
+		else if (!Q_stricmp("MovieDuels Power Duel", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "POWERDUEL");
+		else if (!Q_stricmp("MovieDuels missions", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "COOP");
+		else if (!Q_stricmp("MovieDuels Team", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "TEAM_FFA");
+		else if (!Q_stricmp("MovieDuels Siege", cgs.voteString + 11)) s_parm = CG_GetStringEdString("MENUS", "SIEGE");
+		else if (!Q_stricmp("MovieDuels CTF", cgs.voteString + 11))s_parm = CG_GetStringEdString("MENUS", "CAPTURE_THE_FLAG");
+		else if (!Q_stricmp("MovieDuels CTY", cgs.voteString + 11))s_parm = CG_GetStringEdString("MENUS", "CAPTURE_THE_YSALIMARI");
 	}
 	else if (!Q_strncmp(cgs.voteString, "map", 3))
 	{
@@ -9417,7 +9419,7 @@ static qboolean CG_DrawFollow(void)
 		return qfalse;
 	}
 
-	if (cgs.gametype == GT_POWERDUEL)
+	if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		const clientInfo_t* ci = &cgs.clientinfo[cg.snap->ps.client_num];
 
@@ -9536,13 +9538,13 @@ static void CG_DrawWarmup(void)
 		return;
 	}
 
-	if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+	if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		clientInfo_t* ci1 = NULL;
 		clientInfo_t* ci2 = NULL;
 		clientInfo_t* ci3 = NULL;
 
-		if (cgs.gametype == GT_POWERDUEL)
+		if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 		{
 			if (cgs.duelist1 != -1)
 			{
@@ -9590,15 +9592,19 @@ static void CG_DrawWarmup(void)
 	}
 	else
 	{
-		if (cgs.gametype == GT_FFA) s = CG_GetStringEdString("MENUS", "FREE_FOR_ALL"); //"Free For All";
-		else if (cgs.gametype == GT_HOLOCRON) s = CG_GetStringEdString("MENUS", "HOLOCRON_FFA"); //"Holocron FFA";
-		else if (cgs.gametype == GT_JEDIMASTER) s = "Jedi Master";
-		else if (cgs.gametype == GT_TEAM) s = CG_GetStringEdString("MENUS", "TEAM_FFA"); //"Team FFA";
-		else if (cgs.gametype == GT_SIEGE) s = CG_GetStringEdString("MENUS", "SIEGE"); //"Siege";
-		else if (cgs.gametype == GT_CTF) s = CG_GetStringEdString("MENUS", "CAPTURE_THE_FLAG"); //"Capture the Flag";
-		else if (cgs.gametype == GT_CTY) s = CG_GetStringEdString("MENUS", "CAPTURE_THE_YSALIMARI");
-		//"Capture the Ysalamiri";
-		else if (cgs.gametype == GT_SINGLE_PLAYER) s = "missions";
+		if (cgs.gametype == GT_FFA) s = CG_GetStringEdString("MENUS", "OLD_FREE_FOR_ALL"); //"Free For All";
+		else if (cgs.gametype == GT_MOVIEDUELS_FFA) s = CG_GetStringEdString("MENUS", "FREE_FOR_ALL"); //"Free For All";
+		else if (cgs.gametype == GT_MOVIEDUELS_HOLOCRON) s = CG_GetStringEdString("MENUS", "HOLOCRON_FFA"); //"Holocron FFA";
+		else if (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER) s = CG_GetStringEdString("MENUS", "JEDIMASTER"); //"Holocron FFA";
+
+		else if (cgs.gametype == GT_MOVIEDUELS_DUEL) s = CG_GetStringEdString("MENUS", "DUEL"); //"Team FFA";
+		else if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL) s = CG_GetStringEdString("MENUS", "POWERDUEL"); //"Siege";
+		else if (cgs.gametype == GT_MOVIEDUELS_MISSIONS) s = CG_GetStringEdString("MENUS", "COOP"); //"Capture the Flag";
+
+		else if (cgs.gametype == GT_MOVIEDUELS_TEAM) s = CG_GetStringEdString("MENUS", "TEAM_FFA"); //"Team FFA";
+		else if (cgs.gametype == GT_MOVIEDUELS_SIEGE) s = CG_GetStringEdString("MENUS", "SIEGE"); //"Siege";
+		else if (cgs.gametype == GT_MOVIEDUELS_CTF) s = CG_GetStringEdString("MENUS", "CAPTURE_THE_FLAG"); //"Capture the Flag";
+		else if (cgs.gametype == GT_MOVIEDUELS_CTY) s = CG_GetStringEdString("MENUS", "CAPTURE_THE_YSALIMARI");
 		else s = "";
 		w = CG_Text_Width(s, 1.5f, FONT_MEDIUM);
 		CG_Text_Paint(320 - w / 2, 90, 1.5f, colorWhite, s, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE, FONT_MEDIUM);
@@ -9616,7 +9622,7 @@ static void CG_DrawWarmup(void)
 	{
 		cg.warmupCount = sec;
 
-		if (cgs.gametype != GT_SIEGE)
+		if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 		{
 			switch (sec)
 			{
@@ -9690,14 +9696,14 @@ void CG_DrawFlagStatus()
 		return;
 	}
 
-	if (cgs.gametype != GT_CTF && cgs.gametype != GT_CTY)
+	if (cgs.gametype != GT_MOVIEDUELS_CTF && cgs.gametype != GT_MOVIEDUELS_CTY)
 	{
 		return;
 	}
 
 	const int team = cg.snap->ps.persistant[PERS_TEAM];
 
-	if (cgs.gametype == GT_CTY)
+	if (cgs.gametype == GT_MOVIEDUELS_CTY)
 	{
 		if (team == TEAM_RED)
 		{

@@ -333,20 +333,20 @@ void CG_ParseEntityFromSpawnVars(void)
 	static char* gametypeNames[] =
 	{
 		"ffa",
-		"holocron",
-		"jedimaster",
-		"duel",
-		"powerduel",
-		"single",
-		"team",
-		"siege",
-		"ctf",
-		"cty",
-		"MB"
+		"movieduels_mp_ffa",
+		"movieduels_mp_holocron",
+		"movieduels_mp_jm",
+		"movieduels_mp_duel",
+		"movieduels_mp_powerduel",
+		"movieduels_mp_missions",
+		"movieduels_mp_team",
+		"movieduels_mp_siege",
+		"movieduels_mp_ctf",
+		"movieduels_mp_cty"
 	};
 
 	// check for "notsingle" flag
-	if (cgs.gametype == GT_SINGLE_PLAYER)
+	if (cgs.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		CG_SpawnInt("notsingle", "0", &i);
 		if (i)
@@ -355,7 +355,7 @@ void CG_ParseEntityFromSpawnVars(void)
 		}
 	}
 
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		CG_SpawnInt("notteam", "0", &i);
 		if (i)

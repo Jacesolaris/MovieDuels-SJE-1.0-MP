@@ -107,13 +107,13 @@ static void CG_DrawClientScore(const int y, const score_t* score, float* color, 
 	else if (ci->powerups & 1 << PW_BLUEFLAG)
 		CG_DrawFlagModel(iconx, y, iconSize, iconSize, TEAM_BLUE, qfalse);
 
-	else if (cgs.gametype == GT_POWERDUEL && (ci->duelTeam == DUELTEAM_LONE || ci->duelTeam == DUELTEAM_DOUBLE))
+	else if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL && (ci->duelTeam == DUELTEAM_LONE || ci->duelTeam == DUELTEAM_DOUBLE))
 	{
 		CG_DrawPic(iconx, y, iconSize, iconSize, trap->R_RegisterShaderNoMip(
 			ci->duelTeam == DUELTEAM_LONE ? "gfx/mp/pduel_icon_lone" : "gfx/mp/pduel_icon_double"));
 	}
 
-	else if (cgs.gametype == GT_SIEGE)
+	else if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//try to draw the shader for this class on the scoreboard
 		if (ci->siegeIndex != -1)
@@ -136,7 +136,7 @@ static void CG_DrawClientScore(const int y, const score_t* score, float* color, 
 		localClient = qtrue;
 
 		if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR
-			|| cgs.gametype >= GT_TEAM)
+			|| cgs.gametype >= GT_MOVIEDUELS_TEAM)
 		{
 			rank = -1;
 		}
@@ -178,9 +178,9 @@ static void CG_DrawClientScore(const int y, const score_t* score, float* color, 
 
 	if (score->ping != -1)
 	{
-		if (ci->team != TEAM_SPECTATOR || cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+		if (ci->team != TEAM_SPECTATOR || cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 		{
-			if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+			if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 			{
 				CG_Text_Paint(SB_SCORE_X, y, 1.0f * scale, colorWhite, va("%i/%i", ci->wins, ci->losses), 0, 0,
 					ITEM_TEXTSTYLE_OUTLINED, FONT_SMALL);
@@ -370,7 +370,7 @@ qboolean CG_DrawOldScoreboard(void)
 
 	// fragged by ... line
 	// or if in intermission and duel, prints the winner of the duel round
-	if ((cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL) && cgs.duelWinner != -1 &&
+	if ((cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL) && cgs.duelWinner != -1 &&
 		cg.predicted_player_state.pm_type == PM_INTERMISSION)
 	{
 		s = va("%s^7 %s", cgs.clientinfo[cgs.duelWinner].name, CG_GetStringEdString("MP_INGAME", "DUEL_WINS"));
@@ -380,10 +380,10 @@ qboolean CG_DrawOldScoreboard(void)
 		CG_Text_Paint(x - CG_Text_Width(s, 1.0f, FONT_MEDIUM) / 2, y, 1.0f, colorWhite, s, 0, 0,
 			ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM);
 	}
-	else if ((cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL) && cgs.duelist1 != -1 && cgs.duelist2 != -1 &&
+	else if ((cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL) && cgs.duelist1 != -1 && cgs.duelist2 != -1 &&
 		cg.predicted_player_state.pm_type == PM_INTERMISSION)
 	{
-		if (cgs.gametype == GT_POWERDUEL && cgs.duelist3 != -1)
+		if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL && cgs.duelist3 != -1)
 		{
 			s = va("%s^7 %s %s^7 %s %s", cgs.clientinfo[cgs.duelist1].name,
 				CG_GetStringEdString("MP_INGAME", "SPECHUD_VERSUS"), cgs.clientinfo[cgs.duelist2].name,
@@ -411,11 +411,11 @@ qboolean CG_DrawOldScoreboard(void)
 	}
 
 	// current rank
-	if (cgs.gametype == GT_POWERDUEL)
+	if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//do nothing?
 	}
-	else if (cgs.gametype < GT_TEAM)
+	else if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 	{
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 		{
@@ -439,7 +439,7 @@ qboolean CG_DrawOldScoreboard(void)
 			CG_DrawProportionalString(x, y, s, UI_CENTER | UI_DROPSHADOW, colorTable[CT_WHITE]);
 		}
 	}
-	else if (cgs.gametype != GT_SIEGE)
+	else if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		if (cg.teamScores[0] == cg.teamScores[1])
 		{
@@ -460,7 +460,7 @@ qboolean CG_DrawOldScoreboard(void)
 		CG_Text_Paint(x - CG_Text_Width(s, 1.0f, FONT_MEDIUM) / 2, y, 1.0f, colorWhite, s, 0, 0,
 			ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM);
 	}
-	else if (cgs.gametype == GT_SIEGE && (cg_siegeWinTeam == 1 || cg_siegeWinTeam == 2))
+	else if (cgs.gametype == GT_MOVIEDUELS_SIEGE && (cg_siegeWinTeam == 1 || cg_siegeWinTeam == 2))
 	{
 		if (cg_siegeWinTeam == 1)
 		{
@@ -486,7 +486,7 @@ qboolean CG_DrawOldScoreboard(void)
 
 	CG_Text_Paint(SB_NAME_X, y, 1.0f, colorWhite, CG_GetStringEdString("MP_INGAME", "NAME"), 0, 0,
 		ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM);
-	if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+	if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		char sWL[100];
 		trap->SE_GetStringTextString("MP_INGAME_W_L", sWL, sizeof sWL);
@@ -531,7 +531,7 @@ qboolean CG_DrawOldScoreboard(void)
 
 	//I guess this can be accomplished simply by printing the first teams score with a maxClients
 	//value passed in related to how many players are on both teams.
-	if (cgs.gametype >= GT_SINGLE_PLAYER)
+	if (cgs.gametype >= GT_MOVIEDUELS_MISSIONS)
 	{
 		//
 		// teamplay scoreboard

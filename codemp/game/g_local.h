@@ -1651,7 +1651,7 @@ void Weapon_StunThink(gentity_t* ent);
 
 #define TD_VELOCITY			900		//max velocity for thermal dets
 
-#define DISRUPTOR_MAX_CHARGE (level.gametype == GT_SIEGE ? 200 : 60)
+#define DISRUPTOR_MAX_CHARGE (level.gametype == GT_MOVIEDUELS_SIEGE ? 200 : 60)
 #define BRYAR_PISTOL_ALT_DPDAMAGE			DODGE_BOLTBLOCK			//minimum DP damage of bryar secondary
 #define BRYAR_PISTOL_ALT_DPMAXDAMAGE		DODGE_BOLTBLOCK*1.5		//maximum DP damage of bryar secondary
 #define BRYAR_MAX_CHARGE					5

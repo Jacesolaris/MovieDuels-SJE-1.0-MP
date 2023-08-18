@@ -255,7 +255,7 @@ void CG_SetConfigValues(void)
 	cgs.scores1 = atoi(CG_ConfigString(CS_SCORES1));
 	cgs.scores2 = atoi(CG_ConfigString(CS_SCORES2));
 	cgs.levelStartTime = atoi(CG_ConfigString(CS_LEVEL_START_TIME));
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTY)
+	if (cgs.gametype == GT_MOVIEDUELS_CTF || cgs.gametype == GT_MOVIEDUELS_CTY)
 	{
 		const char* s = CG_ConfigString(CS_FLAGSTATUS);
 
@@ -975,7 +975,7 @@ static void CG_ConfigStringModified(void)
 	}
 	else if (num == CS_FLAGSTATUS)
 	{
-		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTY)
+		if (cgs.gametype == GT_MOVIEDUELS_CTF || cgs.gametype == GT_MOVIEDUELS_CTY)
 		{
 			// format is rb where its red/blue, 0 is at base, 1 is taken, 2 is dropped
 			const int redflagId = str[0] - '0', blueflagId = str[1] - '0';
@@ -1170,7 +1170,7 @@ static void CG_MapRestart(void)
 	// we really should clear more parts of cg here and stop sounds
 
 	// play the "fight" sound if this is a restart without warmup
-	if (cg.warmup == 0 && cgs.gametype != GT_SIEGE && cgs.gametype != GT_POWERDUEL/* && cgs.gametype == GT_DUEL */)
+	if (cg.warmup == 0 && cgs.gametype != GT_MOVIEDUELS_SIEGE && cgs.gametype != GT_MOVIEDUELS_POWERDUEL/* && cgs.gametype == GT_MOVIEDUELS_DUEL */)
 	{
 		trap->S_StartLocalSound(cgs.media.countFightSound, CHAN_ANNOUNCER);
 		CG_CenterPrint(CG_GetStringEdString("MP_SVGAME", "BEGIN_DUEL"), 120, GIANTCHAR_WIDTH * 2);

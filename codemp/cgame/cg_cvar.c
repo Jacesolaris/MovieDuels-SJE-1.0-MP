@@ -49,7 +49,7 @@ static void CG_TeamOverlayChange(void)
 {
 	// If team overlay is on, ask for updates from the server.  If its off,
 	// let the server know so we don't receive it
-	if (cg_drawTeamOverlay.integer > 0 && cgs.gametype >= GT_SINGLE_PLAYER)
+	if (cg_drawTeamOverlay.integer > 0 && cgs.gametype >= GT_MOVIEDUELS_MISSIONS)
 		trap->Cvar_Set("teamoverlay", "1");
 	else
 		trap->Cvar_Set("teamoverlay", "0");

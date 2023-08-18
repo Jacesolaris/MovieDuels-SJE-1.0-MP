@@ -1144,7 +1144,7 @@ void finish_spawning_turretG2(gentity_t* base)
 
 	base->s.eType = ET_GENERAL;
 
-	if (base->team && base->team[0] && //level.gametype == GT_SIEGE &&
+	if (base->team && base->team[0] && //level.gametype == GT_MOVIEDUELS_SIEGE &&
 		!base->teamnodmg)
 	{
 		base->teamnodmg = atoi(base->team);
@@ -1226,7 +1226,7 @@ void finish_spawning_turretG2(gentity_t* base)
 		}
 		//start in "off" anim
 		TurboLaser_SetBoneAnim(base, 4, 5);
-		if (level.gametype == GT_SIEGE)
+		if (level.gametype == GT_MOVIEDUELS_SIEGE)
 		{
 			base->s.eFlags2 |= EF2_BRACKET_ENTITY;
 		}

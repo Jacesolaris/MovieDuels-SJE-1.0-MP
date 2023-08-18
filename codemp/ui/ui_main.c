@@ -514,17 +514,17 @@ static const size_t numSkillLevels = ARRAY_LEN(skillLevels);
 
 static const char* gameTypes[] =
 {
-	"FFA",
-	"Holocron",
-	"JediMaster",
-	"Duel",
-	"PowerDuel",
-	"SP",
-	"Team FFA",
-	"Siege",
-	"CTF",
-	"CTY",
-	"MB",
+		"ffa",                      //0
+		"movieduels_mp_ffa",        //1
+		"movieduels_mp_holocron",   //2
+		"movieduels_mp_jm",         //3
+		"movieduels_mp_duel",       //4
+		"movieduels_mp_powerduel",  //5
+		"movieduels_mp_missions",   //6
+		"movieduels_mp_team",       //7
+		"movieduels_mp_siege",      //8
+		"movieduels_mp_ctf",        //9
+		"movieduels_mp_cty"         //10
 };
 static const int numGameTypes = ARRAY_LEN(gameTypes);
 
@@ -1045,7 +1045,7 @@ void UI_SetActiveMenu(uiMenuCommand_t menu)
 			// trap->Cvar_Set( "cl_paused", "1" );
 			// No chatin non-siege games.
 
-			if (trap->Cvar_VariableValue("g_gametype") < GT_TEAM)
+			if (trap->Cvar_VariableValue("g_gametype") < GT_MOVIEDUELS_TEAM)
 			{
 				return;
 			}
@@ -1616,7 +1616,7 @@ void UI_Load(void)
 	UI_ParseGameInfo("ui/jamp/gameinfo.txt");
 #endif
 
-	if (gametype != GT_SINGLE_PLAYER)
+	if (gametype != GT_MOVIEDUELS_MISSIONS)
 	{
 		UI_LoadBots();
 		UI_LoadArenas();
@@ -1690,24 +1690,26 @@ static const char* UI_GetGameTypeName(int gtEnum)
 	switch (gtEnum)
 	{
 	case GT_FFA:
+		return UI_GetStringEdString("MENUS", "OLD_FREE_FOR_ALL"); //"Free For All";
+	case GT_MOVIEDUELS_FFA:
 		return UI_GetStringEdString("MENUS", "FREE_FOR_ALL"); //"Free For All";
-	case GT_HOLOCRON:
+	case GT_MOVIEDUELS_HOLOCRON:
 		return UI_GetStringEdString("MENUS", "HOLOCRON_FFA"); //"Holocron FFA";
-	case GT_JEDIMASTER:
-		return UI_GetStringEdString("OJP_MENUS", "JEDIMASTER"); //"Jedi Master";??
-	case GT_SINGLE_PLAYER:
-		return UI_GetStringEdString("OJP_MENUS", "COOP"); //"Team FFA";
-	case GT_DUEL:
+	case GT_MOVIEDUELS_JEDIMASTER:
+		return UI_GetStringEdString("MENUS", "JEDIMASTER"); //"Jedi Master";??
+	case GT_MOVIEDUELS_DUEL:
 		return UI_GetStringEdString("MENUS", "DUEL"); //"Team FFA";
-	case GT_POWERDUEL:
+	case GT_MOVIEDUELS_POWERDUEL:
 		return UI_GetStringEdString("MENUS", "POWERDUEL"); //"Team FFA";
-	case GT_TEAM:
+	case GT_MOVIEDUELS_MISSIONS:
+		return UI_GetStringEdString("MENUS", "COOP"); //"Team FFA";
+	case GT_MOVIEDUELS_TEAM:
 		return UI_GetStringEdString("MENUS", "TEAM_FFA"); //"Team FFA";
-	case GT_SIEGE:
+	case GT_MOVIEDUELS_SIEGE:
 		return UI_GetStringEdString("MENUS", "SIEGE"); //"Siege";
-	case GT_CTF:
+	case GT_MOVIEDUELS_CTF:
 		return UI_GetStringEdString("MENUS", "CAPTURE_THE_FLAG"); //"Capture the Flag";
-	case GT_CTY:
+	case GT_MOVIEDUELS_CTY:
 		return UI_GetStringEdString("MENUS", "CAPTURE_THE_YSALIMARI"); //"Capture the Ysalamiri";
 	default:;
 	}
@@ -1973,7 +1975,7 @@ static void UI_DrawForceSide(rectDef_t* rect, float scale, vec4_t color, int tex
 			Menu_ShowItemByName(menu, "darkpowers", qfalse);
 			Menu_ShowItemByName(menu, "darkpowers_team", qfalse);
 
-			Menu_ShowItemByName(menu, "lightpowers_team", qtrue); //(ui_gameType.integer >= GT_TEAM));
+			Menu_ShowItemByName(menu, "lightpowers_team", qtrue); //(ui_gameType.integer >= GT_MOVIEDUELS_TEAM));
 		}
 		menu = Menus_FindByName("ingame_playerforce");
 		if (menu)
@@ -1982,7 +1984,7 @@ static void UI_DrawForceSide(rectDef_t* rect, float scale, vec4_t color, int tex
 			Menu_ShowItemByName(menu, "darkpowers", qfalse);
 			Menu_ShowItemByName(menu, "darkpowers_team", qfalse);
 
-			Menu_ShowItemByName(menu, "lightpowers_team", qtrue); //(ui_gameType.integer >= GT_TEAM));
+			Menu_ShowItemByName(menu, "lightpowers_team", qtrue); //(ui_gameType.integer >= GT_MOVIEDUELS_TEAM));
 		}
 	}
 	else
@@ -1995,7 +1997,7 @@ static void UI_DrawForceSide(rectDef_t* rect, float scale, vec4_t color, int tex
 			Menu_ShowItemByName(menu, "lightpowers_team", qfalse);
 			Menu_ShowItemByName(menu, "darkpowers", qtrue);
 
-			Menu_ShowItemByName(menu, "darkpowers_team", qtrue); //(ui_gameType.integer >= GT_TEAM));
+			Menu_ShowItemByName(menu, "darkpowers_team", qtrue); //(ui_gameType.integer >= GT_MOVIEDUELS_TEAM));
 		}
 		menu = Menus_FindByName("ingame_playerforce");
 		if (menu)
@@ -2004,7 +2006,7 @@ static void UI_DrawForceSide(rectDef_t* rect, float scale, vec4_t color, int tex
 			Menu_ShowItemByName(menu, "lightpowers_team", qfalse);
 			Menu_ShowItemByName(menu, "darkpowers", qtrue);
 
-			Menu_ShowItemByName(menu, "darkpowers_team", qtrue); //(ui_gameType.integer >= GT_TEAM));
+			Menu_ShowItemByName(menu, "darkpowers_team", qtrue); //(ui_gameType.integer >= GT_MOVIEDUELS_TEAM));
 		}
 	}
 
@@ -2016,13 +2018,13 @@ qboolean UI_HasSetSaberOnly(const char* info, const int gametype)
 	int i = 0;
 	int wDisable;
 
-	if (gametype == GT_JEDIMASTER)
+	if (gametype == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		//set to 0
 		return qfalse;
 	}
 
-	if (gametype == GT_DUEL || gametype == GT_POWERDUEL)
+	if (gametype == GT_MOVIEDUELS_DUEL || gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		wDisable = atoi(Info_ValueForKey(info, "g_duelWeaponDisable"));
 	}
@@ -2078,8 +2080,8 @@ qboolean UI_TrueJediEnabled(void)
 	const int gametype = atoi(Info_ValueForKey(info, "g_gametype"));
 	const qboolean saberOnly = UI_HasSetSaberOnly(info, gametype);
 
-	if (gametype == GT_HOLOCRON
-		|| gametype == GT_JEDIMASTER
+	if (gametype == GT_MOVIEDUELS_HOLOCRON
+		|| gametype == GT_MOVIEDUELS_JEDIMASTER
 		|| saberOnly
 		|| allForceDisabled)
 	{
@@ -2166,7 +2168,7 @@ static void UI_DrawTeamMember(rectDef_t* rect, float scale, vec4_t color, qboole
 		value = -1;
 	}
 
-	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_SIEGE)
+	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_MOVIEDUELS_SIEGE)
 	{
 		if (value > 1)
 		{
@@ -2374,7 +2376,7 @@ void UpdateBotButtons(void)
 		return;
 	}
 
-	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_SIEGE)
+	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_MOVIEDUELS_SIEGE)
 	{
 		Menu_ShowItemByName(menu, "humanbotfield", qfalse);
 		Menu_ShowItemByName(menu, "humanbotnonfield", qtrue);
@@ -2464,7 +2466,7 @@ void UpdateForceStatus()
 		else
 		{
 			// Set or reset buttons based on choices
-			if (atoi(Info_ValueForKey(info, "g_gametype")) >= GT_TEAM)
+			if (atoi(Info_ValueForKey(info, "g_gametype")) >= GT_MOVIEDUELS_TEAM)
 			{
 				// This is a team-based game.
 				Menu_ShowItemByName(menu, "playerforcespectate", qtrue);
@@ -2494,7 +2496,7 @@ void UpdateForceStatus()
 
 		const int gametype = atoi(Info_ValueForKey(info, "g_gametype"));
 
-		if (gametype == GT_SINGLE_PLAYER)
+		if (gametype == GT_MOVIEDUELS_MISSIONS)
 		{
 			//even thou players are on a team for CoOp, they act like they're not
 			uiSkinColor = uiHoldSkinColor;
@@ -2510,7 +2512,7 @@ void UpdateForceStatus()
 				uiSkinColor = TEAM_BLUE;
 				break;
 			default:
-				if (gametype >= GT_TEAM)
+				if (gametype >= GT_MOVIEDUELS_TEAM)
 				{
 					uiSkinColor = TEAM_FREE;
 				}
@@ -3110,7 +3112,7 @@ static void UI_DrawBotSkill(rectDef_t* rect, float scale, vec4_t color, int text
 
 static void UI_DrawRedBlue(rectDef_t* rect, float scale, vec4_t color, int textStyle, int i_menu_font)
 {
-	if (trap->Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER)
+	if (trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_MISSIONS)
 	{
 		//print different team names for CoOp
 		Text_Paint(rect->x, rect->y, scale, color,
@@ -3607,8 +3609,9 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		if (flags & UI_SHOW_FFA)
 		{
 			if (trap->Cvar_VariableValue("g_gametype") != GT_FFA &&
-				trap->Cvar_VariableValue("g_gametype") != GT_HOLOCRON &&
-				trap->Cvar_VariableValue("g_gametype") != GT_JEDIMASTER)
+				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_FFA &&
+				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_HOLOCRON &&
+				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_JEDIMASTER)
 			{
 				vis = qfalse;
 			}
@@ -3617,8 +3620,9 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		if (flags & UI_SHOW_NOTFFA)
 		{
 			if (trap->Cvar_VariableValue("g_gametype") == GT_FFA ||
-				trap->Cvar_VariableValue("g_gametype") == GT_HOLOCRON ||
-				trap->Cvar_VariableValue("g_gametype") != GT_JEDIMASTER)
+				trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_HOLOCRON ||
+				trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_HOLOCRON ||
+				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_JEDIMASTER)
 			{
 				vis = qfalse;
 			}
@@ -3677,7 +3681,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME)
 		{
-			if (uiInfo.gameTypes[ui_gametype.integer].gtEnum <= GT_TEAM)
+			if (uiInfo.gameTypes[ui_gametype.integer].gtEnum <= GT_MOVIEDUELS_TEAM)
 			{
 				vis = qfalse;
 			}
@@ -3685,7 +3689,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME)
 		{
-			if (uiInfo.gameTypes[ui_gametype.integer].gtEnum > GT_TEAM)
+			if (uiInfo.gameTypes[ui_gametype.integer].gtEnum > GT_MOVIEDUELS_TEAM)
 			{
 				vis = qfalse;
 			}
@@ -3693,7 +3697,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME)
 		{
-			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum <= GT_TEAM)
+			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum <= GT_MOVIEDUELS_TEAM)
 			{
 				vis = qfalse;
 			}
@@ -3701,7 +3705,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMGAME)
 		{
-			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum > GT_TEAM)
+			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum > GT_MOVIEDUELS_TEAM)
 			{
 				vis = qfalse;
 			}
@@ -4138,7 +4142,7 @@ static qboolean UI_NetGameType_HandleKey(int flags, float* special, int key)
 			value--;
 			if (UI_InSoloMenu())
 			{
-				if (uiInfo.gameTypes[value].gtEnum == GT_SIEGE)
+				if (uiInfo.gameTypes[value].gtEnum == GT_MOVIEDUELS_SIEGE)
 				{
 					value--;
 				}
@@ -4149,7 +4153,7 @@ static qboolean UI_NetGameType_HandleKey(int flags, float* special, int key)
 			value++;
 			if (UI_InSoloMenu())
 			{
-				if (uiInfo.gameTypes[value].gtEnum == GT_SIEGE)
+				if (uiInfo.gameTypes[value].gtEnum == GT_MOVIEDUELS_SIEGE)
 				{
 					value++;
 				}
@@ -4340,7 +4344,7 @@ static qboolean UI_TeamMember_HandleKey(int flags, float* special, int key, qboo
 			value++;
 		}
 
-		/*if (ui_actualNetGameType.integer >= GT_TEAM) {
+		/*if (ui_actualNetGameType.integer >= GT_MOVIEDUELS_TEAM) {
 		if (value >= uiInfo.characterCount + 2) {
 		value = 0;
 		} else if (value < 0) {
@@ -4489,7 +4493,7 @@ static qboolean UI_BotName_HandleKey(int flags, float* special, int key)
 		}
 
 		/*
-		if (game >= GT_TEAM) {
+		if (game >= GT_MOVIEDUELS_TEAM) {
 		if (value >= uiInfo.characterCount + 2) {
 		value = 0;
 		} else if (value < 0) {
@@ -5105,7 +5109,7 @@ static void UI_StartSkirmish(qboolean next)
 
 	int delay = 500;
 
-	if (g == GT_DUEL || g == GT_POWERDUEL)
+	if (g == GT_MOVIEDUELS_DUEL || g == GT_MOVIEDUELS_POWERDUEL)
 	{
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
 		trap->Cvar_Set("sv_maxClients", va("%d", temp));
@@ -5113,14 +5117,14 @@ static void UI_StartSkirmish(qboolean next)
 			uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap->Cmd_ExecuteText(EXEC_APPEND, buff);
 	}
-	else if (g == GT_HOLOCRON || g == GT_JEDIMASTER)
+	else if (g == GT_MOVIEDUELS_HOLOCRON || g == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
 		trap->Cvar_Set("sv_maxClients", va("%d", temp));
 		for (i = 0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++)
 		{
 			Com_sprintf(buff, sizeof buff, "addbot \"%s\" %f %s %i %s\n",
-				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_HOLOCRON ? "" : "Blue",
+				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_MOVIEDUELS_HOLOCRON ? "" : "Blue",
 				delay, uiInfo.teamList[k].teamMembers[i]);
 			trap->Cmd_ExecuteText(EXEC_APPEND, buff);
 			delay += 500;
@@ -5129,7 +5133,7 @@ static void UI_StartSkirmish(qboolean next)
 		for (i = 0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers - 1; i++)
 		{
 			Com_sprintf(buff, sizeof buff, "addbot \"%s\" %f %s %i %s\n",
-				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_HOLOCRON ? "" : "Red",
+				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_MOVIEDUELS_HOLOCRON ? "" : "Red",
 				delay, uiInfo.teamList[k].teamMembers[i]);
 			trap->Cmd_ExecuteText(EXEC_APPEND, buff);
 			delay += 500;
@@ -5142,7 +5146,7 @@ static void UI_StartSkirmish(qboolean next)
 		for (i = 0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++)
 		{
 			Com_sprintf(buff, sizeof buff, "addbot \"%s\" %f %s %i %s\n",
-				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_FFA ? "" : "Blue", delay,
+				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_MOVIEDUELS_FFA ? "" : "Blue", delay,
 				uiInfo.teamList[k].teamMembers[i]);
 			trap->Cmd_ExecuteText(EXEC_APPEND, buff);
 			delay += 500;
@@ -5151,13 +5155,13 @@ static void UI_StartSkirmish(qboolean next)
 		for (i = 0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers - 1; i++)
 		{
 			Com_sprintf(buff, sizeof buff, "addbot \"%s\" %f %s %i %s\n",
-				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_FFA ? "" : "Red", delay,
+				UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, g == GT_MOVIEDUELS_FFA ? "" : "Red", delay,
 				uiInfo.teamList[k].teamMembers[i]);
 			trap->Cmd_ExecuteText(EXEC_APPEND, buff);
 			delay += 500;
 		}
 	}
-	if (g >= GT_TEAM)
+	if (g >= GT_MOVIEDUELS_TEAM)
 	{
 		trap->Cmd_ExecuteText(EXEC_APPEND, "wait 5; team Red\n");
 	}
@@ -5462,7 +5466,7 @@ static void UI_SetBotButton(void)
 	const int server = trap->Cvar_VariableValue("sv_running");
 
 	// If in siege or a client, don't show add bot button
-	if (gameType == GT_SIEGE || server == 0) // If it's not siege, don't worry about it
+	if (gameType == GT_MOVIEDUELS_SIEGE || server == 0) // If it's not siege, don't worry about it
 	{
 		const char* name = "addBot";
 		menuDef_t* menu = Menu_GetFocused(); // Get current menu (either video or ingame video, I would assume)
@@ -6402,14 +6406,14 @@ void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index
 void UI_ClampMaxPlayers(void)
 {
 	// duel requires 2 players
-	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_DUEL)
+	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_MOVIEDUELS_DUEL)
 	{
 		if ((int)trap->Cvar_VariableValue("sv_maxClients") < 2)
 			trap->Cvar_Set("sv_maxClients", "2");
 	}
 
 	// power duel requires 3 players
-	else if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_POWERDUEL)
+	else if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_MOVIEDUELS_POWERDUEL)
 	{
 		if ((int)trap->Cvar_VariableValue("sv_maxClients") < 3)
 			trap->Cvar_Set("sv_maxClients", "3");
@@ -6485,8 +6489,8 @@ static void UI_RunMenuScript(char** args)
 				trap->Cvar_Set("g_warmup", "120");
 			}
 
-			if (trap->Cvar_VariableValue("g_gametype") == GT_DUEL ||
-				trap->Cvar_VariableValue("g_gametype") == GT_POWERDUEL)
+			if (trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_DUEL ||
+				trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_POWERDUEL)
 			{
 				//always set fraglimit 1 when starting a duel game
 				trap->Cvar_Set("fraglimit", "1");
@@ -6508,7 +6512,7 @@ static void UI_RunMenuScript(char** args)
 
 					if (numval <= maxcl)
 					{
-						if (ui_actualNetGametype.integer >= GT_TEAM)
+						if (ui_actualNetGametype.integer >= GT_MOVIEDUELS_TEAM)
 						{
 							Com_sprintf(buff, sizeof buff, "addbot \"%s\" %f %s\n", UI_GetBotNameByNumber(bot - 2),
 								skill, "Blue");
@@ -6531,7 +6535,7 @@ static void UI_RunMenuScript(char** args)
 
 					if (numval <= maxcl)
 					{
-						if (ui_actualNetGametype.integer >= GT_TEAM)
+						if (ui_actualNetGametype.integer >= GT_MOVIEDUELS_TEAM)
 						{
 							Com_sprintf(buff, sizeof buff, "addbot \"%s\" %f %s\n", UI_GetBotNameByNumber(bot - 2),
 								skill, "Red");
@@ -6572,7 +6576,7 @@ static void UI_RunMenuScript(char** args)
 		}
 		else if (Q_stricmp(name, "loadArenas") == 0)
 		{
-			if (trap->Cvar_VariableValue("g_gametype") != GT_SINGLE_PLAYER)
+			if (trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_MISSIONS)
 			{
 				UI_LoadArenas();
 			}
@@ -6757,7 +6761,7 @@ static void UI_RunMenuScript(char** args)
 		// On the solo game creation screen, we can't see siege maps
 		else if (Q_stricmp(name, "checkforsiege") == 0)
 		{
-			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_SIEGE)
+			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_MOVIEDUELS_SIEGE)
 			{
 				// fake out the handler to advance to the next game type
 				UI_NetGameType_HandleKey(0, NULL, A_MOUSE1);
@@ -6841,7 +6845,7 @@ static void UI_RunMenuScript(char** args)
 		}
 		else if (Q_stricmp(name, "addBot") == 0)
 		{
-			if (trap->Cvar_VariableValue("g_gametype") >= GT_SINGLE_PLAYER)
+			if (trap->Cvar_VariableValue("g_gametype") >= GT_MOVIEDUELS_MISSIONS)
 			{
 				trap->Cmd_ExecuteText(EXEC_APPEND,
 					va("addbot \"%s\" %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex),
@@ -7290,8 +7294,8 @@ static void UI_RunMenuScript(char** args)
 			int	weaponDisable, i;
 			const char* cvarString;
 
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum == GT_DUEL ||
-				uiInfo.gameTypes[ui_netGameType.integer].gtEnum == GT_POWERDUEL)
+			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum == GT_MOVIEDUELS_DUEL ||
+				uiInfo.gameTypes[ui_netGameType.integer].gtEnum == GT_MOVIEDUELS_POWERDUEL)
 			{
 				cvarString = "g_duelWeaponDisable";
 			}
@@ -7321,7 +7325,7 @@ static void UI_RunMenuScript(char** args)
 		//  swapping humans for bots on the menu
 		else if (Q_stricmp(name, "setSiegeNoBots") == 0)
 		{
-			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_SIEGE)
+			if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_MOVIEDUELS_SIEGE)
 			{
 				int i;
 				int redValue;
@@ -7815,7 +7819,7 @@ void UI_SetSiegeTeams(void)
 	const int gametype = atoi(Info_ValueForKey(info, "g_gametype"));
 
 	//If the server we are connected to is not siege we cannot choose a class anyway
-	if (gametype != GT_SIEGE)
+	if (gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		return;
 	}
@@ -7929,9 +7933,9 @@ static int UI_MapCountByGameType(qboolean singlePlayer)
 		? uiInfo.gameTypes[ui_gametype.integer].gtEnum
 		: uiInfo.gameTypes[ui_netGametype.integer].gtEnum;
 
-	//Since GT_CTY uses the same entities as CTF, use the same map sets
-	if (game == GT_CTY)
-		game = GT_CTF;
+	//Since GT_MOVIEDUELS_CTY uses the same entities as CTF, use the same map sets
+	if (game == GT_MOVIEDUELS_CTY)
+		game = GT_MOVIEDUELS_CTF;
 
 	for (int i = 0; i < uiInfo.mapCount; i++)
 	{
@@ -7940,7 +7944,7 @@ static int UI_MapCountByGameType(qboolean singlePlayer)
 		{
 			if (singlePlayer)
 			{
-				if (!(uiInfo.mapList[i].typeBits & 1 << GT_SINGLE_PLAYER))
+				if (!(uiInfo.mapList[i].typeBits & 1 << GT_MOVIEDUELS_MISSIONS))
 				{
 					continue;
 				}
@@ -9111,7 +9115,7 @@ static const char* UI_FeederItemText(float feederID, int index, int column,
 					*handle3 = uiInfo.uiDC.Assets.needPass;
 				}
 				//check for saberonly and restricted force powers
-				if (gametype != GT_JEDIMASTER)
+				if (gametype != GT_MOVIEDUELS_JEDIMASTER)
 				{
 					qboolean saberOnly = qtrue;
 					qboolean allForceDisabled = qfalse;
@@ -9149,8 +9153,8 @@ static const char* UI_FeederItemText(float feederID, int index, int column,
 					}
 					else if (atoi(Info_ValueForKey(info, "truejedi")) != 0)
 					{
-						if (gametype != GT_HOLOCRON
-							&& gametype != GT_JEDIMASTER
+						if (gametype != GT_MOVIEDUELS_HOLOCRON
+							&& gametype != GT_MOVIEDUELS_JEDIMASTER
 							&& !saberOnly
 							&& !allForceDisabled)
 						{
@@ -11557,7 +11561,7 @@ GetModuleAPI
 
 uiImport_t* trap = NULL;
 
-Q_EXPORT uiExport_t* QDECL GetModuleAPI(int apiVersion, uiImport_t* import)
+Q_EXPORT uiExport_t * QDECL GetModuleAPI(int apiVersion, uiImport_t * import)
 {
 	static uiExport_t uie = { 0 };
 

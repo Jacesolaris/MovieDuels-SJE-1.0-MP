@@ -150,56 +150,53 @@ int G_GetMapTypeBits(const char* type)
 		if (strstr(type, "ffa"))
 		{
 			typeBits |= 1 << GT_FFA;
-			typeBits |= 1 << GT_JEDIMASTER;
 		}
-		if (strstr(type, "missions"))
+		if (strstr(type, "movieduels_mp_ffa"))
 		{
-			typeBits |= 1 << GT_SINGLE_PLAYER;
+			typeBits |= 1 << GT_MOVIEDUELS_FFA;
 		}
-		if (strstr(type, "team"))
+		if (strstr(type, "movieduels_mp_holocron"))
 		{
-			typeBits |= 1 << GT_TEAM;
+			typeBits |= 1 << GT_MOVIEDUELS_HOLOCRON;
 		}
-		if (strstr(type, "holocron"))
+		if (strstr(type, "movieduels_mp_jm"))
 		{
-			typeBits |= 1 << GT_HOLOCRON;
+			typeBits |= 1 << GT_MOVIEDUELS_JEDIMASTER;
 		}
-		if (strstr(type, "jedimaster"))
+		if (strstr(type, "movieduels_mp_duel"))
 		{
-			typeBits |= 1 << GT_JEDIMASTER;
+			typeBits |= 1 << GT_MOVIEDUELS_DUEL;
 		}
-		if (strstr(type, "duel"))
+		if (strstr(type, "movieduels_mp_powerduel"))
 		{
-			typeBits |= 1 << GT_DUEL;
-			typeBits |= 1 << GT_POWERDUEL;
+			typeBits |= 1 << GT_MOVIEDUELS_POWERDUEL;
 		}
-		if (strstr(type, "powerduel"))
+		if (strstr(type, "movieduels_mp_missions"))
 		{
-			typeBits |= 1 << GT_DUEL;
-			typeBits |= 1 << GT_POWERDUEL;
+			typeBits |= 1 << GT_MOVIEDUELS_MISSIONS;
 		}
-		if (strstr(type, "siege"))
+		if (strstr(type, "movieduels_mp_team"))
 		{
-			typeBits |= 1 << GT_SIEGE;
+			typeBits |= 1 << GT_MOVIEDUELS_TEAM;
 		}
-		if (strstr(type, "ctf"))
+		if (strstr(type, "movieduels_mp_siege"))
 		{
-			typeBits |= 1 << GT_CTF;
-			typeBits |= 1 << GT_CTY;
+			typeBits |= 1 << GT_MOVIEDUELS_SIEGE;
 		}
-		if (strstr(type, "cty"))
+		if (strstr(type, "movieduels_mp_ctf"))
 		{
-			typeBits |= 1 << GT_CTY;
+			typeBits |= 1 << GT_MOVIEDUELS_CTF;
+			typeBits |= 1 << GT_MOVIEDUELS_CTY;
 		}
-		if (strstr(type, "MB"))
+		if (strstr(type, "movieduels_mp_cty"))
 		{
-			typeBits |= 1 << GT_FFA;
+			typeBits |= 1 << GT_MOVIEDUELS_CTY;
 		}
 	}
 	else
 	{
-		typeBits |= 1 << GT_FFA;
-		typeBits |= 1 << GT_JEDIMASTER;
+		typeBits |= 1 << GT_MOVIEDUELS_FFA;
+		typeBits |= 1 << GT_MOVIEDUELS_JEDIMASTER;
 	}
 
 	return typeBits;
@@ -221,7 +218,7 @@ qboolean G_DoesMapSupportGametype(const char* mapname, const int gametype)
 	}
 
 	// FFA now allows voting for maps supported by other gametypes
-	if (gametype == GT_FFA)
+	if (gametype == GT_MOVIEDUELS_FFA)
 	{
 		return qtrue;
 	}
@@ -538,7 +535,7 @@ void G_AddRandomBot(const int team)
 			{
 				continue;
 			}
-			if (level.gametype == GT_SIEGE)
+			if (level.gametype == GT_MOVIEDUELS_SIEGE)
 			{
 				if (team >= 0 && cl->sess.siegeDesiredTeam != team)
 				{
@@ -578,7 +575,7 @@ void G_AddRandomBot(const int team)
 			{
 				continue;
 			}
-			if (level.gametype == GT_SIEGE)
+			if (level.gametype == GT_MOVIEDUELS_SIEGE)
 			{
 				if (team >= 0 && cl->sess.siegeDesiredTeam != team)
 				{
@@ -636,7 +633,7 @@ int G_RemoveRandomBot(const int team)
 		if (cl->sess.sessionTeam == TEAM_SPECTATOR && cl->sess.spectatorState == SPECTATOR_FOLLOW)
 			continue;
 
-		if (level.gametype == GT_SIEGE && team >= 0 && cl->sess.siegeDesiredTeam != team)
+		if (level.gametype == GT_MOVIEDUELS_SIEGE && team >= 0 && cl->sess.siegeDesiredTeam != team)
 			continue;
 		if (team >= 0 && cl->sess.sessionTeam != team)
 			continue;
@@ -672,7 +669,7 @@ int G_CountHumanPlayers(int ignoreClientNum, const int team)
 		}
 		//don't count as a human player (for the bot_minplayers stuff) until
 		//the player isn't a specator.
-		if (level.gametype != GT_DUEL && level.gametype != GT_POWERDUEL
+		if (level.gametype != GT_MOVIEDUELS_DUEL && level.gametype != GT_MOVIEDUELS_POWERDUEL
 			//human players in the game are specators while not in the duel.  Don't
 			//use this rule for those gametypes.
 			&& cl->sess.sessionTeam == TEAM_SPECTATOR)
@@ -703,7 +700,7 @@ int G_CountBotPlayers(const int team)
 		{
 			continue;
 		}
-		if (level.gametype == GT_SIEGE)
+		if (level.gametype == GT_MOVIEDUELS_SIEGE)
 		{
 			if (team >= 0 && cl->sess.siegeDesiredTeam != team)
 			{
@@ -895,7 +892,7 @@ static void G_AddBot(const char* name, const float skill, const char* team, cons
 	const char* botinfo = G_GetBotInfoByName(name);
 	if (!botinfo)
 	{
-		if (level.gametype == GT_SINGLE_PLAYER)
+		if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 		{
 			trap->Print(S_COLOR_RED "Error: Bots are not supported in Mission mode\n");
 			trap->BotFreeClient(client_num);
@@ -996,7 +993,7 @@ static void G_AddBot(const char* name, const float skill, const char* team, cons
 	// initialize the bot settings
 	if (!team || !*team)
 	{
-		if (level.gametype >= GT_TEAM)
+		if (level.gametype >= GT_MOVIEDUELS_TEAM)
 		{
 			if (PickTeam(client_num) == TEAM_RED)
 				team = "red";
@@ -1047,7 +1044,7 @@ static void G_AddBot(const char* name, const float skill, const char* team, cons
 	// register the userinfo
 	trap->SetUserinfo(client_num, userinfo);
 
-	if (level.gametype >= GT_TEAM)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		if (team && !Q_stricmp(team, "red"))
 			bot->client->sess.sessionTeam = TEAM_RED;
@@ -1057,7 +1054,7 @@ static void G_AddBot(const char* name, const float skill, const char* team, cons
 			bot->client->sess.sessionTeam = PickTeam(-1);
 	}
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		bot->client->sess.siegeDesiredTeam = bot->client->sess.sessionTeam;
 		bot->client->sess.sessionTeam = TEAM_SPECTATOR;
@@ -1082,7 +1079,7 @@ static void G_AddBot(const char* name, const float skill, const char* team, cons
 			team = "Red";
 		else
 		{
-			if (level.gametype == GT_SIEGE)
+			if (level.gametype == GT_MOVIEDUELS_SIEGE)
 				team = bot->client->sess.sessionTeam == TEAM_BLUE ? "Blue" : "s";
 			else
 				team = "Blue";
@@ -1099,8 +1096,8 @@ static void G_AddBot(const char* name, const float skill, const char* team, cons
 			return;
 	}
 
-	if (level.gametype == GT_DUEL ||
-		level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL ||
+		level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		int loners = 0;
 		int doubles = 0;
@@ -1332,7 +1329,7 @@ G_LoadBots
 static void G_LoadBots(void)
 {
 	vmCvar_t bots_file;
-	char dirlist[1024];
+	char dirlist[2048];
 	int dirlen;
 
 	if (!trap->Cvar_VariableIntegerValue("bot_enable"))
@@ -1410,7 +1407,7 @@ G_InitBots
 */
 void G_InitBots(void)
 {
-	if (level.gametype != GT_SINGLE_PLAYER)
+	if (level.gametype != GT_MOVIEDUELS_MISSIONS)
 	{
 		trap->Cvar_Register(&bot_minplayers, "bot_minplayers", "0", CVAR_SERVERINFO);
 		LoadPath_ThisLevel(); //no bots routes in sp

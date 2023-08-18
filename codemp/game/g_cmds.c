@@ -325,7 +325,7 @@ void G_Give(gentity_t* ent, const char* name, const char* args, const int argc)
 			ent->health = Com_Clampi(1, ent->client->ps.stats[STAT_MAX_HEALTH], atoi(args));
 		else
 		{
-			if (level.gametype == GT_SIEGE && ent->client->siegeClass != -1)
+			if (level.gametype == GT_MOVIEDUELS_SIEGE && ent->client->siegeClass != -1)
 				ent->health = bgSiegeClasses[ent->client->siegeClass].maxhealth;
 			else
 				ent->health = ent->client->ps.stats[STAT_MAX_HEALTH];
@@ -340,7 +340,7 @@ void G_Give(gentity_t* ent, const char* name, const char* args, const int argc)
 			ent->client->ps.stats[STAT_ARMOR] = Com_Clampi(0, ent->client->ps.stats[STAT_MAX_HEALTH], atoi(args));
 		else
 		{
-			if (level.gametype == GT_SIEGE && ent->client->siegeClass != -1)
+			if (level.gametype == GT_MOVIEDUELS_SIEGE && ent->client->siegeClass != -1)
 				ent->client->ps.stats[STAT_ARMOR] = bgSiegeClasses[ent->client->siegeClass].maxarmor;
 			else
 				ent->client->ps.stats[STAT_ARMOR] = ent->client->ps.stats[STAT_MAX_HEALTH];
@@ -581,7 +581,7 @@ void Cmd_LevelShot_f(const gentity_t* ent)
 	}
 
 	// doesn't work in single player
-	if (level.gametype == GT_SINGLE_PLAYER)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		trap->SendServerCommand(ent - g_entities, "print \"Must not be in singleplayer mode for levelshot\n\"");
 		return;
@@ -623,7 +623,7 @@ void G_Kill(gentity_t* ent)
 	if (in_camera)
 		return;
 
-	if ((level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL) &&
+	if ((level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL) &&
 		level.numPlayingClients > 1 && !level.warmupTime)
 	{
 		if (!g_allowDuelSuicide.integer)
@@ -695,13 +695,13 @@ void BroadcastTeamChange(gclient_t* client, const int old_team)
 {
 	client->ps.fd.forceDoInit = 1; //every time we change teams make sure our force powers are set right
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//don't announce these things in siege
 		return;
 	}
 
-	if (level.gametype == GT_SINGLE_PLAYER)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		if (client->sess.sessionTeam == TEAM_SPECTATOR && old_team != TEAM_SPECTATOR)
 		{
@@ -819,12 +819,12 @@ void SetTeam(gentity_t* ent, const char* s)
 		team = TEAM_SPECTATOR;
 		spec_state = SPECTATOR_FREE;
 	}
-	else if (g_gametype.integer == GT_SINGLE_PLAYER)
+	else if (g_gametype.integer == GT_MOVIEDUELS_MISSIONS)
 	{
 		//players spawn on NPCTEAM_PLAYER
 		team = NPCTEAM_PLAYER;
 	}
-	else if (level.gametype >= GT_TEAM)
+	else if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		// if running a team game, assign player to one of the teams
 		spec_state = SPECTATOR_NOT;
@@ -880,7 +880,7 @@ void SetTeam(gentity_t* ent, const char* s)
 
 	const int old_team = client->sess.sessionTeam;
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		if (client->tempSpectate >= level.time &&
 			team == TEAM_SPECTATOR)
@@ -929,12 +929,12 @@ void SetTeam(gentity_t* ent, const char* s)
 	}
 
 	// override decision if limiting the players
-	if (level.gametype == GT_DUEL
+	if (level.gametype == GT_MOVIEDUELS_DUEL
 		&& level.numNonSpectatorClients >= 2)
 	{
 		team = TEAM_SPECTATOR;
 	}
-	else if (level.gametype == GT_POWERDUEL
+	else if (level.gametype == GT_MOVIEDUELS_POWERDUEL
 		&& (level.numPlayingClients >= 3 || G_PowerDuelCheckFail(ent)))
 	{
 		team = TEAM_SPECTATOR;
@@ -988,16 +988,16 @@ void SetTeam(gentity_t* ent, const char* s)
 		// when oldteam is spectator, take care to restore old score info!
 		// this is potentially changed during a specator/follow! (see SpectatorClientEndFrame)
 		if (g_spectate_keep_score.integer >= 1
-			&& level.gametype != GT_DUEL
-			&& level.gametype != GT_POWERDUEL
-			&& level.gametype != GT_SIEGE)
+			&& level.gametype != GT_MOVIEDUELS_DUEL
+			&& level.gametype != GT_MOVIEDUELS_POWERDUEL
+			&& level.gametype != GT_MOVIEDUELS_SIEGE)
 		{
 			ent->client->ps.persistant[PERS_SCORE] = ent->client->pers.save_score; // restore!
 		}
 		else
 		{
-			if (level.gametype != GT_DUEL
-				&& level.gametype != GT_POWERDUEL
+			if (level.gametype != GT_MOVIEDUELS_DUEL
+				&& level.gametype != GT_MOVIEDUELS_POWERDUEL
 				&& ent->s.eType != ET_NPC)
 			{
 				if (g_spectate_keep_score.integer >= 0)
@@ -1119,7 +1119,7 @@ void Cmd_Team_f(gentity_t* ent)
 
 	if (trap->Argc() != 2)
 	{
-		if (level.gametype == GT_SINGLE_PLAYER)
+		if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 		{
 			switch (old_team)
 			{
@@ -1177,7 +1177,7 @@ void Cmd_Team_f(gentity_t* ent)
 	}
 
 	// if they are playing a tournament game, count as a loss
-	if (level.gametype == GT_DUEL
+	if (level.gametype == GT_MOVIEDUELS_DUEL
 		&& ent->client->sess.sessionTeam == TEAM_FREE)
 	{
 		//in a tournament game
@@ -1186,7 +1186,7 @@ void Cmd_Team_f(gentity_t* ent)
 		return;
 	}
 
-	if (level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//don't let clients change teams manually at all in powerduel, it will be taken care of through automated stuff
 		trap->SendServerCommand(ent - g_entities, "print \"Cannot switch teams in Power Duel\n\"");
@@ -1212,7 +1212,7 @@ void Cmd_DuelTeam_f(gentity_t* ent)
 	int old_team;
 	char s[MAX_TOKEN_CHARS];
 
-	if (level.gametype != GT_POWERDUEL)
+	if (level.gametype != GT_MOVIEDUELS_POWERDUEL)
 	{
 		//don't bother doing anything if this is not power duel
 		return;
@@ -1341,7 +1341,7 @@ void Cmd_SiegeClass_f(gentity_t* ent)
 	char class_name[64];
 	qboolean startedAsSpec = qfalse;
 
-	if (level.gametype != GT_SIEGE)
+	if (level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//classes are only valid for this gametype
 		return;
@@ -1465,7 +1465,7 @@ void Cmd_ForceChanged_f(gentity_t* ent)
 
 	ent->client->ps.fd.forceDoInit = 1;
 argCheck:
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//If this is duel, don't even bother changing team in relation to this.
 		return;
@@ -1496,7 +1496,7 @@ qboolean G_SetSaber(const gentity_t* ent, const int saber_num, const char* saber
 {
 	char trunc_saber_name[MAX_QPATH] = { 0 };
 
-	if (!siege_override && level.gametype == GT_SIEGE && ent->client->siegeClass != -1 &&
+	if (!siege_override && level.gametype == GT_MOVIEDUELS_SIEGE && ent->client->siegeClass != -1 &&
 		(bgSiegeClasses[ent->client->siegeClass].saberStance || bgSiegeClasses[ent->client->siegeClass].saber1[0] ||
 			bgSiegeClasses[ent->client->siegeClass].saber2[0]))
 	{
@@ -1607,7 +1607,7 @@ void Cmd_Follow_f(gentity_t* ent)
 	}
 
 	// if they are playing a tournament game, count as a loss
-	if ((level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if ((level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 		&& ent->client->sess.sessionTeam == TEAM_FREE)
 	{
 		//WTF???
@@ -1643,7 +1643,7 @@ void Cmd_FollowCycle_f(gentity_t* ent, const int dir)
 	}
 
 	// if they are playing a tournament game, count as a loss
-	if ((level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if ((level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 		&& ent->client->sess.sessionTeam == TEAM_FREE)
 	{
 		//WTF???
@@ -1762,7 +1762,7 @@ static void G_SayTo(const gentity_t* ent, const gentity_t* other, const int mode
 		return;
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		ent->client && (ent->client->tempSpectate >= level.time || ent->client->sess.sessionTeam == TEAM_SPECTATOR) &&
 		other->client->sess.sessionTeam != TEAM_SPECTATOR &&
 		other->client->tempSpectate < level.time)
@@ -1794,7 +1794,7 @@ void G_Say(const gentity_t* ent, const gentity_t* target, int mode, const char* 
 	char location[64];
 	char* loc_msg = NULL;
 
-	if (level.gametype < GT_TEAM && mode == SAY_TEAM)
+	if (level.gametype < GT_MOVIEDUELS_TEAM && mode == SAY_TEAM)
 	{
 		mode = SAY_ALL;
 	}
@@ -1827,7 +1827,7 @@ void G_Say(const gentity_t* ent, const gentity_t* target, int mode, const char* 
 		color = COLOR_CYAN;
 		break;
 	case SAY_TELL:
-		if (target && target->inuse && target->client && level.gametype >= GT_TEAM &&
+		if (target && target->inuse && target->client && level.gametype >= GT_MOVIEDUELS_TEAM &&
 			target->client->sess.sessionTeam == ent->client->sess.sessionTeam &&
 			Team_GetLocationMsg(ent, location, sizeof location))
 		{
@@ -1913,9 +1913,9 @@ static void Cmd_SayTeam_f(const gentity_t* ent)
 
 	// if not in TEAM gametypes and player has allies, use allychat (SAY_ALLY) instead of SAY_ALL
 	if (sje_number_of_allies(ent) > 0)
-		G_Say(ent, NULL, level.gametype >= GT_TEAM ? SAY_TEAM : SAY_ALLY, p);
+		G_Say(ent, NULL, level.gametype >= GT_MOVIEDUELS_TEAM ? SAY_TEAM : SAY_ALLY, p);
 	else
-		G_Say(ent, NULL, level.gametype >= GT_TEAM ? SAY_TEAM : SAY_ALL, p);
+		G_Say(ent, NULL, level.gametype >= GT_MOVIEDUELS_TEAM ? SAY_TEAM : SAY_ALL, p);
 }
 
 /*
@@ -1977,7 +1977,7 @@ static void Cmd_VoiceCommand_f(gentity_t* ent)
 	if (trap->Argc() < 2)
 	{
 		// other gamemodes will show info of how to use the voice_cmd
-		if (level.gametype < GT_TEAM)
+		if (level.gametype < GT_MOVIEDUELS_TEAM)
 		{
 			for (i = 0; i < MAX_CUSTOM_SIEGE_SOUNDS; i++)
 			{
@@ -2031,7 +2031,7 @@ static void Cmd_VoiceCommand_f(gentity_t* ent)
 		return;
 	}
 
-	if (level.gametype >= GT_TEAM)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		gentity_t* te = G_TempEntity(vec3_origin, EV_VOICECMD_SOUND);
 		te->s.groundEntityNum = ent->s.number;
@@ -2135,16 +2135,16 @@ void Cmd_Where_f(const gentity_t* ent)
 }
 
 static const char* gameNames[] = {
-	"Free For All",
-	"Holocron FFA",
-	"Jedi Master",
-	"Duel",
-	"Power Duel",
-	"Single Player",
-	"Team FFA",
-	"Siege",
-	"Capture the Flag",
-	"Capture the Ysalamiri"
+	"MovieDuels Free For All",
+	"MovieDuels Holocron",
+	"MovieDuels Jedi Master",
+	"MovieDuels Duel",
+	"MovieDuels Power Duel",
+	"MovieDuels missions",
+	"MovieDuels Team",
+	"MovieDuels Siege",
+	"MovieDuels CTF",
+	"MovieDuels CTY"
 };
 
 /*
@@ -2207,7 +2207,7 @@ qboolean G_VoteGametype(const gentity_t* ent, int num_args, const char* arg1, co
 		{
 			trap->SendServerCommand(ent - g_entities,
 				va("print \"Gametype (%s) unrecognised, defaulting to FFA/Deathmatch\n\"", arg2));
-			gt = GT_FFA;
+			gt = GT_MOVIEDUELS_FFA;
 		}
 	}
 	// numeric but out of range
@@ -2215,11 +2215,11 @@ qboolean G_VoteGametype(const gentity_t* ent, int num_args, const char* arg1, co
 	{
 		trap->SendServerCommand(ent - g_entities,
 			va("print \"Gametype (%i) is out of range, defaulting to FFA/Deathmatch\n\"", gt));
-		gt = GT_FFA;
+		gt = GT_MOVIEDUELS_FFA;
 	}
 
 	// logically invalid gametypes, or gametypes not fully implemented in MP
-	if (gt == GT_SINGLE_PLAYER)
+	if (gt == GT_MOVIEDUELS_MISSIONS)
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"This gametype is not supported (%s).\n\"", arg2));
 		return qfalse;
@@ -2466,7 +2466,7 @@ void Cmd_CallVote_f(gentity_t* ent)
 	}
 
 	// can't vote as a spectator, except in (power)duel
-	if (level.gametype != GT_DUEL && level.gametype != GT_POWERDUEL && ent->client->sess.sessionTeam == TEAM_SPECTATOR)
+	if (level.gametype != GT_MOVIEDUELS_DUEL && level.gametype != GT_MOVIEDUELS_POWERDUEL && ent->client->sess.sessionTeam == TEAM_SPECTATOR)
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NOSPECVOTE")));
 		return;
@@ -2653,7 +2653,7 @@ void Cmd_Vote_f(const gentity_t* ent)
 			va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "VOTEALREADY")));
 		return;
 	}
-	if (level.gametype != GT_DUEL && level.gametype != GT_POWERDUEL)
+	if (level.gametype != GT_MOVIEDUELS_DUEL && level.gametype != GT_MOVIEDUELS_POWERDUEL)
 	{
 		if (ent->client->sess.sessionTeam == TEAM_SPECTATOR)
 		{
@@ -3272,7 +3272,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 		select_level = ent->client->ps.fd.saber_anim_level;
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		ent->client->siegeClass != -1 &&
 		bgSiegeClasses[ent->client->siegeClass].saberStance)
 	{
@@ -3396,7 +3396,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 		return;
 	}
 
-	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//rather pointless in this mode..
 		trap->SendServerCommand(ent - g_entities,
@@ -3444,7 +3444,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 			return;
 		}
 
-		if (!g_friendlyFire.integer && (level.gametype >= GT_TEAM && OnSameTeam(ent, challenged)))
+		if (!g_friendlyFire.integer && (level.gametype >= GT_MOVIEDUELS_TEAM && OnSameTeam(ent, challenged)))
 		{
 			return;
 		}

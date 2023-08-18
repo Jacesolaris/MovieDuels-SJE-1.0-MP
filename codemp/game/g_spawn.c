@@ -813,10 +813,10 @@ qboolean G_CallSpawn(gentity_t* ent)
 	{
 		if (strcmp(item->classname, ent->classname) == 0)
 		{
-			if (g_gametype.integer != GT_JEDIMASTER
-				&& g_gametype.integer != GT_HOLOCRON
-				&& g_gametype.integer != GT_SINGLE_PLAYER
-				&& g_gametype.integer != GT_SIEGE
+			if (g_gametype.integer != GT_MOVIEDUELS_JEDIMASTER
+				&& g_gametype.integer != GT_MOVIEDUELS_HOLOCRON
+				&& g_gametype.integer != GT_MOVIEDUELS_MISSIONS
+				&& g_gametype.integer != GT_MOVIEDUELS_SIEGE
 				&& (item->giType == IT_WEAPON || item->giType == IT_AMMO))
 			{
 				//don't spawn weapons or their ammo as part of the map load.
@@ -1013,16 +1013,16 @@ void G_SpawnGEntityFromSpawnVars(qboolean inSubBSP)
 	static char* gametypeNames[] =
 	{
 		"ffa",
-		"holocron",
-		"jedimaster",
-		"duel",
-		"powerduel",
-		"single",
-		"team",
-		"siege",
-		"ctf",
-		"cty",
-		"MB"
+		"movieduels_mp_ffa",
+		"movieduels_mp_holocron",
+		"movieduels_mp_jm",
+		"movieduels_mp_duel",
+		"movieduels_mp_powerduel",
+		"movieduels_mp_missions",
+		"movieduels_mp_team",
+		"movieduels_mp_siege",
+		"movieduels_mp_ctf",
+		"movieduels_mp_cty"
 	};
 
 	// get the next free entity
@@ -1034,7 +1034,7 @@ void G_SpawnGEntityFromSpawnVars(qboolean inSubBSP)
 	}
 
 	// check for "notsingle" flag
-	if (level.gametype == GT_SINGLE_PLAYER)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		G_SpawnInt("notsingle", "0", &i);
 		if (i)
@@ -1044,8 +1044,8 @@ void G_SpawnGEntityFromSpawnVars(qboolean inSubBSP)
 			return;
 		}
 	}
-	// check for "notteam" flag (GT_FFA, GT_DUEL, GT_SINGLE_PLAYER)
-	if (level.gametype >= GT_TEAM)
+	// check for "notteam" flag (GT_MOVIEDUELS_FFA, GT_MOVIEDUELS_DUEL, GT_MOVIEDUELS_MISSIONS)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		G_SpawnInt("notteam", "0", &i);
 		if (i)
@@ -1068,7 +1068,7 @@ void G_SpawnGEntityFromSpawnVars(qboolean inSubBSP)
 
 	if (G_SpawnString("gametype", NULL, &value))
 	{
-		if (level.gametype >= GT_FFA && level.gametype < GT_MAX_GAME_TYPE)
+		if (level.gametype >= GT_MOVIEDUELS_FFA && level.gametype < GT_MAX_GAME_TYPE)
 		{
 			const char* gametypeName = gametypeNames[level.gametype];
 
@@ -1225,16 +1225,16 @@ void sje_main_spawn_entity(gentity_t* ent)
 	static char* gametypeNames[] =
 	{
 		"ffa",
-		"holocron",
-		"jedimaster",
-		"duel",
-		"powerduel",
-		"single",
-		"team",
-		"siege",
-		"ctf",
-		"cty",
-		"MB"
+		"movieduels_mp_ffa",
+		"movieduels_mp_holocron",
+		"movieduels_mp_jm",
+		"movieduels_mp_duel",
+		"movieduels_mp_powerduel",
+		"movieduels_mp_missions",
+		"movieduels_mp_team",
+		"movieduels_mp_siege",
+		"movieduels_mp_ctf",
+		"movieduels_mp_cty"
 	};
 
 	while (j < level.sje_spawn_strings_values_count[ent->s.number])
@@ -1250,7 +1250,7 @@ void sje_main_spawn_entity(gentity_t* ent)
 	level.numSpawnVars = level.sje_spawn_strings_values_count[ent->s.number] / 2;
 
 	// check for "notsingle" flag
-	if (level.gametype == GT_SINGLE_PLAYER)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		G_SpawnInt("notsingle", "0", &i);
 		if (i)
@@ -1260,8 +1260,8 @@ void sje_main_spawn_entity(gentity_t* ent)
 			return;
 		}
 	}
-	// check for "notteam" flag (GT_FFA, GT_DUEL, GT_SINGLE_PLAYER)
-	if (level.gametype >= GT_TEAM)
+	// check for "notteam" flag (GT_MOVIEDUELS_FFA, GT_MOVIEDUELS_DUEL, GT_MOVIEDUELS_MISSIONS)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		G_SpawnInt("notteam", "0", &i);
 		if (i)
@@ -1284,7 +1284,7 @@ void sje_main_spawn_entity(gentity_t* ent)
 
 	if (G_SpawnString("gametype", NULL, &value))
 	{
-		if (level.gametype >= GT_FFA && level.gametype < GT_MAX_GAME_TYPE)
+		if (level.gametype >= GT_MOVIEDUELS_FFA && level.gametype < GT_MAX_GAME_TYPE)
 		{
 			const char* gametypeName = gametypeNames[level.gametype];
 
@@ -1841,7 +1841,7 @@ void SP_worldspawn(void)
 		}
 	}
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//a tad bit of a hack, but..
 		EWebPrecache();
@@ -1891,10 +1891,10 @@ void SP_worldspawn(void)
 		level.warmupTime = 0;
 	}
 	else if (g_doWarmup.integer
-		&& level.gametype != GT_DUEL
-		&& level.gametype != GT_POWERDUEL
-		&& level.gametype != GT_SIEGE
-		&& level.gametype != GT_SINGLE_PLAYER)
+		&& level.gametype != GT_MOVIEDUELS_DUEL
+		&& level.gametype != GT_MOVIEDUELS_POWERDUEL
+		&& level.gametype != GT_MOVIEDUELS_SIEGE
+		&& level.gametype != GT_MOVIEDUELS_MISSIONS)
 	{
 		// Turn it on
 		level.warmupTime = -1;

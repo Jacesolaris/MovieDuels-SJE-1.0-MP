@@ -2005,7 +2005,7 @@ static void CG_General(centity_t* cent)
 
 	if (cent->currentState.eFlags & EF_FORCE_VISIBLE && cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE)
 	{
-		if (cgs.gametype == GT_SIEGE)
+		if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 		{
 			// A team game
 			if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_SPECTATOR || cg.predicted_player_state.persistant[
@@ -2034,7 +2034,7 @@ static void CG_General(centity_t* cent)
 				ent.renderfx |= RF_MINLIGHT | RF_NODEPTH;
 			}
 		}
-		else if (cgs.gametype >= GT_TEAM)
+		else if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 		{
 			// A team game
 			if (cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_RED)
@@ -2054,7 +2054,7 @@ static void CG_General(centity_t* cent)
 				ent.renderfx |= RF_MINLIGHT | RF_NODEPTH;
 			}
 		}
-		else if (cgs.gametype == GT_FFA)
+		else if (cgs.gametype == GT_MOVIEDUELS_FFA)
 		{
 			// A team game
 			if (cg.predicted_player_state.botclass == BCLASS_DESANN
@@ -3274,7 +3274,7 @@ static void CG_Missile(centity_t* cent)
 	CG_AddRefEntityWithPowerups(&ent, s1);
 
 	if (s1->weapon == WP_SABER
-		&& (cgs.gametype == GT_JEDIMASTER || //playing JediMaster
+		&& (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER || //playing JediMaster
 			s1->owner == cg.snap->ps.client_num)) //or it's our saber and we've dropped it.
 	{
 		// always make the saber glow when on the ground
@@ -3311,7 +3311,7 @@ static void CG_Missile(centity_t* cent)
 			trap->FX_AddSprite(&fx_s_args);
 		}
 
-		if (cgs.gametype == GT_JEDIMASTER)
+		if (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER)
 		{
 			ent.shaderRGBA[0] = 255;
 			ent.shaderRGBA[1] = 255;

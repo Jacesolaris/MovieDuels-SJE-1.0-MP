@@ -177,60 +177,57 @@ void UI_LoadArenas(void)
 
 		const char* type = Info_ValueForKey(ui_arenaInfos[n], "type");
 		// if no type specified, it will be treated as "ffa"
-		if (*type) {
+		if (*type)
+		{
 			if (strstr(type, "ffa"))
 			{
 				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
 			}
-			if (strstr(type, "team"))
+			if (strstr(type, "movieduels_mp_ffa"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_TEAM;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_FFA;
 			}
-			if (strstr(type, "missions"))
+			if (strstr(type, "movieduels_mp_holocron"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SINGLE_PLAYER;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_HOLOCRON;
 			}
-			if (strstr(type, "holocron"))
+			if (strstr(type, "movieduels_mp_jm"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_HOLOCRON;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_JEDIMASTER;
 			}
-			if (strstr(type, "jedimaster"))
+			if (strstr(type, "movieduels_mp_duel"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_DUEL;
 			}
-			if (strstr(type, "duel"))
+			if (strstr(type, "movieduels_mp_powerduel"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_POWERDUEL;
 			}
-			if (strstr(type, "powerduel"))
+			if (strstr(type, "movieduels_mp_missions"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_MISSIONS;
 			}
-			if (strstr(type, "siege"))
+			if (strstr(type, "movieduels_mp_team"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SIEGE;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_TEAM;
 			}
-			if (strstr(type, "ctf"))
+			if (strstr(type, "movieduels_mp_siege"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTF;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_SIEGE;
 			}
-			if (strstr(type, "cty"))
+			if (strstr(type, "movieduels_mp_ctf"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_CTF;
 			}
-			if (strstr(type, "MB"))
+			if (strstr(type, "movieduels_mp_cty"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_CTY;
 			}
 		}
 		else
 		{
-			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
-			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
+			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_FFA;
+			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_JEDIMASTER;
 		}
 
 		uiInfo.mapCount++;
@@ -277,60 +274,57 @@ void UI_LoadSPArenas(void)
 
 		const char* type = Info_ValueForKey(ui_arenaInfos[n], "type");
 		// if no type specified, it will be treated as "ffa"
-		if (*type) {
+		if (*type)
+		{
 			if (strstr(type, "ffa"))
 			{
 				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
 			}
-			if (strstr(type, "team"))
+			if (strstr(type, "movieduels_mp_ffa"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_TEAM;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_FFA;
 			}
-			if (strstr(type, "missions"))
+			if (strstr(type, "movieduels_mp_holocron"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SINGLE_PLAYER;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_HOLOCRON;
 			}
-			if (strstr(type, "holocron"))
+			if (strstr(type, "movieduels_mp_jm"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_HOLOCRON;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_JEDIMASTER;
 			}
-			if (strstr(type, "jedimaster"))
+			if (strstr(type, "movieduels_mp_duel"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_DUEL;
 			}
-			if (strstr(type, "duel"))
+			if (strstr(type, "movieduels_mp_powerduel"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_POWERDUEL;
 			}
-			if (strstr(type, "powerduel"))
+			if (strstr(type, "movieduels_mp_missions"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_MISSIONS;
 			}
-			if (strstr(type, "siege"))
+			if (strstr(type, "movieduels_mp_team"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SIEGE;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_TEAM;
 			}
-			if (strstr(type, "ctf"))
+			if (strstr(type, "movieduels_mp_siege"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTF;
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_SIEGE;
 			}
-			if (strstr(type, "cty"))
+			if (strstr(type, "movieduels_mp_ctf"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_CTF;
 			}
-			if (strstr(type, "MB"))
+			if (strstr(type, "movieduels_mp_cty"))
 			{
-				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_CTY;
 			}
 		}
 		else
 		{
-			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
-			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
+			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_FFA;
+			uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_JEDIMASTER;
 		}
 
 		uiInfo.mapCount++;

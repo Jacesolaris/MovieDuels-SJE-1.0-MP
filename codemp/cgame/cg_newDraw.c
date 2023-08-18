@@ -109,7 +109,7 @@ float CG_GetValue(const int owner_draw)
 
 qboolean CG_OtherTeamHasFlag(void)
 {
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTY)
+	if (cgs.gametype == GT_MOVIEDUELS_CTF || cgs.gametype == GT_MOVIEDUELS_CTY)
 	{
 		const int team = cg.snap->ps.persistant[PERS_TEAM];
 		if (team == TEAM_RED && cgs.redflag == FLAG_TAKEN)
@@ -127,7 +127,7 @@ qboolean CG_OtherTeamHasFlag(void)
 
 qboolean CG_YourTeamHasFlag(void)
 {
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTY)
+	if (cgs.gametype == GT_MOVIEDUELS_CTF || cgs.gametype == GT_MOVIEDUELS_CTY)
 	{
 		const int team = cg.snap->ps.persistant[PERS_TEAM];
 		if (team == TEAM_RED && cgs.blueflag == FLAG_TAKEN)
@@ -182,7 +182,7 @@ qboolean CG_OwnerDrawVisible(const int flags)
 
 	if (flags & CG_SHOW_ANYTEAMGAME)
 	{
-		if (cgs.gametype >= GT_TEAM)
+		if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 		{
 			return qtrue;
 		}
@@ -190,7 +190,7 @@ qboolean CG_OwnerDrawVisible(const int flags)
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME)
 	{
-		if (cgs.gametype < GT_TEAM)
+		if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 		{
 			return qtrue;
 		}
@@ -198,7 +198,7 @@ qboolean CG_OwnerDrawVisible(const int flags)
 
 	if (flags & CG_SHOW_CTF)
 	{
-		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTY)
+		if (cgs.gametype == GT_MOVIEDUELS_CTF || cgs.gametype == GT_MOVIEDUELS_CTY)
 		{
 			return qtrue;
 		}
@@ -222,7 +222,7 @@ qboolean CG_OwnerDrawVisible(const int flags)
 
 	if (flags & CG_SHOW_SINGLEPLAYER)
 	{
-		if (cgs.gametype == GT_SINGLE_PLAYER)
+		if (cgs.gametype == GT_MOVIEDUELS_MISSIONS)
 		{
 			return qtrue;
 		}
@@ -230,7 +230,7 @@ qboolean CG_OwnerDrawVisible(const int flags)
 
 	if (flags & CG_SHOW_TOURNAMENT)
 	{
-		if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+		if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 		{
 			return qtrue;
 		}
@@ -264,11 +264,11 @@ const char* CG_GetKillerText(void)
 const char* CG_GetGameStatusText(void)
 {
 	static const char* s = "";
-	if (cgs.gametype == GT_POWERDUEL)
+	if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		s = "";
 	}
-	else if (cgs.gametype < GT_TEAM)
+	else if (cgs.gametype < GT_MOVIEDUELS_TEAM)
 	{
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 		{

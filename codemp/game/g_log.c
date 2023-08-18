@@ -927,7 +927,7 @@ qboolean CalculateUntouchable(const gentity_t* ent)
 #ifdef LOGGING_WEAPONS
 	const int playTime = (level.time - ent->client->pers.enterTime) / 60000;
 
-	if (level.gametype == GT_JEDIMASTER && ent->client->ps.isJediMaster)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && ent->client->ps.isJediMaster)
 	{
 		//Jedi Master can only be killed once anyway
 		return qfalse;
@@ -1013,7 +1013,7 @@ qboolean CalculateTactician(const gentity_t* ent, int* kills)
 		//duh, only 1 weapon
 		return qfalse;
 	}
-	if (level.gametype == GT_JEDIMASTER && ent->client->ps.isJediMaster)
+	if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && ent->client->ps.isJediMaster)
 	{
 		//Jedi Master has only 1 weapon
 		return qfalse;
@@ -1413,8 +1413,8 @@ int CalculateTeamAward(const gentity_t* ent)
 	{
 		teamAwards |= 1 << TEAM_MVP;
 	}
-	if (GT_CTF == level.gametype ||
-		GT_CTY == level.gametype)
+	if (GT_MOVIEDUELS_CTF == level.gametype ||
+		GT_MOVIEDUELS_CTY == level.gametype)
 	{
 		if (CalculateTeamDefender(ent))
 		{
@@ -1524,7 +1524,7 @@ void CalculateAwards(gentity_t* ent, char* msg)
 		strcpy(buf2, buf1);
 		Com_sprintf(buf1, AWARDS_MSG_LENGTH, "%s %d", buf2, streak);
 	}
-	if (level.gametype >= GT_TEAM)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		teamAwards = CalculateTeamAward(ent);
 		if (teamAwards)

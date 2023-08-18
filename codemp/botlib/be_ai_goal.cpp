@@ -96,18 +96,19 @@ using campspot_t = struct campspot_s
 //FIXME: these are game specific
 enum {
 	GT_FFA,				// free for all
-	GT_HOLOCRON,		// holocron match
-	GT_JEDIMASTER,		// jedi master
-	GT_DUEL,		// one on one tournament
-	GT_POWERDUEL,
-	GT_SINGLE_PLAYER,	// single player tournament
+	GT_MOVIEDUELS_FFA,				// free for all
+	GT_MOVIEDUELS_HOLOCRON,		// holocron match
+	GT_MOVIEDUELS_JEDIMASTER,		// jedi master
+	GT_MOVIEDUELS_DUEL,		// one on one tournament
+	GT_MOVIEDUELS_POWERDUEL,
+	GT_MOVIEDUELS_MISSIONS,	// single player tournament
 
 	//-- team games go after this --
 
-	GT_TEAM,			// team deathmatch
-	GT_SIEGE,			// siege
-	GT_CTF,				// capture the flag
-	GT_CTY,
+	GT_MOVIEDUELS_TEAM,			// team deathmatch
+	GT_MOVIEDUELS_SIEGE,			// siege
+	GT_MOVIEDUELS_CTF,				// capture the flag
+	GT_MOVIEDUELS_CTY,
 	GT_MAX_GAME_TYPE
 };
 using gametype_t = int;
@@ -840,10 +841,10 @@ int BotGetLevelItemGoal(const int index, const char* name, bot_goal_t* goal)
 	for (; li; li = li->next)
 	{
 		//
-		if (g_gametype == GT_SINGLE_PLAYER) {
+		if (g_gametype == GT_MOVIEDUELS_MISSIONS) {
 			if (li->flags & IFL_NOTSINGLE) continue;
 		}
-		else if (g_gametype >= GT_TEAM) {
+		else if (g_gametype >= GT_MOVIEDUELS_TEAM) {
 			if (li->flags & IFL_NOTTEAM) continue;
 		}
 		else {
@@ -1042,10 +1043,10 @@ void BotUpdateEntityItems(void)
 			//if this level item is already linked
 			if (li->entitynum) continue;
 			//
-			if (g_gametype == GT_SINGLE_PLAYER) {
+			if (g_gametype == GT_MOVIEDUELS_MISSIONS) {
 				if (li->flags & IFL_NOTSINGLE) continue;
 			}
-			else if (g_gametype >= GT_TEAM) {
+			else if (g_gametype >= GT_MOVIEDUELS_TEAM) {
 				if (li->flags & IFL_NOTTEAM) continue;
 			}
 			else {
@@ -1260,11 +1261,11 @@ int BotChooseLTGItem(const int goalstate, vec3_t origin, int* inventory, const i
 	//go through the items in the level
 	for (const levelitem_t* li = levelitems; li; li = li->next)
 	{
-		if (g_gametype == GT_SINGLE_PLAYER) {
+		if (g_gametype == GT_MOVIEDUELS_MISSIONS) {
 			if (li->flags & IFL_NOTSINGLE)
 				continue;
 		}
-		else if (g_gametype >= GT_TEAM) {
+		else if (g_gametype >= GT_MOVIEDUELS_TEAM) {
 			if (li->flags & IFL_NOTTEAM)
 				continue;
 		}
@@ -1428,11 +1429,11 @@ int BotChooseNBGItem(const int goalstate, vec3_t origin, int* inventory, const i
 	//go through the items in the level
 	for (levelitem_t* li = levelitems; li; li = li->next)
 	{
-		if (g_gametype == GT_SINGLE_PLAYER) {
+		if (g_gametype == GT_MOVIEDUELS_MISSIONS) {
 			if (li->flags & IFL_NOTSINGLE)
 				continue;
 		}
-		else if (g_gametype >= GT_TEAM) {
+		else if (g_gametype >= GT_MOVIEDUELS_TEAM) {
 			if (li->flags & IFL_NOTTEAM)
 				continue;
 		}

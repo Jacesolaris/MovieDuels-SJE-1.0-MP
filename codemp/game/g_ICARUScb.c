@@ -9174,7 +9174,7 @@ void UpdatePlayerScriptTarget(void)
 {
 	int client_num = -1;
 
-	if (level.gametype != GT_SINGLE_PLAYER)
+	if (level.gametype != GT_MOVIEDUELS_MISSIONS)
 	{
 		//only used for CoOp
 		return;

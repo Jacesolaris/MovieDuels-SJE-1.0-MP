@@ -174,7 +174,7 @@ void CG_InitSiegeMode(void)
 	fileHandle_t f;
 	char teamIcon[128];
 
-	if (cgs.gametype != GT_SIEGE)
+	if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		goto failure;
 	}

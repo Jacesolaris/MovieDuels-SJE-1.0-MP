@@ -1766,7 +1766,7 @@ int G_CanUseDispOn(const gentity_t* ent, const int dispType)
 
 qboolean TryHeal(gentity_t* ent, gentity_t* target)
 {
-	if (level.gametype == GT_SIEGE && ent->client->siegeClass != -1 &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && ent->client->siegeClass != -1 &&
 		target && target->inuse && target->maxHealth && target->healingclass &&
 		target->healingclass[0] && target->health > 0 && target->health < target->maxHealth)
 	{
@@ -1850,7 +1850,7 @@ void TryUse(gentity_t* ent)
 	vec3_t src, dest, vf;
 	vec3_t viewspot;
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		!gSiegeRoundBegun)
 	{
 		//nothing can be used til the round starts.
@@ -1972,7 +1972,7 @@ void TryUse(gentity_t* ent)
 			else
 			{
 				// Otherwise board this vehicle.
-				if (level.gametype < GT_TEAM ||
+				if (level.gametype < GT_MOVIEDUELS_TEAM ||
 					!target->alliedTeam ||
 					target->alliedTeam == ent->client->sess.sessionTeam)
 				{
@@ -2047,7 +2047,7 @@ void TryUse(gentity_t* ent)
 
 	//Check for a use command
 	if (ValidUseTarget(target)
-		&& (level.gametype != GT_SIEGE
+		&& (level.gametype != GT_MOVIEDUELS_SIEGE
 			|| !target->alliedTeam
 			|| target->alliedTeam != ent->client->sess.sessionTeam
 			|| g_ff_objectives.integer))

@@ -301,9 +301,9 @@ void CG_DrawInformation(void)
 	CG_DrawProportionalString(320, y, s, UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 	y += i_prop_height;
 
-	if (cgs.gametype != GT_SIEGE)
+	if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
-		if (cgs.gametype != GT_SINGLE_PLAYER)
+		if (cgs.gametype != GT_MOVIEDUELS_MISSIONS)
 		{
 			value = atoi(Info_ValueForKey(info, "timelimit"));
 			if (value)
@@ -314,7 +314,7 @@ void CG_DrawInformation(void)
 			}
 		}
 
-		if (cgs.gametype < GT_CTF && cgs.gametype != GT_SINGLE_PLAYER)
+		if (cgs.gametype < GT_MOVIEDUELS_CTF && cgs.gametype != GT_MOVIEDUELS_MISSIONS)
 		{
 			value = atoi(Info_ValueForKey(info, "fraglimit"));
 			if (value)
@@ -324,7 +324,7 @@ void CG_DrawInformation(void)
 				y += i_prop_height;
 			}
 
-			if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+			if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 			{
 				value = atoi(Info_ValueForKey(info, "duel_fraglimit"));
 				if (value)
@@ -337,7 +337,7 @@ void CG_DrawInformation(void)
 		}
 	}
 
-	if (cgs.gametype >= GT_CTF)
+	if (cgs.gametype >= GT_MOVIEDUELS_CTF)
 	{
 		value = atoi(Info_ValueForKey(info, "capturelimit"));
 		if (value)
@@ -348,7 +348,7 @@ void CG_DrawInformation(void)
 		}
 	}
 
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		value = atoi(Info_ValueForKey(info, "g_forceBasedTeams"));
 		if (value)
@@ -359,7 +359,7 @@ void CG_DrawInformation(void)
 		}
 	}
 
-	if (cgs.gametype != GT_SIEGE)
+	if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		const int value_nofp = atoi(Info_ValueForKey(info, "g_forcePowerDisable"));
 
@@ -411,7 +411,7 @@ void CG_DrawInformation(void)
 			y += i_prop_height;
 		}
 
-		if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+		if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 		{
 			value = atoi(Info_ValueForKey(info, "g_duelWeaponDisable"));
 		}
@@ -419,7 +419,7 @@ void CG_DrawInformation(void)
 		{
 			value = atoi(Info_ValueForKey(info, "g_weaponDisable"));
 		}
-		if (cgs.gametype != GT_JEDIMASTER && value == WP_SABERSONLY)
+		if (cgs.gametype != GT_MOVIEDUELS_JEDIMASTER && value == WP_SABERSONLY)
 		{
 			CG_DrawProportionalString(320, y, va("%s", (char*)CG_GetStringEdString("MP_INGAME", "SABERONLYSET")),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);

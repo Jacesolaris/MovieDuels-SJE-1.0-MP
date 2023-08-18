@@ -435,7 +435,7 @@ void VEH_TurretThink(Vehicle_t* p_veh, gentity_t* parent, const int turretNum)
 		}
 		else if (parent->enemy && parent->enemy->s.number < ENTITYNUM_WORLD)
 		{
-			if (g_gametype.integer < GT_TEAM || !OnSameTeam(parent->enemy, parent))
+			if (g_gametype.integer < GT_MOVIEDUELS_TEAM || !OnSameTeam(parent->enemy, parent))
 			{
 				//either not in a team game or the enemy isn't on the same team
 				turretEnemy = parent->enemy;

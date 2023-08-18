@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-17,BuildNum-05" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-18,BuildNum-06" // build date
 
 #define	STEPSIZE		18
 
@@ -270,18 +270,19 @@ typedef enum
 
 typedef enum {
 	GT_FFA,				// free for all
-	GT_HOLOCRON,		// holocron ffa
-	GT_JEDIMASTER,		// jedi master
-	GT_DUEL,		// one on one tournament
-	GT_POWERDUEL,
-	GT_SINGLE_PLAYER,	// single player ffa
+	GT_MOVIEDUELS_FFA,				// free for all
+	GT_MOVIEDUELS_HOLOCRON,		// holocron ffa
+	GT_MOVIEDUELS_JEDIMASTER,		// jedi master
+	GT_MOVIEDUELS_DUEL,		// one on one tournament
+	GT_MOVIEDUELS_POWERDUEL,
+	GT_MOVIEDUELS_MISSIONS,	// single player ffa
 
 	//-- team games go after this --
 
-	GT_TEAM,			// team deathmatch
-	GT_SIEGE,			// siege
-	GT_CTF,				// capture the flag
-	GT_CTY,
+	GT_MOVIEDUELS_TEAM,			// team deathmatch
+	GT_MOVIEDUELS_SIEGE,			// siege
+	GT_MOVIEDUELS_CTF,				// capture the flag
+	GT_MOVIEDUELS_CTY,
 	GT_MAX_GAME_TYPE
 } gametype_t;
 
@@ -2082,17 +2083,16 @@ extern int force_power_dark_light[NUM_FORCE_POWERS];
 #define MAX_WALL_GRAB_SLOPE	0.2f
 
 #define ARENAS_PER_TIER		4
-#define MAX_ARENAS			1024
-#define	MAX_ARENAS_TEXT		8192
+#define MAX_ARENAS			2048
+#define	MAX_ARENAS_TEXT		16384
 
-#define MAX_BOTS			1024
-#define MAX_BOTS_TEXT		8192
+#define MAX_BOTS			2048
+#define MAX_BOTS_TEXT		16384
 
 #define	HYPERSPACE_TIME				4000 //For hyperspace triggers
 #define	HYPERSPACE_TELEPORT_FRAC	0.75f
 #define	HYPERSPACE_SPEED			10000.0f//was 30000
 #define	HYPERSPACE_TURN_RATE		45.0f
 
-extern const char* gametypeStringShort[GT_MAX_GAME_TYPE];
 const char* BG_GetGametypeString(int gametype);
 int BG_GetGametypeForString(const char* gametype);

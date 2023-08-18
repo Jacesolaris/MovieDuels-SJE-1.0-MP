@@ -629,7 +629,7 @@ qboolean BG_LegalizedForcePowers(char* power_out, const size_t power_out_size, c
 		i++;
 	}
 
-	if (gametype < GT_TEAM)
+	if (gametype < GT_MOVIEDUELS_TEAM)
 	{
 		//don't bother with team powers then
 		final_powers[FP_TEAM_HEAL] = 0;
@@ -2017,7 +2017,7 @@ float vectoyaw(const vec3_t vec)
 
 qboolean BG_HasYsalamiri(const int gametype, const playerState_t* ps)
 {
-	if (gametype == GT_CTY &&
+	if (gametype == GT_MOVIEDUELS_CTY &&
 		(ps->powerups[PW_REDFLAG] || ps->powerups[PW_BLUEFLAG]))
 	{
 		return qtrue;
@@ -2465,11 +2465,11 @@ qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const
 			}
 		}
 
-		if (gametype != GT_JEDIMASTER &&
-			gametype != GT_SINGLE_PLAYER &&
-			gametype != GT_HOLOCRON &&
-			gametype != GT_SIEGE &&
-			gametype != GT_CTY)
+		if (gametype != GT_MOVIEDUELS_JEDIMASTER &&
+			gametype != GT_MOVIEDUELS_MISSIONS &&
+			gametype != GT_MOVIEDUELS_HOLOCRON &&
+			gametype != GT_MOVIEDUELS_SIEGE &&
+			gametype != GT_MOVIEDUELS_CTY)
 		{
 			if (ps->isJediMaster && item && (item->giType == IT_WEAPON || item->giType == IT_AMMO))
 			{
@@ -2527,11 +2527,11 @@ qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const
 			return qfalse;
 		}
 
-		if (gametype != GT_JEDIMASTER &&
-			gametype != GT_SINGLE_PLAYER &&
-			gametype != GT_HOLOCRON &&
-			gametype != GT_SIEGE &&
-			gametype != GT_CTY)
+		if (gametype != GT_MOVIEDUELS_JEDIMASTER &&
+			gametype != GT_MOVIEDUELS_MISSIONS &&
+			gametype != GT_MOVIEDUELS_HOLOCRON &&
+			gametype != GT_MOVIEDUELS_SIEGE &&
+			gametype != GT_MOVIEDUELS_CTY)
 		{
 			if (item->giType == IT_WEAPON && item->giTag == WP_BRYAR_OLD)
 			{
@@ -2547,7 +2547,7 @@ qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const
 		{
 			return qfalse;
 		}
-		if (gametype == GT_SINGLE_PLAYER)
+		if (gametype == GT_MOVIEDUELS_MISSIONS)
 		{
 			const int ammo_index = weaponData[item->giTag].ammoIndex;
 
@@ -2633,7 +2633,7 @@ qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const
 		return qtrue; // powerups are always picked up
 
 	case IT_TEAM: // team items, such as flags
-		if (gametype == GT_CTF || gametype == GT_CTY)
+		if (gametype == GT_MOVIEDUELS_CTF || gametype == GT_MOVIEDUELS_CTY)
 		{
 			// ent->modelindex2 is non-zero on items if they are dropped
 			// we need to know this because we can pick up our dropped flag (and return it)
@@ -3788,44 +3788,32 @@ qboolean BG_IsWhiteSpace(const char c)
 	return qfalse;
 }
 
-const char* gametypeStringShort[GT_MAX_GAME_TYPE] =
-{
-	"FFA",
-	"HOLO",
-	"JM",
-	"1v1",
-	"2v1",
-	"SP",
-	"TDM",
-	"SAGA",
-	"CTF",
-	"CTY"
-};
-
 const char* BG_GetGametypeString(const int gametype)
 {
 	switch (gametype)
 	{
 	case GT_FFA:
 		return "Free For All";
-	case GT_HOLOCRON:
-		return "Holocron";
-	case GT_JEDIMASTER:
-		return "Jedi Master";
-	case GT_DUEL:
-		return "Duel";
-	case GT_POWERDUEL:
-		return "Power Duel";
-	case GT_SINGLE_PLAYER:
-		return "missions";
-	case GT_TEAM:
-		return "Team Deathmatch";
-	case GT_SIEGE:
-		return "Siege";
-	case GT_CTF:
-		return "Capture The Flag";
-	case GT_CTY:
-		return "Capture The Ysalimiri";
+	case GT_MOVIEDUELS_FFA:
+		return "MovieDuels Free For All";
+	case GT_MOVIEDUELS_HOLOCRON:
+		return "MovieDuels Holocron";
+	case GT_MOVIEDUELS_JEDIMASTER:
+		return "MovieDuels Jedi Master";
+	case GT_MOVIEDUELS_DUEL:
+		return "MovieDuels Duel";
+	case GT_MOVIEDUELS_POWERDUEL:
+		return "MovieDuels Power Duel";
+	case GT_MOVIEDUELS_MISSIONS:
+		return "MovieDuels missions";
+	case GT_MOVIEDUELS_TEAM:
+		return "MovieDuels Team";
+	case GT_MOVIEDUELS_SIEGE:
+		return "MovieDuels Siege";
+	case GT_MOVIEDUELS_CTF:
+		return "MovieDuels CTF";
+	case GT_MOVIEDUELS_CTY:
+		return "MovieDuels CTY";
 
 	default:
 		return "Unknown Gametype";
@@ -3834,24 +3822,50 @@ const char* BG_GetGametypeString(const int gametype)
 
 int BG_GetGametypeForString(const char* gametype)
 {
-	if (!Q_stricmp(gametype, "ffa")
-		|| !Q_stricmp(gametype, "dm")
-		|| !Q_stricmp(gametype, "MB"))
+	if (!Q_stricmp(gametype, "ffa"))
+	{
 		return GT_FFA;
-	if (!Q_stricmp(gametype, "holocron")) return GT_HOLOCRON;
-	if (!Q_stricmp(gametype, "jm")) return GT_JEDIMASTER;
-	if (!Q_stricmp(gametype, "duel")) return GT_DUEL;
-	if (!Q_stricmp(gametype, "powerduel")) return GT_POWERDUEL;
-	if (!Q_stricmp(gametype, "sp")
-		|| !Q_stricmp(gametype, "missions"))
-		return GT_SINGLE_PLAYER;
-	if (!Q_stricmp(gametype, "tdm")
-		|| !Q_stricmp(gametype, "tffa")
-		|| !Q_stricmp(gametype, "team"))
-		return GT_TEAM;
-	if (!Q_stricmp(gametype, "siege")) return GT_SIEGE;
-	if (!Q_stricmp(gametype, "ctf")) return GT_CTF;
-	if (!Q_stricmp(gametype, "cty")) return GT_CTY;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_ffa"))
+	{
+		return GT_MOVIEDUELS_FFA;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_holocron"))
+	{
+		return GT_MOVIEDUELS_HOLOCRON;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_jm"))
+	{
+		return GT_MOVIEDUELS_JEDIMASTER;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_duel"))
+	{
+		return GT_MOVIEDUELS_DUEL;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_powerduel"))
+	{
+		return GT_MOVIEDUELS_POWERDUEL;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_missions"))
+	{
+		return GT_MOVIEDUELS_MISSIONS;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_team"))
+	{
+		return GT_MOVIEDUELS_TEAM;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_siege"))
+	{
+		return GT_MOVIEDUELS_SIEGE;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_ctf"))
+	{
+		return GT_MOVIEDUELS_CTF;
+	}
+	if (!Q_stricmp(gametype, "movieduels_mp_cty"))
+	{
+		return GT_MOVIEDUELS_CTY;
+	}
 	return -1;
 }
 
@@ -3895,7 +3909,7 @@ qboolean BG_IsUsingHeavyWeap(const playerState_t* ps)
 qboolean BG_IsLMSGametype(const int gametype)
 {
 	//indicates if this is a Last Man Standing compatible gametype or not.
-	if (gametype != GT_DUEL && gametype != GT_POWERDUEL && gametype != GT_SIEGE)
+	if (gametype != GT_MOVIEDUELS_DUEL && gametype != GT_MOVIEDUELS_POWERDUEL && gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		return qtrue;
 	}

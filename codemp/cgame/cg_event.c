@@ -447,9 +447,9 @@ clientkilled:
 	{
 		char* s;
 
-		if (cgs.gametype < GT_TEAM && cgs.gametype != GT_DUEL && cgs.gametype != GT_POWERDUEL)
+		if (cgs.gametype < GT_MOVIEDUELS_TEAM && cgs.gametype != GT_MOVIEDUELS_DUEL && cgs.gametype != GT_MOVIEDUELS_POWERDUEL)
 		{
-			if (cgs.gametype == GT_JEDIMASTER &&
+			if (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER &&
 				attacker < MAX_CLIENTS &&
 				!ent->isJediMaster &&
 				!cg.snap->ps.isJediMaster &&
@@ -461,7 +461,7 @@ clientkilled:
 				trap->SE_GetStringTextString("MP_INGAME_JMKILLED_NOTJM", part2, sizeof part2);
 				s = va("%s %s\n%s\n", part1, target_name, part2);
 			}
-			else if (cgs.gametype == GT_JEDIMASTER &&
+			else if (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER &&
 				attacker < MAX_CLIENTS &&
 				!ent->isJediMaster &&
 				!cg.snap->ps.isJediMaster)
@@ -471,7 +471,7 @@ clientkilled:
 				trap->SE_GetStringTextString("MP_INGAME_KILLED_MESSAGE", part1, sizeof part1);
 				s = va("%s %s\n", part1, target_name);
 			}
-			else if (cgs.gametype == GT_POWERDUEL)
+			else if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 			{
 				s = "";
 			}
@@ -4442,7 +4442,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			// CTF: blue team captured the red flag, 1FCTF: blue team captured the neutral flag
 			break;
 		case GTS_RED_RETURN: // CTF: blue flag returned, 1FCTF: never used
-			if (cgs.gametype == GT_CTY)
+			if (cgs.gametype == GT_MOVIEDUELS_CTY)
 			{
 				CG_AddBufferedSound(cgs.media.blueYsalReturnedSound);
 			}
@@ -4452,7 +4452,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			}
 			break;
 		case GTS_BLUE_RETURN: // CTF red flag returned, 1FCTF: neutral flag returned
-			if (cgs.gametype == GT_CTY)
+			if (cgs.gametype == GT_MOVIEDUELS_CTY)
 			{
 				CG_AddBufferedSound(cgs.media.redYsalReturnedSound);
 			}
@@ -4464,7 +4464,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 		case GTS_RED_TAKEN: // CTF: red team took blue flag, 1FCTF: blue team took the neutral flag
 			// if this player picked up the flag then a sound is played in CG_CheckLocalSounds
-			if (cgs.gametype == GT_CTY)
+			if (cgs.gametype == GT_MOVIEDUELS_CTY)
 			{
 				CG_AddBufferedSound(cgs.media.redTookYsalSound);
 			}
@@ -4475,7 +4475,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			break;
 		case GTS_BLUE_TAKEN: // CTF: blue team took the red flag, 1FCTF red team took the neutral flag
 			// if this player picked up the flag then a sound is played in CG_CheckLocalSounds
-			if (cgs.gametype == GT_CTY)
+			if (cgs.gametype == GT_MOVIEDUELS_CTY)
 			{
 				CG_AddBufferedSound(cgs.media.blueTookYsalSound);
 			}

@@ -919,7 +919,7 @@ static void CG_RegisterSounds(void)
 	trap->S_RegisterSound("sound/weapons/force/grip.mp3"); //PDSOUND_FORCEGRIP
 	trap->S_RegisterSound("sound/weapons/force/griploop.wav"); //PDSOUND_FORCEGRIP
 
-	if (cgs.gametype >= GT_TEAM || com_buildScript.integer)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM || com_buildScript.integer)
 	{
 		cgs.media.redLeadsSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM046");
 		cgs.media.blueLeadsSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM045");
@@ -928,14 +928,14 @@ static void CG_RegisterSounds(void)
 		cgs.media.redScoredSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM044");
 		cgs.media.blueScoredSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM043");
 
-		if (cgs.gametype == GT_CTF || com_buildScript.integer)
+		if (cgs.gametype == GT_MOVIEDUELS_CTF || com_buildScript.integer)
 		{
 			cgs.media.redFlagReturnedSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM042");
 			cgs.media.blueFlagReturnedSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM041");
 			cgs.media.redTookFlagSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM040");
 			cgs.media.blueTookFlagSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM039");
 		}
-		if (cgs.gametype == GT_CTY)
+		if (cgs.gametype == GT_MOVIEDUELS_CTY)
 		{
 			cgs.media.redYsalReturnedSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM050");
 			cgs.media.blueYsalReturnedSound = trap->S_RegisterSound("sound/chars/protocol/misc/40MOM049");
@@ -1177,7 +1177,7 @@ static void CG_RegisterSounds(void)
 		cg_siegeWinTeam = atoi(soundName);
 	}
 
-	if (cgs.gametype == GT_SIEGE)
+	if (cgs.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		CG_ParseSiegeObjectiveStatus(CG_ConfigString(CS_SIEGE_OBJECTIVES));
 		cg_beatingSiegeTime = atoi(CG_ConfigString(CS_SIEGE_TIMEOVERRIDE));
@@ -1473,7 +1473,7 @@ static void CG_RegisterGraphics(void)
 
 	cgs.media.itemHoloModel = trap->R_RegisterModel("models/map_objects/mp/holo.md3");
 
-	if (cgs.gametype == GT_HOLOCRON || com_buildScript.integer)
+	if (cgs.gametype == GT_MOVIEDUELS_HOLOCRON || com_buildScript.integer)
 	{
 		for (i = 0; i < NUM_FORCE_POWERS; i++)
 		{
@@ -1485,7 +1485,7 @@ static void CG_RegisterGraphics(void)
 		}
 	}
 
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTY || com_buildScript.integer)
+	if (cgs.gametype == GT_MOVIEDUELS_CTF || cgs.gametype == GT_MOVIEDUELS_CTY || com_buildScript.integer)
 	{
 		if (com_buildScript.integer)
 		{
@@ -1495,12 +1495,12 @@ static void CG_RegisterGraphics(void)
 			trap->R_RegisterModel("models/flags/b_flag_ysal.md3");
 		}
 
-		if (cgs.gametype == GT_CTF)
+		if (cgs.gametype == GT_MOVIEDUELS_CTF)
 		{
 			cgs.media.redFlagModel = trap->R_RegisterModel("models/flags/r_flag.md3");
 			cgs.media.blueFlagModel = trap->R_RegisterModel("models/flags/b_flag.md3");
 		}
-		else if (cgs.gametype == GT_CTY)
+		else if (cgs.gametype == GT_MOVIEDUELS_CTY)
 		{
 			cgs.media.redFlagModel = trap->R_RegisterModel("models/flags/r_flag_ysal.md3");
 			cgs.media.blueFlagModel = trap->R_RegisterModel("models/flags/b_flag_ysal.md3");
@@ -1525,19 +1525,19 @@ static void CG_RegisterGraphics(void)
 		trap->R_RegisterShaderNoMip("gfx/2d/droid_view");
 	}
 
-	if (cgs.gametype >= GT_TEAM || com_buildScript.integer)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM || com_buildScript.integer)
 	{
 		cgs.media.teamRedShader = trap->R_RegisterShader("sprites/team_red");
 		cgs.media.teamBlueShader = trap->R_RegisterShader("sprites/team_blue");
 		//cgs.media.redQuadShader = trap->R_RegisterShader("powerups/blueflag" );
 		cgs.media.teamStatusBar = trap->R_RegisterShader("gfx/2d/colorbar.tga");
 	}
-	else if (cgs.gametype == GT_JEDIMASTER)
+	else if (cgs.gametype == GT_MOVIEDUELS_JEDIMASTER)
 	{
 		cgs.media.teamRedShader = trap->R_RegisterShader("sprites/team_red");
 	}
 
-	if (cgs.gametype == GT_POWERDUEL || com_buildScript.integer)
+	if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL || com_buildScript.integer)
 	{
 		cgs.media.powerDuelAllyShader = trap->R_RegisterShader("gfx/mp/pduel_icon_double");
 		//trap->R_RegisterShader("gfx/mp/pduel_gameicon_ally");
@@ -2327,7 +2327,7 @@ void CG_SetScoreSelection(void* p)
 		return;
 	}
 
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		int feeder = FEEDER_REDTEAM_LIST;
 		i = red;
@@ -2347,7 +2347,7 @@ void CG_SetScoreSelection(void* p)
 // FIXME: might need to cache this info
 static clientInfo_t* CG_InfoFromScoreIndex(const int index, const int team, int* scoreIndex)
 {
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		int count = 0;
 		for (int i = 0; i < cg.numScores; i++)
@@ -2435,7 +2435,7 @@ static const char* CG_FeederItemText(const float feederID, const int index, cons
 			}
 			if (team == -1)
 			{
-				if (cgs.gametype == GT_DUEL || cgs.gametype == GT_POWERDUEL)
+				if (cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 				{
 					return va("%i/%i", info->wins, info->losses);
 				}
@@ -2476,7 +2476,7 @@ static qhandle_t CG_FeederItemImage(float feederID, int index)
 
 static qboolean CG_FeederSelection(const float feederID, const int index, itemDef_t* item)
 {
-	if (cgs.gametype >= GT_TEAM)
+	if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 	{
 		const int team = feederID == FEEDER_REDTEAM_LIST ? TEAM_RED : TEAM_BLUE;
 		int count = 0;

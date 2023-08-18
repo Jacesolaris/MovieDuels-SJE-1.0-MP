@@ -239,7 +239,7 @@ void CG_SiegeBriefingDisplay(int team, int dontshow);
 
 static void CG_SiegeBriefing_f(void)
 {
-	if (cgs.gametype != GT_SIEGE)
+	if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//Cannot be displayed unless in this gametype
 		return;
@@ -259,7 +259,7 @@ static void CG_SiegeBriefing_f(void)
 
 static void CG_SiegeCvarUpdate_f(void)
 {
-	if (cgs.gametype != GT_SIEGE)
+	if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//Cannot be displayed unless in this gametype
 		return;
@@ -279,7 +279,7 @@ static void CG_SiegeCvarUpdate_f(void)
 
 static void CG_SiegeCompleteCvarUpdate_f(void)
 {
-	if (cgs.gametype != GT_SIEGE)
+	if (cgs.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		//Cannot be displayed unless in this gametype
 		return;

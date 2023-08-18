@@ -2897,7 +2897,7 @@ Handles user intended acceleration
 */
 static void PM_Accelerate(vec3_t wishdir, const float wishspeed, const float accel)
 {
-	if (pm->gametype != GT_SIEGE
+	if (pm->gametype != GT_MOVIEDUELS_SIEGE
 		|| pm->ps->m_iVehicleNum
 		|| pm->ps->client_num >= MAX_CLIENTS
 		|| pm->ps->pm_type != PM_NORMAL)
@@ -4302,8 +4302,8 @@ static qboolean pm_check_jump(void)
 		//Force jump is already active.. continue draining power appropriately until we land.
 		if (pm->ps->fd.forcePowerDebounce[FP_LEVITATION] < pm->cmd.serverTime)
 		{
-			if (pm->gametype == GT_DUEL
-				|| pm->gametype == GT_POWERDUEL)
+			if (pm->gametype == GT_MOVIEDUELS_DUEL
+				|| pm->gametype == GT_MOVIEDUELS_POWERDUEL)
 			{
 				//jump takes less power
 				WP_ForcePowerDrain(pm->ps, FP_LEVITATION, 1);
@@ -8200,7 +8200,7 @@ static void PM_GroundTrace(void)
 					pm->ps->weaponTime <= 0)
 				{
 					const gentity_t* servEnt = (gentity_t*)pm_entSelf;
-					if (level.gametype < GT_TEAM ||
+					if (level.gametype < GT_MOVIEDUELS_TEAM ||
 						!trEnt->alliedTeam ||
 						trEnt->alliedTeam == servEnt->client->sess.sessionTeam)
 					{
@@ -13893,7 +13893,7 @@ void PM_Weapon(void)
 		if (pm->ps->ManualBlockingFlags & 1 << MBF_MELEEBLOCK)
 		{
 			PM_SetMeleeBlock();
-		} 
+		}
 		else if (!pm->ps->m_iVehicleNum)
 		{
 			//if riding a vehicle don't do this stuff at all
@@ -14272,7 +14272,7 @@ void PM_Weapon(void)
 		}
 #endif
 
-		if (pm->gametype == GT_SIEGE && pm->ps->weapon == WP_DET_PACK)
+		if (pm->gametype == GT_MOVIEDUELS_SIEGE && pm->ps->weapon == WP_DET_PACK)
 		{
 			// were far too spammy before?  So says Rick.
 			addTime *= 2;
@@ -14554,8 +14554,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* uscmd, const qbo
 			|| !ps->weaponTime //not attacking or being prevented from attacking
 			&& !ps->legsTimer //not in any held legs anim
 			&& !ps->torsoTimer) //not in any held torso anim
-		&& !(uscmd->buttons & (BUTTON_ATTACK | BUTTON_ALT_ATTACK | BUTTON_FORCE_LIGHTNING | BUTTON_FORCEPOWER |
-			BUTTON_DASH | BUTTON_FORCE_DRAIN | BUTTON_FORCEGRIP)) //not trying to attack
+		&& !(uscmd->buttons & (BUTTON_ATTACK | BUTTON_ALT_ATTACK | BUTTON_FORCE_LIGHTNING | BUTTON_FORCEPOWER | BUTTON_DASH | BUTTON_FORCE_DRAIN | BUTTON_FORCEGRIP)) //not trying to attack
 		&& !(ps->ManualBlockingFlags & 1 << HOLDINGBLOCK)
 		&& VectorCompare(ps->velocity, vec3_origin))
 	{

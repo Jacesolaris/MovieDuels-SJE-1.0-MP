@@ -105,7 +105,7 @@ void ObjectDie(gentity_t* self, gentity_t* attacker)
 
 qboolean G_HeavyMelee(const gentity_t* attacker)
 {
-	if (level.gametype == GT_SIEGE
+	if (level.gametype == GT_MOVIEDUELS_SIEGE
 		&& attacker
 		&& attacker->client
 		&& attacker->client->siegeClass != -1
@@ -432,7 +432,7 @@ void AddScore(const gentity_t* ent, const int score)
 	//ScorePlum(ent, origin, score);
 	//
 	ent->client->ps.persistant[PERS_SCORE] += score;
-	if (level.gametype == GT_TEAM && !g_dontPenalizeTeam)
+	if (level.gametype == GT_MOVIEDUELS_TEAM && !g_dontPenalizeTeam)
 		level.teamScores[ent->client->ps.persistant[PERS_TEAM]] += score;
 	CalculateRanks();
 }
@@ -449,7 +449,7 @@ void TossClientWeapon(gentity_t* self, vec3_t direction, const float speed)
 	vec3_t vel;
 	const int weapon = self->s.weapon;
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//no dropping weaps
 		return;
@@ -572,7 +572,7 @@ void TossClientItems(gentity_t* self)
 	gentity_t* dropped = NULL;
 	gclient_t* client = self->client;
 
-	if (level.gametype == GT_SIEGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE)
 	{
 		//just don't drop anything then
 		return;
@@ -683,7 +683,7 @@ void TossClientItems(gentity_t* self)
 	}
 
 	// drop all the powerups if not in teamplay
-	if (level.gametype != GT_TEAM && level.gametype != GT_SIEGE)
+	if (level.gametype != GT_MOVIEDUELS_TEAM && level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		float angle = 45;
 		for (int i = 1; i < PW_NUM_POWERUPS; i++)
@@ -882,7 +882,7 @@ void CheckAlmostCapture()
 		self->client->ps.powerups[PW_BLUEFLAG] ||
 		self->client->ps.powerups[PW_NEUTRALFLAG]) {
 		// get the goal flag this player should have been going for
-		if (level.gametype == GT_CTF || level.gametype == GT_CTY) {
+		if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY) {
 			if (self->client->sess.sessionTeam == TEAM_BLUE) {
 				classname = "team_CTF_blueflag";
 			}
@@ -2877,7 +2877,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	//check player stuff
 	g_dontFrickinCheck = qfalse;
 
-	if (level.gametype == GT_SINGLE_PLAYER && g_lms.integer == 1)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS && g_lms.integer == 1)
 	{
 		gentity_t* murderer = &g_entities[self->client->ps.otherKiller];
 		murderer->liveExp++;
@@ -2891,7 +2891,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 		}
 	}
 
-	if (level.gametype == GT_POWERDUEL)
+	if (level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//don't want to wait til later in the frame if this is the case
 		CheckExitRules();
@@ -3199,7 +3199,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	//Use any target we had
 	G_UseTargets(self, self);
 
-	if (g_slowmoDuelEnd.integer && (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL) && attacker && attacker->inuse && attacker->client)
+	if (g_slowmoDuelEnd.integer && (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL) && attacker && attacker->inuse && attacker->client)
 	{
 		if (!gDoSlowMoDuel)
 		{
@@ -3245,7 +3245,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	G_MuteSound(self->s.number, CHAN_WEAPON);
 
 	//FIXME: this may not be enough
-	if (level.gametype == GT_SIEGE && means_of_death == MOD_TEAM_CHANGE)
+	if (level.gametype == GT_MOVIEDUELS_SIEGE && means_of_death == MOD_TEAM_CHANGE)
 		RemoveDetpacks(self);
 	else
 		BlowDetpacks(self); //blow detpacks if they're planted
@@ -3315,7 +3315,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	G_LogPrintf("%s", buf);
 
 	if (g_austrian.integer
-		&& level.gametype == GT_DUEL
+		&& level.gametype == GT_MOVIEDUELS_DUEL
 		&& level.numPlayingClients >= 2)
 	{
 		const int spawn_time = level.clients[level.sortedClients[0]].respawnTime > level.clients[level.sortedClients[1]]
@@ -3390,7 +3390,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 		}
 		else if (attacker == self || OnSameTeam(self, attacker))
 		{
-			if (level.gametype == GT_DUEL)
+			if (level.gametype == GT_MOVIEDUELS_DUEL)
 			{
 				//in duel, if you kill yourself, the person you are dueling against gets a kill for it
 				int other_cl_num = -1;
@@ -3418,7 +3418,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			{
 				AddScore(attacker, -1);
 			}
-			if (level.gametype == GT_JEDIMASTER)
+			if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 			{
 				if (self->client && self->client->ps.isJediMaster)
 				{
@@ -3432,7 +3432,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 		}
 		else
 		{
-			if (level.gametype == GT_JEDIMASTER)
+			if (level.gametype == GT_MOVIEDUELS_JEDIMASTER)
 			{
 				if (attacker->client && attacker->client->ps.isJediMaster ||
 					self->client && self->client->ps.isJediMaster)
@@ -3498,7 +3498,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			self->client->ps.isJediMaster = qfalse;
 		}
 
-		if (level.gametype == GT_DUEL)
+		if (level.gametype == GT_MOVIEDUELS_DUEL)
 		{
 			//in duel, if you kill yourself, the person you are dueling against gets a kill for it
 			int other_cl_num = -1;
@@ -3596,9 +3596,9 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	if (MOD_SPECTATE == means_of_death)
 	{
 		if (g_spectate_keep_score.integer >= 1
-			&& level.gametype != GT_DUEL
-			&& level.gametype != GT_POWERDUEL
-			&& level.gametype != GT_SIEGE)
+			&& level.gametype != GT_MOVIEDUELS_DUEL
+			&& level.gametype != GT_MOVIEDUELS_POWERDUEL
+			&& level.gametype != GT_MOVIEDUELS_SIEGE)
 		{
 			AddScore(self, 1);
 			self->client->sess.losses -= 1;
@@ -3797,7 +3797,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 
 	trap->LinkEntity((sharedEntity_t*)self);
 
-	if (level.gametype == GT_SINGLE_PLAYER)
+	if (level.gametype == GT_MOVIEDUELS_MISSIONS)
 	{
 		// Start any necessary death fx for this entity
 		DeathFX(self);
@@ -3816,7 +3816,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 		}
 	}
 
-	if (level.gametype == GT_POWERDUEL && !g_noPDuelCheck)
+	if (level.gametype == GT_MOVIEDUELS_POWERDUEL && !g_noPDuelCheck)
 	{
 		//powerduel checks
 		if (self->client->sess.duelTeam == DUELTEAM_LONE)
@@ -4874,7 +4874,7 @@ void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, con
 		trap->G2API_SetSurfaceOnOff(ent->ghoul2, stub_cap_name, 0);
 	}
 
-	if (level.gametype >= GT_TEAM && ent->s.eType != ET_NPC)
+	if (level.gametype >= GT_MOVIEDUELS_TEAM && ent->s.eType != ET_NPC)
 	{
 		//Team game
 		switch (ent->client->sess.sessionTeam)
@@ -5641,7 +5641,7 @@ void G_CheckForDismemberment(gentity_t* ent, const gentity_t* enemy, vec3_t poin
 	{
 		G_GetDismemberBolt(ent, bolt_point, hit_loc_use);
 		if (g_austrian.integer
-			&& (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL))
+			&& (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL))
 		{
 			G_LogPrintf("Duel Dismemberment: %s dismembered at %s\n", ent->client->pers.netname, hitLocName[hit_loc]);
 		}
@@ -6403,7 +6403,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		}
 	}
 
-	if (level.gametype == GT_SIEGE &&
+	if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 		!gSiegeRoundBegun)
 	{
 		//nothing can be damaged til the round starts.
@@ -6622,7 +6622,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 	if (attacker->client
 		&& attacker != targ
 		&& attacker->s.eType == ET_PLAYER
-		&& level.gametype != GT_SIEGE)
+		&& level.gametype != GT_MOVIEDUELS_SIEGE)
 	{
 		int max;
 		max = attacker->client->ps.stats[STAT_MAX_HEALTH];
@@ -6829,12 +6829,12 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		targ->client->ps.otherKillerDebounceTime = level.time + 25000;
 	}
 
-	if ((g_jediVmerc.integer || level.gametype == GT_SIEGE)
+	if ((g_jediVmerc.integer || level.gametype == GT_MOVIEDUELS_SIEGE)
 		&& client)
 	{
 		//less explosive damage for jedi, more saber damage for non-jedi
 		if (client->ps.trueJedi
-			|| level.gametype == GT_SIEGE && client->ps.weapon == WP_SABER)
+			|| level.gametype == GT_MOVIEDUELS_SIEGE && client->ps.weapon == WP_SABER)
 		{
 			//if the target is a trueJedi, reduce splash and explosive damage to 1/2
 			switch (mod)
@@ -6857,7 +6857,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 			default:;
 			}
 		}
-		else if ((client->ps.trueNonJedi || level.gametype == GT_SIEGE && client->ps.weapon != WP_SABER)
+		else if ((client->ps.trueNonJedi || level.gametype == GT_MOVIEDUELS_SIEGE && client->ps.weapon != WP_SABER)
 			&& mod == MOD_SABER)
 		{
 			//if the target is a trueNonJedi, take more saber damage... combined with the 1.5 in the w_saber stuff, this is 6 times damage!
@@ -6872,7 +6872,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		}
 	}
 
-	if (attacker->client && targ->client && level.gametype == GT_SIEGE &&
+	if (attacker->client && targ->client && level.gametype == GT_MOVIEDUELS_SIEGE &&
 		targ->client->siegeClass != -1 && bgSiegeClasses[targ->client->siegeClass].classflags & 1 <<
 		CFL_STRONGAGAINSTPHYSICAL)
 	{
@@ -6911,7 +6911,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 				}
 			}
 			else if (targ->inuse && targ->client &&
-				level.gametype >= GT_TEAM &&
+				level.gametype >= GT_MOVIEDUELS_TEAM &&
 				attacker->s.number >= MAX_CLIENTS &&
 				attacker->alliedTeam &&
 				targ->client->sess.sessionTeam == attacker->alliedTeam &&
@@ -6922,7 +6922,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 			}
 		}
 
-		if (level.gametype == GT_JEDIMASTER && !g_friendlyFire.integer &&
+		if (level.gametype == GT_MOVIEDUELS_JEDIMASTER && !g_friendlyFire.integer &&
 			targ && targ->client && attacker && attacker->client &&
 			targ != attacker && !targ->client->ps.isJediMaster && !attacker->client->ps.isJediMaster &&
 			G_ThereIsAMaster())
@@ -6969,7 +6969,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 	if (attacker && !targ->client)
 	{
 		//attacker hit a non-client
-		if (level.gametype == GT_SIEGE &&
+		if (level.gametype == GT_MOVIEDUELS_SIEGE &&
 			!g_ff_objectives.integer)
 		{
 			//in siege mode (and...?)
@@ -7040,7 +7040,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 	// calculated after knockback, so rocket jumping works
 	if (targ == attacker && !(dflags & DAMAGE_NO_SELF_PROTECTION))
 	{
-		if (level.gametype == GT_SIEGE)
+		if (level.gametype == GT_MOVIEDUELS_SIEGE)
 		{
 			damage *= 1.5;
 		}
@@ -7476,7 +7476,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 	}
 
 	// See if it's the player hurting the enemy flag carrier
-	if (level.gametype == GT_CTF || level.gametype == GT_CTY)
+	if (level.gametype == GT_MOVIEDUELS_CTF || level.gametype == GT_MOVIEDUELS_CTY)
 	{
 		Team_CheckHurtCarrier(targ, attacker);
 	}
