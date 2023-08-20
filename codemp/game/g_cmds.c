@@ -2983,19 +2983,19 @@ int G_ItemUsable(const playerState_t* ps, int forced_use)
 
 		return 1;
 	case HI_SEEKER:
-		if (ps->eFlags & EF_SEEKERDRONE)
+		/*if (ps->eFlags & EF_SEEKERDRONE)
 		{
 			G_AddEvent(&g_entities[ps->client_num], EV_ITEMUSEFAIL, SEEKER_ALREADYDEPLOYED);
 			return 0;
-		}
+		}*/
 
 		return 1;
 	case HI_SENTRY_GUN:
-		if (ps->fd.sentryDeployed)
+		/*if (ps->fd.sentryDeployed)
 		{
 			G_AddEvent(&g_entities[ps->client_num], EV_ITEMUSEFAIL, SENTRY_ALREADYPLACED);
 			return 0;
-		}
+		}*/
 
 		yawonly[ROLL] = 0;
 		yawonly[PITCH] = 0;

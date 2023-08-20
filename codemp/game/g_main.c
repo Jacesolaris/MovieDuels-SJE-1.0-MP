@@ -541,7 +541,11 @@ void G_InitGame(int levelTime, int randomSeed, int restart)
 		Q_stricmp(sje_mapname, "mp/duel3") == 0 || Q_stricmp(sje_mapname, "mp/duel4") == 0 ||
 		Q_stricmp(sje_mapname, "mp/duel5") == 0 || Q_stricmp(sje_mapname, "mp/duel6") == 0 ||
 		Q_stricmp(sje_mapname, "mp/duel7") == 0 || Q_stricmp(sje_mapname, "mp/duel8") == 0 ||
-		Q_stricmp(sje_mapname, "mp/duel9") == 0 || Q_stricmp(sje_mapname, "mp/duel10") == 0)
+		Q_stricmp(sje_mapname, "mp/duel9") == 0 || Q_stricmp(sje_mapname, "mp/duel10") == 0 ||
+		Q_stricmp(sje_mapname, "duel_dotf") == 0 || Q_stricmp(sje_mapname, "duel_quigonfuneral") == 0 ||
+		Q_stricmp(sje_mapname, "duel_geonosis_hangar") == 0 || Q_stricmp(sje_mapname, "duel_kamino_lp") == 0 ||
+		Q_stricmp(sje_mapname, "duel_coruscantlp") == 0 || Q_stricmp(sje_mapname, "duel_jt_training") == 0 ||
+		Q_stricmp(sje_mapname, "duel_office") == 0 || Q_stricmp(sje_mapname, "duel_luke") == 0)
 	{
 		level.is_duel_mp_map = qtrue;
 	}

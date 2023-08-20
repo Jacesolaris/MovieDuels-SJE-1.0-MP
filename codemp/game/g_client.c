@@ -2748,6 +2748,10 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "han_esb/default")
 			|| Class_Model(model, "oldhan/default")
 			|| Class_Model(model, "oldhan")
+			|| Class_Model(model, "captain_solo")
+			|| Class_Model(model, "captain_solo/esb")
+			|| Class_Model(model, "captain_solo/rotj")
+			|| Class_Model(model, "han_young")
 			|| Class_Model(model, "hansolo/main")
 			|| Class_Model(model, "hansolo/main2")
 			|| Class_Model(model, "sthan/main")
@@ -2824,6 +2828,7 @@ qboolean client_userinfo_changed(const int client_num)
 		}
 		else if (Class_Model(model, "chewbacca")
 			|| Class_Model(model, "chewbacca2")
+			|| Class_Model(model, "chewbacca/bespin")
 			|| Class_Model(model, "chewbacca_bespin")
 			|| Class_Model(model, "koWookiee")
 			|| Class_Model(model, "koWookiee/main")
@@ -3207,9 +3212,15 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jan/blue")
 			|| Class_Model(model, "leia_TFA")
 			|| Class_Model(model, "leia/default")
+			|| Class_Model(model, "leia_anh")
+			|| Class_Model(model, "leia_anh/")
 			|| Class_Model(model, "leia_anh/main")
 			|| Class_Model(model, "leia_anh/default")
 			|| Class_Model(model, "leia_esb")
+			|| Class_Model(model, "leia_esb/hoth")
+			|| Class_Model(model, "leia_endor")
+			|| Class_Model(model, "leia_endor/poncho")
+			|| Class_Model(model, "leia_slave")
 			|| Class_Model(model, "leia_esb/")
 			|| Class_Model(model, "leia_esb/default")
 			|| Class_Model(model, "LeiaV/main")
@@ -3334,6 +3345,31 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jedi_spanki6a")
 			|| Class_Model(model, "jedi_spanki6b")
 			|| Class_Model(model, "jedi_spanki")
+			|| Class_Model(model, "jedi_spanki1a_jka")
+			|| Class_Model(model, "jedi_spanki1b_jka")
+			|| Class_Model(model, "jedi_spanki2_jka")
+			|| Class_Model(model, "jedi_spanki2a_jka")
+			|| Class_Model(model, "jedi_spanki2b_jka")
+			|| Class_Model(model, "jedi_spanki3_jka")
+			|| Class_Model(model, "jedi_spanki3a_jka")
+			|| Class_Model(model, "jedi_spanki3b_jka")
+			|| Class_Model(model, "jedi_spanki4_jka")
+			|| Class_Model(model, "jedi_spanki4a_jka")
+			|| Class_Model(model, "jedi_spanki4b_jka")
+			|| Class_Model(model, "jedi_spanki5_jka")
+			|| Class_Model(model, "jedi_spanki5a_jka")
+			|| Class_Model(model, "jedi_spanki5b_jka")
+			|| Class_Model(model, "jedi_spanki6_jka")
+			|| Class_Model(model, "jedi_spanki6a_jka")
+			|| Class_Model(model, "jedi_spanki6b_jka")
+			|| Class_Model(model, "jedi_spanki_jka")
+			|| Class_Model(model, "Jedi_GenericFemale1")
+			|| Class_Model(model, "Jedi_GenericFemale1A")
+			|| Class_Model(model, "Jedi_GenericFemale2")
+			|| Class_Model(model, "Jedi_GenericFemale2A")
+			|| Class_Model(model, "Jedi_GenericFemale3")
+			|| Class_Model(model, "Jedi_GenericFemale3A")
+			|| Class_Model(model, "jaro_tapal_mp")
 			|| Class_Model(model, "spiderman")
 			|| Class_Model(model, "Wolverine")
 			|| Class_Model(model, "SD_tmnt")
@@ -3347,6 +3383,13 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Vandar_ghost")
 			|| Class_Model(model, "Visas")
 			|| Class_Model(model, "VrookLamar")
+			|| Class_Model(model, "cal_inquisitor_mp")
+			|| Class_Model(model, "cal_kestis_jedi_mp")
+			|| Class_Model(model, "cal_kestis_mp")
+			|| Class_Model(model, "cal_kestis_mp/cape")
+			|| Class_Model(model, "cal_kestis_mp/default2")
+			|| Class_Model(model, "cal_kestis_jedi_mp")
+			|| Class_Model(model, "cal_survivor_mp")
 			|| Class_Model(model, "cal_kestis")
 			|| Class_Model(model, "cal_kestis/cape")
 			|| Class_Model(model, "cal_kestis/cape2")
@@ -3467,8 +3510,16 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "moMace_Windu/main")
 			|| Class_Model(model, "muwindu/main")
 			|| Class_Model(model, "obiwan_ot_mp")
+			|| Class_Model(model, "obiwan_ot_mp/ghost")
+			|| Class_Model(model, "obiwan_ot_mp/default_hooded")
+			|| Class_Model(model, "obiwan_ot_mp/default_robed")
 			|| Class_Model(model, "obiwan_ep3_mp")
-			|| Class_Model(model, "macewindu_mp"))
+			|| Class_Model(model, "obiwan_ep3_mp/exile")
+			|| Class_Model(model, "macewindu_mp")
+			|| Class_Model(model, "obiwan_jabiim_mp")
+			|| Class_Model(model, "obiwan_jabiim_mp/robed")
+			|| Class_Model(model, "obiwan_jabiim_mp/defaultb")
+			|| Class_Model(model, "obiwan_jabiim_mp/robedc"))
 		{
 			client->pers.nextbotclass = BCLASS_KYLE;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3504,6 +3555,20 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "lando")
+			|| Class_Model(model, "landoT")
+			|| Class_Model(model, "landoT/endor")
+			|| Class_Model(model, "landoT/bespin")
+			|| Class_Model(model, "cassian")
+			|| Class_Model(model, "cassian/parka")
+			|| Class_Model(model, "cassian/vest")
+			|| Class_Model(model, "cassian/scarif")
+			|| Class_Model(model, "bodhi")
+			|| Class_Model(model, "chirrut")
+			|| Class_Model(model, "baze")
+			|| Class_Model(model, "niennunb")
+			|| Class_Model(model, "ackbar")
+			|| Class_Model(model, "bailorgana")
+			|| Class_Model(model, "landoskiff")
 			|| Class_Model(model, "lando/red")
 			|| Class_Model(model, "lando/blue")
 			|| Class_Model(model, "lando/main"))
@@ -3522,6 +3587,22 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
+		else if (Class_Model(model, "k2so"))
+			{
+				client->pers.nextbotclass = BCLASS_LANDO;
+				client->pers.botmodelscale = BOTZIZE_MASSIVE;
+				if (!(ent->r.svFlags & SVF_BOT))
+				{
+					if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+						GT_MOVIEDUELS_SIEGE)
+					{
+						client->ps.stats[STAT_HEALTH] = ent->health = 0;
+						player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+						trap->UnlinkEntity((sharedEntity_t*)ent);
+					}
+					Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+				}
+				}
 		else if (Class_Model(model, "luke")
 			|| Class_Model(model, "luke_esb_mp")
 			|| Class_Model(model, "luke_rotj_mp")
@@ -3564,7 +3645,21 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jedi_anakin2")
 			|| Class_Model(model, "jedi_anakin")
 			|| Class_Model(model, "ajunta")
-			|| Class_Model(model, "Atris"))
+			|| Class_Model(model, "Atris")
+			|| Class_Model(model, "luke_anh_mp")
+			|| Class_Model(model, "luke_esb_dago_mp")
+			|| Class_Model(model, "luke_esb_dago_mp/backpack")
+			|| Class_Model(model, "luke_esb_mp")
+			|| Class_Model(model, "luke_hoth_mp")
+			|| Class_Model(model, "luke_pilot_mp")
+			|| Class_Model(model, "luke_yavin_mp")
+			|| Class_Model(model, "luke_rotj_mp/tunic_hood")
+			|| Class_Model(model, "luke_rotj_mp/tunic_robe")
+			|| Class_Model(model, "luke_rotj_mp/tunic")
+			|| Class_Model(model, "luke_rotj_mp/endor")
+			|| Class_Model(model, "luke_rotj_mp/endor_nohelmet")
+			|| Class_Model(model, "luke_rotj_mp")
+			|| Class_Model(model, "luke_rotj_mp/default_fd"))
 		{
 			client->pers.nextbotclass = BCLASS_LUKE;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3597,6 +3692,7 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "monmothma")
+			|| Class_Model(model, "mothma_young")
 			|| Class_Model(model, "monmothma/red")
 			|| Class_Model(model, "monmothma/blue")
 			|| Class_Model(model, "ta/main")
@@ -3739,6 +3835,9 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "rebel")
+			|| Class_Model(model, "rebel_pilot_tfu")
+			|| Class_Model(model, "militiasaboteur")
+			|| Class_Model(model, "militiatrooper")
 			|| Class_Model(model, "rebel/main")
 			|| Class_Model(model, "rebel/red")
 			|| Class_Model(model, "rebel/blue"))
@@ -7196,7 +7295,7 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
 		case BCLASS_LANDO:
-			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SENTRY_GUN;
 			client->ps.stats[STAT_ARMOR] = 100;
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
 			break;
@@ -7304,7 +7403,7 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
 		case BCLASS_STORMTROOPER:
-			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 2 << HI_SEEKER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SHIELD;
 			client->ps.stats[STAT_ARMOR] = 100;
