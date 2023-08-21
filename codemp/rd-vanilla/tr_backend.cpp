@@ -1595,7 +1595,11 @@ const void* RB_DrawSurfs(const void* data) {
 
 		// Render the glowing objects.
 		g_bRenderGlowingObjects = true;
-		RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
+
+		if (r_Dynamic_AMD_Fix->integer == 0)
+		{
+			RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
+		}
 		g_bRenderGlowingObjects = false;
 
 		qglFinish();
