@@ -4353,7 +4353,8 @@ void G_RunFrame(const int levelTime)
 		g_siegeRespawnCheck = level.time + g_siegeRespawn.integer * 1000;
 	}
 
-	if ((level.gametype == GT_MOVIEDUELS_FFA || level.gametype == GT_MOVIEDUELS_TEAM
+	if ((level.gametype == GT_MOVIEDUELS_FFA
+		|| level.gametype == GT_MOVIEDUELS_TEAM
 		|| level.gametype == GT_MOVIEDUELS_CTF) &&
 		g_ffaRespawnTimerCheck < level.time)
 	{

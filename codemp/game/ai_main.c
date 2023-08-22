@@ -10905,10 +10905,10 @@ void standard_bot_ai(bot_state_t* bs)
 			(!bs->doChat || bs->chatTime < level.time))
 		{
 			trap->EA_Attack(bs->client);
-			if (bs->cur_ps.fd.saber_anim_level != SS_STAFF && bs->cur_ps.fd.saber_anim_level != SS_DUAL)
+			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
+				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
 			{
 				Cmd_SaberAttackCycle_f(&g_entities[bs->client]); // we died lets change the saber style
-				bs->changeStyleDebounce = level.time + 10000;
 			}
 		}
 
@@ -10916,24 +10916,24 @@ void standard_bot_ai(bot_state_t* bs)
 	}
 
 	if ((g_entities[bs->client].client->saber[0].type == SABER_STAFF
+		|| g_entities[bs->client].client->saber[0].type == SABER_STAFF_MAUL
 		|| g_entities[bs->client].client->saber[0].type == SABER_STAFF_THIN
 		|| g_entities[bs->client].client->saber[0].type == SABER_STAFF_UNSTABLE
 		|| g_entities[bs->client].client->saber[0].type == SABER_ELECTROSTAFF ||
 		g_entities[bs->client].client->saber[1].type == SABER_STAFF ||
+		g_entities[bs->client].client->saber[1].type == SABER_STAFF_MAUL ||
 		g_entities[bs->client].client->saber[1].type == SABER_STAFF_THIN ||
 		g_entities[bs->client].client->saber[1].type == SABER_STAFF_UNSTABLE ||
 		g_entities[bs->client].client->saber[1].type == SABER_ELECTROSTAFF ||
 		g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF
+		|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_MAUL
 		|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_THIN
 		|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_UNSTABLE
 		|| g_entities[bs->client].client->saber[saber_num].type == SABER_ELECTROSTAFF)
 		&& bs->cur_ps.fd.saber_anim_level != SS_STAFF)
 	{
-		if (bs->changeStyleDebounce < level.time)
-		{
-			Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
-			bs->changeStyleDebounce = level.time + 10000;
-		}
+
+		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
 
 	if ((g_entities[bs->client].client->saber[1].type == SABER_SINGLE

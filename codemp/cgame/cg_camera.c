@@ -1331,7 +1331,7 @@ void CGCam_DrawWideScreen(void)
 	{
 		CGCam_UpdateBarFade();
 
-		if (cg_drawwidescreenmodemp.integer)
+		if (cg_drawwidescreenmode.integer)
 		{
 			//
 		}

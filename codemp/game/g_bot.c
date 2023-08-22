@@ -1362,7 +1362,7 @@ static void G_LoadBots(void)
 	}
 	else
 	{
-		G_LoadBotsFromFile("botfiles/bots_JKA.txt");
+		G_LoadBotsFromFile("botfiles/md_bots_JKA.txt");
 	}
 
 	// get all bots from .bot files

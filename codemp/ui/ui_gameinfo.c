@@ -418,7 +418,7 @@ void UI_LoadBots(void)
 	}
 	else
 	{
-		UI_LoadBotsFromFile("botfiles/bots_JKA.txt");
+		UI_LoadBotsFromFile("botfiles/md_bots_JKA.txt");
 	}
 
 	// get all bots from .bot files
