@@ -5256,7 +5256,7 @@ void AnimateStun(gentity_t* self, gentity_t* inflictor, vec3_t impact)
 			{
 			case 0:
 			default:
-				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT3), 3000);
+				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT5), 3000);
 				break;
 			case 1:
 				G_AddVoiceEvent(self, Q_irand(EV_ANGER1, EV_ANGER1), 3000);
@@ -5278,7 +5278,7 @@ void AnimateStun(gentity_t* self, gentity_t* inflictor, vec3_t impact)
 			{
 			case 0:
 			default:
-				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT3), 3000);
+				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT5), 3000);
 				break;
 			case 1:
 				G_AddVoiceEvent(self, Q_irand(EV_ANGER1, EV_ANGER1), 3000);
@@ -5300,7 +5300,7 @@ void AnimateStun(gentity_t* self, gentity_t* inflictor, vec3_t impact)
 			{
 			case 0:
 			default:
-				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT3), 3000);
+				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT5), 3000);
 				break;
 			case 1:
 				G_AddVoiceEvent(self, Q_irand(EV_ANGER1, EV_ANGER1), 3000);
@@ -6883,6 +6883,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 						//use no saber damage for kick moves.
 						dmg = SABER_NO_DAMAGE;
 					}
+					else if (saber_in_kill_move)
+					{
+						dmg = SABER_MAXHITDAMAGE;
+					}
 					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
 					{
 						dmg = SABER_NORHITDAMAGE;
@@ -6924,13 +6928,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					//use no saber damage for kick moves.
 					dmg = SABER_NO_DAMAGE;
 				}
-				else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
-				{
-					dmg = SABER_NORHITDAMAGE;
-				}
 				else if (saber_in_kill_move)
 				{
 					dmg = SABER_MAXHITDAMAGE;
+				}
+				else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+				{
+					dmg = SABER_NORHITDAMAGE;
 				}
 				else
 				{
@@ -6947,13 +6951,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 				//use no saber damage for kick moves.
 				dmg = SABER_NO_DAMAGE;
 			}
-			else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
-			{
-				dmg = SABER_MINHITDAMAGE;
-			}
 			else if (saber_in_kill_move)
 			{
 				dmg = SABER_MAXHITDAMAGE;
+			}
+			else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+			{
+				dmg = SABER_NORHITDAMAGE;
 			}
 			else
 			{

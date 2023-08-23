@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-22,BuildNum-09" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-23,BuildNum-10" // build date
 
 #define	STEPSIZE		18
 
@@ -1111,6 +1111,8 @@ typedef enum {
 	EV_TAUNT1,
 	EV_TAUNT2,
 	EV_TAUNT3,
+	EV_TAUNT4,
+	EV_TAUNT5,
 	EV_JCHASE1,
 	EV_JCHASE2,
 	EV_JCHASE3,
@@ -1459,6 +1461,7 @@ typedef enum {
 	LS_SPINATTACK_GRIEV,
 	LS_SPINATTACK,
 	LS_LEAP_ATTACK,
+	LS_LEAP_ATTACK2,
 	LS_SWOOP_ATTACK_RIGHT,
 	LS_SWOOP_ATTACK_LEFT,
 	LS_TAUNTAUN_ATTACK_RIGHT,

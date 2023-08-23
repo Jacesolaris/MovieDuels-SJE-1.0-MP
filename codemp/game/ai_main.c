@@ -10954,6 +10954,16 @@ void standard_bot_ai(bot_state_t* bs)
 		}
 	}
 
+	if ((g_entities[bs->client].client->saber[1].type == SABER_NONE)
+		&& bs->cur_ps.fd.saber_anim_level == SS_DUAL)
+	{
+		if (bs->changeStyleDebounce < level.time)
+		{
+			Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+			bs->changeStyleDebounce = level.time + 10000;
+		}
+	}
+
 	if (PM_InLedgeMove(bs->cur_ps.legsAnim))
 	{
 		//we're in a ledge move, just pull up for now

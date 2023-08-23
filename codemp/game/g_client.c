@@ -3340,6 +3340,8 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "jedi")
+			|| Class_Model(model, "chirrut")
+			|| Class_Model(model, "taron_malicos_mp")
 			|| Class_Model(model, "tarados_gon_mp")
 			|| Class_Model(model, "zabrak_rots_mp")
 			|| Class_Model(model, "sariss_mp")
@@ -3733,8 +3735,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (Class_Model(model, "chirrut")
-			|| Class_Model(model, "baze"))
+		else if (Class_Model(model, "baze"))
 		{
 			client->pers.nextbotclass = BCLASS_SWAMPTROOPER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;

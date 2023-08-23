@@ -280,6 +280,8 @@ qboolean R_GetModeInfo(int* width, int* height, const int mode)
 static void R_ModeList_f(void)
 {
 	Com_Printf("\n");
+	Com_Printf("Mode -2: Use desktop resolution\n");
+	Com_Printf("Mode -1: Use r_customWidth and r_customHeight variables\n");
 	for (int i = 0; i < s_numVidModes; i++)
 	{
 		Com_Printf("%s\n", r_vidModes[i].description);

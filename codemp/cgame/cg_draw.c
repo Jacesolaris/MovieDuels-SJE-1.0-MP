@@ -5843,7 +5843,7 @@ float cg_draw_radar(float y)
 							{
 								actual_dist = RADAR_MISSILE_RANGE;
 							}
-							VectorMA(cg.refdef.vieworg, -500.0f * (actual_dist / RADAR_MISSILE_RANGE), dir_player,sound_org);
+							VectorMA(cg.refdef.vieworg, -500.0f * (actual_dist / RADAR_MISSILE_RANGE), dir_player, sound_org);
 							trap->S_StartSound(sound_org, ENTITYNUM_WORLD, CHAN_AUTO, alarm_sound);
 						}
 					}
@@ -7306,7 +7306,6 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			}
 			else if (cross_ent->currentState.shouldtarget || cross_ent->currentState.eType == ET_NPC)
 			{
-				//VectorCopy( crossEnt->startRGBA, ecolor );
 				if (!ecolor[0] && !ecolor[1] && !ecolor[2])
 				{
 					// We really don't want black, so set it to yellow
@@ -7417,17 +7416,16 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 					}
 				}
 				else if (cross_ent->currentState.owner == cg.snap->ps.client_num ||
-					cgs.gametype >= GT_MOVIEDUELS_TEAM && cross_ent->currentState.teamowner == cgs.clientinfo[cg.snap->ps.
-					client_num]
-					.team)
+					cgs.gametype >= GT_MOVIEDUELS_TEAM &&
+					cross_ent->currentState.teamowner == cgs.clientinfo[cg.snap->ps.client_num].team)
 				{
 					ecolor[0] = 0.0f; //R
 					ecolor[1] = 1.0f; //G
 					ecolor[2] = 0.0f; //B
 				}
 				else if (cross_ent->currentState.teamowner == 16 ||
-					cgs.gametype >= GT_MOVIEDUELS_TEAM && cross_ent->currentState.teamowner && cross_ent->currentState.teamowner !=
-					cgs.clientinfo[cg.snap->ps.client_num].team)
+					cgs.gametype >= GT_MOVIEDUELS_TEAM &&
+					cross_ent->currentState.teamowner && cross_ent->currentState.teamowner !=cgs.clientinfo[cg.snap->ps.client_num].team)
 				{
 					ecolor[0] = 1.0f; //R
 					ecolor[1] = 0.0f; //G
@@ -7600,10 +7598,6 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			{
 				h_shader = cgs.media.crosshairShader[Com_Clampi(1, NUM_CROSSHAIRS, cg_drawCrosshair.integer) - 1];
 			}
-		}
-		else if (cg.snap->ps.weapon == WP_BRYAR_PISTOL)
-		{
-			h_shader = cgs.media.crosshairShader[4];
 		}
 		else
 		{
@@ -8701,7 +8695,7 @@ static void CG_ScanForCrosshairEntity(void)
 
 	if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 	{
-		if (trace.entity_num < /*MAX_CLIENTS*/ENTITYNUM_WORLD)
+		if (trace.entity_num < ENTITYNUM_WORLD)
 		{
 			const centity_t* veh = &cg_entities[trace.entity_num];
 			cg.crosshairclient_num = trace.entity_num;
