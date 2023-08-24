@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-23,BuildNum-10" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-24,BuildNum-11" // build date
 
 #define	STEPSIZE		18
 
@@ -1409,7 +1409,7 @@ typedef enum {
 // Ideally this will be replaced with an external file or more sophisticated move-picker
 // once the game gets out of prototype stage.
 
-// rww - Moved all this to bg_public so that we can access the saberMoveData stuff on the cgame
+// rww - Moved all this to bg_public so that we can access the saber_moveData stuff on the cgame
 // which is currently used for determining if a saber trail should be rendered in a given frame
 #ifdef LS_NONE
 #undef LS_NONE
@@ -1646,7 +1646,7 @@ typedef enum {
 	LS_KNOCK_LEFT,
 
 	LS_MOVE_MAX
-} saberMoveName_t;
+} saber_moveName_t;
 
 typedef enum {
 	Q_BR,
@@ -1660,7 +1660,7 @@ typedef enum {
 	Q_NUM_QUADS
 } saberQuadrant_t;
 
-typedef struct saberMoveData_s {
+typedef struct saber_moveData_s {
 	char* name;
 	int animToUse;
 	int	startQuad;
@@ -1668,12 +1668,12 @@ typedef struct saberMoveData_s {
 	unsigned animSetFlags;
 	int blend_time;
 	int blocking;
-	saberMoveName_t chain_idle;			// What move to call if the attack button is not pressed at the end of this anim
-	saberMoveName_t chain_attack;		// What move to call if the attack button (and nothing else) is pressed
+	saber_moveName_t chain_idle;			// What move to call if the attack button is not pressed at the end of this anim
+	saber_moveName_t chain_attack;		// What move to call if the attack button (and nothing else) is pressed
 	qboolean trailLength;
-} saberMoveData_t;
+} saber_moveData_t;
 
-extern saberMoveData_t	saberMoveData[LS_MOVE_MAX];
+extern saber_moveData_t	saber_moveData[LS_MOVE_MAX];
 
 typedef enum
 {
@@ -1728,6 +1728,7 @@ typedef enum saberType_e
 {
 	SABER_NONE = 0,
 	SABER_SINGLE,
+	SABER_SINGLE_CLASSIC,
 	SABER_STAFF,
 	SABER_DAGGER,
 	SABER_BROAD,
@@ -1989,7 +1990,7 @@ qboolean PM_SaberInIdle(int move);
 qboolean PM_FlippingAnim(int anim);
 qboolean PM_SpinningSaberAnim(int anim);
 qboolean pm_saber_in_special_attack(int anim);
-qboolean PM_SaberInKata(saberMoveName_t saber_move);
+qboolean PM_SaberInKata(saber_moveName_t saber_move);
 qboolean PM_InKataAnim(int anim);
 qboolean PM_KickingAnim(int anim);
 qboolean PM_PunchAnim(int anim);
@@ -1997,6 +1998,7 @@ qboolean BG_InRoll(const playerState_t* ps, int anim);
 qboolean BG_InDeathAnim(int anim);
 qboolean BG_InSaberLockOld(int anim);
 qboolean PM_InSaberLock(int anim);
+int PM_BrokenParryForAttack(int move);
 
 void pm_saber_start_trans_anim(int client_num, int saber_anim_level, int weapon, int anim, float* anim_speed, int
 	fatigued);

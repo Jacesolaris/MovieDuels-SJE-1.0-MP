@@ -1392,8 +1392,6 @@ typedef struct playerState_s {
 	int			deltaNumBits;
 #endif
 
-	bclass_t    botclass;
-	bclass_t    nextbotclass;
 	int		    ManualBlockingFlags; //Blockingflag on OK
 	int			localAnimIndex; //index locally (game/cgame) to anim data for this skel
 	int  		PlayerEffectFlags;

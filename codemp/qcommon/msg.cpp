@@ -1632,8 +1632,6 @@ netField_t playerStateFields[] =
 	{PSF(userVec2[1]), 1},
 	{PSF(userVec2[2]), 1},
 
-	{PSF(botclass), 8},
-	{PSF(nextbotclass), 8},
 	{PSF(fd.blockPoints), 16},
 	{PSF(fd.blockPointsMax), 16},
 	{PSF(fd.forceSpeedRecoveryTime), 32},
@@ -1857,8 +1855,6 @@ netField_t pilotPlayerStateFields[] =
 	{PSF(userVec2[1]), 1},
 	{PSF(userVec2[2]), 1},
 
-	{PSF(botclass), 8},
-	{PSF(nextbotclass), 8},
 	{PSF(fd.blockPoints), 16},
 	{PSF(fd.blockPointsMax), 16},
 	{PSF(fd.forceSpeedRecoveryTime), 32},
@@ -1990,8 +1986,6 @@ netField_t vehPlayerStateFields[] =
 	{PSF(userVec2[1]), 1},
 	{PSF(userVec2[2]), 1},
 
-	{PSF(botclass), 8},
-	{PSF(nextbotclass), 8},
 	{PSF(fd.blockPoints), 16},
 	{PSF(fd.blockPointsMax), 16},
 	{PSF(fd.forceSpeedRecoveryTime), 32},

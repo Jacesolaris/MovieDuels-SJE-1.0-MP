@@ -3082,13 +3082,13 @@ qboolean Kyle_CanDoGrab(void)
 	return qfalse;
 }
 
-saberMoveName_t G_PickAutoMultiKick(gentity_t* self, qboolean allowSingles, qboolean storeMove)
+saber_moveName_t G_PickAutoMultiKick(gentity_t* self, qboolean allowSingles, qboolean storeMove)
 {
 	return LS_NONE;
 }
 
 extern qboolean G_CanKickEntity(const gentity_t* self, const gentity_t* target);
-extern saberMoveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy);
+extern saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy);
 extern float NPC_EnemyRangeFromBolt(int bolt_index);
 extern qboolean PM_SaberInTransition(int move);
 extern void ForceDrain(gentity_t* self);
@@ -6428,18 +6428,18 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 				else if (throwing_saber)
 				{
 					vec3_t saberDir2Me;
-					vec3_t saberMoveDir;
+					vec3_t saber_moveDir;
 					const gentity_t* saber = &g_entities[NPCS.NPC->enemy->client->ps.saberEntityNum];
 					VectorSubtract(NPCS.NPC->r.currentOrigin, saber->r.currentOrigin, saberDir2Me);
 					const float saberDist = VectorNormalize(saberDir2Me);
-					VectorCopy(saber->s.pos.trDelta, saberMoveDir);
-					VectorNormalize(saberMoveDir);
+					VectorCopy(saber->s.pos.trDelta, saber_moveDir);
+					VectorNormalize(saber_moveDir);
 					if (!Q_irand(0, 3))
 					{
 						//Com_Printf( "(%d) raise agg - enemy threw saber\n", level.time );
 						Jedi_Aggression(NPCS.NPC, 1);
 					}
-					if (DotProduct(saberMoveDir, saberDir2Me) > 0.5)
+					if (DotProduct(saber_moveDir, saberDir2Me) > 0.5)
 					{
 						//it's heading towards me
 						if (saberDist < 100)
@@ -9036,13 +9036,13 @@ static void Jedi_Patrol(void)
 						if (enemy->client->ps.saberInFlight && !enemy->client->ps.saberHolstered)
 						{
 							vec3_t saberDir2Me;
-							vec3_t saberMoveDir;
+							vec3_t saber_moveDir;
 							const gentity_t* saber = &g_entities[enemy->client->ps.saberEntityNum];
 							VectorSubtract(NPCS.NPC->r.currentOrigin, saber->r.currentOrigin, saberDir2Me);
 							const float saberDist = VectorNormalize(saberDir2Me);
-							VectorCopy(saber->s.pos.trDelta, saberMoveDir);
-							VectorNormalize(saberMoveDir);
-							if (DotProduct(saberMoveDir, saberDir2Me) > 0.5)
+							VectorCopy(saber->s.pos.trDelta, saber_moveDir);
+							VectorNormalize(saber_moveDir);
+							if (DotProduct(saber_moveDir, saberDir2Me) > 0.5)
 							{
 								//it's heading towards me
 								if (saberDist < 200)
@@ -10436,7 +10436,7 @@ qboolean Jedi_InSpecialMove(void)
 							}
 						}
 						NPCS.NPC->client->ps.saberBlocked = BLOCKED_NONE;
-						NPCS.NPC->client->ps.saber_move /* not sure what this is = NPC->client->ps.saberMoveNext*/ =
+						NPCS.NPC->client->ps.saber_move /* not sure what this is = NPC->client->ps.saber_moveNext*/ =
 							LS_NONE;
 						NPCS.NPC->painDebounceTime = level.time + 500;
 						NPCS.NPC->client->ps.pm_time = 500;

@@ -3565,7 +3565,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 #ifndef FINAL_BUILD
 extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
 
-void Cmd_DebugSetSaberMove_f(gentity_t* self)
+void Cmd_DebugSetsaber_move_f(gentity_t* self)
 {
 	int argNum = trap->Argc();
 	char arg[MAX_STRING_CHARS];
@@ -3590,7 +3590,7 @@ void Cmd_DebugSetSaberMove_f(gentity_t* self)
 		self->client->ps.saber_move = LS_MOVE_MAX - 1;
 	}
 
-	Com_Printf("Anim for move: %s\n", animTable[saberMoveData[self->client->ps.saber_move].animToUse].name);
+	Com_Printf("Anim for move: %s\n", animTable[saber_moveData[self->client->ps.saber_move].animToUse].name);
 }
 
 void Cmd_DebugSetSaberBlock_f(gentity_t* self)

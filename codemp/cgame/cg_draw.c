@@ -7571,10 +7571,6 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			{
 				h_shader = cgs.media.crosshairShader[3];
 			}
-			else if (cg.snap->ps.weapon == WP_BRYAR_PISTOL)
-			{
-				h_shader = cgs.media.crosshairShader[4];
-			}
 			else if (cg.snap->ps.weapon == WP_THERMAL ||
 				cg.snap->ps.weapon == WP_DET_PACK ||
 				cg.snap->ps.weapon == WP_TRIP_MINE)
@@ -7586,6 +7582,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				h_shader = cgs.media.crosshairShader[6];
 			}
 			else if (cg.snap->ps.weapon == WP_BRYAR_OLD ||
+				cg.snap->ps.weapon == WP_BRYAR_PISTOL ||
 				cg.snap->ps.weapon == WP_STUN_BATON)
 			{
 				h_shader = cgs.media.crosshairShader[7];

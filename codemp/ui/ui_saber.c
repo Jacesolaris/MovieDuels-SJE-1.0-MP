@@ -2077,6 +2077,7 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saberName, int saberModel, s
 		switch (saberType)
 		{
 		case SABER_SINGLE:
+		case SABER_SINGLE_CLASSIC:
 		case SABER_UNSTABLE:
 		case SABER_THIN:
 		case SABER_SFX:
@@ -2430,7 +2431,7 @@ void UI_SaberDrawBlades(itemDef_t* item, vec3_t origin, vec3_t angles)
 	int saberModel;
 	int	numSabers = 1;
 
-	if (item->flags & ITF_ISCHARACTER//hacked sabermoves sabers in character's hand
+	if (item->flags & ITF_ISCHARACTER//hacked saber_moves sabers in character's hand
 		&& uiInfo.movesTitleIndex == 4 /*MD_DUAL_SABERS*/)
 	{
 		numSabers = 2;
@@ -2439,7 +2440,7 @@ void UI_SaberDrawBlades(itemDef_t* item, vec3_t origin, vec3_t angles)
 	for (int saber_num = 0; saber_num < numSabers; saber_num++)
 	{
 		char saber[MAX_QPATH];
-		if (item->flags & ITF_ISCHARACTER)//hacked sabermoves sabers in character's hand
+		if (item->flags & ITF_ISCHARACTER)//hacked saber_moves sabers in character's hand
 		{
 			UI_GetSaberForMenu(saber, saber_num);
 			saberModel = saber_num + 1;

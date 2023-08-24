@@ -497,7 +497,7 @@ void LoadTips(void)
 	const int time = trap->Milliseconds();
 	const int index = rand() % 15;
 
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 4)
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 5)
 	{
 		switch (index)
 		{

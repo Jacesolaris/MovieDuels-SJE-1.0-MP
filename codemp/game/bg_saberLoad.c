@@ -67,6 +67,7 @@ stringID_table_t saberTable[] =
 {
 	ENUM2STRING(SABER_NONE),
 	ENUM2STRING(SABER_SINGLE),
+	ENUM2STRING(SABER_SINGLE_CLASSIC),
 	ENUM2STRING(SABER_STAFF),
 	ENUM2STRING(SABER_BROAD),
 	ENUM2STRING(SABER_PRONG),
@@ -103,7 +104,7 @@ stringID_table_t saberTable[] =
 	{"", -1}
 };
 
-stringID_table_t saberMoveTable[] =
+stringID_table_t saber_moveTable[] =
 {
 	ENUM2STRING(LS_INVALID),
 
@@ -473,6 +474,10 @@ saberType_t TranslateSaberType(const char* name)
 	if (!Q_stricmp(name, "SABER_SINGLE"))
 	{
 		return SABER_SINGLE;
+	}
+	if (!Q_stricmp(name, "SABER_SINGLE_CLASSIC"))
+	{
+		return SABER_SINGLE_CLASSIC;
 	}
 	if (!Q_stricmp(name, "SABER_STAFF"))
 	{
@@ -1648,7 +1653,7 @@ static void Saber_ParseKataMove(saberInfo_t* saber, const char** p)
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saber_move = GetIDForString(saberMoveTable, value);
+	const int saber_move = GetIDForString(saber_moveTable, value);
 	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
 		saber->kataMove = saber_move;
 	//LS_INVALID - if set, player will execute this move when they press both attack buttons at the same time
@@ -1659,7 +1664,7 @@ static void Saber_ParseLungeAtkMove(saberInfo_t* saber, const char** p)
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saber_move = GetIDForString(saberMoveTable, value);
+	const int saber_move = GetIDForString(saber_moveTable, value);
 	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
 		saber->lungeAtkMove = saber_move;
 }
@@ -1669,7 +1674,7 @@ static void Saber_ParseJumpAtkUpMove(saberInfo_t* saber, const char** p)
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saber_move = GetIDForString(saberMoveTable, value);
+	const int saber_move = GetIDForString(saber_moveTable, value);
 	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
 		saber->jumpAtkUpMove = saber_move;
 }
@@ -1679,7 +1684,7 @@ static void Saber_ParseJumpAtkFwdMove(saberInfo_t* saber, const char** p)
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saber_move = GetIDForString(saberMoveTable, value);
+	const int saber_move = GetIDForString(saber_moveTable, value);
 	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
 		saber->jumpAtkFwdMove = saber_move;
 }
@@ -1689,7 +1694,7 @@ static void Saber_ParseJumpAtkBackMove(saberInfo_t* saber, const char** p)
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saber_move = GetIDForString(saberMoveTable, value);
+	const int saber_move = GetIDForString(saber_moveTable, value);
 	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
 		saber->jumpAtkBackMove = saber_move;
 }
@@ -1699,7 +1704,7 @@ static void Saber_ParseJumpAtkRightMove(saberInfo_t* saber, const char** p)
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saber_move = GetIDForString(saberMoveTable, value);
+	const int saber_move = GetIDForString(saber_moveTable, value);
 	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
 		saber->jumpAtkRightMove = saber_move;
 }
@@ -1709,7 +1714,7 @@ static void Saber_ParseJumpAtkLeftMove(saberInfo_t* saber, const char** p)
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	const int saber_move = GetIDForString(saberMoveTable, value);
+	const int saber_move = GetIDForString(saber_moveTable, value);
 	if (saber_move >= LS_INVALID && saber_move < LS_MOVE_MAX)
 		saber->jumpAtkLeftMove = saber_move;
 }

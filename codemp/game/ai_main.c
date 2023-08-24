@@ -8555,7 +8555,7 @@ void bot_behave_attack_basic(bot_state_t* bs, const gentity_t* target)
 		{
 			//we can and want to do a saber attack fake.
 			int fake_quad = Q_irand(Q_BR, Q_B);
-			while (fake_quad == saberMoveData[bs->cur_ps.saber_move].endQuad)
+			while (fake_quad == saber_moveData[bs->cur_ps.saber_move].endQuad)
 			{
 				//can't fake in the direction we're already trying to attack in
 				fake_quad = Q_irand(Q_BR, Q_B);
@@ -10638,11 +10638,11 @@ void select_best_siege_class(const int client_num, const qboolean force_join)
 	}
 }
 
+extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
 //the main AI loop.
 //please don't be too frightened.
 void standard_bot_ai(bot_state_t* bs)
 {
-	const int saber_num = 0;
 	int doing_fallback = 0;
 	int fj_halt;
 	vec3_t a;
@@ -10655,6 +10655,8 @@ void standard_bot_ai(bot_state_t* bs)
 	gentity_t* friend_in_lof = 0;
 	vec3_t pre_frame_g_angles;
 	vec3_t move_dir;
+	const saberInfo_t* saber1 = BG_MySaber(bs->client, 0);
+	const saberInfo_t* saber2 = BG_MySaber(bs->client, 1);
 
 	//Reset the action states
 	bs->doAttack = qfalse;
@@ -10915,53 +10917,33 @@ void standard_bot_ai(bot_state_t* bs)
 		return;
 	}
 
-	if ((g_entities[bs->client].client->saber[0].type == SABER_STAFF
-		|| g_entities[bs->client].client->saber[0].type == SABER_STAFF_MAUL
-		|| g_entities[bs->client].client->saber[0].type == SABER_STAFF_THIN
-		|| g_entities[bs->client].client->saber[0].type == SABER_STAFF_UNSTABLE
-		|| g_entities[bs->client].client->saber[0].type == SABER_ELECTROSTAFF ||
-		g_entities[bs->client].client->saber[1].type == SABER_STAFF ||
-		g_entities[bs->client].client->saber[1].type == SABER_STAFF_MAUL ||
-		g_entities[bs->client].client->saber[1].type == SABER_STAFF_THIN ||
-		g_entities[bs->client].client->saber[1].type == SABER_STAFF_UNSTABLE ||
-		g_entities[bs->client].client->saber[1].type == SABER_ELECTROSTAFF ||
-		g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF
-		|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_MAUL
-		|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_THIN
-		|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_UNSTABLE
-		|| g_entities[bs->client].client->saber[saber_num].type == SABER_ELECTROSTAFF)
-		&& bs->cur_ps.fd.saber_anim_level != SS_STAFF)
-	{
+	qboolean dualSabers = qfalse;
+	qboolean staffSaber = qfalse;
 
+	if (saber2 && saber2->model[0])
+	{
+		dualSabers = qtrue;
+	}
+
+	if (saber1->numBlades > 1)
+	{
+		staffSaber = qtrue;
+	}
+
+	if (dualSabers && bs->cur_ps.fd.saber_anim_level != SS_DUAL)
+	{//dual sabers
 		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
 
-	if ((g_entities[bs->client].client->saber[1].type == SABER_SINGLE
-		|| g_entities[bs->client].client->saber[1].type == SABER_PALP
-		|| g_entities[bs->client].client->saber[1].type == SABER_THIN
-		|| g_entities[bs->client].client->saber[1].type == SABER_REY
-		|| g_entities[bs->client].client->saber[1].type == SABER_UNSTABLE
-		|| g_entities[bs->client].client->saber[1].type == SABER_ANAKIN
-		|| g_entities[bs->client].client->saber[1].type == SABER_SFX
-		|| g_entities[bs->client].client->saber[1].type == SABER_OBIWAN
-		|| g_entities[bs->client].client->saber[1].type == SABER_DOOKU)
-		&& bs->cur_ps.fd.saber_anim_level != SS_DUAL)
-	{
-		if (bs->changeStyleDebounce < level.time)
-		{
-			Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
-			bs->changeStyleDebounce = level.time + 10000;
-		}
+	if (staffSaber && bs->cur_ps.fd.saber_anim_level != SS_STAFF)
+	{//dual sabers
+		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
 
-	if ((g_entities[bs->client].client->saber[1].type == SABER_NONE)
-		&& bs->cur_ps.fd.saber_anim_level == SS_DUAL)
-	{
-		if (bs->changeStyleDebounce < level.time)
-		{
-			Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
-			bs->changeStyleDebounce = level.time + 10000;
-		}
+	if (!dualSabers && !staffSaber
+		&& (bs->cur_ps.fd.saber_anim_level != SS_FAST && bs->cur_ps.fd.saber_anim_level != SS_MEDIUM && bs->cur_ps.fd.saber_anim_level != SS_STRONG))
+	{//using a single saber
+		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
 
 	if (PM_InLedgeMove(bs->cur_ps.legsAnim))

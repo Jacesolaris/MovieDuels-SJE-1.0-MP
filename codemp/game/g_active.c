@@ -2797,7 +2797,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
-						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
+						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->botclass == BCLASS_OBIWAN)) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -2875,7 +2875,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
-						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
+						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->botclass == BCLASS_OBIWAN)) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -3155,7 +3155,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
-						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
+						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->botclass == BCLASS_OBIWAN)) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -3188,7 +3188,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
-						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
+						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->botclass == BCLASS_OBIWAN)) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -3511,7 +3511,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_MEDIUM:
-					if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
+					if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->botclass == BCLASS_OBIWAN)) //saber kylo
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -3589,7 +3589,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_MEDIUM:
-					if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
+					if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->botclass == BCLASS_OBIWAN)) //saber kylo
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);

@@ -5035,7 +5035,7 @@ void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, const qboolean
 
 	if (!PM_SaberCanInterruptMove(self->client->ps.saber_move, self->client->ps.torsoAnim))
 	{
-		//can't interrupt my current torso anim/sabermove with this, so ignore it entirely!
+		//can't interrupt my current torso anim/saber_move with this, so ignore it entirely!
 		return;
 	}
 

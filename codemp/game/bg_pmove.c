@@ -826,7 +826,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 					{
 						anim = BOTH_SABERYODA_STANCE;
 					}
-					else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+					else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN))//saber obi
 					{
 						anim = BOTH_SABEROBI_STANCE;
 					}
@@ -870,7 +870,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 					{
 						anim = BOTH_SABERYODA_STANCE;
 					}
-					else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+					else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 					{
 						anim = BOTH_SABEROBI_STANCE;
 					}
@@ -914,7 +914,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 					{
 						anim = BOTH_SABERYODA_STANCE;
 					}
-					else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+					else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 					{
 						anim = BOTH_SABEROBI_STANCE;
 					}
@@ -958,7 +958,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 					{
 						anim = BOTH_SABERYODA_STANCE;
 					}
-					else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+					else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 					{
 						anim = BOTH_SABEROBI_STANCE;
 					}
@@ -1002,7 +1002,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 					{
 						anim = BOTH_SABERYODA_STANCE;
 					}
-					else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+					else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 					{
 						anim = BOTH_SABEROBI_STANCE;
 					}
@@ -1047,7 +1047,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 					{
 						anim = BOTH_SABERYODA_STANCE;
 					}
-					else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+					else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 					{
 						anim = BOTH_SABEROBI_STANCE;
 					}
@@ -1156,7 +1156,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEROBI_STANCE;
 		}
@@ -1202,7 +1202,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEROBI_STANCE;
 		}
@@ -1240,7 +1240,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEROBI_STANCE;
 		}
@@ -1271,7 +1271,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEROBI_STANCE;
 		}
@@ -1302,7 +1302,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEROBI_STANCE;
 		}
@@ -1333,7 +1333,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEROBI_STANCE;
 		}
@@ -1364,7 +1364,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEREADY_STANCE;
 		}
@@ -1396,7 +1396,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 		{
 			anim = BOTH_SABERSTANCE_STANCE_ALT;
 		}
-		else if (saber1 && saber1->type == SABER_OBIWAN) //saber obi
+		else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber obi
 		{
 			anim = BOTH_SABEROBI_STANCE;
 		}
@@ -7986,7 +7986,7 @@ qboolean BG_InDFA()
 		return qtrue;
 	}
 
-	if (pm->ps->torsoAnim == saberMoveData[16].animToUse)
+	if (pm->ps->torsoAnim == saber_moveData[16].animToUse)
 	{
 		return qtrue;
 	}
@@ -8015,7 +8015,7 @@ qboolean G_InDFA(const gentity_t* ent)
 		return qtrue;
 	}
 
-	if (ent->client->ps.torsoAnim == saberMoveData[16].animToUse)
+	if (ent->client->ps.torsoAnim == saber_moveData[16].animToUse)
 	{
 		return qtrue;
 	}
@@ -11579,7 +11579,7 @@ void PM_FinishWeaponChange(void)
 			{
 				//holding second saber, activate it.
 				pm->ps->saberHolstered = 1;
-				PM_SetSaberMove(LS_DRAW);
+				PM_Setsaber_move(LS_DRAW);
 			}
 			else
 			{
@@ -11594,14 +11594,14 @@ void PM_FinishWeaponChange(void)
 			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				// Some special bot stuff.
-				PM_SetSaberMove(LS_DRAW);
+				PM_Setsaber_move(LS_DRAW);
 			}
 			else
 #endif
 			{
 				if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 				{
-					PM_SetSaberMove(LS_DRAW);
+					PM_Setsaber_move(LS_DRAW);
 				}
 				else if (PM_WalkingAnim(pm->ps->legsAnim))
 				{
@@ -11628,7 +11628,7 @@ void PM_FinishWeaponChange(void)
 						PM_SetAnim(SETANIM_TORSO, BOTH_SABERSTANCE_STANCE_ALT,
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
-					else if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
+					else if ((saber1 && saber1->type == SABER_OBIWAN) || (pm_entSelf->s.botclass == BCLASS_OBIWAN)) //saber kylo
 					{
 						PM_SetAnim(SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -11640,11 +11640,11 @@ void PM_FinishWeaponChange(void)
 					else if (saber1 && saber1->type == SABER_GRIE || saber1 && saber1->type == SABER_GRIE4)
 						//saber GRIEVOUS
 					{
-						PM_SetSaberMove(LS_DRAW3);
+						PM_Setsaber_move(LS_DRAW3);
 					}
 					else
 					{
-						PM_SetSaberMove(LS_DRAW2);
+						PM_Setsaber_move(LS_DRAW2);
 					}
 				}
 			}
@@ -13434,7 +13434,7 @@ void PM_Weapon(void)
 				}
 				if (kick_move != -1)
 				{
-					int kickAnim = saberMoveData[kick_move].animToUse;
+					int kickAnim = saber_moveData[kick_move].animToUse;
 
 					if (kickAnim != -1)
 					{
@@ -14031,7 +14031,7 @@ void PM_Weapon(void)
 
 					if (kick_move != -1)
 					{
-						int kickAnim = saberMoveData[kick_move].animToUse;
+						int kickAnim = saber_moveData[kick_move].animToUse;
 
 						if (kickAnim != -1)
 						{
@@ -14136,7 +14136,7 @@ void PM_Weapon(void)
 
 					if (kick_move != -1)
 					{
-						int kickAnim = saberMoveData[kick_move].animToUse;
+						int kickAnim = saber_moveData[kick_move].animToUse;
 
 						if (kickAnim != -1)
 						{
@@ -17271,7 +17271,7 @@ static qboolean PM_AdjustAnglesForDualJumpAttack(playerState_t* ps, usercmd_t* u
 	return qtrue;
 }
 
-static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
+static QINLINE void PM_CmdForsaber_moves(usercmd_t* ucmd)
 {
 	//DUAL FORWARD+JUMP+ATTACK
 	if (pm->ps->legsAnim == BOTH_JUMPATTACK6 && pm->ps->saber_move == LS_JUMPATTACK_DUAL ||
@@ -17620,7 +17620,7 @@ void PM_CheckInVehicleSaberAttackAnim(void)
 
 	PM_CheckClearSaberBlock();
 
-	saberMoveName_t saber_move = LS_INVALID;
+	saber_moveName_t saber_move = LS_INVALID;
 	switch (pm->ps->torsoAnim)
 	{
 	case BOTH_VS_ATR_S:
@@ -17645,14 +17645,14 @@ void PM_CheckInVehicleSaberAttackAnim(void)
 			if (!pm->ps->torsoTimer)
 			{
 				//anim was done, set it back to ready
-				PM_SetSaberMove(LS_READY);
+				PM_Setsaber_move(LS_READY);
 				pm->ps->saber_move = LS_READY;
 				pm->ps->weaponstate = WEAPON_IDLE;
 				if (pm->cmd.buttons & BUTTON_ATTACK)
 				{
 					if (!pm->ps->weaponTime)
 					{
-						PM_SetSaberMove(saber_move);
+						PM_Setsaber_move(saber_move);
 						pm->ps->weaponstate = WEAPON_FIRING;
 						pm->ps->weaponTime = pm->ps->torsoTimer;
 					}
@@ -17662,15 +17662,15 @@ void PM_CheckInVehicleSaberAttackAnim(void)
 		else if (pm->ps->torsoTimer
 			&& !pm->ps->weaponTime)
 		{
-			PM_SetSaberMove(LS_READY);
+			PM_Setsaber_move(LS_READY);
 			pm->ps->saber_move = LS_READY;
 			pm->ps->weaponstate = WEAPON_IDLE;
-			PM_SetSaberMove(saber_move);
+			PM_Setsaber_move(saber_move);
 			pm->ps->weaponstate = WEAPON_FIRING;
 			pm->ps->weaponTime = pm->ps->torsoTimer;
 		}
 	}
-	pm->ps->saberBlocking = saberMoveData[pm->ps->saber_move].blocking;
+	pm->ps->saberBlocking = saber_moveData[pm->ps->saber_move].blocking;
 }
 
 //do we have a weapon that's ok for using on the vehicle?
@@ -18710,7 +18710,7 @@ void PmoveSingle(pmove_t* pmove)
 			PM_CmdForRoll(pm->ps, pm->ps->legsAnim, &pm->cmd);
 	}
 
-	PM_CmdForSaberMoves(&pm->cmd);
+	PM_CmdForsaber_moves(&pm->cmd);
 
 	BG_AdjustClientSpeed(pm->ps, &pm->cmd, pm->cmd.serverTime);
 
@@ -19712,7 +19712,7 @@ qboolean PM_GoingToAttackDown(const playerState_t* ps)
 		|| ps->saber_move == LS_A_JUMP_PALP_ //death from above
 		|| ps->saber_move == LS_A_T2B //attacking top to bottom
 		|| ps->saber_move == LS_S_T2B //starting at attack downward
-		|| PM_SaberInTransition(ps->saber_move) && saberMoveData[ps->saber_move].endQuad == Q_T)
+		|| PM_SaberInTransition(ps->saber_move) && saber_moveData[ps->saber_move].endQuad == Q_T)
 		//transitioning to a top to bottom attack
 	{
 		return qtrue;

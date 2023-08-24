@@ -3374,7 +3374,6 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "mj/main")
 			|| Class_Model(model, "jedi/red")
 			|| Class_Model(model, "jedi/blue")
-			|| Class_Model(model, "obi3/main4")
 			|| Class_Model(model, "muwindu/main")
 			|| Class_Model(model, "mmKiadimundi/main")
 			|| Class_Model(model, "bar/main")
@@ -3415,7 +3414,6 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jediconsular1/default")
 			|| Class_Model(model, "jediconsular2/default")
 			|| Class_Model(model, "jediconsular3/default")
-			|| Class_Model(model, "Obinew2/main")
 			|| Class_Model(model, "jedi_spanki1a")
 			|| Class_Model(model, "jedi_spanki1b")
 			|| Class_Model(model, "jedi_spanki2")
@@ -3571,6 +3569,48 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
+		else if (Class_Model(model, "Obinew2/main")
+			|| Class_Model(model, "obi3/main4")
+			|| Class_Model(model, "wzoldben/main3")
+			|| Class_Model(model, "wzoldben/main2")
+			|| Class_Model(model, "ntobiwan/main")
+			|| Class_Model(model, "wzoldben/main")
+			|| Class_Model(model, "Obinew2/main2")
+			|| Class_Model(model, "Obinew2/main3")
+			|| Class_Model(model, "obi3/main")
+			|| Class_Model(model, "obi3/main2")
+			|| Class_Model(model, "obi3/main4")
+			|| Class_Model(model, "obi3/main3")
+			|| Class_Model(model, "obiwan_jabiim_mp")
+			|| Class_Model(model, "obiwan_jabiim_mp/robed")
+			|| Class_Model(model, "obiwan_jabiim_mp/defaultb")
+			|| Class_Model(model, "obiwan_jabiim_mp/robedc")
+			|| Class_Model(model, "obiwan_ot_mp")
+			|| Class_Model(model, "obiwan_ot_mp/ghost")
+			|| Class_Model(model, "obiwan_ot_mp/default_hooded")
+			|| Class_Model(model, "obiwan_ot_mp/default_robed")
+			|| Class_Model(model, "obiwan_ep3_mp")
+			|| Class_Model(model, "obiwan_ep3_mp/exile")
+			|| Class_Model(model, "obiwan_cw_mp")
+			|| Class_Model(model, "obiwan_ep1_mp")
+			|| Class_Model(model, "obiwan_ep2_mp")
+			|| Class_Model(model, "obiwan_tcw_mp")
+			|| Class_Model(model, "ntobiwan/main2"))
+		{
+			client->pers.botmodelscale = BOTZIZE_NORMAL;
+			client->pers.nextbotclass = BCLASS_OBIWAN;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
 		else if (Class_Model(model, "jedi/master")
 			|| Class_Model(model, "agen_kolar_mp")
 			|| Class_Model(model, "ahsoka_s7_mp")
@@ -3617,18 +3657,6 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "kyle/red")
 			|| Class_Model(model, "kyle/blue")
 			|| Class_Model(model, "Jedi_Genericfemale")
-			|| Class_Model(model, "wzoldben/main3")
-			|| Class_Model(model, "wzoldben/main2")
-			|| Class_Model(model, "ntobiwan/main")
-			|| Class_Model(model, "wzoldben/main")
-			|| Class_Model(model, "Obinew2/main")
-			|| Class_Model(model, "Obinew2/main2")
-			|| Class_Model(model, "Obinew2/main3")
-			|| Class_Model(model, "obi3/main")
-			|| Class_Model(model, "obi3/main2")
-			|| Class_Model(model, "obi3/main4")
-			|| Class_Model(model, "obi3/main3")
-			|| Class_Model(model, "ntobiwan/main2")
 			|| Class_Model(model, "macewinduv3")
 			|| Class_Model(model, "mace_windu")
 			|| Class_Model(model, "mace_winduvm")
@@ -3651,22 +3679,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "noQuiGonVM3/main2")
 			|| Class_Model(model, "moMace_Windu/main")
 			|| Class_Model(model, "muwindu/main")
-			|| Class_Model(model, "obiwan_ot_mp")
-			|| Class_Model(model, "obiwan_ot_mp/ghost")
-			|| Class_Model(model, "obiwan_ot_mp/default_hooded")
-			|| Class_Model(model, "obiwan_ot_mp/default_robed")
-			|| Class_Model(model, "obiwan_ep3_mp")
-			|| Class_Model(model, "obiwan_ep3_mp/exile")
 			|| Class_Model(model, "macewindu_mp")
 			|| Class_Model(model, "macewindu_cw_mp")
-			|| Class_Model(model, "obiwan_jabiim_mp")
-			|| Class_Model(model, "obiwan_jabiim_mp/robed")
-			|| Class_Model(model, "obiwan_jabiim_mp/defaultb")
-			|| Class_Model(model, "obiwan_jabiim_mp/robedc")
-			|| Class_Model(model, "obiwan_cw_mp")
-			|| Class_Model(model, "obiwan_ep1_mp")
-			|| Class_Model(model, "obiwan_ep2_mp")
-			|| Class_Model(model, "obiwan_tcw_mp")
 			|| Class_Model(model, "oppo_rancisis_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_KYLE;
@@ -5289,13 +5303,13 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 						//	client->pers.connected = CON_DISCONNECTED;
 							return "Please wait, another connection from this IP is still pending...";
 						}
-		}
-	}
+					}
+				}
 #else
 				if (CompareIPs(tmpIP, level.clients[i].sess.IP))
 					count++;
 #endif
-}
+			}
 			if (count > g_maxConnPerIP.integer)
 			{
 				//	client->pers.connected = CON_DISCONNECTED;
@@ -5410,7 +5424,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 	//		client->areabits = G_Alloc( (trap->AAS_PointReachabilityAreaIndex( NULL ) + 7) / 8 );
 
 	return NULL;
-}
+	}
 
 void G_WriteClientSessionData(const gclient_t* client);
 
@@ -5973,8 +5987,8 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
+		}
 	}
-}
 #endif
 }
 
@@ -6579,6 +6593,7 @@ void ClientSpawn(gentity_t* ent)
 				case BCLASS_STAFFDARK:
 				case BCLASS_STAFF:
 				case BCLASS_UNSTABLESABER:
+				case BCLASS_OBIWAN:
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_SABER;
 					break;
@@ -7441,6 +7456,11 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
+		case BCLASS_OBIWAN:
+			client->ps.stats[STAT_ARMOR] = 100;
+			client->ps.stats[STAT_MAX_HEALTH] = 100;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
+			break;
 		case BCLASS_DESANN:
 			client->ps.stats[STAT_ARMOR] = 300;
 			client->ps.stats[STAT_MAX_HEALTH] = 200;
@@ -7999,6 +8019,7 @@ void ClientSpawn(gentity_t* ent)
 		case BCLASS_STAFFDARK:
 		case BCLASS_STAFF:
 		case BCLASS_UNSTABLESABER:
+		case BCLASS_OBIWAN:
 			//Read bot.txt or Player FP setup for saber users
 			client->ps.fd.blockPoints = BLOCK_POINTS_MAX;
 			break;
@@ -8434,7 +8455,7 @@ void ClientSpawn(gentity_t* ent)
 
 	Player_CheckBurn(ent);
 	Player_CheckFreeze(ent);
-}
+		}
 
 /*
 ===========
