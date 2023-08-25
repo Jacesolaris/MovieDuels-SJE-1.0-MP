@@ -6680,7 +6680,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 INTERNAL AI ROUTINES
 ==========================================================================================
 */
-gentity_t* Jedi_FindEnemyInCone(const gentity_t* self, gentity_t* fallback, const float min_dot)
+gentity_t* jedi_find_enemy_in_cone(const gentity_t* self, gentity_t* fallback, const float min_dot)
 {
 	vec3_t forward, mins, maxs;
 	gentity_t* enemy = fallback;

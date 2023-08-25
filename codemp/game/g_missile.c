@@ -971,6 +971,7 @@ qboolean G_MissileImpact(gentity_t* ent, trace_t* trace)
 	if (other->takedamage && !is_knocked_saber)
 	{
 		missile_dmg = ent->damage;
+		
 		if (G_DoDodge(other, &g_entities[other->r.ownerNum], trace->endpos, -1, &missile_dmg, ent->methodOfDeath))
 		{
 			//player dodged the damage, have missile continue moving.

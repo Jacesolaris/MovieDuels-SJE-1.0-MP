@@ -5620,7 +5620,7 @@ qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3_t forw
 
 extern qboolean PM_InKnockDown(const playerState_t* ps);
 //Returns qfalse if hit effects/damage is still suppose to be applied.
-qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
+qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
 {
 	int dodge_anim = -1;
 	int dpcost = BasicWeaponBlockCosts[mod];
@@ -5632,23 +5632,23 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		return qfalse;
 	}
 
-	if (self->NPC &&
-		(self->client->NPC_class == CLASS_STORMTROOPER
-			|| self->client->NPC_class == CLASS_STORMCOMMANDO
-			|| self->client->NPC_class == CLASS_SWAMPTROOPER
-			|| self->client->NPC_class == CLASS_CLONETROOPER
-			|| self->client->NPC_class == CLASS_IMPWORKER
-			|| self->client->NPC_class == CLASS_IMPERIAL
-			|| self->client->NPC_class == CLASS_SABER_DROID
-			|| self->client->NPC_class == CLASS_ASSASSIN_DROID
-			|| self->client->NPC_class == CLASS_GONK
-			|| self->client->NPC_class == CLASS_MOUSE
-			|| self->client->NPC_class == CLASS_PROBE
-			|| self->client->NPC_class == CLASS_PROTOCOL
-			|| self->client->NPC_class == CLASS_R2D2
-			|| self->client->NPC_class == CLASS_R5D2
-			|| self->client->NPC_class == CLASS_SEEKER
-			|| self->client->NPC_class == CLASS_INTERROGATOR))
+	if (dodger->NPC &&
+		(dodger->client->NPC_class == CLASS_STORMTROOPER
+			|| dodger->client->NPC_class == CLASS_STORMCOMMANDO
+			|| dodger->client->NPC_class == CLASS_SWAMPTROOPER
+			|| dodger->client->NPC_class == CLASS_CLONETROOPER
+			|| dodger->client->NPC_class == CLASS_IMPWORKER
+			|| dodger->client->NPC_class == CLASS_IMPERIAL
+			|| dodger->client->NPC_class == CLASS_SABER_DROID
+			|| dodger->client->NPC_class == CLASS_ASSASSIN_DROID
+			|| dodger->client->NPC_class == CLASS_GONK
+			|| dodger->client->NPC_class == CLASS_MOUSE
+			|| dodger->client->NPC_class == CLASS_PROBE
+			|| dodger->client->NPC_class == CLASS_PROTOCOL
+			|| dodger->client->NPC_class == CLASS_R2D2
+			|| dodger->client->NPC_class == CLASS_R5D2
+			|| dodger->client->NPC_class == CLASS_SEEKER
+			|| dodger->client->NPC_class == CLASS_INTERROGATOR))
 	{
 		// don't get Dodge.
 		return qfalse;
@@ -5660,72 +5660,52 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		return qfalse;
 	}
 
-	if (!self || !self->client || !self->inuse || self->health <= 0)
+	if (!dodger || !dodger->client || !dodger->inuse || dodger->health <= 0)
 	{
-		return qfalse;
-	}
-
-	if (self->client->ps.stats[STAT_DODGE] < 30)
-	{
-		//Not enough dodge
 		return qfalse;
 	}
 
 	//check for private duel conditions
-	if (shooter && shooter->client)
+	if (attacker && attacker->client)
 	{
-		if (shooter->client->ps.duelInProgress && shooter->client->ps.duelIndex != self->s.number)
+		if (attacker->client->ps.duelInProgress && attacker->client->ps.duelIndex != dodger->s.number)
 		{
 			//enemy client is in duel with someone else.
 			return qfalse;
 		}
 
-		if (self->client->ps.duelInProgress && self->client->ps.duelIndex != shooter->s.number)
+		if (dodger->client->ps.duelInProgress && dodger->client->ps.duelIndex != attacker->s.number)
 		{
 			//we're in a duel with someone else.
 			return qfalse;
 		}
 	}
 
-	if (BG_HopAnim(self->client->ps.legsAnim) //in dodge hop
-		|| BG_InRoll(&self->client->ps, self->client->ps.legsAnim)
-		&& self->client->ps.userInt3 & 1 << FLAG_DODGEROLL //in dodge roll
-		|| mod != MOD_SABER && self->client->ps.forceHandExtend == HANDEXTEND_DODGE)
+	if (BG_HopAnim(dodger->client->ps.legsAnim) //in dodge hop
+		|| BG_InRoll(&dodger->client->ps, dodger->client->ps.legsAnim)
+		&& dodger->client->ps.userInt3 & 1 << FLAG_DODGEROLL //in dodge roll
+		|| mod != MOD_SABER && dodger->client->ps.forceHandExtend == HANDEXTEND_DODGE)
 	{
 		//already doing a dodge
 		return qtrue;
 	}
 
-	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE
-		&& mod != MOD_REPEATER_ALT_SPLASH
-		&& mod != MOD_FLECHETTE_ALT_SPLASH
-		&& mod != MOD_ROCKET_SPLASH
-		&& mod != MOD_ROCKET_HOMING_SPLASH
-		&& mod != MOD_THERMAL_SPLASH
-		&& mod != MOD_TRIP_MINE_SPLASH
-		&& mod != MOD_TIMED_MINE_SPLASH
-		&& mod != MOD_DET_PACK_SPLASH)
+	if (dodger->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//can't dodge direct fire in mid-air
 		return qfalse;
 	}
 
-	if (PM_InKnockDown(&self->client->ps)
-		|| BG_InRoll(&self->client->ps, self->client->ps.legsAnim)
-		|| BG_InKnockDown(self->client->ps.legsAnim))
+	if (PM_InKnockDown(&dodger->client->ps)
+		|| BG_InRoll(&dodger->client->ps, dodger->client->ps.legsAnim)
+		|| BG_InKnockDown(dodger->client->ps.legsAnim))
 	{
 		//can't Dodge while knocked down or getting up from knockdown.
 		return qfalse;
 	}
 
-	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
-	{
-		//can't dodge in mid-air
-		return qfalse;
-	}
-
-	if (self->client->ps.forceHandExtend == HANDEXTEND_CHOKE
-		|| PM_InGrappleMove(self->client->ps.torsoAnim) > 1)
+	if (dodger->client->ps.forceHandExtend == HANDEXTEND_CHOKE
+		|| PM_InGrappleMove(dodger->client->ps.torsoAnim) > 1)
 	{
 		//in some effect that stops me from moving on my own
 		return qfalse;
@@ -5737,73 +5717,84 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(self->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.legsAnim))
 	{
 		return qfalse;
 	}
 
-	if (self->client->ps.weapon == WP_SABER && self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+	if (dodger->client->ps.legsAnim == BOTH_MEDITATE || dodger->client->ps.legsAnim == BOTH_MEDITATE_SABER)
+	{//can't dodge while meditating.
+		return qfalse;
+	}
+
+	if (dodger->client->ps.weapon == WP_SABER && dodger->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
 	{
 		return qfalse; //dont do if we are already blocking
 	}
 
-	if (self->client->ps.weapon == WP_SABER && PM_CrouchingAnim(self->client->ps.legsAnim))
+	if (dodger->client->ps.weapon == WP_SABER && PM_CrouchingAnim(dodger->client->ps.legsAnim))
 	{
 		return qfalse; //dont do if we are already blocking
 	}
-	if (self->r.svFlags & SVF_BOT
-		&& self->client->ps.weapon == WP_SABER
-		&& self->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
+
+	if (dodger->r.svFlags & SVF_BOT
+		&& dodger->client->ps.weapon == WP_SABER
+		&& dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
 		// if your not a mando or jedi or low FP then you cant dodge
 	{
 		return qfalse;
 	}
 
-	if (self->r.svFlags & SVF_BOT
-		&& (self->client->ps.weapon != WP_SABER &&
-			self->client->botclass != BCLASS_MANDOLORIAN &&
-			self->client->botclass != BCLASS_MANDOLORIAN1 &&
-			self->client->botclass != BCLASS_MANDOLORIAN2 &&
-			self->client->botclass != BCLASS_BOBAFETT)
-		|| self->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
+	if (!(dodger->client->pers.cmd.buttons & BUTTON_USE) && !(dodger->r.svFlags & SVF_BOT))
+	{
+		return qfalse;
+	}
+
+	if (dodger->r.svFlags & SVF_BOT
+		&& (dodger->client->ps.weapon != WP_SABER &&
+			dodger->client->botclass != BCLASS_MANDOLORIAN &&
+			dodger->client->botclass != BCLASS_MANDOLORIAN1 &&
+			dodger->client->botclass != BCLASS_MANDOLORIAN2 &&
+			dodger->client->botclass != BCLASS_BOBAFETT)
+		|| dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
 		// if your not a mando or jedi or low FP then you cant dodge
 	{
 		return qfalse;
 	}
 
-	if (self->client->ps.fd.forcePower < FATIGUE_DODGE && !(self->r.svFlags & SVF_BOT))
+	if (dodger->client->ps.fd.forcePower < FATIGUE_DODGE && !(dodger->r.svFlags & SVF_BOT))
 	{
 		//Not enough dodge
 		return qfalse;
 	}
 
-	if (mod == MOD_SABER && shooter && shooter->client)
+	if (mod == MOD_SABER && attacker && attacker->client)
 	{
 		//special saber moves have special effects.
-		if (shooter->client->ps.saber_move == LS_A_LUNGE
-			|| shooter->client->ps.saber_move == LS_SPINATTACK
-			|| shooter->client->ps.saber_move == LS_SPINATTACK_DUAL
-			|| shooter->client->ps.saber_move == LS_SPINATTACK_GRIEV)
+		if (attacker->client->ps.saber_move == LS_A_LUNGE
+			|| attacker->client->ps.saber_move == LS_SPINATTACK
+			|| attacker->client->ps.saber_move == LS_SPINATTACK_DUAL
+			|| attacker->client->ps.saber_move == LS_SPINATTACK_GRIEV)
 		{
 			//attacker is doing lunge special
-			if (self->client->ps.userInt3 & 1 << FLAG_FATIGUED)
+			if (dodger->client->ps.userInt3 & 1 << FLAG_FATIGUED)
 			{
 				//can't dodge a lunge special while fatigued
 				return qfalse;
 			}
 		}
 
-		if (PM_SuperBreakWinAnim(shooter->client->ps.torsoAnim) && self->client->ps.fd.forcePower < 50)
+		if (PM_SuperBreakWinAnim(attacker->client->ps.torsoAnim) && dodger->client->ps.fd.forcePower < 50)
 		{
 			//can't block super breaks if we're low on DP.
 			return qfalse;
 		}
 
-		if (!walk_check(self)
-			|| PM_SaberInAttack(self->client->ps.saber_move)
-			|| PM_SaberInStart(self->client->ps.saber_move))
+		if (!walk_check(dodger)
+			|| PM_SaberInAttack(dodger->client->ps.saber_move)
+			|| PM_SaberInStart(dodger->client->ps.saber_move))
 		{
-			if (self->NPC)
+			if (dodger->NPC)
 			{
 				//can't Dodge saber swings while running or in swing.
 				return qtrue;
@@ -5812,39 +5803,39 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		}
 	}
 
-	if (*dmg <= DODGE_MINDAM && mod != MOD_REPEATER)
+	if (*dmg <= DODGE_MINDAM && mod != MOD_REPEATER && mod != MOD_SABER)
 	{
 		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM));
 		no_action = qtrue;
 	}
-	else if (self->client->ps.forceHandExtend == HANDEXTEND_DODGE)
+	else if (dodger->client->ps.forceHandExtend == HANDEXTEND_DODGE)
 	{
 		//you're already dodging but you got hit again.
 		dpcost = 0;
 	}
 
-	if (mod == MOD_DISRUPTOR_SNIPER && shooter && shooter->client)
+	if (mod == MOD_DISRUPTOR_SNIPER && attacker && attacker->client)
 	{
 		int damage = 0;
 
-		if (shooter->genericValue6 <= 10)
+		if (attacker->genericValue6 <= 10)
 		{
 			damage = 10;
 		}
-		else if (shooter->genericValue6 <= 25)
+		else if (attacker->genericValue6 <= 25)
 		{
 			damage = 20;
 		}
-		else if (shooter->genericValue6 < 59)
+		else if (attacker->genericValue6 < 59)
 		{
 			damage = 50;
 		}
-		else if (shooter->genericValue6 == 60)
+		else if (attacker->genericValue6 == 60)
 		{
 			damage = 100;
 		}
 
-		if (self->client->ps.stats[STAT_DODGE] > damage)
+		if (dodger->client->ps.fd.forcePower > damage)
 		{
 			dpcost = damage;
 		}
@@ -5854,30 +5845,13 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		}
 	}
 
-	if (dpcost < self->client->ps.stats[STAT_DODGE])
+	if (dodger->r.svFlags & SVF_BOT) //bots only get 1
 	{
-		G_DodgeDrain(self, shooter, dpcost);
-	}
-	else if (dpcost != 0 && self->client->ps.stats[STAT_DODGE])
-	{
-		//still have enough DP for a partial dodge.
-		//Scale damage as is appropriate
-		*dmg = (int)(*dmg * (self->client->ps.stats[STAT_DODGE] / (float)dpcost));
-		G_DodgeDrain(self, shooter, self->client->ps.stats[STAT_DODGE]);
+		PM_AddFatigue(&dodger->client->ps, FATIGUE_DODGEINGBOT);
 	}
 	else
 	{
-		//not enough DP left
-		return qfalse;
-	}
-
-	if (self->r.svFlags & SVF_BOT) //bots only get 1
-	{
-		PM_AddFatigue(&self->client->ps, FATIGUE_DODGEINGBOT);
-	}
-	else
-	{
-		PM_AddFatigue(&self->client->ps, FATIGUE_DODGEING);
+		PM_AddFatigue(&dodger->client->ps, dpcost);
 	}
 
 	if (no_action)
@@ -5898,7 +5872,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		//splash damage dodge, dodged by throwing oneself away from the blast into a knockdown
 		vec3_t blow_back_dir;
 		int blow_back_power = saved_dmg;
-		VectorSubtract(self->client->ps.origin, dmg_origin, blow_back_dir);
+		VectorSubtract(dodger->client->ps.origin, dmg_origin, blow_back_dir);
 		VectorNormalize(blow_back_dir);
 
 		if (blow_back_power > 1000)
@@ -5907,8 +5881,8 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			blow_back_power = 1000;
 		}
 		blow_back_power *= 2;
-		g_throw(self, blow_back_dir, blow_back_power);
-		G_Knockdown(self, shooter, blow_back_dir, 600, qtrue);
+		g_throw(dodger, blow_back_dir, blow_back_power);
+		G_Knockdown(dodger, attacker, blow_back_dir, 600, qtrue);
 		return qtrue;
 	}
 
@@ -5918,23 +5892,23 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 	if (hit_loc == -1)
 	{
 		//Use the last surface impact data as the hit location
-		if (d_saberGhoul2Collision.integer && self->client
-			&& self->client->g2LastSurfaceModel == G2MODEL_PLAYER
-			&& self->client->g2LastSurfaceTime == level.time)
+		if (d_saberGhoul2Collision.integer && dodger->client
+			&& dodger->client->g2LastSurfaceModel == G2MODEL_PLAYER
+			&& dodger->client->g2LastSurfaceTime == level.time)
 		{
 			char hit_surface[MAX_QPATH];
 
-			trap->G2API_GetSurfaceName(self->ghoul2, self->client->g2LastSurfaceHit, 0, hit_surface);
+			trap->G2API_GetSurfaceName(dodger->ghoul2, dodger->client->g2LastSurfaceHit, 0, hit_surface);
 
 			if (hit_surface[0])
 			{
-				G_GetHitLocFromSurfName(self, hit_surface, &hit_loc, dmg_origin, vec3_origin, vec3_origin, MOD_SABER);
+				G_GetHitLocFromSurfName(dodger, hit_surface, &hit_loc, dmg_origin, vec3_origin, vec3_origin, MOD_SABER);
 			}
 		}
 		else
 		{
 			//ok, that didn't work.  Try the old math way.
-			hit_loc = G_GetHitLocation(self, dmg_origin);
+			hit_loc = G_GetHitLocation(dodger, dmg_origin);
 		}
 	}
 
@@ -5949,18 +5923,18 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		break;
 	case HL_LEG_RT:
 	case HL_LEG_LT:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
-			self->client->jetPackOn = qtrue;
-			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
-			Boba_FlyStart(self);
-			self->client->ps.fd.forceJumpCharge = 280;
-			self->client->jetPackTime = level.time + 30000;
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = level.time + 30000;
 		}
 		else
 		{
@@ -5981,18 +5955,18 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		dodge_anim = BOTH_DODGE_FR;
 		break;
 	case HL_BACK:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
-			self->client->jetPackOn = qtrue;
-			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
-			Boba_FlyStart(self);
-			self->client->ps.fd.forceJumpCharge = 280;
-			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
 		}
 		else
 		{
@@ -6000,18 +5974,18 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		}
 		break;
 	case HL_CHEST:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
-			self->client->jetPackOn = qtrue;
-			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
-			Boba_FlyStart(self);
-			self->client->ps.fd.forceJumpCharge = 280;
-			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
 		}
 		else
 		{
@@ -6019,18 +5993,18 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		}
 		break;
 	case HL_WAIST:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
-			self->client->jetPackOn = qtrue;
-			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
-			Boba_FlyStart(self);
-			self->client->ps.fd.forceJumpCharge = 280;
-			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
 		}
 		else
 		{
@@ -6054,10 +6028,10 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 
 	if (dodge_anim != -1)
 	{
-		if (self->client->ps.forceHandExtend != HANDEXTEND_DODGE && !PM_InKnockDown(&self->client->ps))
+		if (dodger->client->ps.forceHandExtend != HANDEXTEND_DODGE && !PM_InKnockDown(&dodger->client->ps))
 		{
 			//do a simple dodge
-			DoNormalDodge(self, dodge_anim);
+			DoNormalDodge(dodger, dodge_anim);
 		}
 		else
 		{
@@ -6070,26 +6044,26 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			int x;
 			int fall_check_max;
 
-			VectorSubtract(dmg_origin, self->client->ps.origin, impactpoint);
+			VectorSubtract(dmg_origin, dodger->client->ps.origin, impactpoint);
 			VectorNormalize(impactpoint);
 
-			VectorSet(tangles, 0, self->client->ps.viewangles[YAW], 0);
+			VectorSet(tangles, 0, dodger->client->ps.viewangles[YAW], 0);
 
 			AngleVectors(tangles, forward, right, NULL);
 
 			const float fdot = DotProduct(impactpoint, forward);
 			const float rdot = DotProduct(impactpoint, right);
 
-			if (PM_InKnockDown(&self->client->ps))
+			if (PM_InKnockDown(&dodger->client->ps))
 			{
 				//ground dodge roll
 				fall_check_max = 2;
 				if (rdot < 0)
 				{
 					//Right
-					if (self->client->ps.legsAnim == BOTH_KNOCKDOWN3
-						|| self->client->ps.legsAnim == BOTH_KNOCKDOWN5
-						|| self->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+					if (dodger->client->ps.legsAnim == BOTH_KNOCKDOWN3
+						|| dodger->client->ps.legsAnim == BOTH_KNOCKDOWN5
+						|| dodger->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
 					{
 						rolled = BOTH_GETUP_FROLL_R;
 					}
@@ -6101,9 +6075,9 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 				else
 				{
 					//left
-					if (self->client->ps.legsAnim == BOTH_KNOCKDOWN3
-						|| self->client->ps.legsAnim == BOTH_KNOCKDOWN5
-						|| self->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+					if (dodger->client->ps.legsAnim == BOTH_KNOCKDOWN3
+						|| dodger->client->ps.legsAnim == BOTH_KNOCKDOWN5
+						|| dodger->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
 					{
 						rolled = BOTH_GETUP_FROLL_L;
 					}
@@ -6151,7 +6125,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			{
 				//check for a valid rolling direction..namely someplace where we
 				//won't roll off cliffs
-				if (DodgeRollCheck(self, rolled, forward, right))
+				if (DodgeRollCheck(dodger, rolled, forward, right))
 				{
 					//passed check
 					break;
@@ -6200,44 +6174,44 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			if (x == fall_check_max)
 			{
 				//we don't have a valid position to dodge roll to. just do a normal dodge
-				DoNormalDodge(self, dodge_anim);
+				DoNormalDodge(dodger, dodge_anim);
 			}
 			else
 			{
 				//ok, we can do the dodge hops/rolls
-				if (PM_InKnockDown(&self->client->ps)
+				if (PM_InKnockDown(&dodger->client->ps)
 					|| BG_HopAnim(rolled))
 				{
 					//ground dodge roll
-					G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, rolled,
+					G_SetAnim(dodger, &dodger->client->pers.cmd, SETANIM_BOTH, rolled,
 						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 				}
 				else
 				{
 					//normal dodge roll
-					self->client->ps.legsTimer = 0;
-					self->client->ps.legsAnim = 0;
-					G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, rolled,
+					dodger->client->ps.legsTimer = 0;
+					dodger->client->ps.legsAnim = 0;
+					G_SetAnim(dodger, &dodger->client->pers.cmd, SETANIM_BOTH, rolled,
 						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 150);
-					G_AddEvent(self, EV_ROLL, 0);
-					self->r.maxs[2] = self->client->ps.crouchheight;
-					self->client->ps.viewheight = DEFAULT_VIEWHEIGHT;
-					self->client->ps.pm_flags &= ~PMF_DUCKED;
-					self->client->ps.pm_flags |= PMF_ROLLING;
+					G_AddEvent(dodger, EV_ROLL, 0);
+					dodger->r.maxs[2] = dodger->client->ps.crouchheight;
+					dodger->client->ps.viewheight = DEFAULT_VIEWHEIGHT;
+					dodger->client->ps.pm_flags &= ~PMF_DUCKED;
+					dodger->client->ps.pm_flags |= PMF_ROLLING;
 				}
 
 				//set the dodge roll flag
-				self->client->ps.userInt3 |= 1 << FLAG_DODGEROLL;
+				dodger->client->ps.userInt3 |= 1 << FLAG_DODGEROLL;
 
 				//set weapontime
-				self->client->ps.weaponTime = self->client->ps.torsoTimer;
+				dodger->client->ps.weaponTime = dodger->client->ps.torsoTimer;
 
 				//clear out the old dodge move.
-				self->client->ps.forceHandExtend = HANDEXTEND_NONE;
-				self->client->ps.forceDodgeAnim = 0;
-				self->client->ps.forceHandExtendTime = 0;
-				self->client->ps.saber_move = LS_NONE;
-				G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
+				dodger->client->ps.forceHandExtend = HANDEXTEND_NONE;
+				dodger->client->ps.forceDodgeAnim = 0;
+				dodger->client->ps.forceHandExtendTime = 0;
+				dodger->client->ps.saber_move = LS_NONE;
+				G_Sound(dodger, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
 			}
 		}
 		return qtrue;
@@ -6425,9 +6399,9 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		}
 	}
 
-	if (*dmg <= DODGE_MINDAM && mod == MOD_SABER)
+	if (*dmg <= DODGE_MINDAM_SABER && mod == MOD_SABER)
 	{
-		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM));
+		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM_SABER));
 		no_action = qtrue;
 	}
 	else if (dodger->client->ps.forceHandExtend == HANDEXTEND_DODGE)

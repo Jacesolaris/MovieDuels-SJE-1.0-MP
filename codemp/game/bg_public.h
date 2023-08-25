@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-24,BuildNum-11" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-25,BuildNum-12" // build date
 
 #define	STEPSIZE		18
 
@@ -103,7 +103,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 //The Fatigue (Force) Points to Dodge Points Ratio
 #define	DODGE_FATIGUE		6
 //The minimum damage level at which dodge works
-#define DODGE_MINDAM		20
+#define DODGE_MINDAM_SABER	20
+#define DODGE_MINDAM		10
 //Velocity at which you hop away from continued damage
 #define DODGE_HOP			g_speed.value
 //Distance at which Dodge Saber Blocks occur

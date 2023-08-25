@@ -2158,10 +2158,6 @@ void PM_SaberLocked(void)
 						remaining = cur_frame - anim->firstFrame;
 					}
 				}
-				if (!PM_irand_timesync(0, 2))
-				{
-					//PM_AddEvent(EV_JUMP);
-				}
 				//advance/decrement enemy frame number
 				anim = &pm->animations[genemy->torsoAnim];
 
@@ -2170,9 +2166,9 @@ void PM_SaberLocked(void)
 					if (genemy->torsoAnim == BOTH_CWCIRCLELOCK ||
 						genemy->torsoAnim == BOTH_BF1LOCK)
 					{
-						if (!PM_irand_timesync(0, 2))
+						if (!PM_irand_timesync(0, 4))
 						{
-							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+							BG_AddPredictableEventToPlayerstate(Q_irand(EV_PUSHED1, EV_PUSHED3), floor((float)80 / 100 * 100.0f), genemy);
 						}
 						PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
 					}
@@ -2186,7 +2182,7 @@ void PM_SaberLocked(void)
 					//new locks
 					if (g_check_increment_lock_anim(genemy->torsoAnim, SABER_LOCK_LOSE))
 					{
-						if (!PM_irand_timesync(0, 2))
+						if (!PM_irand_timesync(0, 4))
 						{
 							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 						}
@@ -2295,10 +2291,6 @@ void PM_SaberLocked(void)
 							remaining = cur_frame - anim->firstFrame;
 						}
 					}
-					if (!PM_irand_timesync(0, 2))
-					{
-						//PM_AddEvent(EV_JUMP);
-					}
 					//advance/decrement enemy frame number
 					anim = &pm->animations[genemy->torsoAnim];
 
@@ -2307,9 +2299,9 @@ void PM_SaberLocked(void)
 						if (genemy->torsoAnim == BOTH_CWCIRCLELOCK ||
 							genemy->torsoAnim == BOTH_BF1LOCK)
 						{
-							if (!PM_irand_timesync(0, 2))
+							if (!PM_irand_timesync(0, 4))
 							{
-								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+								BG_AddPredictableEventToPlayerstate(Q_irand(EV_PUSHED1, EV_PUSHED3), floor((float)80 / 100 * 100.0f), genemy);
 							}
 							PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
 						}
@@ -2323,7 +2315,7 @@ void PM_SaberLocked(void)
 						//new locks
 						if (g_check_increment_lock_anim(genemy->torsoAnim, SABER_LOCK_LOSE))
 						{
-							if (!PM_irand_timesync(0, 2))
+							if (!PM_irand_timesync(0, 4))
 							{
 								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 							}

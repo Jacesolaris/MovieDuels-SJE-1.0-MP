@@ -8277,24 +8277,3 @@ void add_npc_block_point_bonus(const gentity_t* self)
 		self->client->ps.saberFatigueChainCount = MISHAPLEVEL_LIGHT;
 	}
 }
-
-void G_DodgeDrain(const gentity_t* dodger, const gentity_t* attacker, int amount)
-{
-	//drains DP from victim.  Also awards experience points to the attacker
-
-	if (!g_friendlyFire.integer && OnSameTeam(dodger, attacker))
-	{
-		//don't drain DP if we're hit by a team member
-		return;
-	}
-
-	if (dodger->flags & FL_GODMODE)
-		return;
-
-	dodger->client->ps.stats[STAT_DODGE] -= amount;
-
-	if (dodger->client->ps.stats[STAT_DODGE] < 0)
-	{
-		dodger->client->ps.stats[STAT_DODGE] = 0;
-	}
-}

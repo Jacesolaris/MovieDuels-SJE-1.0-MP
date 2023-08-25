@@ -18653,6 +18653,15 @@ void PmoveSingle(pmove_t* pmove)
 		//can't move
 		stiffenedUp = qtrue;
 	}
+	else if (pm->ps->torsoAnim == BOTH_SHOWOFF_OBI || pm->ps->torsoAnim == BOTH_SABEROBI_STANCE)
+	{
+#ifdef _GAME
+		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+		{
+			stiffenedUp = qtrue;
+		}
+#endif
+	}
 
 	if (pm->ps->weapon == WP_DISRUPTOR && pm->ps->weaponstate == WEAPON_CHARGING_ALT)
 	{
@@ -18708,7 +18717,7 @@ void PmoveSingle(pmove_t* pmove)
 		if (!(cgs.dmflags & DF_JK2ROLL))
 #endif
 			PM_CmdForRoll(pm->ps, pm->ps->legsAnim, &pm->cmd);
-	}
+}
 
 	PM_CmdForsaber_moves(&pm->cmd);
 
@@ -19091,7 +19100,7 @@ void PmoveSingle(pmove_t* pmove)
 
 		VectorMA(pm->ps->origin, 1.0f, pm->ps->velocity, blah);
 		CG_TestLine(pm->ps->origin, blah, 1, 0xff0000, 1);
-	}
+		}
 #endif
 #endif
 
@@ -19265,11 +19274,11 @@ void PmoveSingle(pmove_t* pmove)
 					PM_SetPMViewAngle(self->playerState, veh->m_pVehicle->m_vOrientation, &pm->cmd);
 					PM_SetPMViewAngle(veh->playerState, veh->m_pVehicle->m_vOrientation, &pm->cmd);
 				}
-			}
+					}
 #endif
-		}
+				}
 		noAnimate = qtrue;
-	}
+			}
 
 	if (pm_entSelf->s.NPC_class != CLASS_VEHICLE
 		&& pm->ps->m_iVehicleNum)
@@ -19440,7 +19449,7 @@ void PmoveSingle(pmove_t* pmove)
 		//riding a vehicle, see if we should do some anim overrides
 		PM_VehicleWeaponAnimate();
 	}
-}
+		}
 
 /*
 ================

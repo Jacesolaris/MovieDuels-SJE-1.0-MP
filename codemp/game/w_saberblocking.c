@@ -53,7 +53,6 @@ extern saber_moveName_t pm_broken_parry_for_attack(int move);
 extern qboolean PM_InGetUp(const playerState_t* ps);
 extern qboolean PM_InForceGetUp(const playerState_t* ps);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
-extern qboolean WP_BrokenBoltBlockKnockBack(gentity_t* victim);
 extern void wp_block_points_regenerate(const gentity_t* self, int override_amt);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
 extern saber_moveName_t pm_block_the_attack(int move);

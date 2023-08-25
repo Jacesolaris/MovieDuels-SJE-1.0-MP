@@ -15737,6 +15737,14 @@ void SmoothTrueView(vec3_t eye_angles)
 				{
 					fov = cg_saberlockfov.value;
 				}
+				else if (cg_oversizedview.integer)
+				{
+					fov = cg_oversizedview.value;
+				}
+				else if (cg_undersizedview.integer)
+				{
+					fov = cg_undersizedview.value;
+				}
 				else
 				{
 					fov = cg_fov.value;

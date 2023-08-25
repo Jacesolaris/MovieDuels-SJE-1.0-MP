@@ -3910,6 +3910,32 @@ void CancelReload(gentity_t* ent)
 }
 ////////////////////// reload
 
+float IsOversizedModel(gentity_t* ent)
+{
+	gclient_t* client = ent->client;
+
+	if (client->pers.botmodelscale == BOTZIZE_TALL ||
+		client->pers.botmodelscale == BOTZIZE_LARGE ||
+		client->pers.botmodelscale == BOTZIZE_LARGER ||
+		client->pers.botmodelscale == BOTZIZE_MASSIVE)
+	{
+		return qtrue;
+	}
+	return qfalse;
+}
+
+float IsUndersizedModel(gentity_t* ent)
+{
+	gclient_t* client = ent->client;
+
+	if (client->pers.botmodelscale == BOTZIZE_SMALLER ||
+		client->pers.botmodelscale == BOTZIZE_SMALLEST)
+	{
+		return qtrue;
+	}
+	return qfalse;
+}
+
 /*
 ==============
 ClientThink
@@ -4722,22 +4748,22 @@ void ClientThink_real(gentity_t* ent)
 			}
 
 			//Winner gets full health.. providing he's still alive
-			if (ent->health > 0 && ent->client->ps.stats[STAT_HEALTH] > 0)
+			if (ent->health > 0 && client->ps.stats[STAT_HEALTH] > 0)
 			{
-				if (ent->health < ent->client->ps.stats[STAT_MAX_HEALTH])
+				if (ent->health < client->ps.stats[STAT_MAX_HEALTH])
 				{
-					ent->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->ps.stats[STAT_MAX_HEALTH];
+					client->ps.stats[STAT_HEALTH] = ent->health = client->ps.stats[STAT_MAX_HEALTH];
 				}
 
-				if (ent->client->ps.stats[STAT_ARMOR] < ent->client->ps.stats[STAT_MAX_HEALTH])
+				if (client->ps.stats[STAT_ARMOR] < ent->client->ps.stats[STAT_MAX_HEALTH])
 				{
-					ent->client->ps.stats[STAT_ARMOR] = ent->client->ps.stats[STAT_MAX_HEALTH];
+					client->ps.stats[STAT_ARMOR] = ent->client->ps.stats[STAT_MAX_HEALTH];
 				}
 
 				if (g_spawnInvulnerability.integer)
 				{
-					ent->client->ps.eFlags |= EF_INVULNERABLE;
-					ent->client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
+					client->ps.eFlags |= EF_INVULNERABLE;
+					client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 				}
 			}
 		}
@@ -5048,7 +5074,7 @@ void ClientThink_real(gentity_t* ent)
 
 	if (ent->r.svFlags & SVF_BOT)
 	{
-		if (ent->client->cloak_is_charging)
+		if (client->cloak_is_charging)
 		{
 			if (client->ps.cloakCharcgestartTime <= 0 && level.time - client->ps.cloakchargelaststartTime >= 5000)
 			{
@@ -5201,6 +5227,20 @@ void ClientThink_real(gentity_t* ent)
 				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
 			}
 		}
+		else if (IsOversizedModel(ent))
+		{
+			if (!(client->ps.communicatingflags & 1 << OVERSIZEDMODEL))
+			{
+				client->ps.communicatingflags |= 1 << OVERSIZEDMODEL;
+			}
+		}
+		else if (IsUndersizedModel(ent))
+		{
+			if (!(client->ps.communicatingflags & 1 << UNDERSIZEDMODEL))
+			{
+				client->ps.communicatingflags |= 1 << UNDERSIZEDMODEL;
+			}
+		}
 		else
 		{
 			client->ps.respectingtime = 0;
@@ -5213,6 +5253,8 @@ void ClientThink_real(gentity_t* ent)
 			client->ps.communicatingflags &= ~(1 << GESTURING);
 			client->ps.communicatingflags &= ~(1 << DASHING);
 			client->ps.communicatingflags &= ~(1 << KICKING);
+			client->ps.communicatingflags &= ~(1 << OVERSIZEDMODEL);
+			client->ps.communicatingflags &= ~(1 << UNDERSIZEDMODEL);
 			if (client->ps.weapon != WP_STUN_BATON ||
 				(client->ps.communicatingflags |= client->ps.grapplestartTime >= 3000))
 			{
@@ -5221,17 +5263,17 @@ void ClientThink_real(gentity_t* ent)
 		}
 	}
 
-	if (ent->client->doingThrow > level.time)
+	if (client->doingThrow > level.time)
 	{
-		gentity_t* throwee = &g_entities[ent->client->throwingIndex];
+		gentity_t* throwee = &g_entities[client->throwingIndex];
 
 		if (!throwee->inuse || !throwee->client || throwee->health < 1 ||
 			throwee->client->sess.sessionTeam == TEAM_SPECTATOR ||
 			throwee->client->ps.pm_flags & PMF_FOLLOW ||
 			throwee->client->throwingIndex != ent->s.number)
 		{
-			ent->client->doingThrow = 0;
-			ent->client->ps.forceHandExtend = HANDEXTEND_NONE;
+			client->doingThrow = 0;
+			client->ps.forceHandExtend = HANDEXTEND_NONE;
 
 			if (throwee->inuse && throwee->client)
 			{
@@ -5249,24 +5291,24 @@ void ClientThink_real(gentity_t* ent)
 	if (ucmd->buttons & BUTTON_BLOCK)
 	{
 		//blocking with saber
-		ent->client->ps.saberManualBlockingTime = level.time + FRAMETIME;
+		client->ps.saberManualBlockingTime = level.time + FRAMETIME;
 	}
 
-	if (ent->client->beingThrown > level.time)
+	if (client->beingThrown > level.time)
 	{
-		gentity_t* thrower = &g_entities[ent->client->throwingIndex];
+		gentity_t* thrower = &g_entities[client->throwingIndex];
 
 		if (!thrower->inuse || !thrower->client || thrower->health < 1 ||
 			thrower->client->sess.sessionTeam == TEAM_SPECTATOR ||
 			thrower->client->ps.pm_flags & PMF_FOLLOW ||
 			thrower->client->throwingIndex != ent->s.number)
 		{
-			ent->client->ps.heldByClient = 0;
-			ent->client->beingThrown = 0;
+			client->ps.heldByClient = 0;
+			client->beingThrown = 0;
 
-			if (ent->client->ps.forceHandExtend != HANDEXTEND_POSTTHROWN)
+			if (client->ps.forceHandExtend != HANDEXTEND_POSTTHROWN)
 			{
-				ent->client->ps.forceHandExtend = HANDEXTEND_NONE;
+				client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
 
 			if (thrower->inuse && thrower->client)
@@ -5293,8 +5335,8 @@ void ClientThink_real(gentity_t* ent)
 				vec3_t fwd, right;
 
 				//Always look at the thrower.
-				VectorSubtract(thrower->client->ps.origin, ent->client->ps.origin, entDir);
-				VectorCopy(ent->client->ps.viewangles, otherAngles);
+				VectorSubtract(thrower->client->ps.origin, client->ps.origin, entDir);
+				VectorCopy(client->ps.viewangles, otherAngles);
 				otherAngles[YAW] = vectoyaw(entDir);
 				SetClientViewAngle(ent, otherAngles);
 
@@ -5322,21 +5364,21 @@ void ClientThink_real(gentity_t* ent)
 				bolt_org[2] = pBoltOrg[2];
 #endif
 
-				VectorSubtract(ent->client->ps.origin, bolt_org, vDif);
+				VectorSubtract(client->ps.origin, bolt_org, vDif);
 				if (VectorLength(vDif) > 32.0f && thrower->client->doingThrow - level.time < 4500)
 				{
 					//the hand is too far away, and can no longer hold onto us, so escape.
-					ent->client->ps.heldByClient = 0;
-					ent->client->beingThrown = 0;
+					client->ps.heldByClient = 0;
+					client->beingThrown = 0;
 					thrower->client->doingThrow = 0;
 
 					thrower->client->ps.forceHandExtend = HANDEXTEND_NONE;
 					G_EntitySound(thrower, CHAN_VOICE, G_SoundIndex("*pain25.wav"));
 
-					ent->client->ps.forceDodgeAnim = 2;
-					ent->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
-					ent->client->ps.forceHandExtendTime = level.time + 500;
-					ent->client->ps.velocity[2] = 400;
+					client->ps.forceDodgeAnim = 2;
+					client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
+					client->ps.forceHandExtendTime = level.time + 500;
+					client->ps.velocity[2] = 400;
 					if (ent->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
 					{
 						//short burst
@@ -5352,34 +5394,34 @@ void ClientThink_real(gentity_t* ent)
 				{
 					//step into the next part of the throw, and go flying back
 					float vScale = 400.0f;
-					ent->client->ps.forceHandExtend = HANDEXTEND_POSTTHROWN;
-					ent->client->ps.forceHandExtendTime = level.time + 1200;
-					ent->client->ps.forceDodgeAnim = 0;
+					client->ps.forceHandExtend = HANDEXTEND_POSTTHROWN;
+					client->ps.forceHandExtendTime = level.time + 1200;
+					client->ps.forceDodgeAnim = 0;
 
 					thrower->client->ps.forceHandExtend = HANDEXTEND_POSTTHROW;
 					thrower->client->ps.forceHandExtendTime = level.time + 200;
 
-					ent->client->ps.heldByClient = 0;
+					client->ps.heldByClient = 0;
 
-					ent->client->ps.heldByClient = 0;
-					ent->client->beingThrown = 0;
+					client->ps.heldByClient = 0;
+					client->beingThrown = 0;
 					thrower->client->doingThrow = 0;
 
 					AngleVectors(thrower->client->ps.viewangles, vDif, 0, 0);
-					ent->client->ps.velocity[0] = vDif[0] * vScale;
-					ent->client->ps.velocity[1] = vDif[1] * vScale;
-					ent->client->ps.velocity[2] = 400;
+					client->ps.velocity[0] = vDif[0] * vScale;
+					client->ps.velocity[1] = vDif[1] * vScale;
+					client->ps.velocity[2] = 400;
 
 					G_EntitySound(ent, CHAN_VOICE, G_SoundIndex("*pain100.wav"));
 					G_EntitySound(thrower, CHAN_VOICE, G_SoundIndex("*jump1.wav"));
 
 					//Set the thrower as the "other killer", so if we die from fall/impact damage he is credited.
-					ent->client->ps.otherKiller = thrower->s.number;
-					ent->client->ps.otherKillerTime = level.time + 8000;
-					ent->client->ps.otherKillerDebounceTime = level.time + 100;
-					ent->client->otherKillerMOD = MOD_FALLING;
-					ent->client->otherKillerVehWeapon = 0;
-					ent->client->otherKillerWeaponType = WP_NONE;
+					client->ps.otherKiller = thrower->s.number;
+					client->ps.otherKillerTime = level.time + 8000;
+					client->ps.otherKillerDebounceTime = level.time + 100;
+					client->otherKillerMOD = MOD_FALLING;
+					client->otherKillerVehWeapon = 0;
+					client->otherKillerWeaponType = WP_NONE;
 				}
 				else
 				{
@@ -5407,23 +5449,23 @@ void ClientThink_real(gentity_t* ent)
 
 						if (client->beingThrown - level.time < 4800)
 						{
-							ent->client->ps.heldByClient = thrower->s.number + 1;
+							client->ps.heldByClient = thrower->s.number + 1;
 						}
 					}
 					else
 					{
 						//if the guy can't be put here then it's time to break the throw off.
-						ent->client->ps.heldByClient = 0;
-						ent->client->beingThrown = 0;
+						client->ps.heldByClient = 0;
+						client->beingThrown = 0;
 						thrower->client->doingThrow = 0;
 
 						thrower->client->ps.forceHandExtend = HANDEXTEND_NONE;
 						G_EntitySound(thrower, CHAN_VOICE, G_SoundIndex("*pain25.wav"));
 
-						ent->client->ps.forceDodgeAnim = 2;
-						ent->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
-						ent->client->ps.forceHandExtendTime = level.time + 500;
-						ent->client->ps.velocity[2] = 400;
+						client->ps.forceDodgeAnim = 2;
+						client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
+						client->ps.forceHandExtendTime = level.time + 500;
+						client->ps.velocity[2] = 400;
 						if (ent->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
 						{
 							//short burst
@@ -5439,9 +5481,9 @@ void ClientThink_real(gentity_t* ent)
 			}
 		}
 	}
-	else if (ent->client->ps.heldByClient)
+	else if (client->ps.heldByClient)
 	{
-		ent->client->ps.heldByClient = 0;
+		client->ps.heldByClient = 0;
 	}
 
 	// set up for pmove
@@ -5452,10 +5494,10 @@ void ClientThink_real(gentity_t* ent)
 	if (ent->flags & FL_FORCE_GESTURE)
 	{
 		ent->flags &= ~FL_FORCE_GESTURE;
-		ent->client->pers.cmd.buttons |= BUTTON_GESTURE;
+		client->pers.cmd.buttons |= BUTTON_GESTURE;
 	}
 
-	if (ent->client && ent->client->ps.fallingToDeath &&
+	if (client && client->ps.fallingToDeath &&
 		level.time - FALL_FADE_TIME > ent->client->ps.fallingToDeath)
 	{
 		//die!
@@ -5622,14 +5664,36 @@ void ClientThink_real(gentity_t* ent)
 				if (ent->client->ps.saberLockHitIncrementTime < level.time)
 				{//have moved to next frame since last saberlock attack button press
 					ent->client->ps.saberLockHitIncrementTime = level.time + 150;//so we don't register an attack key press more than once per server frame
-
-					if (ent->client->botclass == BCLASS_DESANN || ent->client->botclass == BCLASS_LUKE)
+					
+					if (blockOpp && blockOpp->r.svFlags & SVF_BOT)
 					{
-						strength = 2;
+						switch (ent->client->ps.fd.saber_anim_level)
+						{
+						case SS_FAST:
+							strength = 1;
+							break;
+						case SS_MEDIUM:
+						case SS_TAVION:
+						case SS_DUAL:
+						case SS_STAFF:
+							strength = 2;
+							break;
+						case SS_STRONG:
+						case SS_DESANN:
+							strength = 3;
+							break;
+						}
 					}
 					else
 					{
-						strength = 1;
+						if (ent->client->botclass == BCLASS_DESANN || ent->client->botclass == BCLASS_LUKE)
+						{
+							strength = 2;
+						}
+						else
+						{
+							strength = 1;
+						}
 					}
 
 					ent->client->ps.saberLockHits += strength;

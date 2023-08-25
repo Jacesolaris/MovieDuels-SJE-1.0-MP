@@ -1540,7 +1540,6 @@ void TossClientItems(gentity_t* self);
 void ExplodeDeath(gentity_t* self);
 void G_CheckForDismemberment(gentity_t* ent, const gentity_t* enemy, vec3_t point, int damage);
 extern int gGAvoidDismember;
-void G_DodgeDrain(const gentity_t* victim, const gentity_t* attacker, int amount);
 
 // damage flags
 #define DAMAGE_NORMAL				0x00000000	// No flags set.
