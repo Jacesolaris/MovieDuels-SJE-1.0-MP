@@ -5183,6 +5183,10 @@ static void UI_Update(const char* name)
 		Q_strncpyz(buf, UI_Cvar_VariableString("ui_Name"), sizeof buf);
 		trap->Cvar_Set("name", buf);
 	}
+	else if (Q_stricmp(name, "ui_SetAdminPass") == 0)
+	{
+		trap->Cmd_ExecuteText(EXEC_APPEND, va("adminlogin \"%s\"\n", UI_Cvar_VariableString("ui_adminpass")));
+	}
 	else if (Q_stricmp(name, "ui_setRate") == 0)
 	{
 		const float rate = trap->Cvar_VariableValue("rate");
@@ -5207,6 +5211,10 @@ static void UI_Update(const char* name)
 		char buf[MAX_NETNAME] = { 0 };
 		Q_strncpyz(buf, UI_Cvar_VariableString("name"), sizeof buf);
 		trap->Cvar_Set("ui_Name", buf);
+	}
+	else if (Q_stricmp(name, "ui_GetAdminPass") == 0)
+	{
+		trap->Cvar_Set("ui_adminpass", UI_Cvar_VariableString("g_adminpassword"));
 	}
 	else if (Q_stricmp(name, "ui_r_colorbits") == 0)
 	{
@@ -10891,6 +10899,7 @@ void UI_Init(qboolean inGameLoad)
 		char buf[MAX_NETNAME] = { 0 };
 		Q_strncpyz(buf, UI_Cvar_VariableString("name"), sizeof buf);
 		trap->Cvar_Register(NULL, "ui_Name", buf, CVAR_INTERNAL);
+		trap->Cvar_Register(NULL, "ui_adminpass", UI_Cvar_VariableString("g_adminpassword"), CVAR_INTERNAL);
 	}
 
 	Menus_CloseAll();

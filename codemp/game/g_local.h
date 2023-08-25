@@ -704,6 +704,12 @@ typedef struct clientPersistant_s
 
 	int	padawantimer;
 	qboolean	ampadawan;
+	int			iamanadmin;
+	int			bitvalue;
+	char		login[1024];
+	char		logout[1024];
+	qboolean	plugindetect;
+	qboolean	amsplat;
 
 } clientPersistant_t;
 

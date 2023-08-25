@@ -1236,6 +1236,15 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 	{
 		client->timeResidual -= 1000;
 
+		if (client->pers.iamanadmin == 1 && (client->pers.connected == CON_CONNECTED) && !(ent->r.svFlags & SVF_BOT))
+		{
+			if (client->pers.bitvalue != g_admincontrol.integer)
+			{
+				client->pers.bitvalue = g_admincontrol.integer;
+				trap->SendServerCommand(ent - g_entities, va("print \"^1Admin control has just changed on your admin level. Type in /MyAdminCommands to see available commands.\n\""));
+			}
+		}
+
 		// if out of trip mines or thermals, remove them from weapon selection
 		if (client->ps.ammo[AMMO_THERMAL] == 0)
 		{
@@ -1514,7 +1523,10 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 
 			if (dmflags.integer & DF_NO_FALLING)
 			{
-				break;
+				if (ent->client->pers.amsplat == 0)
+				{
+					break;
+				}
 			}
 
 			if (PM_InKnockDownOnly(Client->ps.legsAnim))
@@ -1581,7 +1593,10 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 
 			if (dmflags.integer & DF_NO_FALLING)
 			{
-				break;
+				if (ent->client->pers.amsplat == 0)
+				{
+					break;
+				}
 			}
 
 			if (PM_InKnockDownOnly(Client->ps.legsAnim))
@@ -4260,6 +4275,44 @@ void ClientThink_real(gentity_t* ent)
 		}
 	}
 
+	if (ent && ent->client && (ent->client->ps.eFlags & EF_TALK))
+	{
+#ifdef _GAME
+		if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat)
+		{
+			ent->flags |= FL_GODMODE;
+		}
+#endif
+	}
+	else
+	{
+#ifdef _GAME
+		if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat)
+		{
+			ent->flags &= ~FL_GODMODE;
+		}
+#endif
+	}
+
+	if (ent && ent->client && (ent->client->ps.eFlags & EF_TELEPORT_BIT))
+	{
+#ifdef _GAME
+		if (g_spawn_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat && !ent->client->ps.eFlags & EF_TALK)
+		{
+			ent->flags |= FL_GODMODE;
+		}
+#endif
+	}
+	else
+	{
+#ifdef _GAME
+		if (g_spawn_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat && !ent->client->ps.eFlags & EF_TALK)
+		{
+			ent->flags &= ~FL_GODMODE;
+		}
+#endif
+	}
+
 	if (ent && ent->s.eType != ET_NPC)
 	{
 		// check for inactivity timer, but never drop the local client of a non-dedicated server
@@ -5557,6 +5610,7 @@ void ClientThink_real(gentity_t* ent)
 	if (pmove.ps->pm_type == PM_DEAD)
 	{
 		pmove.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;
+		ent->client->pers.amsplat = 0;
 	}
 	/*else if (ent->r.svFlags & SVF_BOT)
 	{

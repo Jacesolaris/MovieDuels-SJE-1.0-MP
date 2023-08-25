@@ -998,6 +998,10 @@ int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const 
 
 	if (other && other->client && forcePower == FP_PUSH)
 	{
+		if (other->client->pers.amsplat == 1)
+		{
+			return 0;
+		}
 		if (other->client->ps.stats[STAT_HEALTH] <= 0 || other->client->ps.eFlags & EF_DEAD)
 		{
 			return 0;
@@ -1005,6 +1009,10 @@ int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const 
 	}
 	else if (other && other->client && forcePower == FP_PULL)
 	{
+		if (other->client->pers.amsplat == 1)
+		{
+			return 0;
+		}
 		if (g_AllowKnockDownPull.integer == 0)
 		{
 			if (BG_InKnockDown(other->client->ps.legsAnim))

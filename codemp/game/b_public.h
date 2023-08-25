@@ -364,4 +364,3 @@ typedef struct
 } gNPC_t;
 
 void NPC_InitGame(void);
-void Svcmd_NPC_f(void);

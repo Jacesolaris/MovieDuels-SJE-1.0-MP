@@ -526,7 +526,7 @@ if(BuildMPEngine)
 
 	if(WIN32)
 		set(MPEngineWin32Files
-			"${MPDir}/win32/iconmp.ico"
+			"${MPDir}/win32/MovieDuels-MP.ico"
 			"${MPDir}/win32/resource.h"
 			"${MPDir}/win32/openjk.rc"
 			)
