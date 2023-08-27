@@ -728,7 +728,7 @@ void G_Kill(gentity_t* ent)
 	{
 		if (!g_allowDuelSuicide.integer)
 		{
-			trap->SendServerCommand(ent - g_entities,va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "ATTEMPTDUELKILL")));
+			trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "ATTEMPTDUELKILL")));
 			return;
 		}
 	}
@@ -2607,7 +2607,6 @@ void Cmd_Punish(gentity_t* ent)
 
 		G_LogPrintf("Punishment admin command executed by %s on %s.\n", ent->client->pers.netname, g_entities[client_id].client->pers.netname);
 
-
 		trap->SendServerCommand(-1, va("cp \"%s^7\n%s\n\"", g_entities[client_id].client->pers.netname, g_adminpunish_saying.string));
 		trap->SendServerCommand(-1, va("print \"%s^7 %s\n\"", g_entities[client_id].client->pers.netname, g_adminpunish_saying.string));
 
@@ -2641,7 +2640,6 @@ void Cmd_AdminLogin(gentity_t* ent)
 	}
 
 	trap->Argv(1, password, sizeof(password)); // password
-
 
 	if (ent->client->pers.plugindetect == qtrue)
 	{
@@ -2682,8 +2680,6 @@ void Cmd_AdminLogout(gentity_t* ent)
 		ent->client->pers.iamanadmin = 0;
 		ent->r.svFlags &= ~SVF_ADMIN;
 		ent->client->pers.bitvalue = 0;
-
-		trap->SendServerCommand(ent - g_entities, va("g_adminpassword %s", " "));
 	}
 }
 

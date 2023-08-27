@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-25,BuildNum-12" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-27,BuildNum-13" // build date
 
 #define	STEPSIZE		18
 
@@ -748,6 +748,7 @@ typedef enum {
 #define	EF_AWARD_DEFEND		     0x00010000		// draw a defend sprite
 #define	EF_AWARD_ASSIST		     0x00020000		// draw a assist sprite
 #define EF_AWARD_DENIED		     0x00040000		// denied
+#define EF_MEDITATING		     0x00080000		//
 
 typedef enum {
 	EFFECT_NONE = 0,

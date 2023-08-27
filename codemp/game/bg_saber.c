@@ -835,7 +835,7 @@ saber_moveName_t PM_NPCSaberAttackFromQuad(const int quad)
 
 #ifdef _GAME
 	if (bot_thinklevel.integer >= 1 &&
-		BG_EnoughForcePowerForMove(SABER_KATA_ATTACK_POWER) &&
+		BG_EnoughForcePowerForMove(SABER_ALT_ATTACK_POWER) &&
 		!pm->ps->fd.forcePowersActive && !in_camera)
 	{
 		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
@@ -4798,7 +4798,7 @@ qboolean PM_SaberBlocking(void)
 					{
 						// Some special bot stuff.
 						nextMove = saber_moveData[pm->ps->saber_move].chain_attack;
-			}
+					}
 					else
 #endif
 					{
@@ -4812,7 +4812,7 @@ qboolean PM_SaberBlocking(void)
 						}
 						nextMove = transitionMove[saber_moveData[pm->ps->saber_move].startQuad][newQuad];
 					}
-		}
+				}
 				else
 				{
 					//return to ready
@@ -4821,7 +4821,7 @@ qboolean PM_SaberBlocking(void)
 					{
 						// Some special bot stuff.
 						nextMove = saber_moveData[pm->ps->saber_move].chain_idle;
-	}
+					}
 					else
 #endif
 					{
@@ -4841,7 +4841,7 @@ qboolean PM_SaberBlocking(void)
 								Q_TL);
 						}
 					}
-}
+				}
 				PM_Setsaber_move(nextMove);
 				pm->ps->weaponTime = pm->ps->torsoTimer;
 			}
@@ -5161,10 +5161,10 @@ void PM_WeaponLightsaber(void)
 				// Always return to ready when attack is released...
 				PM_Setsaber_move(LS_READY);
 				return;
+			}
 		}
-	}
 #endif
-}
+	}
 
 	if (PM_InKnockDown(pm->ps) || BG_InRoll(pm->ps, pm->ps->legsAnim))
 	{
@@ -5249,9 +5249,9 @@ void PM_WeaponLightsaber(void)
 					G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 					return;
+				}
 			}
 		}
-	}
 
 		if (pm->ps->saberLockFrame)
 		{
@@ -5293,7 +5293,7 @@ void PM_WeaponLightsaber(void)
 			{
 				// Some special bot stuff.
 				PM_SetAnim(SETANIM_TORSO, PM_ReadyPoseForsaber_anim_levelBOT(), SETANIM_FLAG_OVERRIDE);
-	}
+			}
 			else
 #endif
 			{
@@ -5800,7 +5800,7 @@ weapChecks:
 			{
 				// Some special bot stuff.
 				PM_SetAnim(SETANIM_TORSO, PM_ReadyPoseForsaber_anim_levelBOT(), SETANIM_FLAG_NORMAL);
-	}
+			}
 			else
 #endif
 			{
@@ -6001,7 +6001,7 @@ weapChecks:
 				{
 					//NPCs never do attack fakes, just follow thru with attack.
 					newmove = LS_A_TL2BR + (curmove - LS_S_TL2BR);
-		}
+				}
 				else
 #endif
 				{
@@ -6009,7 +6009,7 @@ weapChecks:
 					newmove = PM_ReturnforQuad(saber_moveData[curmove].endQuad);
 					PM_AddBlockFatigue(pm->ps, FATIGUE_ATTACKFAKE);
 				}
-	}
+			}
 			else if (curmove >= LS_A_TL2BR && curmove <= LS_A_T2B)
 			{
 				//finished an attack, must continue from here
@@ -6225,7 +6225,7 @@ weapChecks:
 				{
 					//NPCs use more randomized attacks the more skilled they are
 					newmove = PM_NPCSaberAttackFromQuad(saber_moveData[curmove].endQuad);
-		}
+				}
 				else
 #endif
 				{
@@ -6382,7 +6382,7 @@ weapChecks:
 				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
 				{
 					anim = PM_ReadyPoseForsaber_anim_levelBOT();
-			}
+				}
 				else
 #endif
 				{
@@ -6407,7 +6407,7 @@ weapChecks:
 					}
 				}
 				break;
-		}
+			}
 			newmove = LS_READY;
 		}
 
@@ -6897,7 +6897,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				anim = PM_ReadyPoseForsaber_anim_levelBOT();
-	}
+			}
 			else
 #endif
 			{
@@ -6921,7 +6921,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 					anim = PM_IdlePoseForsaber_anim_level();
 				}
 			}
-}
+		}
 
 		if (pm->ps->pm_flags & PMF_DUCKED)
 		{
@@ -7150,7 +7150,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 
 			if (!(g_entities[pm->ps->client_num].r.svFlags & SVF_BOT))
 			{
-	}
+			}
 			else
 #endif
 			{

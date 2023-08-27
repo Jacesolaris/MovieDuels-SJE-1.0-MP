@@ -950,7 +950,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					{
 						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 					}
-					G_Sound(blocker, CHAN_AUTO,G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+					G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 					if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 					{
@@ -1163,7 +1163,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 			blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;
 
-			G_Sound(blocker, CHAN_AUTO,G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+			G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 			if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 			{

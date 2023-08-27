@@ -8863,6 +8863,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 					wp_force_power_regenerate(self, 10);
 					BG_ReduceSaberMishapLevel(&self->client->ps);
 					self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoTimer + 3000;
+					self->client->ps.eFlags |= EF_MEDITATING;
 				}
 				else if (PM_CrouchAnim(self->client->ps.legsAnim))
 				{
@@ -8894,6 +8895,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 				else
 				{
 					wp_force_power_regenerate(self, 0);
+					self->client->ps.eFlags &= ~EF_MEDITATING;
 				}
 			}
 			else
@@ -9049,6 +9051,7 @@ void WP_BlockPointsUpdate(const gentity_t* self)
 				{
 					wp_block_points_regenerate(self, 4);
 					self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoTimer + 3000;
+					self->client->ps.eFlags |= EF_MEDITATING;
 				}
 				else if (PM_CrouchAnim(self->client->ps.legsAnim))
 				{
@@ -9076,6 +9079,7 @@ void WP_BlockPointsUpdate(const gentity_t* self)
 						//regen half as fast
 						self->client->ps.fd.BlockPointsRegenDebounceTime += 2000;
 					}
+					self->client->ps.eFlags &= ~EF_MEDITATING;
 				}
 			}
 		}

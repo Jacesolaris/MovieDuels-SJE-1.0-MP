@@ -298,7 +298,6 @@ CG_CalcTargetThirdPersonViewLocation
 */
 static void CG_CalcIdealThirdPersonViewTarget(void)
 {
-	// Initialize IdealTarget
 	if (gCGHasFallVector)
 	{
 		VectorCopy(gCGFallVector, cameraFocusLoc);
@@ -360,17 +359,17 @@ static void CG_CalcIdealThirdPersonViewTarget(void)
 				vertOffset = 0;
 			}
 		}
+		else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDGUNNER))
+		{
+			vertOffset = 30.0f;
+		}
+		else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDGUNNER))
+		{
+			vertOffset = 0.0f;
+		}
 		else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 		{
 			vertOffset = -15.5f;
-		}
-		else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
-		{
-			vertOffset = 50.0f;
-		}
-		else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
-		{
-			vertOffset = -20.0f;
 		}
 		cameraIdealTarget[2] += vertOffset;
 	}
@@ -404,7 +403,9 @@ static void CG_CalcIdealThirdPersonViewLocation(void)
 	if (cg.snap
 		&& cg.snap->ps.eFlags2 & EF2_HELD_BY_MONSTER
 		&& cg.snap->ps.hasLookTarget
-		&& cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_RANCOR)
+		&& (cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_RANCOR ||
+			cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_SAND_CREATURE ||
+			cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_WAMPA))
 		//only possibility for now, may add Wampa and sand creature later
 	{
 		//stay back
@@ -568,17 +569,22 @@ static void CG_UpdateThirdPersonCameraDamp(void)
 		}
 	}
 
+	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDGUNNER))
+	{
+		thirdPersonCameraDamp = 1;
+	}
+
+	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDGUNNER))
+	{
+		thirdPersonCameraDamp = 1;
+	}
+
+	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDJEDI))
+	{
+		thirdPersonCameraDamp = 1;
+	}
+
 	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
-	{
-		thirdPersonCameraDamp = 1;
-	}
-
-	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
-	{
-		thirdPersonCameraDamp = 1;
-	}
-
-	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
 	{
 		thirdPersonCameraDamp = 1;
 	}
@@ -663,11 +669,6 @@ static void CG_UpdateThirdPersonCameraDamp(void)
 			VectorCopy(trace.endpos, cameraCurLoc);
 		}
 	}
-
-	// Note that previously there was an upper limit to the number of physics traces that are done through the world
-	// for the sake of camera collision, since it wasn't calced per frame.  Now it is calculated every frame.
-	// This has the benefit that the camera is a lot smoother now (before it lerped between tested points),
-	// however two full volume traces each frame is a bit scary to think about.
 }
 
 /*
@@ -709,11 +710,14 @@ static void CG_OffsetThirdPersonView(void)
 	if (cg.snap
 		&& cg.snap->ps.eFlags2 & EF2_HELD_BY_MONSTER
 		&& cg.snap->ps.hasLookTarget
-		&& cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_RANCOR)
+		&& (cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_RANCOR ||
+			cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_SAND_CREATURE ||
+			cg_entities[cg.snap->ps.lookTarget].currentState.NPC_class == CLASS_WAMPA))
 		//only possibility for now, may add Wampa and sand creature later
 	{
 		//being held
 		const centity_t* monster = &cg_entities[cg.snap->ps.lookTarget];
+
 		VectorSet(cameraFocusAngles, 0, AngleNormalize180(monster->lerpAngles[YAW] + 180), 0);
 		//make the look angle the vector from his mouth to me
 	}
@@ -726,52 +730,42 @@ static void CG_OffsetThirdPersonView(void)
 		thirdPersonHorzOffset = -25.5f;
 		thirdPersonAngle = 40.5f;
 	}
-	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
-	{
-		thirdPersonHorzOffset = 0.0f;
-		thirdPersonAngle = 0.0f;
-	}
-	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
-	{
-		thirdPersonHorzOffset = 0.0f;
-		thirdPersonAngle = 0.0f;
-	}
 	else
 	{
 		// Add in the third Person Angle.
 		cameraFocusAngles[YAW] += cg_thirdPersonAngle.value;
+
+		float pitchOffset = cg_thirdPersonPitchOffset.value;
+
+		if (cg.snap && cg.snap->ps.m_iVehicleNum)
 		{
-			float pitchOffset = cg_thirdPersonPitchOffset.value;
-			if (cg.snap && cg.snap->ps.m_iVehicleNum)
+			const centity_t* veh = &cg_entities[cg.snap->ps.m_iVehicleNum];
+			if (veh->m_pVehicle &&
+				veh->m_pVehicle->m_pVehicleInfo->cameraOverride)
 			{
-				const centity_t* veh = &cg_entities[cg.snap->ps.m_iVehicleNum];
-				if (veh->m_pVehicle &&
-					veh->m_pVehicle->m_pVehicleInfo->cameraOverride)
+				//override the range with what the vehicle wants it to be
+				if (veh->m_pVehicle->m_pVehicleInfo->cameraPitchDependantVertOffset)
 				{
-					//override the range with what the vehicle wants it to be
-					if (veh->m_pVehicle->m_pVehicleInfo->cameraPitchDependantVertOffset)
+					if (cg.snap->ps.viewangles[PITCH] > 0)
 					{
-						if (cg.snap->ps.viewangles[PITCH] > 0)
-						{
-							pitchOffset = cg.predicted_player_state.viewangles[PITCH] * -0.75;
-						}
-						else if (cg.snap->ps.viewangles[PITCH] < 0)
-						{
-							pitchOffset = cg.predicted_player_state.viewangles[PITCH] * -0.75;
-						}
-						else
-						{
-							pitchOffset = 0;
-						}
+						pitchOffset = cg.predicted_player_state.viewangles[PITCH] * -0.75;
+					}
+					else if (cg.snap->ps.viewangles[PITCH] < 0)
+					{
+						pitchOffset = cg.predicted_player_state.viewangles[PITCH] * -0.75;
 					}
 					else
 					{
-						pitchOffset = veh->m_pVehicle->m_pVehicleInfo->cameraPitchOffset;
+						pitchOffset = 0;
 					}
 				}
+				else
+				{
+					pitchOffset = veh->m_pVehicle->m_pVehicleInfo->cameraPitchOffset;
+				}
 			}
-			cameraFocusAngles[PITCH] += pitchOffset;
 		}
+		cameraFocusAngles[PITCH] += pitchOffset;
 	}
 
 	// The next thing to do is to see if we need to calculate a new camera target location.
@@ -851,17 +845,22 @@ static void CG_OffsetThirdPersonView(void)
 
 	// Temp: just move the camera to the side a bit
 
-	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	if (cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDGUNNER))
 	{
 		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
 		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
 	}
-	else if (cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
+	else if (cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDGUNNER))
 	{
 		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
 		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
 	}
-	else if (cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
+	else if (cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDJEDI))
+	{
+		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
+		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
+	}
+	else if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 	{
 		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
 		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
@@ -979,12 +978,18 @@ static void CG_OffsetFirstPersonView(void)
 	speed = cg.xyspeed > 200 ? cg.xyspeed : 200;
 
 	delta = cg.bobfracsin * cg_bobPitch.value * speed;
-	if (cg.predicted_player_state.pm_flags & PMF_DUCKED)
+
+	if (cg.predicted_player_state.pm_flags & PMF_DUCKED || cg.snap->ps.eFlags & EF_MEDITATING)
+	{
 		delta *= 3; // crouching
+	}
 	angles[PITCH] += delta;
 	delta = cg.bobfracsin * cg_bobRoll.value * speed;
-	if (cg.predicted_player_state.pm_flags & PMF_DUCKED)
+
+	if (cg.predicted_player_state.pm_flags & PMF_DUCKED || cg.snap->ps.eFlags & EF_MEDITATING)
+	{
 		delta *= 3; // crouching accentuates roll
+	}
 	if (cg.bobcycle & 1)
 		delta = -delta;
 	angles[ROLL] += delta;
@@ -1272,23 +1277,28 @@ static int CG_CalcFov(void)
 	{
 		cgFov = cg_truefov.value;
 	}
+	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDGUNNER))
+	{
+		thirdPersonPitchOffset = 50.0f;
+		thirdPersonRange = 100.0f;
+		cgFov = cg_oversizedview.value;
+	}
+	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDGUNNER))
+	{
+		thirdPersonPitchOffset = 10.0f;
+		thirdPersonRange = 70.0f;
+		cgFov = cg_saberlockfov.value;
+	}
+	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDJEDI))
+	{
+		thirdPersonRange = 100.0f;
+		cgFov = cg_oversizedview.value;
+	}
 	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 	{
 		thirdPersonPitchOffset = -11.25f;
 		thirdPersonRange = 82.5f;
 		cgFov = cg_saberlockfov.value;
-	}
-	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
-	{
-		thirdPersonPitchOffset = +50.0f;
-		thirdPersonRange = 120.0f;
-		cgFov = cg_oversizedview.value;
-	}
-	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
-	{
-		thirdPersonPitchOffset = -10.0f;
-		thirdPersonRange = 60.0f;
-		cgFov = cg_undersizedview.value;
 	}
 	else
 	{
@@ -1695,7 +1705,7 @@ static int CG_CalcViewValues(void)
 			{
 				VectorCopy(ps->viewangles, cg.refdef.viewangles);
 			}
-		}
+}
 #else// VEH_CONTROL_SCHEME_4
 		if (cg.predicted_player_state.m_iVehicleNum //in a vehicle
 			&& BG_UnrestrainedPitchRoll(&cg.predicted_player_state,

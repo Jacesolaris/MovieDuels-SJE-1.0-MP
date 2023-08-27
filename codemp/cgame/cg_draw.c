@@ -7425,7 +7425,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				}
 				else if (cross_ent->currentState.teamowner == 16 ||
 					cgs.gametype >= GT_MOVIEDUELS_TEAM &&
-					cross_ent->currentState.teamowner && cross_ent->currentState.teamowner !=cgs.clientinfo[cg.snap->ps.client_num].team)
+					cross_ent->currentState.teamowner && cross_ent->currentState.teamowner != cgs.clientinfo[cg.snap->ps.client_num].team)
 				{
 					ecolor[0] = 1.0f; //R
 					ecolor[1] = 0.0f; //G
@@ -7585,7 +7585,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				cg.snap->ps.weapon == WP_BRYAR_PISTOL ||
 				cg.snap->ps.weapon == WP_STUN_BATON)
 			{
-				h_shader = cgs.media.crosshairShader[7];
+				h_shader = cgs.media.crosshairShader[5];
 			}
 			else if (cg.snap->ps.weapon == WP_ROCKET_LAUNCHER)
 			{

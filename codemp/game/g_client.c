@@ -2539,10 +2539,9 @@ qboolean client_userinfo_changed(const int client_num)
 		return qfalse;
 	}
 
-
 	s = Info_ValueForKey(userinfo, "g_adminpassword");
 	if (!Q_stricmp(s, ""))
-	{ 
+	{
 		//Blank? Don't log in!
 	}
 	else if (!Q_stricmp(s, g_adminpassword.string))
@@ -2859,7 +2858,17 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jangoJA_fett/main2")
 			|| Class_Model(model, "jangoJA_fett/default")
 			|| Class_Model(model, "jangofett_mp")
-			|| Class_Model(model, "bokatan"))
+			|| Class_Model(model, "bokatan")
+			|| Class_Model(model, "bokatan/nohelm")
+			|| Class_Model(model, "bobafett/mand1")
+			|| Class_Model(model, "bobafett/nohelm")
+			|| Class_Model(model, "bobafett/mand2")
+			|| Class_Model(model, "bobafett/nohelm2")
+			|| Class_Model(model, "dindjarin")
+			|| Class_Model(model, "mando_arm")
+			|| Class_Model(model, "mando_arm/jetpack")
+			|| Class_Model(model, "pazvizsla")
+			|| Class_Model(model, "dindjarin/jetpack"))
 		{
 			client->pers.nextbotclass = BCLASS_BOBAFETT;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2904,7 +2913,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "chewbacca/default")
 			|| Class_Model(model, "chewbacca/red")
 			|| Class_Model(model, "chewbacca/blue")
-			|| Class_Model(model, "cadbane"))
+			|| Class_Model(model, "cadbane")
+			|| Class_Model(model, "krrsantan"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_CHEWIE;
@@ -3360,6 +3370,7 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "jedi")
+			|| Class_Model(model, "asharad_hett_mp")
 			|| Class_Model(model, "chirrut")
 			|| Class_Model(model, "taron_malicos")
 			|| Class_Model(model, "taron_malicos_mp")
@@ -3566,6 +3577,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "barriss_offee_mp")
 			|| Class_Model(model, "lxjade/main")
 			|| Class_Model(model, "ahsoka_mp")
+			|| Class_Model(model, "ahsoka_tm")
 			|| Class_Model(model, "ahsoka_rebels_mp")
 			|| Class_Model(model, "anakin_ep2_mp")
 			|| Class_Model(model, "jedi_hf")
@@ -3813,7 +3825,10 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "rey/head_a1|torso_a1|lower_a1")
 			|| Class_Model(model, "rey")
 			|| Class_Model(model, "rey_mp")
+			|| Class_Model(model, "rey_mp/resistance")
 			|| Class_Model(model, "rey_skywalker_mp")
+			|| Class_Model(model, "rey_skywalker_mp/hood")
+			|| Class_Model(model, "rey_mp/jedi")
 			|| Class_Model(model, "st_rey")
 			|| Class_Model(model, "jedi_st_rey")
 			|| Class_Model(model, "lb/")
@@ -3873,6 +3888,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "luke_rotj_mp/master")
 			|| Class_Model(model, "luke_rotj_mp/tm_tunic")
 			|| Class_Model(model, "luke_rotj_mp/default_fd")
+			|| Class_Model(model, "luke_tfa_mp/cloak_glove")
+			|| Class_Model(model, "luke_tfa_mp/hood_glove")
 			|| Class_Model(model, "galen_arena_cg_mp")
 			|| Class_Model(model, "galen_hero_armor_mp")
 			|| Class_Model(model, "galen_kamino_tsg_mp")
@@ -3893,7 +3910,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (Class_Model(model, "ea_ep2anakin"))
+		else if (Class_Model(model, "ea_ep2anakin")
+			|| Class_Model(model, "ahsoka_tm"))
 		{
 			client->pers.nextbotclass = BCLASS_DUELS;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4053,12 +4071,17 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "rebel")
+			|| Class_Model(model, "rose_tico")
 			|| Class_Model(model, "rebel_pilot_tfu")
 			|| Class_Model(model, "militiasaboteur")
 			|| Class_Model(model, "militiatrooper")
 			|| Class_Model(model, "rebel/main")
 			|| Class_Model(model, "rebel/red")
 			|| Class_Model(model, "rebel/blue")
+			|| Class_Model(model, "poe")
+			|| Class_Model(model, "poe/helmet")
+			|| Class_Model(model, "poe/officer")
+			|| Class_Model(model, "poe/resistance")
 			|| Class_Model(model, "ackbar"))
 		{
 			client->pers.nextbotclass = BCLASS_REBEL;
@@ -4264,7 +4287,9 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "deathtrooper/commander")
 			|| Class_Model(model, "shoretrooper")
 			|| Class_Model(model, "shoretrooper/tank")
-			|| Class_Model(model, "bibfortuna"))
+			|| Class_Model(model, "bibfortuna")
+			|| Class_Model(model, "greef")
+			|| Class_Model(model, "caradune"))
 		{
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
@@ -4302,7 +4327,9 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Itho2")
 			|| Class_Model(model, "Itho3")
 			|| Class_Model(model, "Itho4")
-			|| Class_Model(model, "ithorian"))
+			|| Class_Model(model, "ithorian")
+			|| Class_Model(model, "nrep_sold")
+			|| Class_Model(model, "nrsd_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
@@ -4377,12 +4404,13 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "bkzam/main3")
 			|| Class_Model(model, "4lom/main")
 			|| Class_Model(model, "4lom/")
-			|| Class_Model(model, "asharad_hett_mp")
 			|| Class_Model(model, "tusken")
 			|| Class_Model(model, "tusken/main")
 			|| Class_Model(model, "tusken/blue")
 			|| Class_Model(model, "tusken/red")
-			|| Class_Model(model, "boushh/default"))
+			|| Class_Model(model, "boushh/default")
+			|| Class_Model(model, "fennec")
+			|| Class_Model(model, "fennec/helmet"))
 		{
 			client->pers.nextbotclass = BCLASS_TUSKEN_SNIPER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4434,6 +4462,7 @@ qboolean client_userinfo_changed(const int client_num)
 		}
 		else if (Class_Model(model, "ugnaught")
 			|| Class_Model(model, "ew/main")
+			|| Class_Model(model, "kuiil")
 			|| Class_Model(model, "ew"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLER;
@@ -4596,7 +4625,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "yaddle_mp")
 			|| Class_Model(model, "yoda_mp")
 			|| Class_Model(model, "yodavm")
-			|| Class_Model(model, "pic_mp"))
+			|| Class_Model(model, "pic_mp")
+			|| Class_Model(model, "grogu"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLEST;
 			client->pers.nextbotclass = BCLASS_YODA;
@@ -5455,7 +5485,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 	//		client->areabits = G_Alloc( (trap->AAS_PointReachabilityAreaIndex( NULL ) + 7) / 8 );
 
 	return NULL;
-	}
+}
 
 void G_WriteClientSessionData(const gclient_t* client);
 
@@ -7476,6 +7506,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_CHEWIE:
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SENTRY_GUN;
@@ -7814,6 +7846,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_MANDOLORIAN1:
 			client->ps.stats[STAT_ARMOR] = 300;
@@ -7824,6 +7858,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_MANDOLORIAN2:
 			client->ps.stats[STAT_ARMOR] = 300;
@@ -7834,6 +7870,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_SOILDER:
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
@@ -8488,7 +8526,7 @@ void ClientSpawn(gentity_t* ent)
 
 	Player_CheckBurn(ent);
 	Player_CheckFreeze(ent);
-		}
+}
 
 /*
 ===========

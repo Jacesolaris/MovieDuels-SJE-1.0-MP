@@ -48,6 +48,7 @@ extern qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, i
 	vec3_t blade_dir, int mod);
 extern int G_GetHitLocation(const gentity_t* target, vec3_t ppoint);
 int saberSpinSound = 0;
+void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 extern saber_moveName_t PM_SaberBounceForAttack(int move);
 qboolean PM_SaberInTransition(int move);
 qboolean PM_SaberInDeflect(int move);
@@ -5030,7 +5031,7 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 	}
 }
 
-extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,qboolean break_saber_lock);
+extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean break_saber_lock);
 static qboolean saberDoClashEffect = qfalse;
 static vec3_t saberClashPos = { 0 };
 static vec3_t saberClashNorm = { 0 };
@@ -6870,16 +6871,11 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	const float hilt_radius = self->client->saber[r_saber_num].blade[r_blade_num].radius * 1.2f;
 	const qboolean saber_in_kill_move = PM_SaberInKillMove(self->client->ps.saber_move);
 
-	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Normal Blocking
-	const qboolean self_active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse; //Active Blocking
-	const qboolean self_m_blocking = self->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
-	//Perfect Blocking
+	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;	//Normal Blocking
+	const qboolean self_active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse; //Active Blocking
+	const qboolean self_m_blocking = self->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;//Perfect Blocking
 
-	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberEntityNum && self->client->ps.fd.saber_anim_levelBase
-		!= SS_DUAL)
+	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberEntityNum && self->client->ps.fd.saber_anim_levelBase != SS_DUAL)
 	{
 		// register as a hit so we don't do a lot of interpolation.
 		self->client->ps.saberBlocked = BLOCKED_NONE;
@@ -6903,32 +6899,27 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	/////////////////////////////SABERBLADE BOX SIZE///////////////////////////////////////
 	if (self->client->ps.weaponTime <= 0) //
 	{
-		//
-		VectorClear(saber_tr_mins); //
-		VectorClear(saber_tr_maxs); //
-	} //
-	else if (self_holding_block || self_active_blocking || self_m_blocking || //
-		BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex)) //
+		VectorClear(saber_tr_mins);
+		VectorClear(saber_tr_maxs);
+	}
+	else if (self_holding_block || self_active_blocking || self_m_blocking ||
+		BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex))
 	{
-		//Setting things up so the game always does realistic box traces for the sabers.    //
-		saber_box_size += (d_saberBoxTraceSize.value + hilt_radius * 0.5f) * 3.0f; //
-		//
-		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size); //
-		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 4); //
-	} //
-	else //
+		//Setting things up so the game always does realistic box traces for the sabers.
+		saber_box_size += (d_saberBoxTraceSize.value + hilt_radius * 0.5f) * 3.0f;
+		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size);
+		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 4);
+	}
+	else
 	{
-		//
-		saber_box_size += self->client->saber[r_saber_num].blade[r_blade_num].radius * 0.5f; //
-		//
-		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size); //
-		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 3); //
-	} //
+		saber_box_size += self->client->saber[r_saber_num].blade[r_blade_num].radius * 0.5f;
+		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size);
+		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 3);
+	}
 	/////////////////////////////SABERBLADE BOX SIZE///////////////////////////////////////
 
 	const int real_trace_result = g_real_trace(self, &tr, saber_start, saber_tr_mins, saber_tr_maxs, saber_end,
-		self->s.number,
-		tr_mask, r_saber_num, r_blade_num);
+		self->s.number, tr_mask, r_saber_num, r_blade_num);
 
 	if (real_trace_result == REALTRACE_MISS || real_trace_result == REALTRACE_HIT_WORLD)
 	{
@@ -7308,6 +7299,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			DebounceSaberImpact(self, blocker, r_saber_num, r_blade_num, sabimpactentitynum);
 			return qtrue;
 		}
+
+		if (victim->flags & FL_SABERDAMAGE_RESIST && (!Q_irand(0, 1)))
+		{
+			dflags |= DAMAGE_NO_DAMAGE;
+			G_Beskar_Attack_Bounce(self, victim);
+			G_Sound(victim, CHAN_AUTO, G_SoundIndex("sound/weapons/impacts/beskar_impact1.mp3"));
+		}
 		//hit!
 		//determine if this saber blade does dismemberment or not.
 		if (!WP_SaberBladeUseSecondBladeStyle(&self->client->saber[r_saber_num], r_blade_num)
@@ -7434,7 +7432,6 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 				{
 					//do bounce sound & force feedback
 					gentity_t* te = NULL;
-
 
 					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
 
@@ -16304,4 +16301,25 @@ qboolean WP_SaberNPCFatiguedParry(gentity_t* blocker, gentity_t* attacker, const
 		return qtrue;
 	}
 	return qfalse;
+}
+
+void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other)
+{
+	if (self->client->ps.saberBlocked == BLOCKED_NONE)
+	{
+		if (!pm_saber_in_special_attack(self->client->ps.torsoAnim))
+		{
+			if (SaberAttacking(self))
+			{
+				// Saber is in attack, use bounce for this attack.
+				self->client->ps.saberBounceMove = PM_SaberBounceForAttack(self->client->ps.saber_move);
+				self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
+			}
+			else
+			{
+				// Saber is in defense, use defensive bounce.
+				self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
+			}
+		}
+	}
 }

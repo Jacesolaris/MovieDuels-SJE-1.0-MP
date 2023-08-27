@@ -59,9 +59,9 @@ enum
 	HOLSTER_RIGHTHIP,
 };
 
-//max char size of individual holster.cfg files
+//max char size of individual holster_mp.cfg files
 #define		MAX_HOLSTER_INFO_SIZE					8192
-//max char size for the individual holster.cfg holster type data
+//max char size for the individual holster_mp.cfg holster type data
 #define		MAX_HOLSTER_GROUP_SIZE					MAX_HOLSTER_INFO_SIZE/3
 
 #endif
