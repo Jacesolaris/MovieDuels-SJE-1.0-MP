@@ -5029,7 +5029,7 @@ void ClientThink_real(gentity_t* ent)
 					else
 					{
 						if (client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING && level.time - client->ps.
-							ManualblockStartTime >= 500)
+							ManualblockStartTime >= g_SaberPerfectBlockingTimerEasy.integer)
 						{
 							// Been holding block for too long....Turn off
 							client->ps.ManualBlockingFlags &= ~(1 << PERFECTBLOCKING);
@@ -5051,7 +5051,7 @@ void ClientThink_real(gentity_t* ent)
 					else
 					{
 						if (client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING && level.time - client->ps.
-							ManualblockStartTime >= 200)
+							ManualblockStartTime >= g_SaberPerfectBlockingTimerNormal.integer)
 						{
 							// Been holding block for too long....Turn off
 							client->ps.ManualBlockingFlags &= ~(1 << PERFECTBLOCKING);
@@ -5073,7 +5073,7 @@ void ClientThink_real(gentity_t* ent)
 					else
 					{
 						if (client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING && level.time - client->ps.
-							ManualblockStartTime >= 80)
+							ManualblockStartTime >= g_SaberPerfectBlockingTimerHard.integer)
 						{
 							// Been holding block for too long....Turn off
 							client->ps.ManualBlockingFlags &= ~(1 << PERFECTBLOCKING);
@@ -5408,7 +5408,7 @@ void ClientThink_real(gentity_t* ent)
 			{
 				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
 			}
-			}
+		}
 		else if (client->ps.saberLockTime > level.time && !Is_Undersized_Gunner(ent) && !Is_Oversized_Gunner(ent))
 		{
 			if (!(client->ps.communicatingflags & 1 << CF_SABERLOCKING))
@@ -5497,14 +5497,14 @@ void ClientThink_real(gentity_t* ent)
 			if (client->ps.forceHandExtend != HANDEXTEND_POSTTHROWN)
 			{
 				client->ps.forceHandExtend = HANDEXTEND_NONE;
-		}
+			}
 
 			if (thrower->inuse && thrower->client)
 			{
 				thrower->client->doingThrow = 0;
 				thrower->client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
-	}
+		}
 		else if (thrower->inuse && thrower->client && thrower->ghoul2 &&
 			trap->G2API_HaveWeGhoul2Models(thrower->ghoul2))
 		{
@@ -5668,7 +5668,7 @@ void ClientThink_real(gentity_t* ent)
 				}
 			}
 		}
-}
+	}
 	else if (client->ps.heldByClient)
 	{
 		client->ps.heldByClient = 0;
@@ -6677,7 +6677,7 @@ void ClientThink_real(gentity_t* ent)
 			ent->client->ps.m_iVehicleNum = 0;
 		}
 	}
-	}
+}
 
 /*
 ==================

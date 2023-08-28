@@ -239,5 +239,8 @@ XCVAR_DEF(g_adminlogout_saying, "has logged out as admin", NULL, CVAR_ARCHIVE, q
 XCVAR_DEF(g_chat_protection, "1", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_spawn_protection, "1", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_adminpunish_saying, "is about to be\nPUNISHED!", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_SaberPerfectBlockingTimerEasy, "250", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_SaberPerfectBlockingTimerNormal, "150", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_SaberPerfectBlockingTimerHard, "50", NULL, CVAR_ARCHIVE, qtrue)
 
 #undef XCVAR_DEF
