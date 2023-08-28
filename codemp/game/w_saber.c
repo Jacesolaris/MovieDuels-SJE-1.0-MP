@@ -7290,6 +7290,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		int dflags = 0;
 
 		gentity_t* victim = &g_entities[tr.entity_num];
+		const int index = Q_irand(1, 3);
 
 		if (dmg <= SABER_NONATTACK_DAMAGE || (G_DoSaberDodge(victim, self, tr.endpos, -1, &dmg, MOD_SABER)))
 		{
@@ -7304,7 +7305,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		{
 			dflags |= DAMAGE_NO_DAMAGE;
 			G_Beskar_Attack_Bounce(self, victim);
-			G_Sound(victim, CHAN_AUTO, G_SoundIndex("sound/weapons/impacts/beskar_impact1.mp3"));
+			G_Sound(victim, CHAN_BODY, G_SoundIndex(va("sound/weapons/impacts/beskar_impact%d.mp3", index)));
 		}
 		//hit!
 		//determine if this saber blade does dismemberment or not.
