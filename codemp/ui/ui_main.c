@@ -1042,9 +1042,6 @@ void UI_SetActiveMenu(uiMenuCommand_t menu)
 			Menus_ActivateByName("ingame_siegeobjectives");
 			return;
 		case UIMENU_VOICECHAT:
-			// trap->Cvar_Set( "cl_paused", "1" );
-			// No chatin non-siege games.
-
 			if (trap->Cvar_VariableValue("g_gametype") < GT_MOVIEDUELS_TEAM)
 			{
 				return;
@@ -1072,6 +1069,12 @@ void UI_SetActiveMenu(uiMenuCommand_t menu)
 				UI_LoadSingleMenuFile(va("ui/%s.menu", buf));
 				Menus_ActivateByName(buf);
 			}
+			return;
+		case UIMENU_ADMIN:
+			trap->Key_SetCatcher(KEYCATCH_UI);
+			Menus_CloseAll();
+			Menus_ActivateByName("ingame_admin");
+			return;
 		}
 	}
 }
@@ -7789,6 +7792,27 @@ static void UI_RunMenuScript(char** args)
 			trap->Key_SetCatcher(KEYCATCH_UI);
 			Menus_CloseAll();
 			Menus_ActivateByName("main");
+		}
+		else if (Q_stricmp(name, "AdminMenuKick") == 0)
+		{
+			if (uiInfo.playerIndex >= 0 && uiInfo.playerIndex < uiInfo.playerCount)
+			{
+				trap->Cmd_ExecuteText(EXEC_APPEND, va("Adminkick \"%i\"\n", uiInfo.playerIndexes[uiInfo.playerIndex]));
+			}
+		}
+		else if (Q_stricmp(name, "AdminMenuChangeMap") == 0) 
+		{
+			if (ui_netGametype.integer >= 0 && ui_netGametype.integer < uiInfo.numGameTypes && ui_currentNetMap.integer >= 0 && ui_currentNetMap.integer < uiInfo.mapCount)
+			{
+				trap->Cmd_ExecuteText(EXEC_APPEND, va("Adminchangemap %i %s\n", uiInfo.gameTypes[ui_netGametype.integer].gtEnum, uiInfo.mapList[ui_currentNetMap.integer].mapLoadName));
+			}
+		}
+		else if (Q_stricmp(name, "AdminMenuPunish") == 0)
+		{
+			if (uiInfo.playerIndex >= 0 && uiInfo.playerIndex < uiInfo.playerCount)
+			{
+				trap->Cmd_ExecuteText(EXEC_APPEND, va("Adminpunish \"%i\"\n", uiInfo.playerIndexes[uiInfo.playerIndex]));
+			}
 		}
 		else
 		{

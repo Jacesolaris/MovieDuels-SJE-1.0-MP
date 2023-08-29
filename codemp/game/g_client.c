@@ -2552,7 +2552,6 @@ qboolean client_userinfo_changed(const int client_num)
 			ent->r.svFlags |= SVF_ADMIN;
 			strcpy(ent->client->pers.login, g_adminlogin_saying.string);
 			strcpy(ent->client->pers.logout, g_adminlogout_saying.string);
-			ent->client->pers.bitvalue = g_admincontrol.integer;
 		}
 	}
 
@@ -2606,12 +2605,12 @@ qboolean client_userinfo_changed(const int client_num)
 			if (g_noPadawanNames.integer != 0)
 			{
 				client->pers.padawantimer = 30;
-				client->pers.ampadawan = 1;
+				client->pers.isapadawan = 1;
 			}
 		}
 		else
 		{
-			client->pers.ampadawan = 0;
+			client->pers.isapadawan = 0;
 		}
 	}
 
@@ -5606,7 +5605,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 			Q_strncpyz(sTemp, G_GetStringEdString("MP_SVGAME", "INVALID_ESCAPE_TO_MAIN"), sizeof sTemp);
 			return sTemp; // return "Invalid password";
 		}
-}
+	}
 
 	if (!isBot && firstTime)
 	{
@@ -6312,8 +6311,8 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
+		}
 	}
-}
 #endif
 }
 
@@ -6863,7 +6862,7 @@ void ClientSpawn(gentity_t* ent)
 		else
 		{
 			//New class system
-			if (ent->s.eType != ET_NPC && (!(ent->r.svFlags & SVF_BOT)) &&// no npcs,handled in npc.cfg
+			if (ent->s.eType != ET_NPC && // no npcs,handled in npc.cfg
 				level.gametype != GT_MOVIEDUELS_SIEGE)
 			{
 				//use class-specified weapons
@@ -8688,6 +8687,7 @@ void ClientSpawn(gentity_t* ent)
 		if (ent->client->sess.sessionTeam != TEAM_SPECTATOR)
 		{
 			g_kill_box(ent);
+			
 			if (client->ps.weapon <= WP_NONE)
 			{
 				client->ps.weapon = WP_BRYAR_PISTOL;

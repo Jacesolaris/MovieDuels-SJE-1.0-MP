@@ -441,7 +441,9 @@ static const char* gcmds[] = {
 	"Adminlogout",
 	"Adminnpc",
 	"Adminchangemap",
-	"Adminpunish"
+	"Adminpunish",
+	"Adminkick",
+	"Adminmenu"
 };
 static const size_t numgcmds = ARRAY_LEN(gcmds);
 

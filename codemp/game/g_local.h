@@ -701,13 +701,13 @@ typedef struct clientPersistant_s
 	int save_score;
 
 	int	padawantimer;
-	qboolean	ampadawan;
+	qboolean	isapadawan;
 	int			iamanadmin;
 	int			bitvalue;
 	char		login[1024];
 	char		logout[1024];
 	qboolean	plugindetect;
-	qboolean	amsplat;
+	qboolean	isbeingpunished;
 } clientPersistant_t;
 
 typedef struct renderInfo_s

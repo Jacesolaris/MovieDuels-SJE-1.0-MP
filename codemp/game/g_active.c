@@ -1238,15 +1238,6 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 	{
 		client->timeResidual -= 1000;
 
-		if (client->pers.iamanadmin == 1 && (client->pers.connected == CON_CONNECTED) && !(ent->r.svFlags & SVF_BOT))
-		{
-			if (client->pers.bitvalue != g_admincontrol.integer)
-			{
-				client->pers.bitvalue = g_admincontrol.integer;
-				trap->SendServerCommand(ent - g_entities, va("print \"^1Admin control has just changed on your admin level. Type in /MyAdminCommands to see available commands.\n\""));
-			}
-		}
-
 		// if out of trip mines or thermals, remove them from weapon selection
 		if (client->ps.ammo[AMMO_THERMAL] == 0)
 		{
@@ -1357,15 +1348,15 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		Player_CheckBurn(ent);
 		Player_CheckFreeze(ent);
 
-		if (client->pers.padawantimer >= 3 && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		if (client->pers.padawantimer >= 3 && client->pers.isapadawan == 1 && g_noPadawanNames.integer != 0)
 		{
 			trap->SendServerCommand(ent - g_entities, va("cp \"The Name ^1padawan ^7is not allowed here!\nPlease change it in ^3%d seconds,\nor your name will be changed.\n\"", client->pers.padawantimer));
 			client->pers.padawantimer--;
 		}
 
-		if ((client->pers.padawantimer == 2 || client->pers.padawantimer == 1) && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		if ((client->pers.padawantimer == 2 || client->pers.padawantimer == 1) && client->pers.isapadawan == 1 && g_noPadawanNames.integer != 0)
 		{
-			client->pers.ampadawan = 0;
+			client->pers.isapadawan = 0;
 			G_Rename_Player(&g_entities[client_num], PickName());
 			trap->SendServerCommand(ent - g_entities, va("cp \"^1Padawan names are not allowed, you have been ^1forcefully renamed.\n\""));
 		}
@@ -1525,7 +1516,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 
 			if (dmflags.integer & DF_NO_FALLING)
 			{
-				if (ent->client->pers.amsplat == 0)
+				if (Client->pers.isbeingpunished == 0)
 				{
 					break;
 				}
@@ -1595,7 +1586,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 
 			if (dmflags.integer & DF_NO_FALLING)
 			{
-				if (ent->client->pers.amsplat == 0)
+				if (ent->client->pers.isbeingpunished == 0)
 				{
 					break;
 				}
@@ -4369,7 +4360,7 @@ void ClientThink_real(gentity_t* ent)
 	if (ent && ent->client && (ent->client->ps.eFlags & EF_TALK))
 	{
 #ifdef _GAME
-		if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat)
+		if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.isbeingpunished)
 		{
 			ent->flags |= FL_GODMODE;
 		}
@@ -4378,26 +4369,7 @@ void ClientThink_real(gentity_t* ent)
 	else
 	{
 #ifdef _GAME
-		if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat)
-		{
-			ent->flags &= ~FL_GODMODE;
-		}
-#endif
-	}
-
-	if (ent && ent->client && (ent->client->ps.eFlags & EF_TELEPORT_BIT))
-	{
-#ifdef _GAME
-		if (g_spawn_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat && !ent->client->ps.eFlags & EF_TALK)
-		{
-			ent->flags |= FL_GODMODE;
-		}
-#endif
-	}
-	else
-	{
-#ifdef _GAME
-		if (g_spawn_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.amsplat && !ent->client->ps.eFlags & EF_TALK)
+		if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.isbeingpunished)
 		{
 			ent->flags &= ~FL_GODMODE;
 		}
@@ -4474,6 +4446,26 @@ void ClientThink_real(gentity_t* ent)
 			{
 				if (client->ps.userInt2 != 1)
 					client->ps.userInt2 = 1;
+			}
+
+			if (client->pers.isbeingpunished)
+			{
+				if (!client->ps.duelInProgress)
+				{
+					ent->takedamage = qtrue;
+					client->damage_fromWorld = qtrue;
+					client->ps.forceRestricted = qtrue;
+					ent->flags &= ~FL_GODMODE;
+					if (client->jetPackOn)
+					{
+						Jetpack_Off(ent);
+					}
+					if (client->ps.groundEntityNum != ENTITYNUM_NONE && !(ent->client->ps.fd.forcePowersActive & (1 << FP_LEVITATION)))
+					{
+						//We're not jumping, we're on the floor. SO SMACK THAT BITCH UP!
+						client->ps.velocity[2] += 1000;
+					}
+				}
 			}
 		}
 	}
@@ -5745,7 +5737,7 @@ void ClientThink_real(gentity_t* ent)
 	if (pmove.ps->pm_type == PM_DEAD)
 	{
 		pmove.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;
-		ent->client->pers.amsplat = 0;
+		ent->client->pers.isbeingpunished = 0;
 	}
 	/*else if (ent->r.svFlags & SVF_BOT)
 	{

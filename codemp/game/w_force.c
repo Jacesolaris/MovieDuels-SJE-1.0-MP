@@ -998,7 +998,7 @@ int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const 
 
 	if (other && other->client && forcePower == FP_PUSH)
 	{
-		if (other->client->pers.amsplat == 1)
+		if (other->client->pers.isbeingpunished == 1)
 		{
 			return 0;
 		}
@@ -1009,7 +1009,7 @@ int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const 
 	}
 	else if (other && other->client && forcePower == FP_PULL)
 	{
-		if (other->client->pers.amsplat == 1)
+		if (other->client->pers.isbeingpunished == 1)
 		{
 			return 0;
 		}

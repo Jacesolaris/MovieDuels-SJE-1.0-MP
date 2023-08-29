@@ -716,9 +716,11 @@ void Cmd_TeamTask_f(gentity_t* ent) {
 void G_Kill(gentity_t* ent)
 {
 	if (in_camera)
+	{
 		return;
+	}
 
-	if (ent->client->pers.amsplat == qtrue)
+	if (ent->client->pers.isbeingpunished == qtrue)
 	{
 		return;
 	}
@@ -2543,6 +2545,17 @@ void Svcmd_ToggleAllowVote_f(void)
 		g_allowVote.integer & 1 << index ? "^2Enabled" : "^1Disabled");
 }
 
+void CG_AdminMenu(gentity_t* ent)
+{
+	if (!(ent->r.svFlags & SVF_ADMIN))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Must login with /adminlogin (password)\n\"");
+		return;
+	}
+
+	trap->SendServerCommand(ent - g_entities, "openadminmenu");
+}
+
 void Cmd_ChangeMap(gentity_t* ent)
 {
 	char   arg1[MAX_STRING_CHARS];
@@ -2601,26 +2614,84 @@ void Cmd_Punish(gentity_t* ent)
 		trap->SendServerCommand(ent - g_entities, va("print \"Client is currently dueling. Please wait for them to finish.\n\""));
 		return;
 	}
+	
 	if (g_entities[client_id].health > 0)
 	{
+		gentity_t* kEnt = &g_entities[client_id];
+
 		G_ScreenShake(g_entities[client_id].client->ps.origin, &g_entities[client_id], 3.0f, 2000, qtrue);
 
 		G_LogPrintf("Punishment admin command executed by %s on %s.\n", ent->client->pers.netname, g_entities[client_id].client->pers.netname);
 
-		trap->SendServerCommand(-1, va("cp \"%s^7\n%s\n\"", g_entities[client_id].client->pers.netname, g_adminpunish_saying.string));
-		trap->SendServerCommand(-1, va("print \"%s^7 %s\n\"", g_entities[client_id].client->pers.netname, g_adminpunish_saying.string));
+		trap->SendServerCommand(-1, va("cp \"%s^7\n%s\n\"", g_entities[client_id].client->pers.netname, g_adminpunishment_saying.string));
 
 		g_entities[client_id].client->ps.velocity[2] += 1000;
-		g_entities[client_id].client->pers.amsplat = 1;
+		g_entities[client_id].client->pers.isbeingpunished = 1;
 		g_entities[client_id].client->ps.forceDodgeAnim = 0;
 		g_entities[client_id].client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
 		g_entities[client_id].client->ps.forceHandExtendTime = level.time + Q3_INFINITE;
 		g_entities[client_id].client->ps.quickerGetup = qfalse;
+		
+		if (kEnt->inuse && kEnt->client)
+		{
+			g_entities[client_id].flags &= ~FL_GODMODE;
+			g_entities[client_id].client->ps.stats[STAT_HEALTH] = kEnt->health = -99999;
+			player_die(kEnt, kEnt, kEnt, 100000, MOD_SUICIDE);
+		}
 	}
 	else
 	{
 		return;
 	}
+}
+
+void Cmd_Kick(gentity_t* ent)
+{
+	int client_id = -1;
+	char   arg1[MAX_STRING_CHARS];
+
+	if (!(ent->r.svFlags & SVF_ADMIN))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Must login with /adminlogin (password)\n\"");
+		return;
+	}
+
+	trap->Argv(1, arg1, sizeof(arg1));
+	client_id = G_ClientNumberFromArg(arg1);
+
+	if (client_id == -1)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Can't find client ID for %s\n\"", arg1));
+		return;
+	}
+	if (client_id == -2)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Ambiguous client ID for %s\n\"", arg1));
+		return;
+	}
+	if (client_id >= MAX_CLIENTS || client_id < 0)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Bad client ID for %s\n\"", arg1));
+		return;
+	}
+	// either we have the client id or the string did not match
+	if (!g_entities[client_id].inuse)
+	{ // check to make sure client slot is in use
+		trap->SendServerCommand(ent - g_entities, va("print \"Client %s is not active\n\"", arg1));
+		return;
+	}
+	if (client_id == ent->client->ps.client_num)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"You cant kick yourself.\n\""));
+		return;
+	}
+	if (g_entities[client_id].client->sess.spectatorState == SPECTATOR_FOLLOW)
+	{
+		g_entities[client_id].client->sess.spectatorState = SPECTATOR_FREE;
+	}
+	trap->DropClient(client_id, "was Kicked");
+
+	G_LogPrintf("Kick command executed by %s on %s.\n", ent->client->pers.netname, g_entities[client_id].client->pers.netname);
 }
 
 void Cmd_AdminLogin(gentity_t* ent)
@@ -2645,8 +2716,6 @@ void Cmd_AdminLogin(gentity_t* ent)
 	{
 		if (strcmp(password, g_adminpassword.string) == 0)
 		{
-			ent->client->pers.bitvalue = g_admincontrol.integer;
-
 			strcpy(ent->client->pers.login, g_adminlogin_saying.string);
 			strcpy(ent->client->pers.logout, g_adminlogout_saying.string);
 
@@ -2657,6 +2726,8 @@ void Cmd_AdminLogin(gentity_t* ent)
 			G_LogPrintf("%s %s\n", ent->client->pers.netname, ent->client->pers.login);
 
 			trap->SendServerCommand(-1, va("print \"%s ^7%s\n\"", ent->client->pers.netname, ent->client->pers.login));
+			
+			Com_Printf("-----Now type Adminmenu to see admin commands ----------\n");
 		}
 		else
 		{
@@ -4127,6 +4198,8 @@ command_t commands[] = {
 	{"Adminnpc", Cmd_AdminNPC_f, CMD_CHEATOVERRIDE | CMD_ALIVE},
 	{"Adminchangemap", Cmd_ChangeMap, CMD_NOINTERMISSION},
 	{"Adminpunish", Cmd_Punish, CMD_NOINTERMISSION},
+	{"Adminkick", Cmd_Kick, CMD_NOINTERMISSION},
+	{"Adminmenu", CG_AdminMenu, CMD_NOINTERMISSION},
 };
 static const size_t num_commands = ARRAY_LEN(commands);
 
