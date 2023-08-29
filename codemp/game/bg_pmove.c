@@ -2796,9 +2796,9 @@ static void PM_Friction(void)
 	else if (pm_flying != FLY_NORMAL && pm_flying != FLY_VEHICLE)
 	{
 		// apply ground friction
-		if (pm->waterlevel <= 1)
+		if (pm->watertype & CONTENTS_LADDER || pm->waterlevel <= 1)
 		{
-			if (pml.walking && !(pml.groundTrace.surfaceFlags & SURF_SLICK))
+			if (pm->watertype & CONTENTS_LADDER || pml.walking && !(pml.groundTrace.surfaceFlags & SURF_SLICK))
 			{
 				// if getting knocked back, no friction
 				if (!(pm->ps->pm_flags & PMF_TIME_KNOCKBACK) && !(pm->ps->pm_flags & PMF_TIME_NOFRICTION))
@@ -2816,7 +2816,7 @@ static void PM_Friction(void)
 							if (pm->cmd.forwardmove < 0)
 							{
 								//trying to hold back some
-								friction *= 0.5f; //0.25f;
+								friction *= 0.4f; //0.25f;
 							}
 							else
 							{
@@ -2824,8 +2824,8 @@ static void PM_Friction(void)
 								friction *= 0.2f; //0.1f;
 							}
 							pm->cmd.forwardmove = pm->cmd.rightmove = 0;
-							if (pml.groundPlane && pm->ps->legsAnim == BOTH_FORCELONGLEAP_LAND || pm->ps->legsAnim ==
-								BOTH_FORCELONGLEAP_LAND2)
+
+							if (pml.groundPlane && (pm->ps->legsAnim == BOTH_FORCELONGLEAP_LAND || pm->ps->legsAnim == BOTH_FORCELONGLEAP_LAND2))
 							{
 #ifdef _GAME
 								G_PlayEffect(EFFECT_LANDING_SAND, pml.groundTrace.endpos, pml.groundTrace.plane.normal);
@@ -3896,22 +3896,14 @@ qboolean PM_AdjustAnglesForKnockdown(playerState_t* ps, usercmd_t* ucmd)
 
 qboolean PM_AdjustAnglesForLongJump(playerState_t* ps, usercmd_t* ucmd)
 {
-	if (ps->legsAnim == BOTH_FORCELONGLEAP_START
-		|| ps->legsAnim == BOTH_FORCELONGLEAP_ATTACK
-		|| ps->legsAnim == BOTH_FORCELONGLEAP_ATTACK2
-		|| ps->legsAnim == BOTH_FORCELONGLEAP_LAND)
+	if (ps->viewEntity <= 0 || ps->viewEntity >= ENTITYNUM_WORLD)
 	{
-		//can't turn
-		if (ps->viewEntity <= 0 || ps->viewEntity >= ENTITYNUM_WORLD)
-		{
-			//don't clamp angles when looking through a viewEntity
-			PM_SetPMViewAngle(ps, ps->viewangles, ucmd);
-		}
-		ucmd->angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - ps->delta_angles[PITCH];
-		ucmd->angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - ps->delta_angles[YAW];
-		return qtrue;
+		//don't clamp angles when looking through a viewEntity
+		PM_SetPMViewAngle(ps, ps->viewangles, ucmd);
 	}
-	return qfalse;
+	ucmd->angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - ps->delta_angles[PITCH];
+	ucmd->angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - ps->delta_angles[YAW];
+	return qtrue;
 }
 
 float G_ForceWallJumpStrength(void)
@@ -4459,8 +4451,7 @@ static qboolean pm_check_jump(void)
 				}
 				else
 				{
-					//in land-slide anim
-					//FIXME: force some forward movement?  Less if holding back?
+					//in land-slide anim?
 				}
 				if (pm->ps->groundEntityNum == ENTITYNUM_NONE //still in air
 					&& pm->ps->origin[2] < pm->ps->fd.forceJumpZStart) //dropped below original jump start
@@ -4468,7 +4459,7 @@ static qboolean pm_check_jump(void)
 					//slow down
 					pm->ps->velocity[0] *= 0.65f;
 					pm->ps->velocity[1] *= 0.65f;
-					if ((pm->ps->velocity[0] + pm->ps->velocity[1]) * 0.5f <= 10.0f)
+					if ((pm->ps->velocity[0] + pm->ps->velocity[1]) * 0.4f <= 8.0f)
 					{
 						//falling straight down
 						PM_SetAnim(SETANIM_BOTH, BOTH_FORCEINAIR1, SETANIM_FLAG_OVERRIDE);
@@ -4515,7 +4506,7 @@ static qboolean pm_check_jump(void)
 				VectorSet(fwdAngles, 0, pm->ps->viewangles[YAW], 0);
 				AngleVectors(fwdAngles, jumpFwd, NULL, NULL);
 				VectorScale(jumpFwd, FORCE_LONG_LEAP_SPEED, pm->ps->velocity); //speed
-				pm->ps->velocity[2] = 240;
+				pm->ps->velocity[2] = 250;
 				pml.groundPlane = qfalse;
 				pml.walking = qfalse;
 				pm->ps->groundEntityNum = ENTITYNUM_NONE;
@@ -18856,7 +18847,16 @@ void PmoveSingle(pmove_t* pmove)
 	PM_AdjustAngleForWallRun(pm->ps, &pm->cmd, qtrue);
 	PM_AdjustAnglesForKnockdown(pm->ps, &pm->cmd);
 	PM_AdjustAngleForWallGrab(pm->ps, &pm->cmd);
-	PM_AdjustAnglesForLongJump(pm->ps, &pm->cmd);
+
+	if (pm->ps->legsAnim == BOTH_FORCELONGLEAP_START
+		|| pm->ps->legsAnim == BOTH_FORCELONGLEAP_ATTACK
+		|| pm->ps->legsAnim == BOTH_FORCELONGLEAP_ATTACK2
+		|| pm->ps->legsAnim == BOTH_FORCELONGLEAP_LAND
+		|| pm->ps->legsAnim == BOTH_FORCELONGLEAP_LAND2)
+	{
+		//can't turn during force leap
+		PM_AdjustAnglesForLongJump(pm->ps, &pm->cmd);
+	}
 
 	if (pm->ps->saber_move == LS_A_LUNGE ||
 		pm->ps->saber_move == LS_A_BACK_CR || pm->ps->saber_move == LS_A_BACK ||

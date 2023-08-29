@@ -330,8 +330,7 @@ static void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 			count = BRYAR_MAX_CHARGE;
 		}
 
-		damage = BRYAR_PISTOL_ALT_DPDAMAGE + (float)count / BRYAR_MAX_CHARGE * (BRYAR_PISTOL_ALT_DPMAXDAMAGE -
-			BRYAR_PISTOL_ALT_DPDAMAGE);
+		damage = BRYAR_PISTOL_ALT_DPDAMAGE + (float)count / BRYAR_MAX_CHARGE * (BRYAR_PISTOL_ALT_DPMAXDAMAGE - BRYAR_PISTOL_ALT_DPDAMAGE);
 
 		missile->s.generic1 = count; // The missile will then render according to the charge level.
 
@@ -353,8 +352,7 @@ static void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 				count = BRYAR_MAX_CHARGE;
 			}
 
-			damage = BRYAR_PISTOL_ALT_DPDAMAGE + (float)count / BRYAR_MAX_CHARGE * (BRYAR_PISTOL_ALT_DPMAXDAMAGE -
-				BRYAR_PISTOL_ALT_DPDAMAGE);
+			damage = BRYAR_PISTOL_ALT_DPDAMAGE + (float)count / BRYAR_MAX_CHARGE * (BRYAR_PISTOL_ALT_DPMAXDAMAGE - BRYAR_PISTOL_ALT_DPDAMAGE);
 
 			missile2->s.generic1 = count;
 
@@ -1347,8 +1345,6 @@ static void WP_FireDisruptor(gentity_t* ent, qboolean alt_fire)
 	{
 		WP_DisruptorMainFire(ent);
 	}
-
-	G_PlayEffect(G_EffectIndex("disruptor/line_cap"), muzzle, forward);
 }
 
 /*

@@ -549,6 +549,7 @@ void CL_PlayDemo_f(void)
 	CL_Disconnect(qtrue);
 
 	Com_sprintf(extension, sizeof extension, ".dm_%d", PROTOCOL_VERSION);
+
 	if (!Q_stricmp(arg + strlen(arg) - strlen(extension), extension))
 	{
 		Com_sprintf(name, sizeof name, "demos/%s", arg);
