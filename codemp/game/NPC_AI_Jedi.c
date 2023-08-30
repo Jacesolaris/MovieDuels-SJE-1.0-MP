@@ -728,9 +728,10 @@ qboolean Boba_StopKnockdown(gentity_t* self, const gentity_t* pusher, const vec3
 	vec3_t pDir, fwd, right, ang;
 
 	if (self->client->NPC_class != CLASS_BOBAFETT
-		|| self->client->botclass != BCLASS_BOBAFETT
-		|| self->client->botclass != BCLASS_MANDOLORIAN1
-		|| self->client->botclass != BCLASS_MANDOLORIAN2)
+		&& self->client->pers.botclass != BCLASS_BOBAFETT
+		&& self->client->pers.botclass != BCLASS_JANGO_NOJP
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 	{
 		return qfalse;
 	}
@@ -3509,9 +3510,11 @@ static void Jedi_CombatDistance(const int enemy_dist)
 	}
 
 	if (NPCS.NPC->client->NPC_class == CLASS_BOBAFETT
-		|| NPCS.NPC->client->pers.nextbotclass == BCLASS_BOBAFETT
-		|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-		|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+		|| NPCS.NPC->client->pers.botclass == BCLASS_BOBAFETT
+		|| NPCS.NPC->client->pers.botclass == BCLASS_JANGO_NOJP
+		|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN
+		|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN1
+		|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN2)
 	{
 		if (!TIMER_Done(NPCS.NPC, "flameTime"))
 		{
@@ -4478,9 +4481,11 @@ evasionType_t Jedi_CheckFlipEvasions(gentity_t* self, const float rightdot, floa
 			if (self->client->NPC_class == CLASS_BOBAFETT
 				|| self->client->NPC_class == CLASS_MANDO
 				|| self->client->NPC_class == CLASS_REBORN && self->s.weapon != WP_SABER
-				|| self->client->pers.nextbotclass == BCLASS_BOBAFETT
-				|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-				|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+				|| self->client->pers.botclass == BCLASS_BOBAFETT
+				|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+				|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+				|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+				|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 			{
 				G_AddEvent(self, EV_JUMP, 0);
 			}
@@ -4578,9 +4583,11 @@ evasionType_t Jedi_CheckFlipEvasions(gentity_t* self, const float rightdot, floa
 								if (self->client->NPC_class == CLASS_BOBAFETT
 									|| self->client->NPC_class == CLASS_MANDO
 									|| self->client->NPC_class == CLASS_REBORN && self->s.weapon != WP_SABER
-									|| self->client->pers.nextbotclass == BCLASS_BOBAFETT
-									|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-									|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+									|| self->client->pers.botclass == BCLASS_BOBAFETT
+									|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+									|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+									|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+									|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 								{
 									G_AddEvent(self, EV_JUMP, 0);
 								}
@@ -4680,9 +4687,11 @@ evasionType_t Jedi_CheckFlipEvasions(gentity_t* self, const float rightdot, floa
 						if (self->client->NPC_class == CLASS_BOBAFETT
 							|| self->client->NPC_class == CLASS_MANDO
 							|| self->client->NPC_class == CLASS_REBORN && self->s.weapon != WP_SABER
-							|| self->client->pers.nextbotclass == BCLASS_BOBAFETT
-							|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-							|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+							|| self->client->pers.botclass == BCLASS_BOBAFETT
+							|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+							|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+							|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+							|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 						{
 							G_AddEvent(self, EV_JUMP, 0);
 						}
@@ -5022,9 +5031,11 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		|| self->client->ps.saberInFlight
 		|| BG_SabersOff(&self->client->ps)
 		|| self->client->NPC_class == CLASS_BOBAFETT
-		|| self->client->pers.nextbotclass == BCLASS_BOBAFETT
-		|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-		|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+		|| self->client->pers.botclass == BCLASS_BOBAFETT
+		|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+		|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+		|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+		|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 	{
 		//either it will miss by a bit (and 25% chance) OR our saber is not in-hand OR saber is off
 		if (self->NPC && (self->NPC->rank == RANK_CREWMAN || self->NPC->rank >= RANK_LT_JG))
@@ -5036,9 +5047,11 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 				&& !PM_InKnockDown(&self->client->ps) //not knocked down
 				&& (self->client->ps.saberInFlight ||
 					self->client->NPC_class == CLASS_BOBAFETT
-					|| self->client->pers.nextbotclass == BCLASS_BOBAFETT
-					|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-					|| self->client->pers.nextbotclass == BCLASS_MANDOLORIAN2 ||
+					|| self->client->pers.botclass == BCLASS_BOBAFETT
+					|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN2 ||
 					!PM_SaberInAttack(self->client->ps.saber_move) //not attacking
 					&& !PM_SaberInStart(self->client->ps.saber_move) //not starting an attack
 					&& !PM_SpinningSaberAnim(self->client->ps.torsoAnim) //not in a saber spin
@@ -6396,11 +6409,13 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 			int whichDefense = 0;
 			if (NPCS.NPC->client->ps.weaponTime || NPCS.NPC->client->ps.saberInFlight || NPCS.NPC->client->NPC_class ==
 				CLASS_BOBAFETT
-				|| NPCS.NPC->client->pers.nextbotclass == BCLASS_BOBAFETT
+				|| NPCS.NPC->client->pers.botclass == BCLASS_BOBAFETT
 				|| NPCS.NPC->client->NPC_class == CLASS_REBORN && NPCS.NPC->s.weapon != WP_SABER
 				|| NPCS.NPC->client->NPC_class == CLASS_ROCKETTROOPER
-				|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-				|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+				|| NPCS.NPC->client->pers.botclass == BCLASS_JANGO_NOJP
+				|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN
+				|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN1
+				|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN2)
 			{
 				//I'm attacking or recovering from a parry, can only try to strafe/jump right now
 				if (Q_irand(0, 10) < NPCS.NPCInfo->stats.aggression)
@@ -6640,9 +6655,11 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 						if (NPCS.NPC->client->NPC_class == CLASS_BOBAFETT
 							|| NPCS.NPC->client->NPC_class == CLASS_REBORN && NPCS.NPC->s.weapon != WP_SABER
 							|| NPCS.NPC->client->NPC_class == CLASS_ROCKETTROOPER
-							|| NPCS.NPC->client->pers.nextbotclass == BCLASS_BOBAFETT
-							|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-							|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+							|| NPCS.NPC->client->pers.botclass == BCLASS_BOBAFETT
+							|| NPCS.NPC->client->pers.botclass == BCLASS_JANGO_NOJP
+							|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN
+							|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN1
+							|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN2)
 						{
 							NPCS.NPC->client->ps.fd.forceJumpCharge = 280; //FIXME: calc this intelligently?
 						}
@@ -6893,9 +6910,11 @@ static void Jedi_FaceEnemy(const qboolean doPitch)
 	CalcEntitySpot(NPCS.NPC->enemy, SPOT_HEAD, enemy_eyes);
 
 	if (NPCS.NPC->client->NPC_class == CLASS_BOBAFETT || NPCS.NPC->client->NPC_class == CLASS_MANDO
-		|| NPCS.NPC->client->pers.nextbotclass == BCLASS_BOBAFETT
-		|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-		|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN2
+		|| NPCS.NPC->client->pers.botclass == BCLASS_BOBAFETT
+		|| NPCS.NPC->client->pers.botclass == BCLASS_JANGO_NOJP
+		|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN
+		|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN1
+		|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN2
 		&& TIMER_Done(NPCS.NPC, "flameTime")
 		&& NPCS.NPC->s.weapon != WP_NONE
 		&& NPCS.NPC->s.weapon != WP_DISRUPTOR
@@ -7486,9 +7505,11 @@ static void Jedi_CombatIdle(const int enemy_dist)
 					&& NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
 					&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
 					&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
-					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2
+					&& NPCS.NPC->client->pers.botclass != BCLASS_BOBAFETT
+					&& NPCS.NPC->client->pers.botclass != BCLASS_JANGO_NOJP
+					&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN
+					&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN1
+					&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN2
 					&& !NPCS.NPC->client->ps.saberHolstered
 					&& !Q_irand(0, 5))
 				{
@@ -7995,9 +8016,11 @@ static qboolean Jedi_TryJump(const gentity_t* goal)
 									int jumpAnim;
 									//FIXME: this should be more intelligent, like the normal force jump anim logic
 									if (NPCS.NPC->client->NPC_class == CLASS_BOBAFETT
-										|| NPCS.NPC->client->pers.nextbotclass == BCLASS_BOBAFETT
-										|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-										|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN2
+										|| NPCS.NPC->client->pers.botclass == BCLASS_BOBAFETT
+										|| NPCS.NPC->client->pers.botclass == BCLASS_JANGO_NOJP
+										|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN
+										|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN1
+										|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN2
 										|| NPCS.NPCInfo->rank != RANK_CREWMAN && NPCS.NPCInfo->rank <= RANK_LT_JG)
 									{
 										//can't do acrobatics
@@ -8018,9 +8041,11 @@ static qboolean Jedi_TryJump(const gentity_t* goal)
 								NPCS.NPC->client->ps.fd.forcePowersActive |= 1 << FP_LEVITATION;
 
 								if (NPCS.NPC->client->NPC_class == CLASS_BOBAFETT
-									|| NPCS.NPC->client->pers.nextbotclass == BCLASS_BOBAFETT
-									|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-									|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+									|| NPCS.NPC->client->pers.botclass == BCLASS_BOBAFETT
+									|| NPCS.NPC->client->pers.botclass == BCLASS_JANGO_NOJP
+									|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN
+									|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN1
+									|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN2)
 								{
 									G_SoundOnEnt(NPCS.NPC, CHAN_ITEM, "sound/boba/jeton.wav");
 									NPCS.NPC->client->jetPackTime = level.time + Q_irand(1000, 3000);
@@ -9092,9 +9117,11 @@ static void Jedi_Patrol(void)
 						NPCS.NPCInfo->stats.aggression = 3;
 					}
 					else if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT && NPCS.NPC->client->NPC_class != CLASS_MANDO
-						&& NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-						&& NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-						&& NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+						&& NPCS.NPC->client->pers.botclass != BCLASS_BOBAFETT
+						&& NPCS.NPC->client->pers.botclass != BCLASS_JANGO_NOJP
+						&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN
+						&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN1
+						&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN2)
 					{
 						//the player, toy with him
 						//get progressively more interested over time
@@ -9547,9 +9574,11 @@ static void Jedi_Attack(void)
 			if (NPCS.NPC->client->NPC_class == CLASS_BOBAFETT
 				|| NPCS.NPC->client->NPC_class == CLASS_REBORN && NPCS.NPC->s.weapon != WP_SABER
 				|| NPCS.NPC->client->NPC_class == CLASS_ROCKETTROOPER
-				|| NPCS.NPC->client->pers.nextbotclass == BCLASS_BOBAFETT
-				|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN1
-				|| NPCS.NPC->client->pers.nextbotclass == BCLASS_MANDOLORIAN2)
+				|| NPCS.NPC->client->pers.botclass == BCLASS_BOBAFETT
+				|| NPCS.NPC->client->pers.botclass == BCLASS_JANGO_NOJP
+				|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN
+				|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN1
+				|| NPCS.NPC->client->pers.botclass == BCLASS_MANDOLORIAN2)
 			{
 				if (NPCS.NPCInfo->walkDebounceTime < level.time && NPCS.NPCInfo->walkDebounceTime >= 0)
 				{
@@ -9744,9 +9773,11 @@ static void Jedi_Attack(void)
 	if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
 		&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
 		&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
-		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+		&& NPCS.NPC->client->pers.botclass != BCLASS_BOBAFETT
+		&& NPCS.NPC->client->pers.botclass != BCLASS_JANGO_NOJP
+		&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN
+		&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN2)
 	{
 		if (PM_SaberInBrokenParry(NPCS.NPC->client->ps.saber_move) || NPCS.NPC->client->ps.saberBlocked ==
 			BLOCKED_PARRY_BROKEN)
@@ -9774,9 +9805,11 @@ static void Jedi_Attack(void)
 	if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
 		&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
 		&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
-		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+		&& NPCS.NPC->client->pers.botclass != BCLASS_BOBAFETT
+		&& NPCS.NPC->client->pers.botclass != BCLASS_JANGO_NOJP
+		&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN
+		&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN2)
 	{
 		Jedi_CheckDecreasesaber_anim_level();
 	}
@@ -9802,9 +9835,11 @@ static void Jedi_Attack(void)
 		if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
 			&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
 			&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
-			|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-			|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-			|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+			&& NPCS.NPC->client->pers.botclass != BCLASS_BOBAFETT
+			&& NPCS.NPC->client->pers.botclass != BCLASS_JANGO_NOJP
+			&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN
+			&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN1
+			&& NPCS.NPC->client->pers.botclass != BCLASS_MANDOLORIAN2)
 		{
 			//saber wielders only.
 			if (NPCS.NPC->client->NPC_class == CLASS_TAVION

@@ -1029,59 +1029,6 @@ void CG_ReattachLimb(centity_t* source)
 			trap->G2API_SetSkin(source->ghoul2, 0, ci->torsoSkin, ci->torsoSkin);
 		}
 	}
-
-	/*
-	char *limbName;
-	char *stubCapName;
-	int i = G2_MODELPART_HEAD;
-
-	//rww NOTE: Assumes G2_MODELPART_HEAD is first and G2_MODELPART_RLEG is last
-	while (i <= G2_MODELPART_RLEG)
-	{
-		if (source->torsoBolt & (1 << (i-10)))
-		{
-			switch (i)
-			{
-			case G2_MODELPART_HEAD:
-				limbName = "head";
-				stubCapName = "torso_cap_head";
-				break;
-			case G2_MODELPART_WAIST:
-				limbName = "torso";
-				stubCapName = "hips_cap_torso";
-				break;
-			case G2_MODELPART_LARM:
-				limbName = "l_arm";
-				stubCapName = "torso_cap_l_arm";
-				break;
-			case G2_MODELPART_RARM:
-				limbName = "r_arm";
-				stubCapName = "torso_cap_r_arm";
-				break;
-			case G2_MODELPART_RHAND:
-				limbName = "r_hand";
-				stubCapName = "r_arm_cap_r_hand";
-				break;
-			case G2_MODELPART_LLEG:
-				limbName = "l_leg";
-				stubCapName = "hips_cap_l_leg";
-				break;
-			case G2_MODELPART_RLEG:
-				limbName = "r_leg";
-				stubCapName = "hips_cap_r_leg";
-				break;
-			default:
-				source->torsoBolt = 0;
-				source->ghoul2weapon = NULL;
-				return;
-			}
-
-			trap->G2API_SetSurfaceOnOff(source->ghoul2, limbName, 0);
-			trap->G2API_SetSurfaceOnOff(source->ghoul2, stubCapName, 0x00000100);
-		}
-		i++;
-	}
-	*/
 	source->torsoBolt = 0;
 
 	source->ghoul2weapon = NULL;
@@ -2833,6 +2780,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 								|| cent->currentState.botclass == BCLASS_R5D2
 								|| cent->currentState.botclass == BCLASS_PROTOCOL
 								|| cent->currentState.botclass == BCLASS_BOBAFETT
+								|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 								|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 								|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 								|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -2858,6 +2806,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 								|| cent->currentState.botclass == BCLASS_R2D2
 								|| cent->currentState.botclass == BCLASS_R5D2
 								|| cent->currentState.botclass == BCLASS_PROTOCOL
+								|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 								|| cent->currentState.botclass == BCLASS_BOBAFETT
 								|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 								|| cent->currentState.botclass == BCLASS_MANDOLORIAN
@@ -2900,6 +2849,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					|| cent->currentState.botclass == BCLASS_R5D2
 					|| cent->currentState.botclass == BCLASS_PROTOCOL
 					|| cent->currentState.botclass == BCLASS_BOBAFETT
+					|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 					|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -2940,6 +2890,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 						|| cent->currentState.botclass == BCLASS_R5D2
 						|| cent->currentState.botclass == BCLASS_PROTOCOL
 						|| cent->currentState.botclass == BCLASS_BOBAFETT
+						|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 						|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 						|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 						|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -2964,6 +2915,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 						|| cent->currentState.botclass == BCLASS_R5D2
 						|| cent->currentState.botclass == BCLASS_PROTOCOL
 						|| cent->currentState.botclass == BCLASS_BOBAFETT
+						|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 						|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 						|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 						|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -2988,6 +2940,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 						|| cent->currentState.botclass == BCLASS_R5D2
 						|| cent->currentState.botclass == BCLASS_PROTOCOL
 						|| cent->currentState.botclass == BCLASS_BOBAFETT
+						|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 						|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 						|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 						|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -3021,6 +2974,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					|| cent->currentState.botclass == BCLASS_R5D2
 					|| cent->currentState.botclass == BCLASS_PROTOCOL
 					|| cent->currentState.botclass == BCLASS_BOBAFETT
+					|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 					|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -3215,6 +3169,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					|| cent->currentState.botclass == BCLASS_R5D2
 					|| cent->currentState.botclass == BCLASS_PROTOCOL
 					|| cent->currentState.botclass == BCLASS_BOBAFETT
+					|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 					|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -3245,6 +3200,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					|| cent->currentState.botclass == BCLASS_R5D2
 					|| cent->currentState.botclass == BCLASS_PROTOCOL
 					|| cent->currentState.botclass == BCLASS_BOBAFETT
+					|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 					|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -3384,7 +3340,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					|| cg.predicted_player_state.weapon == WP_SABER || cg.predicted_player_state.weapon == WP_MELEE)
 				{
 					//h4q3ry
-					if (cent->currentState.eFlags & EF_DUAL_WEAPONS)
+					if (cent->currentState.eFlags & EF3_DUAL_WEAPONS)
 					{
 						CG_GetClientWeaponMuzzleBoltPointduals(cent->currentState.eventParm, cent->currentState.origin2,
 							qtrue);
@@ -3433,7 +3389,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					cg.renderingThirdPerson)
 				{
 					//h4q3ry
-					if (cent->currentState.eFlags & EF_DUAL_WEAPONS)
+					if (cent->currentState.eFlags & EF3_DUAL_WEAPONS)
 					{
 						CG_GetClientWeaponMuzzleBoltPointduals(cent->currentState.eventParm, cent->currentState.origin2,
 							qtrue);

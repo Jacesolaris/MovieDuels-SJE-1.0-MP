@@ -2892,7 +2892,6 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jangoJA_fett/main")
 			|| Class_Model(model, "jangoJA_fett/main2")
 			|| Class_Model(model, "jangoJA_fett/default")
-			|| Class_Model(model, "jangofett_mp")
 			|| Class_Model(model, "md_jango")
 			|| Class_Model(model, "md_jango_geo")
 			|| Class_Model(model, "md_jango_dual_player")
@@ -2927,6 +2926,22 @@ qboolean client_userinfo_changed(const int client_num)
 		{
 			client->pers.nextbotclass = BCLASS_BOBAFETT;
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "jangofett_mp"))
+		{
+			client->pers.nextbotclass = BCLASS_JANGO_NOJP;
+			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
 				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
@@ -6823,7 +6838,7 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.ammo[AMMO_BLASTER] = ammoData[AMMO_BLASTER].max;
 			client->ps.ammo[AMMO_METAL_BOLTS] = ammoData[AMMO_METAL_BOLTS].max;
 			client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-			client->ps.eFlags |= EF_DUAL_WEAPONS;
+			client->ps.eFlags |= EF3_DUAL_WEAPONS;
 			client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
 			client->skillLevel[SK_THERMAL] = FORCE_LEVEL_3;
 			client->skillLevel[SK_BOWCASTER] = FORCE_LEVEL_3;
@@ -6944,7 +6959,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -6959,7 +6974,29 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_BLASTERRATEOFFIREUPGRADE] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
+					client->ps.ammo[AMMO_BLASTER] = 900;
+					client->ps.ammo[AMMO_POWERCELL] = 500;
+					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_ROCKET_LAUNCHER;
+					client->skillLevel[SK_ROCKET] = FORCE_LEVEL_3;
+					client->ps.ammo[AMMO_ROCKETS] = 3;
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_THERMAL;
+					client->skillLevel[SK_THERMAL] = FORCE_LEVEL_3;
+					client->skillLevel[SK_SMOKEGRENADE] = FORCE_LEVEL_3;
+					client->ps.ammo[AMMO_THERMAL] = 4;
+					client->skillLevel[SK_GRAPPLE] = FORCE_LEVEL_3;
+					client->skillLevel[SK_FLAMETHROWER] = FORCE_LEVEL_3;
+					break;
+				case BCLASS_JANGO_NOJP:
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BLASTER;
+					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
+					client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
+					client->skillLevel[SK_BLASTERRATEOFFIREUPGRADE] = FORCE_LEVEL_3;
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
+					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7050,7 +7087,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7317,7 +7354,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7333,7 +7370,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7350,7 +7387,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7460,7 +7497,7 @@ void ClientSpawn(gentity_t* ent)
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7510,7 +7547,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7562,7 +7599,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_CRYOBAN] = FORCE_LEVEL_3;
 					if (client->skillLevel[SK_PISTOL] >= FORCE_LEVEL_3 && ent->client->ps.weapon == WP_BRYAR_PISTOL)
 					{
-						client->ps.eFlags |= EF_DUAL_WEAPONS;
+						client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					}
 					break;
 				}
@@ -7603,7 +7640,7 @@ void ClientSpawn(gentity_t* ent)
 				client->skillLevel[SK_CRYOBAN] = FORCE_LEVEL_3;
 				if (client->skillLevel[SK_PISTOL] >= FORCE_LEVEL_3 && ent->client->ps.weapon == WP_BRYAR_PISTOL)
 				{
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 				}
 			}
 		}
@@ -7760,6 +7797,17 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
 		case BCLASS_BOBAFETT:
+			client->ps.stats[STAT_ARMOR] = 300;
+			client->ps.stats[STAT_MAX_HEALTH] = 150;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_JETPACK;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_FLAMETHROWER;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
+			break;
+		case BCLASS_JANGO_NOJP:
 			client->ps.stats[STAT_ARMOR] = 300;
 			client->ps.stats[STAT_MAX_HEALTH] = 150;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_JETPACK;
@@ -8448,6 +8496,7 @@ void ClientSpawn(gentity_t* ent)
 		case BCLASS_TROOPER3:
 		case BCLASS_BOUNTYHUNTER1:
 		case BCLASS_BOBAFETT:
+		case BCLASS_JANGO_NOJP:
 			client->ps.fd.forcePowerLevel[FP_HEAL] = FORCE_LEVEL_0;
 			client->ps.fd.forcePowerLevel[FP_LEVITATION] = FORCE_LEVEL_3; //big jumps for the jetpack club
 			client->ps.fd.forcePowerLevel[FP_SPEED] = FORCE_LEVEL_0;
@@ -8687,7 +8736,7 @@ void ClientSpawn(gentity_t* ent)
 		if (ent->client->sess.sessionTeam != TEAM_SPECTATOR)
 		{
 			g_kill_box(ent);
-			
+
 			if (client->ps.weapon <= WP_NONE)
 			{
 				client->ps.weapon = WP_BRYAR_PISTOL;
@@ -8705,7 +8754,7 @@ void ClientSpawn(gentity_t* ent)
 				G_SetAnim(ent, NULL, SETANIM_TORSO, TORSO_RAISEWEAP1,
 					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS, 0);
 
-				if (client->ps.eFlags & EF_DUAL_WEAPONS)
+				if (client->ps.eFlags & EF3_DUAL_WEAPONS)
 				{
 					client->ps.legsAnim = WeaponReadyAnim2[client->ps.weapon];
 				}

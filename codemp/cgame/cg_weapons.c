@@ -608,10 +608,10 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 		addspriteArgStruct_t fx_s_args;
 		vec3_t flashorigin;
 		vec3_t flashdir;
+		int wpmdlidx = 2;
 
 		if (leftweap == qfalse)
 		{
-			int wpmdlidx = 2;
 			wpmdlidx = 1;
 		}
 
@@ -624,15 +624,14 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 		{
 			mdxaBone_t bolt_matrix;
 
-			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, 1))
+			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, wpmdlidx))
 			{
 				//it's quite possible that we may have have no weapon model and be in a valid state, so return here if this is the case
 				return;
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,
-				cgs.game_models, cent->modelScale))
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, wpmdlidx, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
@@ -754,15 +753,14 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 		{
 			mdxaBone_t bolt_matrix;
 
-			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, 1))
+			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, wpmdlidx))
 			{
 				//it's quite possible that we may have have no weapon model and be in a valid state, so return here if this is the case
 				return;
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,
-				cgs.game_models, cent->modelScale))
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, wpmdlidx, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
@@ -1455,7 +1453,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	// add everything onto the hand
 	CG_AddPlayerWeapon(&hand, ps, &cg_entities[cg.predicted_player_state.client_num], angles, qfalse);
 
-	if (ps->eFlags & EF_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
+	if (ps->eFlags & EF3_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
 	{
 		memset(&hand, 0, sizeof hand);
 		// set up gun position
@@ -1521,9 +1519,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		hand.renderfx = RF_DEPTHHACK | RF_FIRST_PERSON;
 		angles[2] += 20;
 		// add everything onto the hand
-		cg_add_player_weaponduals(&hand, ps, &cg_entities[cg.predicted_player_state.client_num],
-			angles,
-			qfalse, qtrue);
+		cg_add_player_weaponduals(&hand, ps, &cg_entities[cg.predicted_player_state.client_num],angles,	qfalse, qtrue);
 	}
 }
 
@@ -3430,7 +3426,7 @@ void CG_CopyG2WeaponInstance(const centity_t* cent, const int weapon_num, void* 
 			else
 			{
 				trap->G2API_CopySpecificGhoul2Model(CG_G2WeaponInstance(cent, weapon_num), 0, to_ghoul2, 1);
-				if (cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
+				if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
 				{
 					trap->G2API_CopySpecificGhoul2Model(CG_G2WeaponInstance2(cent, weapon_num), 0, to_ghoul2, 2);
 				}
@@ -3489,14 +3485,14 @@ void CG_CheckPlayerG2Weapons(const playerState_t* ps, centity_t* cent)
 
 	if (cent->ghoul2 && (cent->ghoul2weapon != CG_G2WeaponInstance(cent, ps->weapon) ||
 		cent->ghoul2weapon2 != CG_G2WeaponInstance2(cent, cent->currentState.weapon) &&
-		cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon != WP_SABER ||
-		cent->ghoul2weapon2 != NULL && (!(cent->currentState.eFlags & EF_DUAL_WEAPONS) ||
+		cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon != WP_SABER ||
+		cent->ghoul2weapon2 != NULL && (!(cent->currentState.eFlags & EF3_DUAL_WEAPONS) ||
 			cent->currentState.weapon == WP_SABER)) && ps->client_num == cent->currentState.number)
 	{
 		CG_CopyG2WeaponInstance(cent, ps->weapon, cent->ghoul2);
 		cent->ghoul2weapon = CG_G2WeaponInstance(cent, ps->weapon);
 
-		if (cent->currentState.eFlags & EF_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
+		if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
 		{
 			cent->ghoul2weapon2 = CG_G2WeaponInstance2(cent, ps->weapon);
 		}

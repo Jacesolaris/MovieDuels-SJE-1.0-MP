@@ -757,7 +757,6 @@ static void CG_RegisterSounds(void)
 	trap->S_RegisterSound("sound/weapons/saber/saberlockstart.mp3");
 	trap->S_RegisterSound("sound/weapons/saber/saberlockend.mp3");
 
-
 	for (i = 1; i < 5; i++)
 	{
 		trap->S_RegisterSound(va("sound/weapons/saber/saber_locking_start%d.mp3", i));
@@ -2783,6 +2782,8 @@ void CG_Init(const int serverMessageNum, const int serverCommandSequence, const 
 	static gitem_t* item;
 	char buf[64];
 
+	centity_t* cent = &cg_entities[client_num];
+
 	BG_InitAnimsets(); //clear it out
 
 	trap->RegisterSharedMemory(cg.sharedBuffer.raw);
@@ -2795,6 +2796,7 @@ void CG_Init(const int serverMessageNum, const int serverCommandSequence, const 
 	CG_InitItems();
 
 	//create the global jetpack instance
+
 	CG_InitJetpackGhoul2();
 
 	CG_PmoveClientPointerUpdate();
@@ -3310,7 +3312,7 @@ static qboolean CG_IncomingConsoleCommand(void)
 	{ //any command containing the string "blah" is redirected to "quit"
 		strcpy(icc->conCommand, "quit");
 		return qfalse;
-	}
+}
 #endif
 	return qtrue;
 }
@@ -3380,7 +3382,7 @@ GetModuleAPI
 
 cgameImport_t* trap = NULL;
 
-Q_EXPORT cgameExport_t* QDECL GetModuleAPI(const int apiVersion, cgameImport_t* import)
+Q_EXPORT cgameExport_t * QDECL GetModuleAPI(const int apiVersion, cgameImport_t * import)
 {
 	static cgameExport_t cge = { 0 };
 

@@ -2192,31 +2192,29 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		}
 
 		cg_entities[client_num].localAnimIndex = CG_G2SkelForModel(cg_entities[client_num].ghoul2);
-		cg_entities[client_num].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[client_num].ghoul2,
-			cg_entities[client_num].localAnimIndex);
-
+		cg_entities[client_num].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[client_num].ghoul2,cg_entities[client_num].localAnimIndex);		
+		
 		if (cg_entities[client_num].currentState.number != cg.predicted_player_state.client_num &&
 			cg_entities[client_num].currentState.weapon == WP_SABER)
 		{
 			cg_entities[client_num].weapon = cg_entities[client_num].currentState.weapon;
+
 			if (cg_entities[client_num].ghoul2 && ci->ghoul2Model)
 			{
-				CG_CopyG2WeaponInstance(&cg_entities[client_num], cg_entities[client_num].currentState.weapon,
-					cg_entities[client_num].ghoul2);
-				cg_entities[client_num].ghoul2weapon = CG_G2WeaponInstance(
-					&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
+				CG_CopyG2WeaponInstance(&cg_entities[client_num], cg_entities[client_num].currentState.weapon,cg_entities[client_num].ghoul2);
+				cg_entities[client_num].ghoul2weapon = CG_G2WeaponInstance(&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
 
-				if (cg_entities[client_num].currentState.eFlags & EF_DUAL_WEAPONS &&
-					cg_entities[client_num].currentState.weapon == WP_BRYAR_PISTOL)
+
+				if (cg_entities[client_num].currentState.eFlags & EF3_DUAL_WEAPONS && cg_entities[client_num].currentState.weapon == WP_BRYAR_PISTOL)
 				{
-					cg_entities[client_num].ghoul2weapon2 = CG_G2WeaponInstance2(
-						&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
+					cg_entities[client_num].ghoul2weapon2 = CG_G2WeaponInstance2(&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
 				}
 				else
 				{
 					cg_entities[client_num].ghoul2weapon2 = NULL;
 				}
 			}
+
 			if (!cg_entities[client_num].currentState.saberHolstered)
 			{
 				//if not holstered set length and desired length for both blades to full right now.
@@ -12549,15 +12547,15 @@ CheckTrail:
 							trap->FX_AddPrimitive(&fx);
 						}
 					}
+				}
 			}
-		}
 
 			// we must always do this, even if we aren't active..otherwise we won't know where to pick up from
 			VectorCopy(org, saber_trail->base);
 			VectorMA(end, 3.0f, axis[0], saber_trail->tip);
 			saber_trail->lastTime = cg.time;
+		}
 	}
-}
 	else
 	{
 		// Use the supremely hacky SFX Sabers.
@@ -14829,7 +14827,11 @@ static void CG_ForceElectrocution(centity_t* cent, const vec3_t origin, vec3_t t
 
 void* cg_g2JetpackInstance = NULL;
 
+void* cg_g2InvisibleJetpackInstance = NULL;
+
 #define JETPACK_MODEL "models/weapons2/jetpack/model.glm"
+
+#define NO_JETPACK_MODEL "models/weapons2/noweap/noweap.glm"
 
 void CG_InitJetpackGhoul2(void)
 {
@@ -17174,9 +17176,9 @@ void CG_Player(centity_t* cent)
 
 			cent->localAnimIndex = CG_G2SkelForModel(cent->ghoul2);
 			cent->eventAnimIndex = CG_G2EvIndexForModel(cent->ghoul2, cent->localAnimIndex);
-	}
+		}
 		return;
-}
+	}
 
 	if (ci->superSmoothTime)
 	{
@@ -17211,8 +17213,7 @@ void CG_Player(centity_t* cent)
 
 	CG_VehicleEffects(cent);
 
-	if (cent->currentState.eFlags & EF_JETPACK && !(cent->currentState.eFlags & EF_DEAD) &&
-		cg_g2JetpackInstance)
+	if (cent->currentState.eFlags & EF_JETPACK && !(cent->currentState.eFlags & EF_DEAD) && cg_g2JetpackInstance)
 	{
 		//should have a jetpack attached
 		//1 is rhand weap, 2 is lhand weap (akimbo sabs), 3 is jetpack
@@ -17251,8 +17252,7 @@ void CG_Player(centity_t* cent)
 				}
 
 				if (cent->currentState.eFlags & EF_JETPACK_ACTIVE
-					|| cent->currentState.eFlags & EF_JETPACK_FLAMING
-					|| cent->currentState.eFlags & EF_JETPACK_HOVER)
+					|| cent->currentState.eFlags & EF_JETPACK_FLAMING)
 				{
 					//create effects
 					//Play the effect
@@ -17260,10 +17260,18 @@ void CG_Player(centity_t* cent)
 					trap->FX_PlayEffectID(cgs.effects.mBobaJet, flame_pos, flame_dir, -1, -1, qfalse);
 
 					//Keep the jet fire sound looping
-					trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin,
-						trap->S_RegisterSound("sound/jetpack/thrust"));
+					trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin, trap->S_RegisterSound("sound/jetpack/thrust"));
 				}
-				else
+				else if (cent->currentState.eFlags & EF3_JETPACK_HOVER)
+				{
+					//Play the effect
+					trap->FX_PlayEffectID(cgs.effects.mBlueJet, flame_pos, flame_dir, -1, -1, qfalse);
+					trap->FX_PlayEffectID(cgs.effects.mBlueJet, flame_pos, flame_dir, -1, -1, qfalse);
+
+					//Keep the jet fire sound looping
+					trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin, trap->S_RegisterSound("sound/jetpack/thrust"));
+				}
+				else 
 				{
 					//just idling
 					trap->FX_PlayEffectID(cgs.effects.mBlueJet, flame_pos, flame_dir, -1, -1, qfalse);
@@ -17272,17 +17280,16 @@ void CG_Player(centity_t* cent)
 				n++;
 			}
 
-			trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin,
-				trap->S_RegisterSound("sound/jetpack/idle.wav"));
+			trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin, trap->S_RegisterSound("sound/jetpack/idle.wav"));
 		}
 	}
 	else if (trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, 3))
 	{
-		//fixme: would be good if this could be done not every frame
 		trap->G2API_RemoveGhoul2Model(&cent->ghoul2, 3);
 	}
 
 	if ((cent->currentState.botclass == BCLASS_BOBAFETT ||
+		cent->currentState.botclass == BCLASS_JANGO_NOJP ||
 		cent->currentState.NPC_class == CLASS_BOBAFETT ||
 		cent->currentState.NPC_class == CLASS_ROCKETTROOPER ||
 		cent->currentState.botclass == BCLASS_MANDOLORIAN ||
@@ -17295,6 +17302,7 @@ void CG_Player(centity_t* cent)
 		qboolean wj = qfalse;
 		fxHandle_t flame_effect = cent->currentState.botclass == BCLASS_BOBAFETT ||
 			cent->currentState.NPC_class == CLASS_BOBAFETT ||
+			cent->currentState.botclass == BCLASS_JANGO_NOJP ||
 			cent->currentState.botclass == BCLASS_MANDOLORIAN ||
 			cent->currentState.botclass == BCLASS_MANDOLORIAN1 ||
 			cent->currentState.botclass == BCLASS_MANDOLORIAN2
@@ -17539,8 +17547,8 @@ void CG_Player(centity_t* cent)
 			cent->currentState.NPC_class != CLASS_REMOTE && cent->currentState.NPC_class != CLASS_SEEKER) &&
 		(cent->ghoul2weapon != CG_G2WeaponInstance(cent, cent->currentState.weapon) ||
 			cent->ghoul2weapon2 != CG_G2WeaponInstance2(cent, cent->currentState.weapon) &&
-			cent->currentState.eFlags & EF_DUAL_WEAPONS ||
-			cent->ghoul2weapon2 != NULL && !(cent->currentState.eFlags & EF_DUAL_WEAPONS)) &&
+			cent->currentState.eFlags & EF3_DUAL_WEAPONS ||
+			cent->ghoul2weapon2 != NULL && !(cent->currentState.eFlags & EF3_DUAL_WEAPONS)) &&
 		!(cent->currentState.eFlags & EF_DEAD) && !cent->torsoBolt &&
 		cg.snap && (cent->currentState.number != cg.snap->ps.client_num || cg.snap->ps.pm_flags & PMF_FOLLOW))
 	{
@@ -17599,7 +17607,7 @@ void CG_Player(centity_t* cent)
 
 			cent->weapon = cent->currentState.weapon;
 			cent->ghoul2weapon = CG_G2WeaponInstance(cent, cent->currentState.weapon);
-			if (cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
+			if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
 			{
 				cent->ghoul2weapon2 = CG_G2WeaponInstance2(cent, cent->currentState.weapon);
 			}
@@ -19375,7 +19383,7 @@ stillDoSaber:
 			}
 
 			l++;
-		}
+}
 	}
 
 	if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
@@ -19692,7 +19700,7 @@ stillDoSaber:
 	//
 	if (cent->currentState.weapon != WP_EMPLACED_GUN)
 	{
-		if (cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
+		if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
 		{
 			cg_add_player_weaponduals(&legs, NULL, cent, root_angles, qtrue, qtrue);
 		}
@@ -20042,6 +20050,7 @@ stillDoSaber:
 			}
 			else if (cent->currentState.botclass == BCLASS_BOBAFETT
 				|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
+				|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 				|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 				|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
 				|| cent->currentState.botclass == BCLASS_MANDOLORIAN2)
@@ -20116,6 +20125,7 @@ stillDoSaber:
 				}
 				else if (cent->currentState.botclass == BCLASS_BOBAFETT
 					|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
+					|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN2)
@@ -20371,4 +20381,4 @@ void CG_ResetPlayerEntity(centity_t* cent)
 	{
 		trap->Print("%i ResetPlayerEntity yaw=%i\n", cent->currentState.number, cent->pe.torso.yawAngle);
 	}
-}
+	}

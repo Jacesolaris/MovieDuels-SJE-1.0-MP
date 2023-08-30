@@ -4238,11 +4238,11 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass == BCLASS_SBD ||
-			self->client->botclass == BCLASS_BATTLEDROID ||
-			self->client->botclass == BCLASS_DROIDEKA ||
-			self->client->botclass == BCLASS_PROTOCOL ||
-			self->client->botclass == BCLASS_JAWA))
+		&& (self->client->pers.botclass == BCLASS_SBD ||
+			self->client->pers.botclass == BCLASS_BATTLEDROID ||
+			self->client->pers.botclass == BCLASS_DROIDEKA ||
+			self->client->pers.botclass == BCLASS_PROTOCOL ||
+			self->client->pers.botclass == BCLASS_JAWA))
 	{
 		// don't get Dodge.
 		return qfalse;
@@ -5753,10 +5753,11 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 
 	if (dodger->r.svFlags & SVF_BOT
 		&& (dodger->client->ps.weapon != WP_SABER &&
-			dodger->client->botclass != BCLASS_MANDOLORIAN &&
-			dodger->client->botclass != BCLASS_MANDOLORIAN1 &&
-			dodger->client->botclass != BCLASS_MANDOLORIAN2 &&
-			dodger->client->botclass != BCLASS_BOBAFETT)
+			dodger->client->pers.botclass != BCLASS_MANDOLORIAN &&
+			dodger->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
+			dodger->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
+			dodger->client->pers.botclass != BCLASS_JANGO_NOJP &&
+			dodger->client->pers.botclass != BCLASS_BOBAFETT)
 		|| dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
 		// if your not a mando or jedi or low FP then you cant dodge
 	{
@@ -5927,12 +5928,13 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = level.time + 30000;
@@ -5959,12 +5961,13 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -5978,12 +5981,13 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -5997,12 +6001,13 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -6347,19 +6352,21 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 
 	if ((dodger->r.svFlags & SVF_BOT
 		&& dodger->client->ps.weapon != WP_SABER
-		&& dodger->client->botclass != BCLASS_MANDOLORIAN
-		&& dodger->client->botclass != BCLASS_MANDOLORIAN1
-		&& dodger->client->botclass != BCLASS_MANDOLORIAN2
-		&& dodger->client->botclass != BCLASS_BOBAFETT))// if your not a mando or jedi then you cant dodge
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN2
+		&& dodger->client->pers.botclass != BCLASS_JANGO_NOJP
+		&& dodger->client->pers.botclass != BCLASS_BOBAFETT))// if your not a mando or jedi then you cant dodge
 	{
 		return qfalse;
 	}
 
 	if (dodger->r.svFlags & SVF_BOT
-		&& dodger->client->botclass == BCLASS_MANDOLORIAN
-		&& dodger->client->botclass == BCLASS_MANDOLORIAN1
-		&& dodger->client->botclass == BCLASS_MANDOLORIAN2
-		&& dodger->client->botclass == BCLASS_BOBAFETT && dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT)// if your a mando low FP then you cant dodge
+		&& (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT) && dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT)// if your a mando low FP then you cant dodge
 	{
 		return qfalse;
 	}
@@ -6491,12 +6498,13 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = level.time + 30000;
@@ -6523,12 +6531,13 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -6542,12 +6551,13 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -6561,12 +6571,13 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -7563,9 +7574,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	if (self->client->ps.weapon != WP_SABER && self->client->NPC_class != CLASS_BOBAFETT
-		|| self->client->pers.botclass != BCLASS_BOBAFETT
-		|| self->client->pers.botclass != BCLASS_MANDOLORIAN1
-		|| self->client->pers.botclass != BCLASS_MANDOLORIAN2)
+		&& self->client->pers.botclass != BCLASS_BOBAFETT
+		&& self->client->pers.botclass != BCLASS_JANGO_NOJP
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 	{
 		do_full_routine = qfalse;
 	}
@@ -7640,9 +7653,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	if (BG_SabersOff(&self->client->ps) && self->client->NPC_class != CLASS_BOBAFETT
-		|| self->client->pers.botclass != BCLASS_BOBAFETT
-		|| self->client->pers.botclass != BCLASS_MANDOLORIAN1
-		|| self->client->pers.botclass != BCLASS_MANDOLORIAN2)
+		&& self->client->pers.botclass != BCLASS_BOBAFETT
+		&& self->client->pers.botclass != BCLASS_JANGO_NOJP
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 	{
 		if (self->s.eType != ET_NPC)
 		{
@@ -7818,9 +7833,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 						(dot1 = DotProduct(dir, forward)) < SABER_REFLECT_MISSILE_CONE))
 				{
 					//TD is close enough to hurt me, I'm on the ground and the thing is at rest or behind me and about to blow up, or I don't have force-push so force-jump!
-					if (self->client->botclass == BCLASS_BOBAFETT
-						|| self->client->botclass == BCLASS_MANDOLORIAN1
-						|| self->client->botclass == BCLASS_MANDOLORIAN2)
+					if (self->client->pers.botclass == BCLASS_BOBAFETT
+						|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+						|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+						|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+						|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 					{
 						//jump out of the way
 						self->client->ps.fd.forceJumpCharge = 480;
@@ -7828,9 +7845,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 					}
 				}
 				else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
-					&& self->client->botclass != BCLASS_BOBAFETT
-					&& self->client->botclass != BCLASS_MANDOLORIAN1
-					&& self->client->botclass != BCLASS_MANDOLORIAN2)
+					&& self->client->pers.botclass != BCLASS_BOBAFETT
+					&& self->client->pers.botclass != BCLASS_JANGO_NOJP
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 				{
 					ForceThrow(self, qfalse);
 					PM_AddFatigue(&self->client->ps, FORCE_DEFLECT_PUSH);
@@ -7859,9 +7878,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 						vec3_t throw_dir;
 						//make the gesture
 						if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
-							&& self->client->botclass != BCLASS_BOBAFETT
-							&& self->client->botclass != BCLASS_MANDOLORIAN1
-							&& self->client->botclass != BCLASS_MANDOLORIAN2)
+							&& self->client->pers.botclass != BCLASS_BOBAFETT
+							&& self->client->pers.botclass != BCLASS_JANGO_NOJP
+							&& self->client->pers.botclass != BCLASS_MANDOLORIAN
+							&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+							&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 						{
 							ForceThrow(self, qfalse);
 							PM_AddFatigue(&self->client->ps, FORCE_DEFLECT_PUSH);
@@ -7892,9 +7913,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				&& DotProduct(dir, forward) < SABER_REFLECT_MISSILE_CONE)
 			{
 				//try to evade it
-				if (self->client->botclass == BCLASS_BOBAFETT
-					|| self->client->botclass == BCLASS_MANDOLORIAN1
-					|| self->client->botclass == BCLASS_MANDOLORIAN2)
+				if (self->client->pers.botclass == BCLASS_BOBAFETT
+					|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 				{
 					//jump out of the way
 					self->client->ps.fd.forceJumpCharge = 480;
@@ -7902,9 +7925,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				}
 			}
 			else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
-				&& self->client->botclass != BCLASS_BOBAFETT
-				&& self->client->botclass != BCLASS_MANDOLORIAN1
-				&& self->client->botclass != BCLASS_MANDOLORIAN2)
+				&& self->client->pers.botclass != BCLASS_BOBAFETT
+				&& self->client->pers.botclass != BCLASS_JANGO_NOJP
+				&& self->client->pers.botclass != BCLASS_MANDOLORIAN
+				&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+				&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 			{
 				if (!self->s.number && self->client->ps.fd.forcePowerLevel[FP_PUSH] == 1 && dist >= 192)
 				{
@@ -8025,10 +8050,12 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			{
 				Jedi_Ambush(self);
 			}
-			if (self->client->NPC_class == CLASS_BOBAFETT
+			if ((self->client->NPC_class == CLASS_BOBAFETT
 				|| self->client->pers.botclass == BCLASS_BOBAFETT
+				|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+				|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 				|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
-				|| self->client->pers.botclass == BCLASS_MANDOLORIAN2
+				|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 				&& self->client->ps.eFlags2 & EF2_FLYING //moveType == MT_FLYSWIM
 				&& incoming->methodOfDeath != MOD_ROCKET_HOMING)
 			{
@@ -8051,9 +8078,11 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			{
 				//make sure to turn on your saber if it's not on
 				if (self->client->NPC_class != CLASS_BOBAFETT
-					|| self->client->pers.botclass != BCLASS_BOBAFETT
-					|| self->client->pers.botclass != BCLASS_MANDOLORIAN1
-					|| self->client->pers.botclass != BCLASS_MANDOLORIAN2)
+					&& self->client->pers.botclass != BCLASS_BOBAFETT
+					&& self->client->pers.botclass != BCLASS_JANGO_NOJP
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 				{
 					WP_ActivateSaber(self);
 				}
@@ -10615,27 +10644,27 @@ static void G_PunchSomeMofos(gentity_t* ent)
 					//do a tad bit more damage on the second swing
 					dmg = MELEE_SWING2_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_GRAN)
+				if (ent->client->pers.botclass == BCLASS_GRAN)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_EXTRA_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_CHEWIE)
+				if (ent->client->pers.botclass == BCLASS_CHEWIE)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_WOOKIE_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_WOOKIE)
+				if (ent->client->pers.botclass == BCLASS_WOOKIE)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_WOOKIE_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_WOOKIEMELEE)
+				if (ent->client->pers.botclass == BCLASS_WOOKIEMELEE)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_WOOKIE_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_SBD)
+				if (ent->client->pers.botclass == BCLASS_SBD)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_EXTRA_DAMAGE;
@@ -13287,8 +13316,11 @@ qboolean manual_meleeblocking(const gentity_t* defender) //Is this guy blocking 
 
 qboolean manual_melee_dodging(const gentity_t* defender) //Is this guy dodgeing or not?
 {
-	if (defender->client->NPC_class == BCLASS_BOBAFETT || defender->client->botclass == BCLASS_MANDOLORIAN || defender->
-		client->botclass == BCLASS_MANDOLORIAN1 || defender->client->botclass == BCLASS_MANDOLORIAN2)
+	if (defender->client->NPC_class == BCLASS_BOBAFETT ||
+		defender->client->pers.botclass == BCLASS_JANGO_NOJP ||
+		defender->client->pers.botclass == BCLASS_MANDOLORIAN ||
+		defender->client->pers.botclass == BCLASS_MANDOLORIAN1 ||
+		defender->client->pers.botclass == BCLASS_MANDOLORIAN2)
 	{
 		return qfalse;
 	}

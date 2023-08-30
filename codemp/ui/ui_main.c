@@ -946,7 +946,7 @@ void UI_ParseMenu(const char* menuFile);
 void UI_LoadSingleMenuFile(const char* menuFile)
 {
 	//load in a single menu file
-	trap->PC_LoadGlobalDefines("ui/jamp/menudef.h"); //Load globaldefines for parsing.
+	trap->PC_LoadGlobalDefines("ui/mdmp/menudef.h"); //Load globaldefines for parsing.
 	UI_ParseMenu(menuFile);
 	trap->PC_RemoveAllGlobalDefines(); //Close globaldefines.
 }
@@ -1533,7 +1533,7 @@ void UI_LoadMenus(const char* menuFile, qboolean reset)
 {
 	pc_token_t token;
 
-	trap->PC_LoadGlobalDefines("ui/jamp/menudef.h");
+	trap->PC_LoadGlobalDefines("ui/mdmp/menudef.h");
 
 	int handle = trap->PC_LoadSource(menuFile);
 	if (!handle)
@@ -1616,7 +1616,7 @@ void UI_Load(void)
 #ifdef PRE_RELEASE_TADEMO
 	UI_ParseGameInfo("demogameinfo.txt");
 #else
-	UI_ParseGameInfo("ui/jamp/gameinfo.txt");
+	UI_ParseGameInfo("ui/mdmp/gameinfo.txt");
 #endif
 
 	if (gametype != GT_MOVIEDUELS_MISSIONS)
@@ -6613,7 +6613,7 @@ static void UI_RunMenuScript(char** args)
 		}
 		else if (Q_stricmp(name, "loadGameInfo") == 0)
 		{
-			UI_ParseGameInfo("ui/jamp/gameinfo.txt");
+			UI_ParseGameInfo("ui/mdmp/gameinfo.txt");
 		}
 		else if (Q_stricmp(name, "RefreshServers") == 0)
 		{
@@ -10896,7 +10896,7 @@ void UI_Init(qboolean inGameLoad)
 	uiInfo.characterCount = 0;
 	uiInfo.aliasCount = 0;
 
-	UI_ParseGameInfo("ui/jamp/gameinfo.txt");
+	UI_ParseGameInfo("ui/mdmp/gameinfo.txt");
 
 	const char* menuSet = UI_Cvar_VariableString("ui_menuFilesMP");
 	if (menuSet == NULL || menuSet[0] == '\0')

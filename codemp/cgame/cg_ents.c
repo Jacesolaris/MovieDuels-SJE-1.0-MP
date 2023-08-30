@@ -1794,7 +1794,7 @@ static void CG_General(centity_t* cent)
 	}
 
 	// add to refresh list
-	
+
 	// test for duel noX conditions
 	if (cent->currentState.weapon == WP_TRIP_MINE ||
 		cent->currentState.weapon == WP_DET_PACK ||
@@ -1965,7 +1965,7 @@ static void CG_General(centity_t* cent)
 		}
 	}
 
-	if (cent->currentState.time == -1 && cent->currentState.weapon == WP_TRIP_MINE && cent->currentState.eFlags &EF_FIRING)
+	if (cent->currentState.time == -1 && cent->currentState.weapon == WP_TRIP_MINE && cent->currentState.eFlags & EF_FIRING)
 	{
 		vec3_t beam_org;
 		int beam_id;
@@ -2104,6 +2104,7 @@ static void CG_General(centity_t* cent)
 				ent.shaderRGBA[2] = 230;
 			}
 			else if (cent->currentState.botclass == BCLASS_BOBAFETT
+				|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 				|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 				|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 				|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -2181,6 +2182,7 @@ static void CG_General(centity_t* cent)
 					ent.shaderRGBA[2] = 230;
 				}
 				else if (cent->currentState.botclass == BCLASS_BOBAFETT
+					|| cent->currentState.botclass == BCLASS_JANGO_NOJP
 					|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN
 					|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
@@ -3857,8 +3859,8 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 				*/
 				//I guess I just don't want this happening.
 				cent->lerpOriginOffset[2] = 0.0f;
-	}
-}
+			}
+		}
 
 		//done with this bit
 		cent->hasRagOffset = qfalse;

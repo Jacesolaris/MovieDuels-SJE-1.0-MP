@@ -311,7 +311,7 @@ static void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 	missile->classname = "bryar_proj";
 	missile->s.weapon = WP_BRYAR_PISTOL;
 
-	if (ent->client->ps.eFlags & EF_DUAL_WEAPONS)
+	if (ent->client->ps.eFlags & EF3_DUAL_WEAPONS)
 	{
 		missile2->classname = "bryar_proj";
 		missile2->s.weapon = WP_BRYAR_PISTOL;
@@ -339,7 +339,7 @@ static void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 		VectorSet(missile->r.maxs, box_size, box_size, box_size);
 		VectorSet(missile->r.mins, -box_size, -box_size, -box_size);
 
-		if (ent->client->ps.eFlags & EF_DUAL_WEAPONS)
+		if (ent->client->ps.eFlags & EF3_DUAL_WEAPONS)
 		{
 			count = (level.time - ent->client->ps.weaponChargeTime) / BRYAR_CHARGE_UNIT;
 
@@ -378,7 +378,7 @@ static void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 	// we don't want it to bounce forever
 	missile->bounceCount = 8;
 
-	if (ent->client->ps.eFlags & EF_DUAL_WEAPONS)
+	if (ent->client->ps.eFlags & EF3_DUAL_WEAPONS)
 	{
 		missile2->damage = damage;
 		missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
@@ -4185,27 +4185,27 @@ void WP_FireMelee(gentity_t* ent, qboolean alt_fire)
 				//do a tad bit more damage on the second swing
 				dmg = MELEE_SWING2_DAMAGE;
 			}
-			if (ent->client && ent->client->botclass == BCLASS_GRAN)
+			if (ent->client && ent->client->pers.botclass == BCLASS_GRAN)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_EXTRA_DAMAGE;
 			}
-			if (ent->client && ent->client->botclass == BCLASS_CHEWIE)
+			if (ent->client && ent->client->pers.botclass == BCLASS_CHEWIE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client && ent->client->botclass == BCLASS_WOOKIE)
+			if (ent->client && ent->client->pers.botclass == BCLASS_WOOKIE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client && ent->client->botclass == BCLASS_WOOKIEMELEE)
+			if (ent->client && ent->client->pers.botclass == BCLASS_WOOKIEMELEE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client && ent->client->botclass == BCLASS_SBD)
+			if (ent->client && ent->client->pers.botclass == BCLASS_SBD)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_EXTRA_DAMAGE;
@@ -5514,7 +5514,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	}
 
 	calcmuzzle_point(ent, forward, vright, muzzle);
-	if (ent->client->ps.eFlags & EF_DUAL_WEAPONS)
+	if (ent->client->ps.eFlags & EF3_DUAL_WEAPONS)
 	{
 		calcmuzzle_point2(ent, forward, vright, muzzle2);
 	}

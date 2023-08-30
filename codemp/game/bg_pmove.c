@@ -206,7 +206,7 @@ int forcePowerNeeded[NUM_FORCE_POWER_LEVELS][NUM_FORCE_POWERS] =
 	{
 		50, //FP_HEAL,//instant //You get 5 points of health.. for 50 force points!
 		10, //FP_LEVITATION,//hold/duration
-		50, //FP_SPEED,//duration
+		30, //FP_SPEED,//duration
 		20, //FP_PUSH,//hold/duration
 		20, //FP_PULL,//hold/duration
 		20, //FP_TELEPATHY,//instant
@@ -295,7 +295,7 @@ int forcePowerNeededlevel1[NUM_FORCE_POWER_LEVELS][NUM_FORCE_POWERS] =
 	{
 		50, //FP_HEAL,//instant //You get 5 points of health.. for 50 force points!
 		10, //FP_LEVITATION,//hold/duration
-		50, //FP_SPEED,//duration
+		30, //FP_SPEED,//duration
 		20, //FP_PUSH,//hold/duration
 		20, //FP_PULL,//hold/duration
 		20, //FP_TELEPATHY,//instant
@@ -384,7 +384,7 @@ int forcePowerNeededlevel2[NUM_FORCE_POWER_LEVELS][NUM_FORCE_POWERS] =
 	{
 		50, //FP_HEAL,//instant //You get 5 points of health.. for 50 force points!
 		10, //FP_LEVITATION,//hold/duration
-		50, //FP_SPEED,//duration
+		30, //FP_SPEED,//duration
 		20, //FP_PUSH,//hold/duration
 		20, //FP_PULL,//hold/duration
 		20, //FP_TELEPATHY,//instant
@@ -519,13 +519,13 @@ QINLINE PM_GetWeaponReadyAnim(void)
 {
 	if (pm->cmd.buttons & BUTTON_WALKING && pm->cmd.buttons & BUTTON_BLOCK)
 	{
-		if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+		if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 		{
 			return WeaponAimingAnim2[pm->ps->weapon];
 		}
 		return WeaponAimingAnim[pm->ps->weapon];
 	}
-	if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+	if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
 		return WeaponReadyAnim2[pm->ps->weapon];
 	}
@@ -4381,6 +4381,7 @@ static qboolean pm_check_jump(void)
 	}
 
 	if (pm_entSelf->s.botclass == BCLASS_BOBAFETT ||
+		pm_entSelf->s.botclass == BCLASS_JANGO_NOJP ||
 		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN ||
 		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN1 ||
 		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN2)
@@ -6255,10 +6256,10 @@ static void PM_AirMove(void)
 			pm->ps->forceJumpFlip)
 		{
 			PM_CheckJump();
-		}
+	}
 #endif
 		PM_CheckGrab();
-	}
+}
 	PM_Friction();
 
 	float fmove = pm->cmd.forwardmove;
@@ -10215,7 +10216,7 @@ static void PM_Footsteps(void)
 					}
 					else if (pm->ps->weapon == WP_BRYAR_PISTOL)
 					{
-						if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+						if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 						{
 							if (!pm->ps->weaponTime)
 							{
@@ -10994,7 +10995,7 @@ static void PM_Footsteps(void)
 					}
 					else if (pm->ps->weapon == WP_BRYAR_PISTOL)
 					{
-						if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+						if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 						{
 							if (!pm->ps->weaponTime)
 							{
@@ -11507,7 +11508,7 @@ void PM_BeginWeaponChange(const int weapon)
 	if (pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
 		//Changing weaps, remove dual weaps
-		pm->ps->eFlags &= ~EF_DUAL_WEAPONS;
+		pm->ps->eFlags &= ~EF3_DUAL_WEAPONS;
 	}
 
 	// turn of any kind of zooming when weapon switching.
@@ -11547,17 +11548,18 @@ void PM_FinishWeaponChange(void)
 
 	if (weapon == WP_BRYAR_PISTOL && (pm_entSelf->s.botclass == BCLASS_BOBAFETT ||
 		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN ||
+		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN ||
 		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN1 ||
 		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN2))
 	{
 		//player playing as boba fett
-		pm->ps->eFlags |= EF_DUAL_WEAPONS;
+		pm->ps->eFlags |= EF3_DUAL_WEAPONS;
 	}
 #ifdef _GAME
 	else if (weapon == WP_BRYAR_PISTOL && g_entities[pm->ps->client_num].client->skillLevel[SK_PISTOL] >= FORCE_LEVEL_3)
 	{
 		//Changed weaps, add dual weaps
-		pm->ps->eFlags |= EF_DUAL_WEAPONS;
+		pm->ps->eFlags |= EF3_DUAL_WEAPONS;
 	}
 #endif
 
@@ -12062,7 +12064,7 @@ rest:
 		// dumb, but since we shoot a charged weapon on button-up, we need to repress this button for now
 		pm->cmd.buttons |= BUTTON_ATTACK;
 		pm->ps->eFlags |= EF_FIRING;
-	}
+}
 	else if (pm->ps->weaponstate == WEAPON_CHARGING_ALT)
 	{
 		// weapon has a charge, so let us do an alt-attack
@@ -12750,7 +12752,7 @@ void PM_Weapon(void)
 			pm->ps->torsoTimer = pm->ps->legsTimer;
 			return;
 		}
-	}
+}
 #endif
 #endif //0
 
@@ -12804,9 +12806,9 @@ void PM_Weapon(void)
 			else
 			{
 				pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
-			}
-#endif
 		}
+#endif
+	}
 	}
 
 	if (pm->ps->weapon != WP_DISRUPTOR //not using disruptor
@@ -13485,7 +13487,7 @@ void PM_Weapon(void)
 	{
 		if (pm->ps->client_num < MAX_CLIENTS && pm->ps->ammo[weaponData[pm->ps->weapon].ammoIndex] != -1)
 		{
-			if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+			if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 			{
 				if (pm->ps->ammo[weaponData[pm->ps->weapon].ammoIndex] < weaponData[pm->ps->weapon].energyPerShot * 2
 					&&
@@ -13927,8 +13929,8 @@ void PM_Weapon(void)
 						}
 						pm->ps->weaponTime = pm->ps->torsoTimer;
 						return;
-					}
-				}
+		}
+	}
 #else
 #ifdef _GAME
 				if (pm_entSelf)
@@ -13942,7 +13944,7 @@ void PM_Weapon(void)
 				return;
 #endif
 #endif
-			}
+					}
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK && pm->ps->weapon == WP_MELEE)
 			{
 				//kicks
@@ -14162,11 +14164,11 @@ void PM_Weapon(void)
 			{
 				pm->ps->weaponTime = pm->ps->torsoTimer;
 			}
-		}
+				}
 	}
 	else if (pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
-		if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+		if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 		{
 			PM_StartTorsoAnim(WeaponAttackAnim2[pm->ps->weapon]);
 		}
@@ -14177,7 +14179,7 @@ void PM_Weapon(void)
 	}
 	else
 	{
-		if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+		if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 		{
 			PM_StartTorsoAnim(WeaponAttackAnim2[pm->ps->weapon]);
 		}
@@ -14203,7 +14205,7 @@ void PM_Weapon(void)
 		amount = weaponData[pm->ps->weapon].energyPerShot;
 	}
 
-	if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+	if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
 		amount *= 2;
 	}
@@ -14715,7 +14717,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 					ps->delta_angles[i] = -yawClamp - cmd->angles[i];
 					temp = -yawClamp;
 				}
-			}
+}
 		}
 #else //VEH_CONTROL_SCHEME_4
 		if (pm_entVeh && BG_UnrestrainedPitchRoll(ps, pm_entVeh->m_pVehicle))
@@ -16638,8 +16640,8 @@ static void BG_G2ClientSpineAngles(void* ghoul2, const int motionBolt, vec3_t ce
 			&& !PM_SpinningSaberAnim(ciTorso))
 		{
 			doCorr = qtrue;
-		}
 	}
+}
 #endif
 
 	if (doCorr)
@@ -16899,8 +16901,8 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t* cent, 
 
 	// allow yaw to drift a bit
 	if (cent->legsAnim != BOTH_STAND1 ||
-		(cent->torsoAnim != WeaponReadyAnim[cent->weapon] && !(cent->eFlags & EF_DUAL_WEAPONS) ||
-			cent->torsoAnim != WeaponReadyAnim2[cent->weapon] && cent->eFlags & EF_DUAL_WEAPONS))
+		(cent->torsoAnim != WeaponReadyAnim[cent->weapon] && !(cent->eFlags & EF3_DUAL_WEAPONS) ||
+			cent->torsoAnim != WeaponReadyAnim2[cent->weapon] && cent->eFlags & EF3_DUAL_WEAPONS))
 	{
 		// if not standing still, always point all in the same direction
 		//cent->pe.torso.yawing = qtrue;	// always center
@@ -17221,8 +17223,8 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t* cent, 
 		if (!llAngles[YAW])
 		{
 			llAngles[YAW] -= bLAngles[ROLL];
-		}
 	}
+}
 #endif
 
 	if (BG_ClassHasBadBones(cent->NPC_class))
@@ -17520,7 +17522,7 @@ void PM_VehicleViewAngles(playerState_t* ps, const bgEntity_t* veh, const usercm
 			clampMin[YAW] = clampMax[YAW] = 0;
 			clampMin[ROLL] = clampMax[ROLL] = -1;
 		}
-	}
+}
 	else
 	{
 		//NOTE: passengers can look around freely, UNLESS they're controlling a turret!
@@ -18978,13 +18980,13 @@ void PmoveSingle(pmove_t* pmove)
 		{
 			pm->ps->eFlags |= EF_JETPACK_FLAMING; //going up
 			pm->ps->eFlags |= EF_JETPACK_ACTIVE;
-			pm->ps->eFlags |= EF_JETPACK_HOVER;
+			pm->ps->eFlags |= EF3_JETPACK_HOVER;
 		}
 		else
 		{
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING; //idling
 			pm->ps->eFlags |= EF_JETPACK_ACTIVE;
-			pm->ps->eFlags &= ~EF_JETPACK_HOVER;
+			pm->ps->eFlags &= ~EF3_JETPACK_HOVER;
 		}
 	}
 
@@ -19005,6 +19007,7 @@ void PmoveSingle(pmove_t* pmove)
 	}
 
 	if (pm_entSelf->s.botclass == BCLASS_BOBAFETT
+		|| pm_entSelf->s.botclass == BCLASS_JANGO_NOJP
 		|| pm_entSelf->s.botclass == BCLASS_MANDOLORIAN
 		|| pm_entSelf->s.botclass == BCLASS_MANDOLORIAN1
 		|| pm_entSelf->s.botclass == BCLASS_MANDOLORIAN2)
@@ -19045,7 +19048,7 @@ void PmoveSingle(pmove_t* pmove)
 			&& pm->cmd.upmove == 0)
 		{
 			// Hover at this height...
-			pm->ps->eFlags |= EF_JETPACK_HOVER;
+			pm->ps->eFlags |= EF3_JETPACK_HOVER;
 			pm->ps->eFlags &= ~EF_JETPACK_ACTIVE;
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING;
 			pm->ps->pm_type = PM_JETPACK;
@@ -19056,7 +19059,7 @@ void PmoveSingle(pmove_t* pmove)
 			// On the ground. Make sure jetpack is deactivated...
 			pm->ps->eFlags &= ~EF_JETPACK_ACTIVE;
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING;
-			pm->ps->eFlags &= ~EF_JETPACK_HOVER;
+			pm->ps->eFlags &= ~EF3_JETPACK_HOVER;
 			pm->ps->pm_type = PM_NORMAL;
 		}
 	}
@@ -19099,7 +19102,7 @@ void PmoveSingle(pmove_t* pmove)
 
 		VectorMA(pm->ps->origin, 1.0f, pm->ps->velocity, blah);
 		CG_TestLine(pm->ps->origin, blah, 1, 0xff0000, 1);
-	}
+}
 #endif
 #endif
 

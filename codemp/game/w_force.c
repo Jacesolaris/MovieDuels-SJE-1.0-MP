@@ -3182,22 +3182,38 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 					}
 
 					const class_t npc_class = trace_ent->client->NPC_class;
-					const bclass_t botclass = trace_ent->client->botclass;
+					const bclass_t botclass = trace_ent->client->pers.botclass;
 
-					if (trace_ent->health <= 0 || (botclass == BCLASS_SEEKER || botclass == BCLASS_SBD ||
-						botclass == BCLASS_MANDOLORIAN || botclass == BCLASS_MANDOLORIAN1 || botclass ==
-						BCLASS_MANDOLORIAN2 ||
-						botclass == BCLASS_BOBAFETT || botclass == BCLASS_BATTLEDROID || botclass == BCLASS_DROIDEKA))
+					if (trace_ent->health <= 0 ||
+						(botclass == BCLASS_SEEKER ||
+							botclass == BCLASS_SBD ||
+							botclass == BCLASS_MANDOLORIAN ||
+							botclass == BCLASS_MANDOLORIAN1 ||
+							botclass == BCLASS_MANDOLORIAN2 ||
+							botclass == BCLASS_JANGO_NOJP ||
+							botclass == BCLASS_BOBAFETT ||
+							botclass == BCLASS_BATTLEDROID ||
+							botclass == BCLASS_DROIDEKA))
 					{
 						trace_ent->client->ps.electrifyTime = level.time + 4000;
 					}
-					else if (trace_ent->health <= 0 || (npc_class == CLASS_SEEKER || npc_class == CLASS_PROBE ||
-						npc_class == CLASS_MOUSE || npc_class == CLASS_GONK || npc_class == CLASS_R2D2 || npc_class ==
-						CLASS_REMOTE ||
-						npc_class == CLASS_R5D2 || npc_class == CLASS_PROTOCOL || npc_class == CLASS_MARK1 ||
-						npc_class == CLASS_SBD || npc_class == CLASS_BATTLEDROID || npc_class == CLASS_DROIDEKA ||
-						npc_class == CLASS_MARK2 || npc_class == CLASS_INTERROGATOR || npc_class == CLASS_ATST ||
-						npc_class == CLASS_SENTRY))
+					else if (trace_ent->health <= 0 ||
+						(npc_class == CLASS_SEEKER ||
+							npc_class == CLASS_PROBE ||
+							npc_class == CLASS_MOUSE ||
+							npc_class == CLASS_GONK ||
+							npc_class == CLASS_R2D2 ||
+							npc_class == CLASS_REMOTE ||
+							npc_class == CLASS_R5D2 ||
+							npc_class == CLASS_PROTOCOL ||
+							npc_class == CLASS_MARK1 ||
+							npc_class == CLASS_SBD ||
+							npc_class == CLASS_BATTLEDROID ||
+							npc_class == CLASS_DROIDEKA ||
+							npc_class == CLASS_MARK2 ||
+							npc_class == CLASS_INTERROGATOR ||
+							npc_class == CLASS_ATST ||
+							npc_class == CLASS_SENTRY))
 					{
 						// special droid only behaviors
 						trace_ent->client->ps.electrifyTime = level.time + 4000;
@@ -4245,8 +4261,9 @@ void ForceJump(gentity_t* self, const usercmd_t* ucmd)
 		return;
 	}
 
-	if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-		|| self->client->pers.botclass == BCLASS_BOBAFETT
+	if (self->client->pers.botclass == BCLASS_BOBAFETT
+		|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+		|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 		|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 		|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 	{
@@ -8698,8 +8715,9 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		self->client->ps.PlayerEffectFlags &= ~(1 << PEF_FLAMING);
 	}
 
-	if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-		|| self->client->pers.botclass == BCLASS_BOBAFETT
+	if (self->client->pers.botclass == BCLASS_BOBAFETT
+		|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+		|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 		|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 		|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 	{
@@ -9188,11 +9206,11 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass == BCLASS_SBD ||
-			self->client->botclass == BCLASS_BATTLEDROID ||
-			self->client->botclass == BCLASS_DROIDEKA ||
-			self->client->botclass == BCLASS_PROTOCOL ||
-			self->client->botclass == BCLASS_JAWA))
+		&& (self->client->pers.botclass == BCLASS_SBD ||
+			self->client->pers.botclass == BCLASS_BATTLEDROID ||
+			self->client->pers.botclass == BCLASS_DROIDEKA ||
+			self->client->pers.botclass == BCLASS_PROTOCOL ||
+			self->client->pers.botclass == BCLASS_JAWA))
 	{
 		// don't get Dodge.
 		return qfalse;
@@ -9278,10 +9296,11 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass != BCLASS_MANDOLORIAN &&
-			self->client->botclass != BCLASS_MANDOLORIAN1 &&
-			self->client->botclass != BCLASS_MANDOLORIAN2 &&
-			self->client->botclass != BCLASS_BOBAFETT) &&
+		&& (self->client->pers.botclass != BCLASS_MANDOLORIAN &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
+			self->client->pers.botclass != BCLASS_BOBAFETT &&
+			self->client->pers.botclass != BCLASS_JANGO_NOJP) &&
 		self->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
 	{
 		//must have enough force power
@@ -9294,10 +9313,11 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass != BCLASS_MANDOLORIAN &&
-			self->client->botclass != BCLASS_MANDOLORIAN1 &&
-			self->client->botclass != BCLASS_MANDOLORIAN2 &&
-			self->client->botclass != BCLASS_BOBAFETT))
+		&& (self->client->pers.botclass != BCLASS_MANDOLORIAN &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
+			self->client->pers.botclass != BCLASS_JANGO_NOJP &&
+			self->client->pers.botclass != BCLASS_BOBAFETT))
 	{
 		PM_AddFatigue(&self->client->ps, FATIGUE_DODGEINGBOT);
 	}
@@ -9351,15 +9371,16 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 		break;
 	case HL_LEG_RT:
 	case HL_LEG_LT:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = level.time + 30000;
@@ -9383,15 +9404,16 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 		dodge_anim = BOTH_DODGE_FR;
 		break;
 	case HL_BACK:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -9402,15 +9424,16 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 		}
 		break;
 	case HL_CHEST:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -9421,15 +9444,16 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 		}
 		break;
 	case HL_WAIST:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -9513,15 +9537,16 @@ qboolean jedi_disruptor_dodge_evasion(gentity_t* self, gentity_t* shooter, vec3_
 		break;
 	case HL_LEG_RT:
 	case HL_LEG_LT:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = level.time + 30000;
@@ -9545,15 +9570,16 @@ qboolean jedi_disruptor_dodge_evasion(gentity_t* self, gentity_t* shooter, vec3_
 		dodge_anim = BOTH_DODGE_FR;
 		break;
 	case HL_BACK:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -9564,15 +9590,16 @@ qboolean jedi_disruptor_dodge_evasion(gentity_t* self, gentity_t* shooter, vec3_
 		}
 		break;
 	case HL_CHEST:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -9583,15 +9610,16 @@ qboolean jedi_disruptor_dodge_evasion(gentity_t* self, gentity_t* shooter, vec3_
 		}
 		break;
 	case HL_WAIST:
-		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| self->client->pers.botclass == BCLASS_BOBAFETT
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_JANGO_NOJP
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;

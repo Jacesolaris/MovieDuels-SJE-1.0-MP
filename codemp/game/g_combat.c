@@ -2589,6 +2589,7 @@ void death_fxextra(gentity_t* ent)
 	switch (ent->client->pers.botclass)
 	{
 	case BCLASS_BOBAFETT:
+	case BCLASS_JANGO_NOJP:
 	case BCLASS_MANDOLORIAN:
 	case BCLASS_MANDOLORIAN1:
 	case BCLASS_MANDOLORIAN2:
@@ -3154,11 +3155,11 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 
 	if (self->r.svFlags & SVF_BOT)
 	{
-		if (self->client->botclass == BCLASS_BOBAFETT
-			|| self->client->botclass == BCLASS_ROCKETTROOPER
-			|| self->client->botclass == BCLASS_MANDOLORIAN
-			|| self->client->botclass == BCLASS_MANDOLORIAN1
-			|| self->client->botclass == BCLASS_MANDOLORIAN2)
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_ROCKETTROOPER
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			if (self->client->ps.eFlags2 & EF2_FLYING || self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
@@ -7373,27 +7374,28 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 					Boba_FlyStop(targ);
 				}
 
-				if (client->botclass == BCLASS_BOBAFETT
-					|| client->botclass == BCLASS_ROCKETTROOPER
-					|| client->botclass == BCLASS_MANDOLORIAN
-					|| client->botclass == BCLASS_MANDOLORIAN1
-					|| client->botclass == BCLASS_MANDOLORIAN2)
+				if (client->pers.botclass == BCLASS_BOBAFETT
+					|| client->pers.botclass == BCLASS_JANGO_NOJP
+					|| client->pers.botclass == BCLASS_ROCKETTROOPER
+					|| client->pers.botclass == BCLASS_MANDOLORIAN
+					|| client->pers.botclass == BCLASS_MANDOLORIAN1
+					|| client->pers.botclass == BCLASS_MANDOLORIAN2)
 				{
 					// DEMP2 also disables npc jetpack
 					Boba_FlyStop(targ);
 				}
 
-				if (client->nextbotclass == BCLASS_PROTOCOL || client->nextbotclass == BCLASS_SEEKER ||
-					client->nextbotclass == BCLASS_R2D2 || client->nextbotclass == BCLASS_R5D2 ||
-					client->nextbotclass == BCLASS_MOUSE || client->nextbotclass == BCLASS_GONK)
+				if (client->pers.botclass == BCLASS_PROTOCOL || client->pers.botclass == BCLASS_SEEKER ||
+					client->pers.botclass == BCLASS_R2D2 || client->pers.botclass == BCLASS_R5D2 ||
+					client->pers.botclass == BCLASS_MOUSE || client->pers.botclass == BCLASS_GONK)
 				{
 					// DEMP2 does more damage to these guys.
 					take *= 2;
 				}
-				else if (client->nextbotclass == BCLASS_PROBE || client->nextbotclass == BCLASS_INTERROGATOR ||
-					client->nextbotclass == BCLASS_MARK1 || client->nextbotclass == BCLASS_MARK2 ||
-					client->nextbotclass == BCLASS_SENTRY || client->nextbotclass == BCLASS_SBD ||
-					client->nextbotclass == BCLASS_BATTLEDROID || client->nextbotclass == BCLASS_DROIDEKA)
+				else if (client->pers.botclass == BCLASS_PROBE || client->pers.botclass == BCLASS_INTERROGATOR ||
+					client->pers.botclass == BCLASS_MARK1 || client->pers.botclass == BCLASS_MARK2 ||
+					client->pers.botclass == BCLASS_SENTRY || client->pers.botclass == BCLASS_SBD ||
+					client->pers.botclass == BCLASS_BATTLEDROID || client->pers.botclass == BCLASS_DROIDEKA)
 				{
 					// DEMP2 does way more damage to these guys.
 					take *= 5;
