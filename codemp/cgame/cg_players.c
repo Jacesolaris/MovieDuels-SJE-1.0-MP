@@ -7327,7 +7327,7 @@ void CG_DoSaber(vec3_t origin, vec3_t dir, float length, float length_max, float
 	}
 }
 
-void CG_DoTFASaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+void CG_DoUnstableSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light, int cnum, int bnum)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -7511,8 +7511,8 @@ void CG_DoTFASaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 		radiusmult = 1.0;
 	}
 
-	effectradius = (radius * 1.6f * v1 + Q_flrand(-1.0f, 1.0f) * 0.1f) * radiusmult * cg_SFXSabersGlowSizeTFA.value;
-	coreradius = (radius * 0.4f * v2 + Q_flrand(-1.0f, 1.0f) * 0.1f) * radiusmult * cg_SFXSabersCoreSizeTFA.value;
+	effectradius = (radius * 1.6f * v1 + Q_flrand(-1.0f, 1.0f) * 0.1f) * radiusmult * cg_SFXSabersGlowSizeUS.value;
+	coreradius = (radius * 0.4f * v2 + Q_flrand(-1.0f, 1.0f) * 0.1f) * radiusmult * cg_SFXSabersCoreSizeUS.value;
 
 	ignite_len = length_max * 0.30f;
 	ignite_radius = effectradius * effectradius * 1.5f;
@@ -8052,6 +8052,556 @@ void CG_DoSaberUnstable(vec3_t origin, vec3_t dir, float length, float length_ma
 			trap->R_AddRefEntityToScene(&saber);
 		}
 
+		saber.customShader = ignite;
+		saber.radius = ignite_radius * 0.25f;
+		saber.shaderRGBA[0] = 0xff;
+		saber.shaderRGBA[1] = 0xff;
+		saber.shaderRGBA[2] = 0xff;
+		saber.shaderRGBA[3] = 0xff;
+		trap->R_AddRefEntityToScene(&saber);
+
+		if (color == SABER_RGB ||
+			color == SABER_PIMP ||
+			color == SABER_WHITE ||
+			color == SABER_SCRIPTED)
+		{
+			saber.customShader = cgs.media.whiteIgniteFlare;
+			saber.radius = ignite_radius * 0.25f;
+			saber.shaderRGBA[0] = 0xff;
+			saber.shaderRGBA[1] = 0xff;
+			saber.shaderRGBA[2] = 0xff;
+			saber.shaderRGBA[3] = 0xff;
+			trap->R_AddRefEntityToScene(&saber);
+		}
+	}
+}
+
+void CG_DoTFASaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+	float radius, saber_colors_t color, int rfx, qboolean do_light, int cnum, int bnum)
+{
+	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
+	float radiusmult, effectradius, coreradius, effectalpha, angle_scale;
+	float blade_len, end_len, trail_len, base_len, dis_tip, dis_muz, dis_dif;
+	float v1, v2;
+	vec3_t rgb = { 1, 1, 1 };
+	int i;
+	qhandle_t ignite = 0;
+	qhandle_t blade = 0, glow = 0;
+	refEntity_t saber, sbak;
+	float ignite_len, ignite_radius;
+
+	VectorSubtract(blade_tip, blade_muz, blade_dir);
+	VectorSubtract(trail_tip, trail_muz, trail_dir);
+	blade_len = VectorLength(blade_dir);
+	trail_len = VectorLength(trail_dir);
+	VectorNormalize(blade_dir);
+	VectorNormalize(trail_dir);
+
+	if (blade_len < MIN_SABERBLADE_DRAW_LENGTH)
+	{
+		return;
+	}
+
+	VectorSubtract(trail_tip, blade_tip, end_dir);
+	VectorSubtract(trail_muz, blade_muz, base_dir);
+	end_len = VectorLength(end_dir);
+	base_len = VectorLength(base_dir);
+	VectorNormalize(end_dir);
+	VectorNormalize(base_dir);
+
+	switch (color)
+	{
+	case SABER_RED:
+		glow = cgs.media.redEp7GlowShader;
+		blade = cgs.media.ep7redSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
+		ignite = cgs.media.redIgniteFlare;
+		break;
+	case SABER_ORANGE:
+		glow = cgs.media.orangeEp7GlowShader;
+		blade = cgs.media.ep7orangeSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
+		ignite = cgs.media.orangeIgniteFlare;
+		break;
+	case SABER_YELLOW:
+		glow = cgs.media.yellowEp7GlowShader;
+		blade = cgs.media.ep7yellowSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
+		ignite = cgs.media.yellowIgniteFlare;
+		break;
+	case SABER_GREEN:
+		glow = cgs.media.greenEp7GlowShader;
+		blade = cgs.media.ep7greenSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
+		ignite = cgs.media.greenIgniteFlare;
+		break;
+	case SABER_PURPLE:
+		glow = cgs.media.purpleEp7GlowShader;
+		blade = cgs.media.ep7purpleSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
+		ignite = cgs.media.purpleIgniteFlare;
+		break;
+	case SABER_BLUE:
+		glow = cgs.media.blueEp7GlowShader;
+		blade = cgs.media.ep7blueSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
+		ignite = cgs.media.blueIgniteFlare;
+		break;
+	case SABER_LIME:
+		glow = cgs.media.limeSaberGlowShader;
+		blade = cgs.media.rgbTFASaberCoreShader;
+		ignite = cgs.media.greenIgniteFlare;
+		break;
+	case SABER_SCRIPTED:
+	case SABER_WHITE:
+	case SABER_PIMP:
+	case SABER_RGB:
+		glow = cgs.media.rgbSaberGlowShader;
+		blade = cgs.media.ep7SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
+		ignite = cgs.media.whiteIgniteFlare02;
+		break;
+	case SABER_BLACK:
+		glow = cgs.media.blackSaberGlowShader;
+		blade = cgs.media.blackSaberCoreShader;
+		ignite = cgs.media.blackIgniteFlare;
+		break;
+	case SABER_CUSTOM:
+		glow = cgs.media.customSaberGlowShader;
+		blade = cgs.media.rgbTFASaberCoreShader;
+		ignite = cgs.media.whiteIgniteFlare02;
+		break;
+	default:
+		glow = cgs.media.rgbSaberGlowShader;
+		blade = cgs.media.rgbTFASaberCoreShader;
+		ignite = cgs.media.whiteIgniteFlare;
+		break;
+	}
+
+	VectorMA(blade_muz, blade_len * 0.5f, blade_dir, mid);
+
+	if (do_light)
+	{
+		CG_RGBForSaberColor(color, rgb, cnum, bnum);
+		VectorScale(rgb, 0.66f, rgb);
+		trap->R_AddLightToScene(mid, blade_len * 2.0f + randoms() * 10.0f, rgb[0], rgb[1], rgb[2]);
+	}
+
+	//Distance Scale
+	{
+		float len;
+		float glowscale = 0.5;
+		VectorSubtract(mid, cg.refdef.vieworg, dif);
+		len = VectorLength(dif);
+		if (len > 4000)
+		{
+			len = 4000;
+		}
+		else if (len < 1)
+		{
+			len = 1;
+		}
+
+		v1 = (len + 400) / 400;
+		v2 = (len + 4000) / 4000;
+
+		if (end_len > 1 || base_len > 1)
+		{
+			if (end_len > base_len)
+				glowscale = (end_len + 4) * 0.1;
+			else
+				glowscale = (base_len + 4) * 0.1;
+
+			if (glowscale > 1.0)
+				glowscale = 1.0;
+		}
+		effectalpha = glowscale;
+	}
+
+	//Angle Scale
+	{
+		VectorSubtract(blade_tip, cg.refdef.vieworg, dif);
+		dis_tip = VectorLength(dif);
+
+		VectorSubtract(blade_muz, cg.refdef.vieworg, dif);
+		dis_muz = VectorLength(dif);
+
+		if (dis_tip > dis_muz)
+		{
+			dis_dif = dis_tip - dis_muz;
+		}
+		else if (dis_tip < dis_muz)
+		{
+			dis_dif = dis_muz - dis_tip;
+		}
+		else
+		{
+			dis_dif = 0;
+		}
+
+		angle_scale = 1.2f - dis_dif / blade_len * (dis_dif / blade_len);
+
+		if (angle_scale > 1.0f)
+			angle_scale = 1.0f;
+		if (angle_scale < 0.2f)
+			angle_scale = 0.2f;
+
+		effectalpha *= angle_scale;
+
+		angle_scale += 0.3f;
+
+		if (angle_scale > 1.0f)
+			angle_scale = 1.0f;
+		if (angle_scale < 0.4f)
+			angle_scale = 0.4f;
+	}
+
+	memset(&saber, 0, sizeof(refEntity_t));
+
+	if (blade_len < length_max)
+	{
+		radiusmult = 0.5 + blade_len / length_max / 2;
+	}
+	else
+	{
+		radiusmult = 1.0;
+	}
+
+	effectradius = (radius * 1.6f * v1 + Q_flrand(-1.0f, 1.0f) * 0.1f) * radiusmult * cg_SFXSabersGlowSizeTFA.value;
+	coreradius = (radius * 0.4f * v2 + Q_flrand(-1.0f, 1.0f) * 0.1f) * radiusmult * cg_SFXSabersCoreSizeTFA.value;
+
+	ignite_len = length_max * 0.30f;
+	ignite_radius = effectradius * effectradius * 1.5f;
+	ignite_radius -= blade_len;
+	ignite_radius *= 2.2f;
+
+	if (cg_saberTrail.integer == 2 && cg_shadows.integer != 2 && cgs.glconfig.stencilBits >= 4)
+	{
+		rfx |= RF_FORCEPOST;
+	}
+
+	for (i = 0; i < 3; i++)
+		rgb[i] *= 255;
+
+	{
+		saber.renderfx = rfx;
+		if (blade_len - effectradius * angle_scale / 2 > 0)
+		{
+			saber.radius = effectradius * angle_scale;
+			saber.saberLength = blade_len - saber.radius / 2;
+			VectorCopy(blade_muz, saber.origin);
+			VectorCopy(blade_dir, saber.axis[0]);
+			saber.reType = RT_SABER_GLOW;
+			saber.customShader = glow;
+
+			if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff *
+				effectalpha;
+			else
+			{
+				for (i = 0; i < 3; i++)
+					saber.shaderRGBA[i] = rgb[i] * effectalpha;
+				saber.shaderRGBA[3] = 255 * effectalpha;
+			}
+
+			trap->R_AddRefEntityToScene(&saber);
+		}
+
+		// Do the hot core
+		VectorMA(blade_muz, blade_len, blade_dir, saber.origin);
+		VectorMA(blade_muz, -1, blade_dir, saber.oldorigin);
+
+		saber.customShader = blade;
+		saber.reType = RT_LINE;
+
+		saber.radius = coreradius;
+
+		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+
+		if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+		else
+		{
+			for (i = 0; i < 3; i++)
+				saber.shaderRGBA[i] = rgb[i];
+			saber.shaderRGBA[3] = 255;
+		}
+		sbak = saber;
+		trap->R_AddRefEntityToScene(&saber);
+
+		if (color == SABER_RGB || color == SABER_PIMP || color == SABER_WHITE || color == SABER_SCRIPTED)
+		{
+			// Add the saber surface that provides color.
+			sbak.customShader = blade;
+			saber.reType = RT_LINE;
+			saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+			saber.radius = coreradius;
+			trap->R_AddRefEntityToScene(&sbak);
+		}
+	}
+
+	{
+		saber.renderfx = rfx;
+		if (trail_len - effectradius * angle_scale / 2 > 0)
+		{
+			saber.radius = effectradius * angle_scale;
+			saber.saberLength = trail_len - saber.radius / 2;
+			VectorCopy(trail_muz, saber.origin);
+			VectorCopy(trail_dir, saber.axis[0]);
+			saber.reType = RT_SABER_GLOW;
+			saber.customShader = glow;
+			if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff *
+				effectalpha;
+			else
+			{
+				for (i = 0; i < 3; i++)
+					saber.shaderRGBA[i] = rgb[i] * effectalpha;
+				saber.shaderRGBA[3] = 255 * effectalpha;
+			}
+
+			trap->R_AddRefEntityToScene(&saber);
+		}
+
+		// Do the hot core
+		VectorMA(trail_muz, trail_len, trail_dir, saber.origin);
+		VectorMA(trail_muz, -1, trail_dir, saber.oldorigin);
+
+		saber.customShader = blade;
+		saber.reType = RT_LINE;
+
+		saber.radius = coreradius;
+
+		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+		if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+		else
+		{
+			for (i = 0; i < 3; i++)
+				saber.shaderRGBA[i] = rgb[i];
+			saber.shaderRGBA[3] = 255;
+		}
+		sbak = saber;
+		trap->R_AddRefEntityToScene(&saber);
+
+		if (color == SABER_RGB || color == SABER_PIMP || color == SABER_WHITE || color == SABER_SCRIPTED)
+		{
+			// Add the saber surface that provides color.
+			sbak.customShader = blade;
+			saber.reType = RT_LINE;
+			saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+			saber.radius = coreradius;
+			trap->R_AddRefEntityToScene(&sbak);
+		}
+	}
+
+	VectorMA(blade_muz, blade_len - 0.5, blade_dir, blade_tip);
+	VectorMA(trail_muz, trail_len - 0.5, trail_dir, trail_tip);
+
+	if (base_len > 2)
+	{
+		saber.renderfx = rfx;
+		if (base_len - effectradius * angle_scale > 0)
+		{
+			saber.radius = effectradius * angle_scale;
+			saber.saberLength = base_len - effectradius * angle_scale;
+			VectorMA(blade_muz, effectradius * angle_scale / 2, base_dir, saber.origin);
+			VectorCopy(base_dir, saber.axis[0]);
+			saber.reType = RT_SABER_GLOW;
+			saber.customShader = glow;
+			if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff *
+				effectalpha;
+			else
+			{
+				for (i = 0; i < 3; i++)
+					saber.shaderRGBA[i] = rgb[i] * effectalpha;
+				saber.shaderRGBA[3] = 255 * effectalpha;
+			}
+			trap->R_AddRefEntityToScene(&saber);
+		}
+
+		// Do the hot core
+		VectorMA(blade_muz, base_len, base_dir, saber.origin);
+		VectorMA(blade_muz, -0.1, base_dir, saber.oldorigin);
+
+		saber.customShader = blade;
+		saber.reType = RT_LINE;
+
+		saber.radius = coreradius;
+		saber.saberLength = base_len;
+
+		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+
+		if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+		else
+		{
+			for (i = 0; i < 3; i++)
+				saber.shaderRGBA[i] = rgb[i];
+			saber.shaderRGBA[3] = 255;
+		}
+		sbak = saber;
+		trap->R_AddRefEntityToScene(&saber);
+
+		if (color == SABER_RGB || color == SABER_PIMP || color == SABER_WHITE || color == SABER_SCRIPTED)
+		{
+			// Add the saber surface that provides color.
+			sbak.customShader = cgs.media.sfxSaberBlade2Shader;
+			saber.reType = RT_LINE;
+			saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+			saber.radius = coreradius;
+			saber.saberLength = base_len;
+			trap->R_AddRefEntityToScene(&sbak);
+		}
+	}
+
+	if (end_len > 1)
+	{
+		{
+			VectorSubtract(blade_tip, cg.refdef.vieworg, dif);
+			dis_tip = VectorLength(dif);
+
+			VectorSubtract(trail_tip, cg.refdef.vieworg, dif);
+			dis_muz = VectorLength(dif);
+
+			if (dis_tip > dis_muz)
+			{
+				dis_dif = dis_tip - dis_muz;
+			}
+			else if (dis_tip < dis_muz)
+			{
+				dis_dif = dis_muz - dis_tip;
+			}
+			else
+			{
+				dis_dif = 0;
+			}
+
+			if (dis_dif > end_len * 0.9)
+			{
+				effectalpha *= 0.3;
+			}
+			else if (dis_dif > end_len * 0.8)
+			{
+				effectalpha *= 0.5;
+			}
+			else if (dis_dif > end_len * 0.7)
+			{
+				effectalpha *= 0.7;
+			}
+		}
+
+		saber.renderfx = rfx;
+		if (end_len - effectradius * angle_scale > 0)
+		{
+			saber.radius = effectradius * angle_scale;
+			saber.saberLength = end_len - effectradius * angle_scale;
+			VectorMA(blade_tip, effectradius * angle_scale / 2, end_dir, saber.origin);
+			VectorCopy(end_dir, saber.axis[0]);
+			saber.reType = RT_SABER_GLOW;
+			saber.customShader = glow;
+			if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff *
+				effectalpha;
+			else
+			{
+				for (i = 0; i < 3; i++)
+					saber.shaderRGBA[i] = rgb[i] * effectalpha;
+				saber.shaderRGBA[3] = 255 * effectalpha;
+			}
+			trap->R_AddRefEntityToScene(&saber);
+		}
+
+		// Do the hot core
+		VectorMA(blade_tip, end_len, end_dir, saber.origin);
+		VectorMA(blade_tip, -0.1, end_dir, saber.oldorigin);
+
+		saber.customShader = cgs.media.sfxSaberEndShader;
+		saber.reType = RT_LINE;
+
+		if (end_len > 9)
+		{
+			angle_scale = 5;
+		}
+		else if (end_len < 3)
+		{
+			angle_scale = 1;
+		}
+		else
+		{
+			angle_scale = end_len / 5;
+		}
+
+		{
+			angle_scale -= dis_dif / end_len * (dis_dif / end_len) * angle_scale;
+
+			if (angle_scale < 0.8)
+				angle_scale = 0.8;
+		}
+
+		saber.radius = coreradius * angle_scale;
+		saber.saberLength = end_len;
+
+		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+		if (color != SABER_RGB && color != SABER_PIMP && color != SABER_WHITE && color != SABER_SCRIPTED)
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+		else
+		{
+			for (i = 0; i < 3; i++)
+				saber.shaderRGBA[i] = rgb[i];
+			saber.shaderRGBA[3] = 255;
+		}
+		sbak = saber;
+		trap->R_AddRefEntityToScene(&saber);
+
+		if (color == SABER_RGB || color == SABER_PIMP || color == SABER_WHITE || color == SABER_SCRIPTED)
+		{
+			sbak.customShader = cgs.media.sfxSaberEnd2Shader;
+			saber.reType = RT_LINE;
+			saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
+			saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
+			saber.radius = coreradius * angle_scale;
+			saber.saberLength = end_len;
+			trap->R_AddRefEntityToScene(&sbak);
+		}
+	}
+
+	if (blade_len <= ignite_len)
+	{
+		saber.renderfx = rfx;
+		saber.radius = ignite_radius;
+		VectorCopy(blade_muz, saber.origin);
+		saber.reType = RT_SPRITE;
+		saber.customShader = ignite;
+		for (i = 0; i < 3; i++)
+		{
+			saber.shaderRGBA[i] = rgb[i];
+			saber.shaderRGBA[3] = 255;
+		}
+		saber.shaderRGBA[0] = 0xff;
+		saber.shaderRGBA[1] = 0xff;
+		saber.shaderRGBA[2] = 0xff;
+		saber.shaderRGBA[3] = 0xff;
+		if (color == SABER_BLACK)
+		{
+			saber.customShader = cgs.media.blackIgniteFlare;
+		}
+		else
+		{
+			saber.customShader = ignite;
+			trap->R_AddRefEntityToScene(&saber);
+		}
 		saber.customShader = ignite;
 		saber.radius = ignite_radius * 0.25f;
 		saber.shaderRGBA[0] = 0xff;
@@ -10262,36 +10812,50 @@ void CG_DoOTSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t t
 		glow = cgs.media.redOTGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.redIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_ORANGE:
 		glow = cgs.media.orangeOTGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.orangeIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_YELLOW:
 		glow = cgs.media.yellowOTGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.yellowIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_GREEN:
 		glow = cgs.media.greenOTGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.greenIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_PURPLE:
 		glow = cgs.media.purpleOTGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.purpleIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_BLUE:
 		glow = cgs.media.blueOTGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.blueIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_LIME:
 		glow = cgs.media.limeSaberGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.greenIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_SCRIPTED:
 	case SABER_WHITE:
@@ -10300,21 +10864,29 @@ void CG_DoOTSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t t
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.whiteIgniteFlare02;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	case SABER_BLACK:
 		glow = cgs.media.blackSaberGlowShader;
 		blade = cgs.media.blackSaberCoreShader;
 		ignite = cgs.media.blackIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end_black");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail_black");
 		break;
 	case SABER_CUSTOM:
 		glow = cgs.media.customSaberGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.whiteIgniteFlare02;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	default:
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.otSaberCoreShader;
 		ignite = cgs.media.whiteIgniteFlare;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		break;
 	}
 
@@ -12761,7 +13333,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -12821,7 +13393,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -12881,7 +13453,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -12941,7 +13513,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -13001,7 +13573,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -13061,7 +13633,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -13121,7 +13693,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -13168,7 +13740,7 @@ JustDoIt:
 			}
 			else
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -13181,7 +13753,7 @@ JustDoIt:
 				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
 				SABER_ELECTROSTAFF)
 			{
-				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
@@ -13229,6 +13801,66 @@ JustDoIt:
 			else
 			{
 				CG_DoCustomSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+					client->saber[saber_num].blade[blade_num].lengthMax,
+					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
+					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
+						SFL2_NO_DLIGHT), cent->currentState.client_num, saber_num);
+			}
+			break;
+		case 9:
+			if (cent->currentState.botclass == BCLASS_UNSTABLESABER || client->saber[saber_num].type == SABER_UNSTABLE
+				||
+				client->saber[saber_num].type == SABER_STAFF_UNSTABLE || client->saber[saber_num].type ==
+				SABER_ELECTROSTAFF)
+			{
+				CG_DoUnstableSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+					client->saber[saber_num].blade[blade_num].lengthMax,
+					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
+					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
+						SFL2_NO_DLIGHT), cent->currentState.client_num, saber_num);
+			}
+			else if (client->saber[saber_num].type == SABER_THIN || client->saber[saber_num].type == SABER_STAFF_THIN)
+			{
+				CG_DoEp3Saber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+					client->saber[saber_num].blade[blade_num].lengthMax,
+					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
+					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
+						SFL2_NO_DLIGHT), cent->currentState.client_num, saber_num);
+			}
+			else if (client->saber[saber_num].type == SABER_SFX || client->saber[saber_num].type == SABER_STAFF_SFX)
+			{
+				CG_DoSFXSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+					client->saber[saber_num].blade[blade_num].lengthMax,
+					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
+					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
+						SFL2_NO_DLIGHT), cent->currentState.client_num, saber_num);
+			}
+			else if (client->saber[saber_num].type == SABER_CUSTOMSFX)
+			{
+				CG_DoCustomSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
+					client->saber[saber_num].blade[blade_num].lengthMax,
+					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
+					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
+						SFL2_NO_DLIGHT), cent->currentState.client_num, saber_num);
+			}
+			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
+			{
+				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saber_num].blade[blade_num].lengthMax,
+					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
+					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
+						SFL2_NO_DLIGHT), cent->currentState.client_num, saber_num);
+			}
+			else if (client->saber[saber_num].type == SABER_GRIE || client->saber[saber_num].type == SABER_GRIE4)
+			{
+				CG_DoBattlefrontSaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin,
+					fx.mVerts[3].origin, client->saber[saber_num].blade[blade_num].lengthMax,
+					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
+					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &
+						SFL2_NO_DLIGHT), cent->currentState.client_num, saber_num);
+			}
+			else
+			{
+				CG_DoTFASaber(fx.mVerts[0].origin, fx.mVerts[1].origin, fx.mVerts[2].origin, fx.mVerts[3].origin,
 					client->saber[saber_num].blade[blade_num].lengthMax,
 					client->saber[saber_num].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saber_num].numBlades < 3 && !(client->saber[saber_num].saberFlags2 &

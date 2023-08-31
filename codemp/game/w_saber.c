@@ -7437,39 +7437,15 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		{
 			if (saber_hit_wall)
 			{
-				if (g_saberbounceonwalls.integer || self->client->saber[r_saber_num].saberFlags & SFL_BOUNCE_ON_WALLS
+				if (self->client->saber[r_saber_num].saberFlags & SFL_BOUNCE_ON_WALLS
 					&& (PM_SaberInAttackPure(self->client->ps.saber_move) //only in a normal attack anim
-						|| self->client->ps.saber_move == LS_A_JUMP_T__B_
-						|| self->client->ps.saber_move == LS_A_JUMP_PALP_)) //or in the strong jump-fwd-attack "death from above" move
+						|| self->client->ps.saber_move == LS_A_JUMP_T__B_ || self->client->ps.saber_move ==
+						LS_A_JUMP_PALP_)) //or in the strong jump-fwd-attack "death from above" move
 				{
 					//do bounce sound & force feedback
-					gentity_t* te = NULL;
-
-					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
-
-					//do bounce sound & force feedback
 					WP_SaberBounceOnWallSound(self, r_saber_num, r_blade_num);
-					//do hit effect
-					te = G_TempEntity(tr.endpos, EV_SABER_HIT);
-					te->s.otherEntityNum = ENTITYNUM_NONE;//we didn't hit anyone in particular
-					te->s.otherEntityNum2 = self->s.number;//send this so it knows who we are
-					te->s.weapon = r_saber_num;
-					te->s.legsAnim = r_blade_num;
-					VectorCopy(tr.endpos, te->s.origin);
-					VectorCopy(tr.plane.normal, te->s.angles);
-					if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
-					{ //don't let it play with no direction
-						te->s.angles[1] = 1;
-					}
-					//do radius damage/knockback, if any
-					if (!WP_SaberBladeUseSecondBladeStyle(&self->client->saber[r_saber_num], r_blade_num))
-					{
-						WP_SaberRadiusDamage(self, tr.endpos, self->client->saber[r_saber_num].splashRadius, self->client->saber[r_saber_num].splashDamage, self->client->saber[r_saber_num].splashKnockback);
-					}
-					else
-					{
-						WP_SaberRadiusDamage(self, tr.endpos, self->client->saber[r_saber_num].splashRadius2, self->client->saber[r_saber_num].splashDamage2, self->client->saber[r_saber_num].splashKnockback2);
-					}
+					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
+					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad - Q_BR);
 				}
 				else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK &&
 					!PM_SaberInAttackPure(self->client->ps.saber_move) &&

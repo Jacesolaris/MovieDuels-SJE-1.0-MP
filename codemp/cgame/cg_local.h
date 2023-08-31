@@ -1289,6 +1289,22 @@ typedef struct cgMedia_s {
 	qhandle_t blueEp3GlowShader;
 	qhandle_t purpleEp3GlowShader;
 
+	//Episode VII Sabers
+	qhandle_t ep7SaberCoreShader;
+	qhandle_t ep7redSaberCoreShader;
+	qhandle_t ep7orangeSaberCoreShader;
+	qhandle_t ep7yellowSaberCoreShader;
+	qhandle_t ep7greenSaberCoreShader;
+	qhandle_t ep7blueSaberCoreShader;
+	qhandle_t ep7purpleSaberCoreShader;
+	qhandle_t ep7blackSaberCoreShader;
+	qhandle_t redEp7GlowShader;
+	qhandle_t orangeEp7GlowShader;
+	qhandle_t yellowEp7GlowShader;
+	qhandle_t greenEp7GlowShader;
+	qhandle_t blueEp7GlowShader;
+	qhandle_t purpleEp7GlowShader;
+
 	qhandle_t	yellowDroppedSaberShader;
 
 	qhandle_t	rivetMarkShader;
