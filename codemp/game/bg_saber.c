@@ -2643,7 +2643,15 @@ saber_moveName_t PM_SaberLungeAttackMove(const qboolean noSpecials)
 		AngleVectors(fwdAngles, jumpFwd, NULL, NULL);
 		VectorScale(jumpFwd, 150, pm->ps->velocity);
 		PM_AddEvent(EV_JUMP);
-		return LS_PULL_ATTACK_STAB;
+
+		if (pm->ps->fd.forcePower < BLOCKPOINTS_KNOCKAWAY)
+		{
+			return LS_A_LUNGE;
+		}
+		else
+		{
+			return LS_PULL_ATTACK_STAB;
+		}
 	}
 	if (pm->ps->fd.saber_anim_level == SS_DUAL)
 	{

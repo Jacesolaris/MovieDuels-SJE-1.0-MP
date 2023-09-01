@@ -81,6 +81,13 @@ static qhandle_t purpleEp2GlowShader;
 
 //Episode III Sabers
 static qhandle_t ep3SaberCoreShader;
+static qhandle_t ep3redSaberCoreShader;
+static qhandle_t ep3orangeSaberCoreShader;
+static qhandle_t ep3yellowSaberCoreShader;
+static qhandle_t ep3greenSaberCoreShader;
+static qhandle_t ep3blueSaberCoreShader;
+static qhandle_t ep3purpleSaberCoreShader;
+static qhandle_t ep3blackSaberCoreShader;
 static qhandle_t whiteIgniteFlare02;
 static qhandle_t blackIgniteFlare02;
 static qhandle_t redEp3GlowShader;
@@ -141,31 +148,38 @@ void UI_CacheSaberGlowGraphics(void)
 	rgbTFASaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/TFASabers/blade_TFA");
 
 	//Episode I Sabers
-	ep1SaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep1Sabers/saber_core");
-	redEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep1Sabers/red_glowa");
-	orangeEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep1Sabers/orange_glowa");
-	yellowEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep1Sabers/yellow_glowa");
-	greenEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep1Sabers/green_glowa");
-	blueEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep1Sabers/blue_glowa");
-	purpleEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep1Sabers/purple_glowa");
+	ep1SaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep1/rgb_line");
+	redEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep1/red_glow");
+	orangeEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep1/orange_glow");
+	yellowEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep1/yellow_glow");
+	greenEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep1/green_glow");
+	blueEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep1/blue_glow");
+	purpleEp1GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep1/purple_glow");
 	//Episode II Sabers
-	ep2SaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep2Sabers/saber_core");
-	redEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep2Sabers/red_glowa");
-	orangeEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep2Sabers/orange_glowa");
-	yellowEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep2Sabers/yellow_glowa");
-	greenEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep2Sabers/green_glowa");
-	blueEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep2Sabers/blue_glowa");
-	purpleEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep2Sabers/purple_glowa");
+	ep2SaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep2/rgb_line");
+	redEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep2/red_glow");
+	orangeEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep2/orange_glow");
+	yellowEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep2/yellow_glow");
+	greenEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep2/green_glow");
+	blueEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep2/blue_glow");
+	purpleEp2GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep2/purple_glow");
 	//Episode III Sabers
-	ep3SaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/saber_core");
-	whiteIgniteFlare02 = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/white_ignite_flare");
-	blackIgniteFlare02 = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/black_ignite_flare");
-	redEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/red_glowa");
-	orangeEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/orange_glowa");
-	yellowEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/yellow_glowa");
-	greenEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/green_glowa");
-	blueEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/blue_glowa");
-	purpleEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/Ep3Sabers/purple_glowa");
+	ep3SaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/rgb_line");
+	ep3redSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/red_line");
+	ep3orangeSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/orange_line");
+	ep3yellowSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/yellow_line");
+	ep3greenSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/green_line");
+	ep3blueSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/blue_line");
+	ep3purpleSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/purple_line");
+	ep3blackSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/black_line");
+	whiteIgniteFlare02 = trap->R_RegisterShaderNoMip("gfx/effects/sabers/white_ignite_flare02");
+	blackIgniteFlare02 = trap->R_RegisterShaderNoMip("gfx/effects/sabers/black_ignite_flare02");
+	redEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/red_glow");
+	orangeEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/orange_glow");
+	yellowEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/yellow_glow");
+	greenEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/green_glow");
+	blueEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/blue_glow");
+	purpleEp3GlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ep3/purple_glow");
 	//Original Trilogy Sabers
 	otSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ot/ot_saberCore");
 	redOTGlowShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers_ot/ot_redGlow");
@@ -1296,32 +1310,32 @@ void UI_DoEp3Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 	{
 	case SABER_RED:
 		glow = redEp3GlowShader;
-		blade = ep3SaberCoreShader;
+		blade = ep3redSaberCoreShader;
 		VectorSet(rgb, 1.0f, 0.2f, 0.2f);
 		break;
 	case SABER_ORANGE:
 		glow = orangeEp3GlowShader;
-		blade = ep3SaberCoreShader;
+		blade = ep3orangeSaberCoreShader;
 		VectorSet(rgb, 1.0f, 0.5f, 0.1f);
 		break;
 	case SABER_YELLOW:
 		glow = yellowEp3GlowShader;
-		blade = ep3SaberCoreShader;
+		blade = ep3yellowSaberCoreShader;
 		VectorSet(rgb, 1.0f, 1.0f, 0.2f);
 		break;
 	case SABER_GREEN:
 		glow = greenEp3GlowShader;
-		blade = ep3SaberCoreShader;
+		blade = ep3greenSaberCoreShader;
 		VectorSet(rgb, 0.2f, 1.0f, 0.2f);
 		break;
 	case SABER_BLUE:
 		glow = blueEp3GlowShader;
-		blade = ep3SaberCoreShader;
+		blade = ep3blueSaberCoreShader;
 		VectorSet(rgb, 0.2f, 0.4f, 1.0f);
 		break;
 	case SABER_PURPLE:
 		glow = purpleEp3GlowShader;
-		blade = ep3SaberCoreShader;
+		blade = ep3purpleSaberCoreShader;
 		VectorSet(rgb, 0.9f, 0.2f, 1.0f);
 		break;
 	case SABER_LIME:

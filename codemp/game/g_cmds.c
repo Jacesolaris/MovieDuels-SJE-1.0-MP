@@ -3711,8 +3711,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//rather pointless in this mode..
-		trap->SendServerCommand(ent - g_entities,
-			va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NODUEL_GAMETYPE")));
+		trap->SendServerCommand(ent - g_entities,va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NODUEL_GAMETYPE")));
 		return;
 	}
 
@@ -3744,6 +3743,8 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 
 	trap->Trace(&tr, ent->client->ps.origin, NULL, NULL, fwd_org, ent->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
+	G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_ENGAGETAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+
 	if (tr.fraction != 1 && tr.entity_num < MAX_CLIENTS)
 	{
 		gentity_t* challenged = &g_entities[tr.entity_num];
@@ -3763,9 +3764,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 
 		if (challenged->client->ps.duelIndex == ent->s.number && challenged->client->ps.duelTime >= level.time)
 		{
-			trap->SendServerCommand(-1, va("print \"%s %s %s!\n\"", challenged->client->pers.netname,
-				G_GetStringEdString("MP_SVGAME", "PLDUELACCEPT"),
-				ent->client->pers.netname));
+			trap->SendServerCommand(-1, va("print \"%s %s %s!\n\"", challenged->client->pers.netname,G_GetStringEdString("MP_SVGAME", "PLDUELACCEPT"),ent->client->pers.netname));
 
 			ent->client->ps.duelInProgress = qtrue;
 			challenged->client->ps.duelInProgress = qtrue;
@@ -3790,10 +3789,9 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 			challenged->client->ps.stats[STAT_ARMOR] = 100;
 
 			//Holster their sabers now, until the duel starts (then they'll get auto-turned on to look cool)
-			G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD,
-				0);
-			G_SetAnim(challenged, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW,
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD,0);
+
+			G_SetAnim(challenged, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
 			if (!ent->client->ps.saberHolstered)
 			{
@@ -4016,6 +4014,7 @@ qboolean TryGrapple(gentity_t* ent)
 	}
 
 	G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_KYLE_GRAB, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+
 	if (ent->client->ps.torsoAnim == BOTH_KYLE_GRAB)
 	{
 		//providing the anim set succeeded..

@@ -2812,8 +2812,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -3686,6 +3685,10 @@ extern qboolean inGameCinematic;
 
 void G_SetsaberdownorAnim(gentity_t* ent)
 {
+	if (ent->client->ps.saberLockTime >= level.time)
+	{
+		return;
+	}
 	if (ent->client->ps.weapon == WP_SABER)
 	{
 		//put away saber

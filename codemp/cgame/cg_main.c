@@ -711,29 +711,36 @@ static void CG_RegisterSounds(void)
 	cgs.media.purpleOTGlowShader = trap->R_RegisterShader("gfx/effects/sabers_ot/ot_purpleGlow");
 
 	//Episode I Sabers
-	cgs.media.ep1SaberCoreShader = trap->R_RegisterShader("gfx/effects/Ep1Sabers/saber_core");
-	cgs.media.redEp1GlowShader = trap->R_RegisterShader("gfx/effects/Ep1Sabers/red_glowa");
-	cgs.media.orangeEp1GlowShader = trap->R_RegisterShader("gfx/effects/Ep1Sabers/orange_glowa");
-	cgs.media.yellowEp1GlowShader = trap->R_RegisterShader("gfx/effects/Ep1Sabers/yellow_glowa");
-	cgs.media.greenEp1GlowShader = trap->R_RegisterShader("gfx/effects/Ep1Sabers/green_glowa");
-	cgs.media.blueEp1GlowShader = trap->R_RegisterShader("gfx/effects/Ep1Sabers/blue_glowa");
-	cgs.media.purpleEp1GlowShader = trap->R_RegisterShader("gfx/effects/Ep1Sabers/purple_glowa");
+	cgs.media.ep1SaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep1/rgb_line");
+	cgs.media.redEp1GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep1/red_glow");
+	cgs.media.orangeEp1GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep1/orange_glow");
+	cgs.media.yellowEp1GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep1/yellow_glow");
+	cgs.media.greenEp1GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep1/green_glow");
+	cgs.media.blueEp1GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep1/blue_glow");
+	cgs.media.purpleEp1GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep1/purple_glow");
 	//Episode II Sabers
-	cgs.media.ep2SaberCoreShader = trap->R_RegisterShader("gfx/effects/Ep2Sabers/saber_core");
-	cgs.media.redEp2GlowShader = trap->R_RegisterShader("gfx/effects/Ep2Sabers/red_glowa");
-	cgs.media.orangeEp2GlowShader = trap->R_RegisterShader("gfx/effects/Ep2Sabers/orange_glowa");
-	cgs.media.yellowEp2GlowShader = trap->R_RegisterShader("gfx/effects/Ep2Sabers/yellow_glowa");
-	cgs.media.greenEp2GlowShader = trap->R_RegisterShader("gfx/effects/Ep2Sabers/green_glowa");
-	cgs.media.blueEp2GlowShader = trap->R_RegisterShader("gfx/effects/Ep2Sabers/blue_glowa");
-	cgs.media.purpleEp2GlowShader = trap->R_RegisterShader("gfx/effects/Ep2Sabers/purple_glowa");
+	cgs.media.ep2SaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep2/rgb_line");
+	cgs.media.redEp2GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep2/red_glow");
+	cgs.media.orangeEp2GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep2/orange_glow");
+	cgs.media.yellowEp2GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep2/yellow_glow");
+	cgs.media.greenEp2GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep2/green_glow");
+	cgs.media.blueEp2GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep2/blue_glow");
+	cgs.media.purpleEp2GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep2/purple_glow");
 	//Episode III Sabers
-	cgs.media.ep3SaberCoreShader = trap->R_RegisterShader("gfx/effects/Ep3Sabers/saber_core");
-	cgs.media.redEp3GlowShader = trap->R_RegisterShader("gfx/effects/Ep3Sabers/red_glowa");
-	cgs.media.orangeEp3GlowShader = trap->R_RegisterShader("gfx/effects/Ep3Sabers/orange_glowa");
-	cgs.media.yellowEp3GlowShader = trap->R_RegisterShader("gfx/effects/Ep3Sabers/yellow_glowa");
-	cgs.media.greenEp3GlowShader = trap->R_RegisterShader("gfx/effects/Ep3Sabers/green_glowa");
-	cgs.media.blueEp3GlowShader = trap->R_RegisterShader("gfx/effects/Ep3Sabers/blue_glowa");
-	cgs.media.purpleEp3GlowShader = trap->R_RegisterShader("gfx/effects/Ep3Sabers/purple_glowa");
+	cgs.media.ep3SaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/rgb_line");
+	cgs.media.ep3redSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/red_line");
+	cgs.media.ep3orangeSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/orange_line");
+	cgs.media.ep3yellowSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/yellow_line");
+	cgs.media.ep3greenSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/green_line");
+	cgs.media.ep3blueSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/blue_line");
+	cgs.media.ep3purpleSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/purple_line");
+	cgs.media.ep3blackSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/black_line");
+	cgs.media.redEp3GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/red_glow");
+	cgs.media.orangeEp3GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/orange_glow");
+	cgs.media.yellowEp3GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/yellow_glow");
+	cgs.media.greenEp3GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/green_glow");
+	cgs.media.blueEp3GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/blue_glow");
+	cgs.media.purpleEp3GlowShader = trap->R_RegisterShader("gfx/effects/sabers_ep3/purple_glow");
 	//Episode VII Sabers
 	cgs.media.ep7SaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_tfa/rgb_line");
 	cgs.media.ep7redSaberCoreShader = trap->R_RegisterShader("gfx/effects/sabers_tfa/red_line");

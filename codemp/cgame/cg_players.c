@@ -9200,31 +9200,42 @@ void CG_DoEp1Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	case SABER_RED:
 		glow = cgs.media.redEp1GlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.redIgniteFlare;
 		break;
 	case SABER_ORANGE:
 		glow = cgs.media.orangeEp1GlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.orangeIgniteFlare;
 		break;
 	case SABER_YELLOW:
 		glow = cgs.media.yellowEp1GlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.yellowIgniteFlare;
 		break;
 	case SABER_GREEN:
 		glow = cgs.media.greenEp1GlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.greenIgniteFlare;
 		break;
 	case SABER_PURPLE:
 		glow = cgs.media.purpleEp1GlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.purpleIgniteFlare;
 		break;
-	case SABER_BLUE:
 		glow = cgs.media.blueEp1GlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.blueIgniteFlare;
 		break;
 	case SABER_LIME:
@@ -9238,6 +9249,8 @@ void CG_DoEp1Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	case SABER_RGB:
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.whiteIgniteFlare02;
 		break;
 	case SABER_BLACK:
@@ -9253,6 +9266,8 @@ void CG_DoEp1Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	default:
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.whiteIgniteFlare;
 		break;
 	}
@@ -9736,31 +9751,43 @@ void CG_DoEp2Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	case SABER_RED:
 		glow = cgs.media.redEp2GlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.redIgniteFlare;
 		break;
 	case SABER_ORANGE:
 		glow = cgs.media.orangeEp2GlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.orangeIgniteFlare;
 		break;
 	case SABER_YELLOW:
 		glow = cgs.media.yellowEp2GlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.yellowIgniteFlare;
 		break;
 	case SABER_GREEN:
 		glow = cgs.media.greenEp2GlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.greenIgniteFlare;
 		break;
 	case SABER_PURPLE:
 		glow = cgs.media.purpleEp2GlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.purpleIgniteFlare;
 		break;
 	case SABER_BLUE:
 		glow = cgs.media.blueEp2GlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.blueIgniteFlare;
 		break;
 	case SABER_LIME:
@@ -9774,11 +9801,15 @@ void CG_DoEp2Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	case SABER_RGB:
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.whiteIgniteFlare02;
 		break;
 	case SABER_BLACK:
 		glow = cgs.media.blackSaberGlowShader;
 		blade = cgs.media.blackSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end_black");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail_black");
 		ignite = cgs.media.blackIgniteFlare;
 		break;
 	case SABER_CUSTOM:
@@ -9789,6 +9820,8 @@ void CG_DoEp2Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	default:
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.ep2SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.whiteIgniteFlare;
 		break;
 	}
@@ -10271,32 +10304,44 @@ void CG_DoEp3Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	{
 	case SABER_RED:
 		glow = cgs.media.redEp3GlowShader;
-		blade = cgs.media.ep3SaberCoreShader;
+		blade = cgs.media.ep3redSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.redIgniteFlare;
 		break;
 	case SABER_ORANGE:
 		glow = cgs.media.orangeEp3GlowShader;
-		blade = cgs.media.ep3SaberCoreShader;
+		blade = cgs.media.ep3orangeSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.orangeIgniteFlare;
 		break;
 	case SABER_YELLOW:
 		glow = cgs.media.yellowEp3GlowShader;
-		blade = cgs.media.ep3SaberCoreShader;
+		blade = cgs.media.ep3yellowSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.yellowIgniteFlare;
 		break;
 	case SABER_GREEN:
 		glow = cgs.media.greenEp3GlowShader;
-		blade = cgs.media.ep3SaberCoreShader;
+		blade = cgs.media.ep3greenSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.greenIgniteFlare;
 		break;
 	case SABER_PURPLE:
 		glow = cgs.media.purpleEp3GlowShader;
-		blade = cgs.media.ep3SaberCoreShader;
+		blade = cgs.media.ep3purpleSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.purpleIgniteFlare;
 		break;
 	case SABER_BLUE:
 		glow = cgs.media.blueEp3GlowShader;
-		blade = cgs.media.ep3SaberCoreShader;
+		blade = cgs.media.ep3blueSaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.blueIgniteFlare;
 		break;
 	case SABER_LIME:
@@ -10310,6 +10355,8 @@ void CG_DoEp3Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	case SABER_RGB:
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.ep3SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.whiteIgniteFlare02;
 		break;
 	case SABER_BLACK:
@@ -10325,6 +10372,8 @@ void CG_DoEp3Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	default:
 		glow = cgs.media.rgbSaberGlowShader;
 		blade = cgs.media.ep3SaberCoreShader;
+		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
+		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.whiteIgniteFlare;
 		break;
 	}
