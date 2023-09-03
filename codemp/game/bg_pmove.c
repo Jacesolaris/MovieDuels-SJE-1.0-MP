@@ -10310,7 +10310,6 @@ static void PM_Footsteps(void)
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 #endif
@@ -10385,7 +10384,6 @@ static void PM_Footsteps(void)
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 #endif
@@ -10437,7 +10435,6 @@ static void PM_Footsteps(void)
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 #endif
@@ -10507,7 +10504,6 @@ static void PM_Footsteps(void)
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 #endif
@@ -10558,7 +10554,6 @@ static void PM_Footsteps(void)
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 #endif
@@ -10643,7 +10638,6 @@ static void PM_Footsteps(void)
 								if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 								{
 									pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
-									pm->ps->sprintFuel -= 15;
 #ifdef _GAME
 									g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 #endif
@@ -10837,7 +10831,6 @@ static void PM_Footsteps(void)
 									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 									{
 										pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
-										pm->ps->sprintFuel -= 15;
 #ifdef _GAME
 										g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 #endif

@@ -9402,6 +9402,7 @@ void saberBackToOwner(gentity_t* saberent)
 		if (saber_owner->client->ps.forceHandExtend != HANDEXTEND_SABERPULL && owner_len <= 180)
 		{
 			saber_owner->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;
+			saber_owner->client->ps.forceHandExtendTime = level.time + 100;
 		}
 
 		if (owner_len <= 32)

@@ -70,7 +70,7 @@ void g_do_m_block_response(const gentity_t* speaker_npc_self)
 		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_ANGER1, EV_ANGER3), 1000);
 		break;
 	default:
-		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_TAUNT1, EV_TAUNT3), 1000);
+		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_TAUNT1, EV_TAUNT5), 1000);
 		break;
 	}
 }

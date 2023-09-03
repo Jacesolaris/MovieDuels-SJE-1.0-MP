@@ -329,7 +329,7 @@ void NPC_Jedi_PlayConfusionSound(const gentity_t* self)
 			}
 			else
 			{
-				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT3), 2000);
+				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT5), 2000);
 			}
 		}
 		else
@@ -2184,7 +2184,7 @@ static qboolean Jedi_BattleTaunt(const gentity_t* NPC)
 			else
 			{
 				//reborn or a jedi fighting an enemy
-				event = Q_irand(EV_TAUNT1, EV_TAUNT3);
+				event = Q_irand(EV_TAUNT1, EV_TAUNT5);
 			}
 			if (event != -1)
 			{
@@ -2212,7 +2212,7 @@ static qboolean Jedi_BattleTaunt(const gentity_t* NPC)
 					&& NPCS.NPC->enemy->s.weapon == WP_SABER
 					&& NPCS.NPC->enemy->client && NPCS.NPC->enemy->client->NPC_class == CLASS_JEDI)
 				{
-					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 2000);
+					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 2000);
 				}
 				return qtrue;
 			}
@@ -3187,7 +3187,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_ANGER1, EV_ANGER1), 5000 + Q_irand(0, 15000));
 					break;
 				default:
-					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 5000 + Q_irand(0, 15000));
+					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 5000 + Q_irand(0, 15000));
 					break;
 				}
 			}
@@ -3205,7 +3205,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_COMBAT1, EV_COMBAT3), 5000 + Q_irand(0, 15000));
 					break;
 				default:
-					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 5000 + Q_irand(0, 15000));
+					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 5000 + Q_irand(0, 15000));
 				}
 			}
 			else
@@ -3225,7 +3225,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_ANGER1, EV_ANGER1), 5000 + Q_irand(0, 15000));
 					break;
 				default:
-					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 5000 + Q_irand(0, 15000));
+					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 5000 + Q_irand(0, 15000));
 					break;
 				}
 			}
@@ -3971,7 +3971,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 				}
 				else
 				{
-					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 10000);
+					G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 10000);
 				}
 				jediSpeechDebounceTime[NPCS.NPC->client->playerTeam] = NPCS.NPCInfo->blockedSpeechDebounceTime = level.
 					time + 3000;
@@ -4113,7 +4113,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 								}
 								else
 								{
-									G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 10000);
+									G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 10000);
 								}
 								jediSpeechDebounceTime[NPCS.NPC->client->playerTeam] = NPCS.NPCInfo->
 									blockedSpeechDebounceTime = level.time + 3000;
@@ -10753,7 +10753,7 @@ void NPC_BSJedi_Default(void)
 						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_ANGER1, EV_ANGER1), 5000 + Q_irand(0, 15000));
 						break;
 					default:
-						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 5000 + Q_irand(0, 15000));
+						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 5000 + Q_irand(0, 15000));
 						break;
 					}
 				}
@@ -10771,7 +10771,7 @@ void NPC_BSJedi_Default(void)
 						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_COMBAT1, EV_COMBAT3), 5000 + Q_irand(0, 15000));
 						break;
 					default:
-						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 5000 + Q_irand(0, 15000));
+						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 5000 + Q_irand(0, 15000));
 					}
 				}
 				else
@@ -10791,7 +10791,7 @@ void NPC_BSJedi_Default(void)
 						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_ANGER1, EV_ANGER1), 5000 + Q_irand(0, 15000));
 						break;
 					default:
-						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT3), 5000 + Q_irand(0, 15000));
+						G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_TAUNT1, EV_TAUNT5), 5000 + Q_irand(0, 15000));
 						break;
 					}
 				}
