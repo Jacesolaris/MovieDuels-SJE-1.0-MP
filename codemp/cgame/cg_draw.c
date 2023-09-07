@@ -2603,7 +2603,7 @@ void CG_DrawJK2ForcePower(const centity_t* cent, const int x, const int y, const
 	}
 	else
 	{
-		if (!cg.snap->ps.BlasterAttackChainCount && com_outcast.integer == 1)
+		if (!cg.snap->ps.BlasterAttackChainCount && g_SerenityJediEngineHudMode.integer == 1)
 		{
 			focus_item = Menu_FindItemByName(menu_hud, "forceamount");
 
@@ -2702,7 +2702,7 @@ void CG_DrawJK2GunFatigue(const centity_t* cent, const int x, const int y)
 
 	trap->R_SetColor(colorTable[CT_WHITE]);
 
-	if (com_outcast.integer == 1) //jko
+	if (g_SerenityJediEngineHudMode.integer == 1) //jko
 	{
 		if (cent->currentState.weapon == WP_STUN_BATON)
 		{
@@ -2786,7 +2786,7 @@ void CG_DrawJK2SaberFatigue(const centity_t* cent, const int x, const int y)
 		return;
 	}
 
-	if (com_outcast.integer == 1) //jko
+	if (g_SerenityJediEngineHudMode.integer == 1) //jko
 	{
 		if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_HUDFLASH)
 		{
@@ -2952,7 +2952,7 @@ void CG_DrawJK2blockingMode(const centity_t* cent, const menuDef_t* menu_hud)
 		return;
 	}
 
-	if (com_outcast.integer == 1) //jko
+	if (g_SerenityJediEngineHudMode.integer == 1) //jko
 	{
 		if (cg.predicted_player_state.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK)
 		{
@@ -3245,6 +3245,47 @@ void CG_DrawHUDJK2LeftFrame1(const int x, const int y)
 
 /*
 ================
+CG_DrawHUDMDLeftFrameHorz
+================
+*/
+void CG_DrawHUDMDLeftFrameHorz(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y + 30, 180, 35, cgs.media.MDHUDLeftFrame); // Metal frame
+}
+
+void CG_DrawHUDMDLeftFramevert(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x + 10, y - 100, 35, 180, cgs.media.MDHUDLeftFramerotate); // vertical
+}
+
+void CG_DrawHUDMDLeftInnerRinghoz(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftInnerRing); // vertical
+}
+
+void CG_DrawHUDMDLeftOuterRinghoz(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftOuterRing); // vertical
+}
+
+void CG_DrawHUDMDLeftInnerRingvert(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftInnerRing); // vertical
+}
+
+void CG_DrawHUDMDLeftOuterRingvert(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftOuterRing); // vertical
+}
+
+/*
+================
 CG_DrawHUDJK2LeftFrame2
 ================
 */
@@ -3265,6 +3306,47 @@ void CG_DrawHUDJK2RightFrame1(const int x, const int y)
 	trap->R_SetColor(hudTintColor);
 	// Inner gray wire frame
 	CG_DrawPic(x, y, 80, 80, cgs.media.JK2HUDInnerRight); //
+}
+
+/*
+================
+CG_DrawHUDMDRightFramehoz
+================
+*/
+void CG_DrawHUDMDRightFramehoz(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x - 100, y + 30, 180, 35, cgs.media.MDHUDRightFrame); // Metal frame
+}
+
+void CG_DrawHUDMDRightFramevert(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x + 30, y - 100, 35, 180, cgs.media.MDHUDRightFramerotate); // vertical
+}
+
+void CG_DrawHUDMDRightInnerRinghoz(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightInnerRing);
+}
+
+void CG_DrawHUDMDRightOuterRinghoz(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightOuterRing);
+}
+
+void CG_DrawHUDMDRightInnerRingvert(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightInnerRing); //vertical
+}
+
+void CG_DrawHUDMDRightOuterRingvert(const int x, const int y)
+{
+	trap->R_SetColor(colorTable[CT_WHITE]);
+	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightOuterRing); //vertical
 }
 
 /*
@@ -3337,7 +3419,7 @@ void CG_DrawHUD(const centity_t* cent)
 		return;
 	}
 
-	if (com_outcast.integer == 1)
+	if (g_SerenityJediEngineHudMode.integer == 1)
 	{
 		if (cg.snap->ps.fd.forcePowersActive & 1 << FP_GRIP
 			|| cg.snap->ps.fd.forcePowersActive & 1 << FP_DRAIN
@@ -3369,7 +3451,7 @@ void CG_DrawHUD(const centity_t* cent)
 		if (menu_hud)
 		{
 			// Print frame
-			if (com_outcast.integer == 0) //jka
+			if (g_SerenityJediEngineHudMode.integer == 0) //jka
 			{
 				CG_DrawHUDJK2LeftFrame2(0, SCREEN_HEIGHT - 80);
 
@@ -3410,7 +3492,7 @@ void CG_DrawHUD(const centity_t* cent)
 					CG_DrawCusblockPoints(x, y, menu_hud);
 				}
 			}
-			else if (com_outcast.integer == 1) //jko
+			else if (g_SerenityJediEngineHudMode.integer == 1) //jko
 			{
 				CG_DrawHUDJK2LeftFrame1(0, SCREEN_HEIGHT - 80);
 
@@ -3428,6 +3510,16 @@ void CG_DrawHUD(const centity_t* cent)
 				}
 
 				CG_DrawHUDJK2LeftFrame2(0, SCREEN_HEIGHT - 80);
+			}
+			else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels left
+			{//left hud
+				CG_DrawHUDMDLeftFramevert(0, SCREEN_HEIGHT - 80); //vertical
+				CG_DrawHUDMDLeftInnerRingvert(0, SCREEN_HEIGHT - 80);
+			}
+			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels left
+			{//left hud
+				CG_DrawHUDMDLeftFrameHorz(0, SCREEN_HEIGHT - 80);
+				CG_DrawHUDMDLeftInnerRinghoz(0, SCREEN_HEIGHT - 80);
 			}
 			else //custom
 			{
@@ -3490,7 +3582,7 @@ void CG_DrawHUD(const centity_t* cent)
 
 		if (menu_hud)
 		{
-			if (com_outcast.integer == 0) //jka
+			if (g_SerenityJediEngineHudMode.integer == 0) //jka
 			{
 				CG_DrawHUDJK2RightFrame2(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 
@@ -3569,7 +3661,7 @@ void CG_DrawHUD(const centity_t* cent)
 				}
 				CG_Draw_JKA_ForcePower(cent, menu_hud);
 			}
-			else if (com_outcast.integer == 1) //jko
+			else if (g_SerenityJediEngineHudMode.integer == 1) //jko
 			{
 				const int y = 400;
 				const int x = 560;
@@ -3611,6 +3703,16 @@ void CG_DrawHUD(const centity_t* cent)
 				}
 
 				CG_DrawHUDJK2RightFrame2(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+			}
+			else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+			{//right hud
+				CG_DrawHUDMDRightFramevert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80); // vertical
+				CG_DrawHUDMDRightInnerRingvert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+			}
+			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+			{//right hud
+				CG_DrawHUDMDRightFramehoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+				CG_DrawHUDMDRightInnerRinghoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 			}
 			else //custom
 			{
@@ -3740,6 +3842,11 @@ void CG_DrawForceSelect(void)
 	}
 
 	if (!cg.snap->ps.fd.forcePowersKnown)
+	{
+		return;
+	}
+
+	if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
 	{
 		return;
 	}
@@ -3890,6 +3997,11 @@ void cg_draw_inventory_select(void)
 	}
 
 	if (!cg.snap->ps.stats[STAT_HOLDABLE_ITEM] || !cg.snap->ps.stats[STAT_HOLDABLE_ITEMS])
+	{
+		return;
+	}
+
+	if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
 	{
 		return;
 	}
@@ -10979,7 +11091,14 @@ static void CG_Draw2D(void)
 
 			if (cg_drawStatus.integer)
 			{
-				CG_DrawIconBackground();
+				if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+				{
+					//CG_DrawIconBackground();
+				}
+				else
+				{
+					CG_DrawIconBackground();
+				}
 			}
 
 			if (in_time > wp_time)
@@ -11003,13 +11122,34 @@ static void CG_Draw2D(void)
 				switch (draw_select)
 				{
 				case 1:
-					cg_draw_inventory_select();
+					if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+					{
+						//CG_DrawIconBackground();
+					}
+					else
+					{
+						cg_draw_inventory_select();
+					}
 					break;
 				case 2:
-					CG_DrawWeaponSelect();
+					if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+					{
+						//CG_DrawIconBackground();
+					}
+					else
+					{
+						CG_DrawWeaponSelect();
+					}
 					break;
 				case 3:
-					CG_DrawForceSelect();
+					if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+					{
+						//CG_DrawIconBackground();
+					}
+					else
+					{
+						CG_DrawForceSelect();
+					}
 					break;
 				default:
 					break;

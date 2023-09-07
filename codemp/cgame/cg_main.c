@@ -2969,6 +2969,17 @@ void CG_Init(const int serverMessageNum, const int serverCommandSequence, const 
 	cgs.media.messageLitOff = trap->R_RegisterShaderNoMip("gfx/hud/message_off");
 	cgs.media.messageObjCircle = trap->R_RegisterShaderNoMip("gfx/hud/objective_circle");
 
+	//movieduels hud
+	cgs.media.MDHUDLeftFrame = trap->R_RegisterShaderNoMip("gfx/hud/DF2-Left-Hud"); //horizontal
+	cgs.media.MDHUDLeftFramerotate = trap->R_RegisterShaderNoMip("gfx/hud/DF-Left-Hud");  //vertical
+	cgs.media.MDHUDLeftInnerRing = trap->R_RegisterShaderNoMip("gfx/hud/DF-Inner-Ring");
+	cgs.media.MDHUDLeftOuterRing = trap->R_RegisterShaderNoMip("gfx/hud/DF-Outer-Ring");
+
+	cgs.media.MDHUDRightFrame = trap->R_RegisterShaderNoMip("gfx/hud/DF2-Right-Hud");
+	cgs.media.MDHUDRightFramerotate = trap->R_RegisterShaderNoMip("gfx/hud/DF-Right-Hud"); //vertical
+	cgs.media.MDHUDRightInnerRing = trap->R_RegisterShaderNoMip("gfx/hud/DF-Inner-Ring");
+	cgs.media.MDHUDRightOuterRing = trap->R_RegisterShaderNoMip("gfx/hud/DF-Outer-Ring");
+
 	// Load tics
 	for (i = 0; i < MAX_TICS; i++)
 	{

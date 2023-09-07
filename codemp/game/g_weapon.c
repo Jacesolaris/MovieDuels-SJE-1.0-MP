@@ -701,7 +701,7 @@ void WP_FireWrist(gentity_t* ent)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
 		if (!(ent->r.svFlags & SVF_BOT))
 		{
@@ -753,7 +753,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
 		if (alt_fire)
 		{
@@ -1448,7 +1448,7 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 		{
 			//no inherent aim screw up
 		}
-		else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+		else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 		{//force sight 2+ gives perfect aim
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
@@ -1605,7 +1605,7 @@ static void WP_FireRepeater(gentity_t* ent, const qboolean alt_fire)
 		{
 			//no inherent aim screw up
 		}
-		else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+		else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 		{//force sight 2+ gives perfect aim
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
@@ -1977,7 +1977,7 @@ static void WP_FlechetteMainFire(gentity_t* ent)
 			{
 				//no inherent aim screw up
 			}
-			else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+			else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 			{//force sight 2+ gives perfect aim
 				if (!(ent->r.svFlags & SVF_BOT))
 				{

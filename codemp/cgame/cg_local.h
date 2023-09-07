@@ -1605,6 +1605,17 @@ typedef struct cgMedia_s {
 	qhandle_t   JK2HUDSaberStyleStaff;
 	qhandle_t   JK2HUDSaberStyleDuels;
 
+	//movieduels hud
+	qhandle_t MDHUDLeftFrame;
+	qhandle_t MDHUDLeftFramerotate;
+	qhandle_t MDHUDLeftInnerRing;
+	qhandle_t MDHUDLeftOuterRing;
+
+	qhandle_t MDHUDRightFrame;
+	qhandle_t MDHUDRightFramerotate;
+	qhandle_t MDHUDRightInnerRing;
+	qhandle_t MDHUDRightOuterRing;
+
 	sfxHandle_t messageLitSound;
 
 	qhandle_t messageLitOn;

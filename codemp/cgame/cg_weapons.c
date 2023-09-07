@@ -631,7 +631,7 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, wpmdlidx, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,cgs.game_models, cent->modelScale))
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, wpmdlidx, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time, cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
@@ -760,7 +760,7 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, wpmdlidx, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,cgs.game_models, cent->modelScale))
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, wpmdlidx, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time, cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
@@ -1519,7 +1519,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		hand.renderfx = RF_DEPTHHACK | RF_FIRST_PERSON;
 		angles[2] += 20;
 		// add everything onto the hand
-		cg_add_player_weaponduals(&hand, ps, &cg_entities[cg.predicted_player_state.client_num],angles,	qfalse, qtrue);
+		cg_add_player_weaponduals(&hand, ps, &cg_entities[cg.predicted_player_state.client_num], angles, qfalse, qtrue);
 	}
 }
 
@@ -1560,8 +1560,7 @@ void CG_DrawIconBackground(void)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_flags & PMF_FOLLOW || cg.predicted_player_state.persistant[PERS_TEAM] ==
-		TEAM_SPECTATOR)
+	if (cg.predicted_player_state.pm_flags & PMF_FOLLOW || cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1569,6 +1568,11 @@ void CG_DrawIconBackground(void)
 	if (cg.predicted_player_state.m_iVehicleNum)
 	{
 		//I'm in a vehicle
+		return;
+	}
+
+	if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+	{
 		return;
 	}
 
@@ -1741,6 +1745,11 @@ void CG_DrawWeaponSelect(void)
 
 	// don't display if dead
 	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
 	{
 		return;
 	}
