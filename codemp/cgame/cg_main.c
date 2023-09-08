@@ -3345,7 +3345,7 @@ static qboolean CG_IncomingConsoleCommand(void)
 	{ //any command containing the string "blah" is redirected to "quit"
 		strcpy(icc->conCommand, "quit");
 		return qfalse;
-}
+	}
 #endif
 	return qtrue;
 }

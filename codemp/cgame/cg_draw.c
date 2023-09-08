@@ -69,6 +69,7 @@ int cg_siegeDeathTime = 0;
 
 #define MAX_HUD_TICS 4
 #define MAX_SJEHUD_TICS 15
+#define MAX_DFHUD_TICS  16
 
 const char* armorTicName[MAX_HUD_TICS] =
 {
@@ -84,6 +85,26 @@ const char* healthTicName[MAX_HUD_TICS] =
 	"health_tic2MP",
 	"health_tic3MP",
 	"health_tic4MP",
+};
+
+const char* df_health_ticName[MAX_DFHUD_TICS] =
+{
+	"DF-Health-Tic1",
+	"DF-Health-Tic2",
+	"DF-Health-Tic3",
+	"DF-Health-Tic4",
+	"DF-Health-Tic5",
+	"DF-Health-Tic6",
+	"DF-Health-Tic7",
+	"DF-Health-Tic8",
+	"DF-Health-Tic9",
+	"DF-Health-Tic10",
+	"DF-Health-Tic11",
+	"DF-Health-Tic12",
+	"DF-Health-Tic13",
+	"DF-Health-Tic14",
+	"DF-Health-Tic15",
+	"DF-Health-Tic16",
 };
 
 const char* forceTicName[MAX_HUD_TICS] =
@@ -701,7 +722,7 @@ void CG_DrawCusHealth(const menuDef_t* menu_hud)
 
 	if (cg.snap->ps.weapon == WP_SABER)
 	{
-		// Print the mueric amount
+		// Print the numeric amount
 		focus_item = Menu_FindItemByName(menu_hud, "healthamount");
 
 		if (focus_item)
@@ -722,7 +743,7 @@ void CG_DrawCusHealth(const menuDef_t* menu_hud)
 	}
 	else
 	{
-		// Print the mueric amount
+		// Print the numeric amount
 		focus_item = Menu_FindItemByName(menu_hud, "healthamountmp");
 
 		if (focus_item)
@@ -740,6 +761,164 @@ void CG_DrawCusHealth(const menuDef_t* menu_hud)
 				NUM_FONT_SMALL,
 				qfalse);
 		}
+	}
+}
+
+void CG_DrawMDHealthVer(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	const int inc = (float)ps->stats[STAT_MAX_HEALTH] / MAX_DFHUD_TICS;
+	int curr_value = ps->stats[STAT_HEALTH];
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_health_ticName[i]);
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+
+		curr_value -= inc;
+	}
+
+	// Print the numeric amount
+	const itemDef_t* focus_item_amount = Menu_FindItemByName(menu_hud, "healthamount_MD_Vert");
+
+	if (focus_item_amount)
+	{
+		// Print health amount
+		trap->R_SetColor(focus_item_amount->window.foreColor);
+
+		CG_DrawNumField(
+			focus_item_amount->window.rect.x,
+			focus_item_amount->window.rect.y,
+			3,
+			ps->stats[STAT_HEALTH],
+			focus_item_amount->window.rect.w,
+			focus_item_amount->window.rect.h,
+			NUM_FONT_SMALL,
+			qfalse);
+	}
+}
+
+void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	const int inc = (float)ps->stats[STAT_MAX_HEALTH] / MAX_DFHUD_TICS;
+	int curr_value = ps->stats[STAT_HEALTH];
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_health_ticName[i]);
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+
+		curr_value -= inc;
+	}
+
+	// Print the numeric amount
+	const itemDef_t* focus_item_amount = Menu_FindItemByName(menu_hud, "healthamount_MD_Hoz");
+
+	if (focus_item_amount)
+	{
+		// Print health amount
+		trap->R_SetColor(focus_item_amount->window.foreColor);
+
+		CG_DrawNumField(
+			focus_item_amount->window.rect.x,
+			focus_item_amount->window.rect.y,
+			3,
+			ps->stats[STAT_HEALTH],
+			focus_item_amount->window.rect.w,
+			focus_item_amount->window.rect.h,
+			NUM_FONT_SMALL,
+			qfalse);
 	}
 }
 
@@ -3263,25 +3442,25 @@ void CG_DrawHUDMDLeftFramevert(const int x, const int y)
 void CG_DrawHUDMDLeftInnerRinghoz(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftInnerRing); // vertical
+	CG_DrawPic(x + 29, y + 26.5, 42, 42, cgs.media.MDHUDLeftInnerRing); // vertical
 }
 
 void CG_DrawHUDMDLeftOuterRinghoz(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftOuterRing); // vertical
+	CG_DrawPic(x + 29, y + 26.5, 42, 42, cgs.media.MDHUDLeftOuterRing); // vertical
 }
 
 void CG_DrawHUDMDLeftInnerRingvert(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftInnerRing); // vertical
+	CG_DrawPic(x + 6.5, y + 9, 42, 42, cgs.media.MDHUDLeftInnerRing); // vertical
 }
 
 void CG_DrawHUDMDLeftOuterRingvert(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDLeftOuterRing); // vertical
+	CG_DrawPic(x + 6.5, y + 9, 42, 42, cgs.media.MDHUDLeftOuterRing); // vertical
 }
 
 /*
@@ -3328,25 +3507,25 @@ void CG_DrawHUDMDRightFramevert(const int x, const int y)
 void CG_DrawHUDMDRightInnerRinghoz(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightInnerRing);
+	CG_DrawPic(x + 9.5, y + 26.5, 42, 42, cgs.media.MDHUDRightInnerRing);
 }
 
 void CG_DrawHUDMDRightOuterRinghoz(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightOuterRing);
+	CG_DrawPic(x + 9.5, y + 26.5, 42, 42, cgs.media.MDHUDRightOuterRing);
 }
 
 void CG_DrawHUDMDRightInnerRingvert(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightInnerRing); //vertical
+	CG_DrawPic(x + 26.5, y + 9, 42, 42, cgs.media.MDHUDRightInnerRing); //vertical
 }
 
 void CG_DrawHUDMDRightOuterRingvert(const int x, const int y)
 {
 	trap->R_SetColor(colorTable[CT_WHITE]);
-	CG_DrawPic(x, y, 40, 40, cgs.media.MDHUDRightOuterRing); //vertical
+	CG_DrawPic(x + 26.5, y + 9, 42, 42, cgs.media.MDHUDRightOuterRing); //vertical
 }
 
 /*
@@ -3512,14 +3691,18 @@ void CG_DrawHUD(const centity_t* cent)
 				CG_DrawHUDJK2LeftFrame2(0, SCREEN_HEIGHT - 80);
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels left
-			{//left hud
+			{//left hud vert
 				CG_DrawHUDMDLeftFramevert(0, SCREEN_HEIGHT - 80); //vertical
 				CG_DrawHUDMDLeftInnerRingvert(0, SCREEN_HEIGHT - 80);
+				CG_DrawHUDMDLeftOuterRingvert(0, SCREEN_HEIGHT - 80);
+				CG_DrawMDHealthVer(menu_hud);
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels left
-			{//left hud
-				CG_DrawHUDMDLeftFrameHorz(0, SCREEN_HEIGHT - 80);
+			{//left hud hoz
+				CG_DrawHUDMDLeftFrameHorz(0, SCREEN_HEIGHT - 80); //horizontal
 				CG_DrawHUDMDLeftInnerRinghoz(0, SCREEN_HEIGHT - 80);
+				CG_DrawHUDMDLeftOuterRinghoz(0, SCREEN_HEIGHT - 80);
+				CG_DrawMDHealthHoz(menu_hud);
 			}
 			else //custom
 			{
@@ -3708,11 +3891,13 @@ void CG_DrawHUD(const centity_t* cent)
 			{//right hud
 				CG_DrawHUDMDRightFramevert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80); // vertical
 				CG_DrawHUDMDRightInnerRingvert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+				CG_DrawHUDMDRightOuterRingvert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
 			{//right hud
 				CG_DrawHUDMDRightFramehoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDRightInnerRinghoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+				CG_DrawHUDMDRightOuterRinghoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 			}
 			else //custom
 			{

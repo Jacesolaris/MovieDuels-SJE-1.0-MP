@@ -5306,7 +5306,9 @@ static const char* g_bindCommands[] = {
 	"hips",
 	"won",
 	"emote",
-	"r_weather"
+	"r_weather",
+	"recorddemo",
+	"stoprecord"
 };
 
 #define g_bindCount ARRAY_LEN(g_bindCommands)

@@ -5935,8 +5935,7 @@ void ClientThink_real(gentity_t* ent)
 	{
 		ent->client->ps.saberLockFrame = 0;
 		//check for taunt
-		if (pmove.cmd.generic_cmd == GENCMD_ENGAGE_DUEL && (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype ==
-			GT_MOVIEDUELS_POWERDUEL))
+		if (pmove.cmd.generic_cmd == GENCMD_ENGAGE_DUEL && (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype ==GT_MOVIEDUELS_POWERDUEL))
 		{
 			//already in a duel, make it a taunt command
 			pmove.cmd.buttons |= BUTTON_GESTURE;

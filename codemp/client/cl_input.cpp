@@ -1891,7 +1891,7 @@ static constexpr cmdList_t inputCmds[] =
 	{"meditate", "Meditate", IN_GenCMD29, nullptr},
 	{"flourish", "Flourish", IN_GenCMD30, nullptr},
 	{"gloat", "Gloat", IN_GenCMD31, nullptr},
-	{"surrender", "Surrender", IN_GenCMD32, nullptr},
+	{"surrender", "Surrender", IN_GenCMD32, nullptr },
 	{"useGivenForce", "Use specified force power", IN_UseGivenForce, nullptr},
 	{"automap_button", "Show/hide automap", IN_AutoMapButton, nullptr},
 	{"automap_toggle", "Show/hide radar", IN_AutoMapToggle, nullptr},
