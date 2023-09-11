@@ -87,24 +87,44 @@ const char* healthTicName[MAX_HUD_TICS] =
 	"health_tic4MP",
 };
 
-const char* df_health_ticName[MAX_DFHUD_TICS] =
+const char* df_health_ticNamevert[MAX_DFHUD_TICS] =
 {
-	"DF-Health-Tic1",
-	"DF-Health-Tic2",
-	"DF-Health-Tic3",
-	"DF-Health-Tic4",
-	"DF-Health-Tic5",
-	"DF-Health-Tic6",
-	"DF-Health-Tic7",
-	"DF-Health-Tic8",
-	"DF-Health-Tic9",
-	"DF-Health-Tic10",
-	"DF-Health-Tic11",
-	"DF-Health-Tic12",
-	"DF-Health-Tic13",
-	"DF-Health-Tic14",
-	"DF-Health-Tic15",
-	"DF-Health-Tic16",
+	"md_health_tic1",
+	"md_health_tic2",
+	"md_health_tic3",
+	"md_health_tic4",
+	"md_health_tic5",
+	"md_health_tic6",
+	"md_health_tic7",
+	"md_health_tic8",
+	"md_health_tic9",
+	"md_health_tic10",
+	"md_health_tic11",
+	"md_health_tic12",
+	"md_health_tic13",
+	"md_health_tic14",
+	"md_health_tic15",
+	"md_health_tic16",
+};
+
+const char* df_health_ticNamehoz[MAX_DFHUD_TICS] =
+{
+	"md_health_tichoz1",
+	"md_health_tichoz2",
+	"md_health_tichoz3",
+	"md_health_tichoz4",
+	"md_health_tichoz5",
+	"md_health_tichoz6",
+	"md_health_tichoz7",
+	"md_health_tichoz8",
+	"md_health_tichoz9",
+	"md_health_tichoz10",
+	"md_health_tichoz11",
+	"md_health_tichoz12",
+	"md_health_tichoz13",
+	"md_health_tichoz14",
+	"md_health_tichoz15",
+	"md_health_tichoz16",
 };
 
 const char* forceTicName[MAX_HUD_TICS] =
@@ -785,13 +805,20 @@ void CG_DrawMDHealthVer(const menuDef_t* menu_hud)
 		return;
 	}
 
+	int health_amt = ps->stats[STAT_HEALTH];
+	if (health_amt > ps->stats[STAT_MAX_HEALTH])
+	{
+		health_amt = ps->stats[STAT_MAX_HEALTH];
+	}
+
 	const int inc = (float)ps->stats[STAT_MAX_HEALTH] / MAX_DFHUD_TICS;
-	int curr_value = ps->stats[STAT_HEALTH];
+	int curr_value = health_amt;
 
 	// Print the health tics, fading out the one which is partial health
 	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
 	{
-		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_health_ticName[i]);
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_health_ticNamevert[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "health_icon_df_vert");
 
 		if (!focus_item) // This is bad
 		{
@@ -818,6 +845,14 @@ void CG_DrawMDHealthVer(const menuDef_t* menu_hud)
 			focus_item->window.rect.w,
 			focus_item->window.rect.h,
 			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
 		);
 
 		curr_value -= inc;
@@ -864,13 +899,20 @@ void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
 		return;
 	}
 
+	int health_amt = ps->stats[STAT_HEALTH];
+	if (health_amt > ps->stats[STAT_MAX_HEALTH])
+	{
+		health_amt = ps->stats[STAT_MAX_HEALTH];
+	}
+
 	const int inc = (float)ps->stats[STAT_MAX_HEALTH] / MAX_DFHUD_TICS;
-	int curr_value = ps->stats[STAT_HEALTH];
+	int curr_value = health_amt;
 
 	// Print the health tics, fading out the one which is partial health
 	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
 	{
-		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_health_ticName[i]);
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_health_ticNamehoz[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "health_icon_df_hoz");
 
 		if (!focus_item) // This is bad
 		{
@@ -891,12 +933,21 @@ void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
 
 		trap->R_SetColor(calc_color);
 
-		CG_DrawPic(
+		CG_DrawRotatePic2(
 			focus_item->window.rect.x,
 			focus_item->window.rect.y,
 			focus_item->window.rect.w,
 			focus_item->window.rect.h,
+			90,
 			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
 		);
 
 		curr_value -= inc;
@@ -3692,17 +3743,17 @@ void CG_DrawHUD(const centity_t* cent)
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels left
 			{//left hud vert
+				CG_DrawMDHealthVer(menu_hud);
 				CG_DrawHUDMDLeftFramevert(0, SCREEN_HEIGHT - 80); //vertical
 				CG_DrawHUDMDLeftInnerRingvert(0, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDLeftOuterRingvert(0, SCREEN_HEIGHT - 80);
-				CG_DrawMDHealthVer(menu_hud);
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels left
 			{//left hud hoz
+				CG_DrawMDHealthHoz(menu_hud);
 				CG_DrawHUDMDLeftFrameHorz(0, SCREEN_HEIGHT - 80); //horizontal
 				CG_DrawHUDMDLeftInnerRinghoz(0, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDLeftOuterRinghoz(0, SCREEN_HEIGHT - 80);
-				CG_DrawMDHealthHoz(menu_hud);
 			}
 			else //custom
 			{
