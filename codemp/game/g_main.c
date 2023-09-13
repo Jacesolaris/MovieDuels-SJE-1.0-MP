@@ -4308,6 +4308,7 @@ extern void TieFighterThink(gentity_t* self);
 #define JETPACK_REFUEL_RATE		150 //seems fair
 
 #define SPRINT_DEFUEL_RATE		150
+#define SPRINT_SLOW_REFUEL_RATE	250
 #define ENHANCED_REFUEL_RATE	75 //seems fair
 
 void G_RunFrame(const int levelTime)
@@ -4807,10 +4808,9 @@ void G_RunFrame(const int levelTime)
 				}
 			}
 
-			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING || ent->client->ps.PlayerEffectFlags & 1 <<
-				PEF_WEAPONSPRINTING)
+			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING || ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 			{
-				//using jetpack, drain fuel
+				//using sprint fuel
 				if (ent->client->sprintDebReduce < level.time)
 				{
 					ent->client->ps.sprintFuel--;
@@ -4823,10 +4823,11 @@ void G_RunFrame(const int levelTime)
 					ent->client->sprintDebReduce = level.time + SPRINT_DEFUEL_RATE;
 				}
 			}
-			else if (ent->client->ps.sprintFuel < 100 && !(ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING) && !(
-				ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
+			else if (ent->client->ps.sprintFuel < 100 &&
+				!(ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING) &&
+				!(ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 			{
-				//recharge jetpack
+				//recharge sprint
 				if (ent->client->sprintkDebRecharge < level.time && !ent->client->IsSprinting)
 				{
 					ent->client->ps.sprintFuel++;
@@ -4836,7 +4837,14 @@ void G_RunFrame(const int levelTime)
 					}
 					else
 					{
-						ent->client->sprintkDebRecharge = level.time + JETPACK_REFUEL_RATE;
+						if (ent->client->ps.sprintFuel < 15)
+						{
+							ent->client->sprintkDebRecharge = level.time + SPRINT_SLOW_REFUEL_RATE;
+						}
+						else
+						{
+							ent->client->sprintkDebRecharge = level.time + JETPACK_REFUEL_RATE;
+						}
 					}
 				}
 			}

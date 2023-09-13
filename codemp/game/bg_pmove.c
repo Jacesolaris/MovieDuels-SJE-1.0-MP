@@ -6256,10 +6256,10 @@ static void PM_AirMove(void)
 			pm->ps->forceJumpFlip)
 		{
 			PM_CheckJump();
-	}
+		}
 #endif
 		PM_CheckGrab();
-}
+	}
 	PM_Friction();
 
 	float fmove = pm->cmd.forwardmove;
@@ -10178,8 +10178,7 @@ static void PM_Footsteps(void)
 					}
 				}
 
-				if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-					PEF_WEAPONSPRINTING)
+				if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 				{
 					pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 					pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10204,13 +10203,12 @@ static void PM_Footsteps(void)
 							desiredAnim = SBD_RUNING_WEAPON;
 						}
 
-						if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-							PEF_WEAPONSPRINTING)
+						if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 						{
 							pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 							pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
 #ifdef _GAME
-							g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+							g_entities[pm->ps->client_num].client->IsSprinting = qfalse; // sbd cannot sprint
 #endif
 						}
 					}
@@ -10312,6 +10310,10 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
@@ -10386,13 +10388,16 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
 						else
 						{
-							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-								PEF_WEAPONSPRINTING)
+							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10437,13 +10442,16 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
 						else
 						{
-							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-								PEF_WEAPONSPRINTING)
+							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10506,13 +10514,16 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
 						else
 						{
-							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-								PEF_WEAPONSPRINTING)
+							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10556,13 +10567,16 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
 						else
 						{
-							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-								PEF_WEAPONSPRINTING)
+							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10594,8 +10608,7 @@ static void PM_Footsteps(void)
 						{
 							desiredAnim = BOTH_RUN7;
 						}
-						if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-							PEF_WEAPONSPRINTING)
+						if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 						{
 							pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 							pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10640,14 +10653,17 @@ static void PM_Footsteps(void)
 									pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
 #ifdef _GAME
 									g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+									if (pm->ps->sprintFuel < 17) // single sprint here
+									{
+										pm->ps->sprintFuel -= 10;
+									}
 #endif
 								}
 							}
 							else
 							{
 								PM_SetAnim(SETANIM_BOTH, BOTH_RUN1, SETANIM_FLAG_NORMAL);
-								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1
-									<< PEF_WEAPONSPRINTING)
+								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 								{
 									pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 									pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10694,13 +10710,33 @@ static void PM_Footsteps(void)
 									}
 									else
 									{
-										if (holding_block)
+										if (holding_block && pm->ps->sprintFuel > 15) // staff sprint here
 										{
 											PM_SetAnim(SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
+
+											if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+											{
+												pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+#ifdef _GAME
+												g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+												if (pm->ps->sprintFuel < 17) // single sprint here
+												{
+													pm->ps->sprintFuel -= 10;
+												}
+#endif
+											}
 										}
 										else
 										{
 											PM_SetAnim(SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+											if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+											{
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+#ifdef _GAME
+												g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+#endif
+											}
 										}
 									}
 								}
@@ -10710,6 +10746,18 @@ static void PM_Footsteps(void)
 								if (pm->ps->fd.forcePowersActive & 1 << FP_SPEED)
 								{
 									PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT, set_anim_flags);
+
+									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+									{
+										pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+#ifdef _GAME
+										g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+										if (pm->ps->sprintFuel < 17) // single sprint here
+										{
+											pm->ps->sprintFuel -= 10;
+										}
+#endif
+									}
 								}
 								else
 								{
@@ -10723,7 +10771,7 @@ static void PM_Footsteps(void)
 									}
 									else
 									{
-										if (holding_block)
+										if (holding_block && pm->ps->sprintFuel > 15) //dual sprint here
 										{
 											if (saber1 && saber1->type == SABER_GRIE)
 											{
@@ -10737,10 +10785,30 @@ static void PM_Footsteps(void)
 											{
 												PM_SetAnim(SETANIM_BOTH, BOTH_RUN_DUAL, set_anim_flags);
 											}
+
+											if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+											{
+												pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+#ifdef _GAME
+												g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+												if (pm->ps->sprintFuel < 17) // single sprint here
+												{
+													pm->ps->sprintFuel -= 10;
+												}
+#endif
+											}
 										}
 										else
 										{
 											PM_SetAnim(SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+											if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+											{
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+#ifdef _GAME
+												g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+#endif
+											}
 										}
 									}
 								}
@@ -10754,6 +10822,18 @@ static void PM_Footsteps(void)
 								if (pm->ps->fd.forcePowersActive & 1 << FP_SPEED)
 								{
 									PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT, set_anim_flags);
+
+									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+									{
+										pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+#ifdef _GAME
+										g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+										if (pm->ps->sprintFuel < 17) // single sprint here
+										{
+											pm->ps->sprintFuel -= 10;
+										}
+#endif
+									}
 								}
 								else
 								{
@@ -10786,29 +10866,41 @@ static void PM_Footsteps(void)
 										}
 										else
 										{
-											if (holding_block)
+											if (holding_block && pm->ps->sprintFuel > 10) // single sprint here
 											{
 												PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SABER_MP, set_anim_flags);
+
+												if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+												{
+													pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+#ifdef _GAME
+													g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+													if (pm->ps->sprintFuel < 17) // single sprint here
+													{
+														pm->ps->sprintFuel -= 10;
+													}
+#endif
+												}
 											}
 											else
 											{
 												PM_SetAnim(SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+
+												if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+												{
+													pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+													pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+#ifdef _GAME
+													g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+#endif
+												}
 											}
 										}
 									}
 								}
 							}
-							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-								PEF_WEAPONSPRINTING)
-							{
-								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
-#ifdef _GAME
-								g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
-#endif
-							}
 						}
-						else
+						else // holding saber but its off
 						{
 							if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 							{
@@ -10833,14 +10925,18 @@ static void PM_Footsteps(void)
 										pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
 #ifdef _GAME
 										g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+										if (pm->ps->sprintFuel < 17) // single sprint here
+										{
+											pm->ps->sprintFuel -= 10;
+										}
 #endif
 									}
 								}
 								else
 								{
 									PM_SetAnim(SETANIM_BOTH, BOTH_RUN1, SETANIM_FLAG_NORMAL);
-									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags &
-										1 << PEF_WEAPONSPRINTING)
+
+									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 									{
 										pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 										pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -10934,8 +11030,7 @@ static void PM_Footsteps(void)
 						break;
 					}
 				}
-				if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-					PEF_WEAPONSPRINTING)
+				if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 				{
 					pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 					pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -11214,8 +11309,7 @@ static void PM_Footsteps(void)
 						break;
 					}
 				}
-				if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-					PEF_WEAPONSPRINTING)
+				if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 				{
 					pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
 					pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
@@ -12057,7 +12151,7 @@ rest:
 		// dumb, but since we shoot a charged weapon on button-up, we need to repress this button for now
 		pm->cmd.buttons |= BUTTON_ATTACK;
 		pm->ps->eFlags |= EF_FIRING;
-}
+	}
 	else if (pm->ps->weaponstate == WEAPON_CHARGING_ALT)
 	{
 		// weapon has a charge, so let us do an alt-attack
@@ -12745,7 +12839,7 @@ void PM_Weapon(void)
 			pm->ps->torsoTimer = pm->ps->legsTimer;
 			return;
 		}
-}
+	}
 #endif
 #endif //0
 
@@ -12799,9 +12893,9 @@ void PM_Weapon(void)
 			else
 			{
 				pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
-		}
+			}
 #endif
-	}
+		}
 	}
 
 	if (pm->ps->weapon != WP_DISRUPTOR //not using disruptor
@@ -13922,8 +14016,8 @@ void PM_Weapon(void)
 						}
 						pm->ps->weaponTime = pm->ps->torsoTimer;
 						return;
-		}
-	}
+					}
+				}
 #else
 #ifdef _GAME
 				if (pm_entSelf)
@@ -13937,7 +14031,7 @@ void PM_Weapon(void)
 				return;
 #endif
 #endif
-					}
+			}
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK && pm->ps->weapon == WP_MELEE)
 			{
 				//kicks
@@ -14157,7 +14251,7 @@ void PM_Weapon(void)
 			{
 				pm->ps->weaponTime = pm->ps->torsoTimer;
 			}
-				}
+		}
 	}
 	else if (pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
@@ -14710,7 +14804,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 					ps->delta_angles[i] = -yawClamp - cmd->angles[i];
 					temp = -yawClamp;
 				}
-}
+			}
 		}
 #else //VEH_CONTROL_SCHEME_4
 		if (pm_entVeh && BG_UnrestrainedPitchRoll(ps, pm_entVeh->m_pVehicle))
@@ -16633,8 +16727,8 @@ static void BG_G2ClientSpineAngles(void* ghoul2, const int motionBolt, vec3_t ce
 			&& !PM_SpinningSaberAnim(ciTorso))
 		{
 			doCorr = qtrue;
+		}
 	}
-}
 #endif
 
 	if (doCorr)
@@ -17216,8 +17310,8 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t* cent, 
 		if (!llAngles[YAW])
 		{
 			llAngles[YAW] -= bLAngles[ROLL];
+		}
 	}
-}
 #endif
 
 	if (BG_ClassHasBadBones(cent->NPC_class))
@@ -17515,7 +17609,7 @@ void PM_VehicleViewAngles(playerState_t* ps, const bgEntity_t* veh, const usercm
 			clampMin[YAW] = clampMax[YAW] = 0;
 			clampMin[ROLL] = clampMax[ROLL] = -1;
 		}
-}
+	}
 	else
 	{
 		//NOTE: passengers can look around freely, UNLESS they're controlling a turret!
@@ -19095,7 +19189,7 @@ void PmoveSingle(pmove_t* pmove)
 
 		VectorMA(pm->ps->origin, 1.0f, pm->ps->velocity, blah);
 		CG_TestLine(pm->ps->origin, blah, 1, 0xff0000, 1);
-}
+	}
 #endif
 #endif
 

@@ -2718,7 +2718,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 		return;
 	}
 
-	if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING)
+	if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING || ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 	{
 		return;
 	}
@@ -2812,7 +2812,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -5935,7 +5935,7 @@ void ClientThink_real(gentity_t* ent)
 	{
 		ent->client->ps.saberLockFrame = 0;
 		//check for taunt
-		if (pmove.cmd.generic_cmd == GENCMD_ENGAGE_DUEL && (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype ==GT_MOVIEDUELS_POWERDUEL))
+		if (pmove.cmd.generic_cmd == GENCMD_ENGAGE_DUEL && (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL))
 		{
 			//already in a duel, make it a taunt command
 			pmove.cmd.buttons |= BUTTON_GESTURE;

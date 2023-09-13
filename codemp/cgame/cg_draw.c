@@ -107,6 +107,46 @@ const char* df_health_ticNamevert[MAX_DFHUD_TICS] =
 	"md_health_tic16",
 };
 
+const char* df_Armour_ticNamevert[MAX_DFHUD_TICS] =
+{
+	"md_armour_tic1",
+	"md_armour_tic2",
+	"md_armour_tic3",
+	"md_armour_tic4",
+	"md_armour_tic5",
+	"md_armour_tic6",
+	"md_armour_tic7",
+	"md_armour_tic8",
+	"md_armour_tic9",
+	"md_armour_tic10",
+	"md_armour_tic11",
+	"md_armour_tic12",
+	"md_armour_tic13",
+	"md_armour_tic14",
+	"md_armour_tic15",
+	"md_armour_tic16",
+};
+
+const char* df_Sprint_ticNamevert[MAX_DFHUD_TICS] =
+{
+	"md_sprint_tic1",
+	"md_sprint_tic2",
+	"md_sprint_tic3",
+	"md_sprint_tic4",
+	"md_sprint_tic5",
+	"md_sprint_tic6",
+	"md_sprint_tic7",
+	"md_sprint_tic8",
+	"md_sprint_tic9",
+	"md_sprint_tic10",
+	"md_sprint_tic11",
+	"md_sprint_tic12",
+	"md_sprint_tic13",
+	"md_sprint_tic14",
+	"md_sprint_tic15",
+	"md_sprint_tic16",
+};
+
 const char* df_health_ticNamehoz[MAX_DFHUD_TICS] =
 {
 	"md_health_tichoz1",
@@ -125,6 +165,46 @@ const char* df_health_ticNamehoz[MAX_DFHUD_TICS] =
 	"md_health_tichoz14",
 	"md_health_tichoz15",
 	"md_health_tichoz16",
+};
+
+const char* df_armour_ticNamehoz[MAX_DFHUD_TICS] =
+{
+	"md_armour_tichoz1",
+	"md_armour_tichoz2",
+	"md_armour_tichoz3",
+	"md_armour_tichoz4",
+	"md_armour_tichoz5",
+	"md_armour_tichoz6",
+	"md_armour_tichoz7",
+	"md_armour_tichoz8",
+	"md_armour_tichoz9",
+	"md_armour_tichoz10",
+	"md_armour_tichoz11",
+	"md_armour_tichoz12",
+	"md_armour_tichoz13",
+	"md_armour_tichoz14",
+	"md_armour_tichoz15",
+	"md_armour_tichoz16",
+};
+
+const char* df_Sprint_ticNamehoz[MAX_DFHUD_TICS] =
+{
+	"md_sprint_tichoz1",
+	"md_sprint_tichoz2",
+	"md_sprint_tichoz3",
+	"md_sprint_tichoz4",
+	"md_sprint_tichoz5",
+	"md_sprint_tichoz6",
+	"md_sprint_tichoz7",
+	"md_sprint_tichoz8",
+	"md_sprint_tichoz9",
+	"md_sprint_tichoz10",
+	"md_sprint_tichoz11",
+	"md_sprint_tichoz12",
+	"md_sprint_tichoz13",
+	"md_sprint_tichoz14",
+	"md_sprint_tichoz15",
+	"md_sprint_tichoz16",
 };
 
 const char* forceTicName[MAX_HUD_TICS] =
@@ -878,6 +958,175 @@ void CG_DrawMDHealthVer(const menuDef_t* menu_hud)
 	}
 }
 
+void CG_DrawMDArmourVer(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int armour_amt = ps->stats[STAT_ARMOR];
+	if (armour_amt > ps->stats[STAT_MAX_HEALTH])
+	{
+		armour_amt = ps->stats[STAT_MAX_HEALTH];
+	}
+
+	const int inc = (float)ps->stats[STAT_MAX_HEALTH] / MAX_DFHUD_TICS;
+	int curr_value = armour_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_Armour_ticNamevert[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "armour_icon_df_vert");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+
+	// Print the numeric amount
+	const itemDef_t* focus_item_amount = Menu_FindItemByName(menu_hud, "armouramount_MD_Vert");
+
+	if (focus_item_amount)
+	{
+		// Print health amount
+		trap->R_SetColor(focus_item_amount->window.foreColor);
+
+		CG_DrawNumField(
+			focus_item_amount->window.rect.x,
+			focus_item_amount->window.rect.y,
+			3,
+			ps->stats[STAT_ARMOR],
+			focus_item_amount->window.rect.w,
+			focus_item_amount->window.rect.h,
+			NUM_FONT_SMALL,
+			qfalse);
+	}
+}
+
+void CG_DrawMDSprintVer(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int sprint_amt = (float)cg.snap->ps.sprintFuel;
+	if (sprint_amt > PLAYER_FUEL_MAX)
+	{
+		sprint_amt = PLAYER_FUEL_MAX;
+	}
+
+	const int inc = PLAYER_FUEL_MAX / MAX_DFHUD_TICS;
+
+	int curr_value = sprint_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_Sprint_ticNamevert[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "sprint_icon_df_vert");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+}
+
 void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
 {
 	vec4_t calc_color;
@@ -970,6 +1219,177 @@ void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
 			focus_item_amount->window.rect.h,
 			NUM_FONT_SMALL,
 			qfalse);
+	}
+}
+
+void CG_DrawMDArmourHoz(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int armour_amt = ps->stats[STAT_ARMOR];
+	if (armour_amt > ps->stats[STAT_MAX_HEALTH])
+	{
+		armour_amt = ps->stats[STAT_MAX_HEALTH];
+	}
+
+	const int inc = (float)ps->stats[STAT_MAX_HEALTH] / MAX_DFHUD_TICS;
+	int curr_value = armour_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_armour_ticNamehoz[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "armour_icon_df_hoz");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			90,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+
+	// Print the numeric amount
+	const itemDef_t* focus_item_amount = Menu_FindItemByName(menu_hud, "armouramount_MD_Hoz");
+
+	if (focus_item_amount)
+	{
+		// Print health amount
+		trap->R_SetColor(focus_item_amount->window.foreColor);
+
+		CG_DrawNumField(
+			focus_item_amount->window.rect.x,
+			focus_item_amount->window.rect.y,
+			3,
+			ps->stats[STAT_ARMOR],
+			focus_item_amount->window.rect.w,
+			focus_item_amount->window.rect.h,
+			NUM_FONT_SMALL,
+			qfalse);
+	}
+}
+
+void CG_DrawMDSprinthoz(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int sprint_amt = (float)cg.snap->ps.sprintFuel;
+	if (sprint_amt > PLAYER_FUEL_MAX)
+	{
+		sprint_amt = PLAYER_FUEL_MAX;
+	}
+
+	const int inc = PLAYER_FUEL_MAX / MAX_DFHUD_TICS;
+
+	int curr_value = sprint_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_Sprint_ticNamehoz[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "sprint_icon_df_hoz");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			90,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
 	}
 }
 
@@ -3744,16 +4164,80 @@ void CG_DrawHUD(const centity_t* cent)
 			else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels left
 			{//left hud vert
 				CG_DrawMDHealthVer(menu_hud);
+				CG_DrawMDArmourVer(menu_hud);
+
+				//if (cg.snap->ps.jetpackFuel < 100)
+				//{
+				//	if (cent->currentState.botclass == BCLASS_BOBAFETT
+				//		|| cent->currentState.botclass == BCLASS_JANGO_NOJP
+				//		|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
+				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN
+				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
+				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN2 || draw_jetpack_fuel_rocket_trooper_player(cent))
+				//	{
+				//		//draw it as long as it isn't full
+				//		CG_DrawDF_JetPackFuel();
+				//	}
+				//}
+				//else if (cg.snap->ps.cloakFuel < 100)
+				//{
+				//	//draw it as long as it isn't full
+				//	CG_DrawDF_CloakFuel();
+				//}
+				//else
+				//{
+					// Draw stamina by default
+				CG_DrawMDSprintVer(menu_hud);
+				//}
+
 				CG_DrawHUDMDLeftFramevert(0, SCREEN_HEIGHT - 80); //vertical
 				CG_DrawHUDMDLeftInnerRingvert(0, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDLeftOuterRingvert(0, SCREEN_HEIGHT - 80);
+
+				/*CG_DrawForceSelect_side();
+				CG_DrawForceSelect_text();
+
+				cg_draw_inventory_select_side();
+				CG_DrawInventorySelect_text();*/
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels left
 			{//left hud hoz
 				CG_DrawMDHealthHoz(menu_hud);
+				CG_DrawMDArmourHoz(menu_hud);
+
+				//if (cg.snap->ps.jetpackFuel < 100)
+				//{
+				//	if (cent->currentState.botclass == BCLASS_BOBAFETT
+				//		|| cent->currentState.botclass == BCLASS_JANGO_NOJP
+				//		|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
+				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN
+				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
+				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN2 || draw_jetpack_fuel_rocket_trooper_player(cent))
+				//	{
+				//		//draw it as long as it isn't full
+				//		CG_DrawDF_JetPackFuel();
+				//	}
+				//}
+				//else if (cg.snap->ps.cloakFuel < 100)
+				//{
+				//	//draw it as long as it isn't full
+				//	CG_DrawDF_CloakFuel();
+				//}
+				//else
+				//{
+					// Draw stamina by default
+				CG_DrawMDSprinthoz(menu_hud);
+				//}
+
 				CG_DrawHUDMDLeftFrameHorz(0, SCREEN_HEIGHT - 80); //horizontal
 				CG_DrawHUDMDLeftInnerRinghoz(0, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDLeftOuterRinghoz(0, SCREEN_HEIGHT - 80);
+
+				/*CG_DrawForceSelect_sidehoz();
+				CG_DrawForceSelect_texthoz();
+
+				cg_draw_inventory_select_sidehoz();
+				CG_DrawInventorySelect_texthoz();*/
 			}
 			else //custom
 			{
@@ -9998,7 +10482,7 @@ static void CG_DrawWarmup(void)
 
 	w = CG_Text_Width(s, scale, FONT_MEDIUM);
 	CG_Text_Paint(320 - w / 2, 125, scale, colorWhite, s, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE, FONT_MEDIUM);
-}
+	}
 
 //==================================================================================
 /*
@@ -11279,7 +11763,7 @@ static void CG_Draw2D(void)
 		CG_DrawJetpackFuel();
 	}
 
-	if (cg.snap->ps.sprintFuel < 100)
+	if (cg.snap->ps.sprintFuel < 100 && (g_SerenityJediEngineHudMode.integer < 2 || g_SerenityJediEngineHudMode.integer > 3))
 	{
 		//draw it as long as it isn't full
 		CG_DrawSprintFuel();
