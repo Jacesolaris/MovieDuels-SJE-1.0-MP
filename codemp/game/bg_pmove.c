@@ -13005,11 +13005,15 @@ void PM_Weapon(void)
 				else
 				{
 					desiredAnim = BOTH_2HANDPUSH;
+
+					pm->ps->powerups[PW_FORCE_PUSH_RHAND] = pm->cmd.serverTime + pm->ps->torsoTimer + 1000;
 				}
 			}
 			else
 			{
 				desiredAnim = BOTH_FORCEPUSH;
+
+				pm->ps->powerups[PW_FORCE_PUSH] = pm->cmd.serverTime + pm->ps->torsoTimer + 1000;
 			}
 			break;
 		case HANDEXTEND_FORCEPULL:

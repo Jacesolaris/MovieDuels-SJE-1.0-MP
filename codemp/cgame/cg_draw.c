@@ -10482,7 +10482,7 @@ static void CG_DrawWarmup(void)
 
 	w = CG_Text_Width(s, scale, FONT_MEDIUM);
 	CG_Text_Paint(320 - w / 2, 125, scale, colorWhite, s, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE, FONT_MEDIUM);
-	}
+}
 
 //==================================================================================
 /*

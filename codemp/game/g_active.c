@@ -4397,7 +4397,22 @@ void ClientThink_real(gentity_t* ent)
 	//Check if we should have a fullbody push effect around the player
 	if (client->pushEffectTime > level.time)
 	{
-		client->ps.eFlags |= EF_BODYPUSH;
+		if (cg_outcastpusheffect.integer == 0) //JKA
+		{
+			client->ps.eFlags |= EF_BODYPUSH;
+		}
+		else if (cg_outcastpusheffect.integer == 1) //JKO
+		{
+			client->ps.eFlags |= EF_BODYPUSH;
+		}
+		else if (cg_outcastpusheffect.integer == 2) // NO EFFECT
+		{
+			//no effect
+		}
+		else // BACKUP
+		{
+			client->ps.eFlags |= EF_BODYPUSH;
+		}
 	}
 	else if (client->pushEffectTime)
 	{
@@ -6678,7 +6693,7 @@ void ClientThink_real(gentity_t* ent)
 ==================
 G_CheckClientTimeouts
 
-Checks whether a client has exceded any timeouts and act accordingly
+Checks whether a client has exceeded any timeouts and act accordingly
 ==================
 */
 void G_CheckClientTimeouts(gentity_t* ent)

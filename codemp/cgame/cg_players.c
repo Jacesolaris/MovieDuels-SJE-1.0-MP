@@ -2192,8 +2192,8 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		}
 
 		cg_entities[client_num].localAnimIndex = CG_G2SkelForModel(cg_entities[client_num].ghoul2);
-		cg_entities[client_num].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[client_num].ghoul2,cg_entities[client_num].localAnimIndex);		
-		
+		cg_entities[client_num].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[client_num].ghoul2, cg_entities[client_num].localAnimIndex);
+
 		if (cg_entities[client_num].currentState.number != cg.predicted_player_state.client_num &&
 			cg_entities[client_num].currentState.weapon == WP_SABER)
 		{
@@ -2201,9 +2201,8 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 
 			if (cg_entities[client_num].ghoul2 && ci->ghoul2Model)
 			{
-				CG_CopyG2WeaponInstance(&cg_entities[client_num], cg_entities[client_num].currentState.weapon,cg_entities[client_num].ghoul2);
+				CG_CopyG2WeaponInstance(&cg_entities[client_num], cg_entities[client_num].currentState.weapon, cg_entities[client_num].ghoul2);
 				cg_entities[client_num].ghoul2weapon = CG_G2WeaponInstance(&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
-
 
 				if (cg_entities[client_num].currentState.eFlags & EF3_DUAL_WEAPONS && cg_entities[client_num].currentState.weapon == WP_BRYAR_PISTOL)
 				{
@@ -5094,7 +5093,7 @@ static void CG_PlayerPowerups(centity_t* cent)
 
 		trap->R_AddRefEntityToScene(&tent);
 	}
-	if (powerups & 1 << PW_FORCE_PUSH)
+	/*if (powerups & 1 << PW_FORCE_PUSH_RHAND)
 	{
 		if (cg.snap->ps.fd.forcePower < 50)
 		{
@@ -5104,8 +5103,8 @@ static void CG_PlayerPowerups(centity_t* cent)
 		{
 			trap->R_AddLightToScene(cent->lerpOrigin, 200 + (rand() & 31), 0.2f, 0.2f, 1);
 		}
-	}
-	if (powerups & 1 << PW_PULL)
+	}*/
+	/*if (powerups & 1 << PW_PULL)
 	{
 		if (cg.snap->ps.fd.forcePower < 50)
 		{
@@ -5115,7 +5114,7 @@ static void CG_PlayerPowerups(centity_t* cent)
 		{
 			trap->R_AddLightToScene(cent->lerpOrigin, 200 + (rand() & 31), 0.2f, 0.2f, 1);
 		}
-	}
+	}*/
 
 	if (powerups & 1 << PW_FORCE_PROJECTILE)
 	{
@@ -5460,18 +5459,42 @@ static void CG_PlayerSplash(const centity_t* cent)
 
 static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 {
-	if (!cent || !cg_renderToTextureFX.integer)
+	const int powerups = cent->currentState.powerups;
+
+	if (cg_outcastpusheffect.integer == 2) // NO EFFECT
+	{
+		//no effect
+		return;
+	}
+
+	if (!cent || !cg_renderToTextureFX.integer || cg_outcastpusheffect.integer == 1)
 	{
 		localEntity_t* ex = CG_AllocLocalEntity();
 		ex->leType = LE_PUFF;
 		ex->refEntity.reType = RT_SPRITE;
-		ex->radius = 2.0f;
+
+		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			ex->radius = 8.0f;
+		}
+		else
+		{
+			ex->radius = 2.0f;
+		}
 		ex->startTime = cg.time;
 		ex->endTime = ex->startTime + 120;
 		VectorCopy(org, ex->pos.trBase);
 		ex->pos.trTime = cg.time;
 		ex->pos.trType = TR_LINEAR;
-		VectorScale(cg.refdef.viewaxis[1], 55, ex->pos.trDelta);
+
+		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			VectorScale(cg.refdef.viewaxis[1], 255, ex->pos.trDelta);
+		}
+		else
+		{
+			VectorScale(cg.refdef.viewaxis[1], 55, ex->pos.trDelta);
+		}
 
 		ex->color[0] = 24;
 		ex->color[1] = 32;
@@ -5482,13 +5505,29 @@ static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 		ex->leType = LE_PUFF;
 		ex->refEntity.reType = RT_SPRITE;
 		ex->refEntity.rotation = 180.0f;
-		ex->radius = 2.0f;
+
+		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			ex->radius = 8.0f;
+		}
+		else
+		{
+			ex->radius = 2.0f;
+		}
 		ex->startTime = cg.time;
 		ex->endTime = ex->startTime + 120;
 		VectorCopy(org, ex->pos.trBase);
 		ex->pos.trTime = cg.time;
 		ex->pos.trType = TR_LINEAR;
-		VectorScale(cg.refdef.viewaxis[1], -55, ex->pos.trDelta);
+
+		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			VectorScale(cg.refdef.viewaxis[1], -255, ex->pos.trDelta);
+		}
+		else
+		{
+			VectorScale(cg.refdef.viewaxis[1], -55, ex->pos.trDelta);
+		}
 
 		ex->color[0] = 24;
 		ex->color[1] = 32;
@@ -5812,7 +5851,7 @@ static void CG_ForcePushBodyBlur(centity_t* cent)
 	{
 		vec3_t fx_org;
 		//go through all the bones we want to put a blur effect on
-		const int bolt = trap->G2API_AddBolt(cent->ghoul2, 0, cg_pushBoneNames[i]);
+		const int lhand = trap->G2API_AddBolt(cent->ghoul2, 0, cg_pushBoneNames[i]);
 
 		if (cent->currentState.NPC_class == CLASS_HAZARD_TROOPER
 			|| cent->currentState.NPC_class == CLASS_ROCKETTROOPER
@@ -5821,22 +5860,21 @@ static void CG_ForcePushBodyBlur(centity_t* cent)
 			|| cent->currentState.NPC_class == CLASS_ASSASSIN_DROID
 			|| cent->currentState.NPC_class == CLASS_RANCOR)
 		{
-			if (bolt == -1)
+			if (lhand == -1)
 			{
 				//don't use bones
 			}
 		}
 		else
 		{
-			if (bolt == -1)
+			if (lhand == -1)
 			{
 				assert(!"You've got an invalid bone/bolt name in cg_pushBoneNames");
 				continue;
 			}
 		}
 
-		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt, &bolt_matrix, cent->turAngles, cent->lerpOrigin, cg.time,
-			cgs.game_models, cent->modelScale);
+		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, lhand, &bolt_matrix, cent->turAngles, cent->lerpOrigin, cg.time, cgs.game_models, cent->modelScale);
 		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, fx_org);
 
 		if ((cent->currentState.weapon == WP_NONE || cent->currentState.weapon == WP_MELEE)
@@ -5849,8 +5887,25 @@ static void CG_ForcePushBodyBlur(centity_t* cent)
 		}
 		else
 		{
-			//standard effect, don't be refractive (for now)
-			CG_ForcePushBlur(fx_org, NULL);
+			if (cg_outcastpusheffect.integer == 0) //JKA
+			{
+				//standard effect, don't be refractive (for now)
+				CG_ForcePushBlur(fx_org, NULL);
+			}
+			else if (cg_outcastpusheffect.integer == 1) //JKO
+			{
+				//standard effect, don't be refractive (for now)
+				CG_ForcePushBlur(fx_org, NULL);
+			}
+			else if (cg_outcastpusheffect.integer == 2) // NO EFFECT
+			{
+				//no effect
+			}
+			else // BACKUP
+			{
+				//standard effect, don't be refractive (for now)
+				CG_ForcePushBlur(fx_org, NULL);
+			}
 		}
 	}
 }
@@ -17952,7 +18007,7 @@ void CG_Player(centity_t* cent)
 					//Keep the jet fire sound looping
 					trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin, trap->S_RegisterSound("sound/jetpack/thrust"));
 				}
-				else 
+				else
 				{
 					//just idling
 					trap->FX_PlayEffectID(cgs.effects.mBlueJet, flame_pos, flame_dir, -1, -1, qfalse);
@@ -19045,7 +19100,22 @@ SkipTrueView:
 	//fullbody push effect
 	if (cent->currentState.eFlags & EF_BODYPUSH)
 	{
-		CG_ForcePushBodyBlur(cent);
+		if (cg_outcastpusheffect.integer == 0) //JKA
+		{
+			CG_ForcePushBodyBlur(cent);
+		}
+		else if (cg_outcastpusheffect.integer == 1) //JKO
+		{
+			CG_ForcePushBodyBlur(cent);
+		}
+		else if (cg_outcastpusheffect.integer == 2) // NO EFFECT
+		{
+			//no effect
+		}
+		else // BACKUP
+		{
+			CG_ForcePushBodyBlur(cent);
+		}
 	}
 
 	if (cent->currentState.powerups & 1 << PW_DISINT_4)
@@ -20026,11 +20096,11 @@ stillDoSaber:
 							rootAngles,
 							NULL);
 					}
-		}
+				}
 #else
 				vectoangles(legs.axis[0], root_angles);
 #endif
-	}
+			}
 
 			while (k < ci->saber[l].numBlades)
 			{
@@ -20064,7 +20134,7 @@ stillDoSaber:
 			}
 
 			l++;
-}
+		}
 	}
 
 	if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
@@ -21062,4 +21132,4 @@ void CG_ResetPlayerEntity(centity_t* cent)
 	{
 		trap->Print("%i ResetPlayerEntity yaw=%i\n", cent->currentState.number, cent->pe.torso.yawAngle);
 	}
-	}
+}
