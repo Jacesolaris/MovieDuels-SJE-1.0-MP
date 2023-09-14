@@ -147,6 +147,46 @@ const char* df_Sprint_ticNamevert[MAX_DFHUD_TICS] =
 	"md_sprint_tic16",
 };
 
+const char* df_fuel_ticNamevert[MAX_DFHUD_TICS] =
+{
+	"md_fuel_tic1",
+	"md_fuel_tic2",
+	"md_fuel_tic3",
+	"md_fuel_tic4",
+	"md_fuel_tic5",
+	"md_fuel_tic6",
+	"md_fuel_tic7",
+	"md_fuel_tic8",
+	"md_fuel_tic9",
+	"md_fuel_tic10",
+	"md_fuel_tic11",
+	"md_fuel_tic12",
+	"md_fuel_tic13",
+	"md_fuel_tic14",
+	"md_fuel_tic15",
+	"md_fuel_tic16",
+};
+
+const char* df_cloak_ticNamevert[MAX_DFHUD_TICS] =
+{
+	"md_cloak_tic1",
+	"md_cloak_tic2",
+	"md_cloak_tic3",
+	"md_cloak_tic4",
+	"md_cloak_tic5",
+	"md_cloak_tic6",
+	"md_cloak_tic7",
+	"md_cloak_tic8",
+	"md_cloak_tic9",
+	"md_cloak_tic10",
+	"md_cloak_tic11",
+	"md_cloak_tic12",
+	"md_cloak_tic13",
+	"md_cloak_tic14",
+	"md_cloak_tic15",
+	"md_cloak_tic16",
+};
+
 const char* df_health_ticNamehoz[MAX_DFHUD_TICS] =
 {
 	"md_health_tichoz1",
@@ -205,6 +245,46 @@ const char* df_Sprint_ticNamehoz[MAX_DFHUD_TICS] =
 	"md_sprint_tichoz14",
 	"md_sprint_tichoz15",
 	"md_sprint_tichoz16",
+};
+
+const char* df_fuel_ticNamehoz[MAX_DFHUD_TICS] =
+{
+	"md_fuel_tichoz1",
+	"md_fuel_tichoz2",
+	"md_fuel_tichoz3",
+	"md_fuel_tichoz4",
+	"md_fuel_tichoz5",
+	"md_fuel_tichoz6",
+	"md_fuel_tichoz7",
+	"md_fuel_tichoz8",
+	"md_fuel_tichoz9",
+	"md_fuel_tichoz10",
+	"md_fuel_tichoz11",
+	"md_fuel_tichoz12",
+	"md_fuel_tichoz13",
+	"md_fuel_tichoz14",
+	"md_fuel_tichoz15",
+	"md_fuel_tichoz16",
+};
+
+const char* df_cloak_ticNamehoz[MAX_DFHUD_TICS] =
+{
+	"md_cloak_tichoz1",
+	"md_cloak_tichoz2",
+	"md_cloak_tichoz3",
+	"md_cloak_tichoz4",
+	"md_cloak_tichoz5",
+	"md_cloak_tichoz6",
+	"md_cloak_tichoz7",
+	"md_cloak_tichoz8",
+	"md_cloak_tichoz9",
+	"md_cloak_tichoz10",
+	"md_cloak_tichoz11",
+	"md_cloak_tichoz12",
+	"md_cloak_tichoz13",
+	"md_cloak_tichoz14",
+	"md_cloak_tichoz15",
+	"md_cloak_tichoz16",
 };
 
 const char* forceTicName[MAX_HUD_TICS] =
@@ -1127,6 +1207,160 @@ void CG_DrawMDSprintVer(const menuDef_t* menu_hud)
 	}
 }
 
+void CG_DrawMDJetpackFuelVer(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int fuel_amt = (float)cg.snap->ps.jetpackFuel;
+	if (fuel_amt > PLAYER_FUEL_MAX)
+	{
+		fuel_amt = PLAYER_FUEL_MAX;
+	}
+
+	const int inc = PLAYER_FUEL_MAX / MAX_DFHUD_TICS;
+
+	int curr_value = fuel_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_fuel_ticNamevert[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "fuel_icon_df_vert");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+}
+
+void CG_DrawMDcloakFuelVer(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int fuel_amt = (float)cg.snap->ps.cloakFuel;
+	if (fuel_amt > PLAYER_FUEL_MAX)
+	{
+		fuel_amt = PLAYER_FUEL_MAX;
+	}
+
+	const int inc = PLAYER_FUEL_MAX / MAX_DFHUD_TICS;
+
+	int curr_value = fuel_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_cloak_ticNamevert[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "cloak_icon_df_vert");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
 {
 	vec4_t calc_color;
@@ -1352,6 +1586,160 @@ void CG_DrawMDSprinthoz(const menuDef_t* menu_hud)
 	{
 		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_Sprint_ticNamehoz[i]);
 		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "sprint_icon_df_hoz");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			90,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+}
+
+void CG_DrawMDJetpackFuelhoz(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int fuel_amt = (float)cg.snap->ps.jetpackFuel;
+	if (fuel_amt > PLAYER_FUEL_MAX)
+	{
+		fuel_amt = PLAYER_FUEL_MAX;
+	}
+
+	const int inc = PLAYER_FUEL_MAX / MAX_DFHUD_TICS;
+
+	int curr_value = fuel_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_fuel_ticNamehoz[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "fuel_icon_df_hoz");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			90,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+}
+
+void CG_DrawMDcloakFuelhoz(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int fuel_amt = (float)cg.snap->ps.cloakFuel;
+	if (fuel_amt > PLAYER_FUEL_MAX)
+	{
+		fuel_amt = PLAYER_FUEL_MAX;
+	}
+
+	const int inc = PLAYER_FUEL_MAX / MAX_DFHUD_TICS;
+
+	int curr_value = fuel_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_cloak_ticNamehoz[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "cloak_icon_df_hoz");
 
 		if (!focus_item) // This is bad
 		{
@@ -4166,29 +4554,21 @@ void CG_DrawHUD(const centity_t* cent)
 				CG_DrawMDHealthVer(menu_hud);
 				CG_DrawMDArmourVer(menu_hud);
 
-				//if (cg.snap->ps.jetpackFuel < 100)
-				//{
-				//	if (cent->currentState.botclass == BCLASS_BOBAFETT
-				//		|| cent->currentState.botclass == BCLASS_JANGO_NOJP
-				//		|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
-				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN
-				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
-				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN2 || draw_jetpack_fuel_rocket_trooper_player(cent))
-				//	{
-				//		//draw it as long as it isn't full
-				//		CG_DrawDF_JetPackFuel();
-				//	}
-				//}
-				//else if (cg.snap->ps.cloakFuel < 100)
-				//{
-				//	//draw it as long as it isn't full
-				//	CG_DrawDF_CloakFuel();
-				//}
-				//else
-				//{
+				if (cg.snap->ps.jetpackFuel < 100)
+				{
+					//draw it as long as it isn't full
+					CG_DrawMDJetpackFuelVer(menu_hud);
+				}
+				else if (cg.snap->ps.cloakFuel < 100)
+				{
+					//draw it as long as it isn't full
+					CG_DrawMDcloakFuelVer(menu_hud);
+				}
+				else
+				{
 					// Draw stamina by default
-				CG_DrawMDSprintVer(menu_hud);
-				//}
+					CG_DrawMDSprintVer(menu_hud);
+				}
 
 				CG_DrawHUDMDLeftFramevert(0, SCREEN_HEIGHT - 80); //vertical
 				CG_DrawHUDMDLeftInnerRingvert(0, SCREEN_HEIGHT - 80);
@@ -4205,29 +4585,20 @@ void CG_DrawHUD(const centity_t* cent)
 				CG_DrawMDHealthHoz(menu_hud);
 				CG_DrawMDArmourHoz(menu_hud);
 
-				//if (cg.snap->ps.jetpackFuel < 100)
-				//{
-				//	if (cent->currentState.botclass == BCLASS_BOBAFETT
-				//		|| cent->currentState.botclass == BCLASS_JANGO_NOJP
-				//		|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
-				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN
-				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
-				//		|| cent->currentState.botclass == BCLASS_MANDOLORIAN2 || draw_jetpack_fuel_rocket_trooper_player(cent))
-				//	{
-				//		//draw it as long as it isn't full
-				//		CG_DrawDF_JetPackFuel();
-				//	}
-				//}
-				//else if (cg.snap->ps.cloakFuel < 100)
-				//{
-				//	//draw it as long as it isn't full
-				//	CG_DrawDF_CloakFuel();
-				//}
-				//else
-				//{
+				if (cg.snap->ps.jetpackFuel < 100)
+				{
+					CG_DrawMDJetpackFuelhoz(menu_hud);
+				}
+				else if (cg.snap->ps.cloakFuel < 100)
+				{
+					//draw it as long as it isn't full
+					CG_DrawMDcloakFuelhoz(menu_hud);
+				}
+				else
+				{
 					// Draw stamina by default
-				CG_DrawMDSprinthoz(menu_hud);
-				//}
+					CG_DrawMDSprinthoz(menu_hud);
+				}
 
 				CG_DrawHUDMDLeftFrameHorz(0, SCREEN_HEIGHT - 80); //horizontal
 				CG_DrawHUDMDLeftInnerRinghoz(0, SCREEN_HEIGHT - 80);
@@ -11757,7 +12128,7 @@ static void CG_Draw2D(void)
 		CG_DrawActivePowers();
 	}
 
-	if (cg.snap->ps.jetpackFuel < 100)
+	if (cg.snap->ps.jetpackFuel < 100 && (g_SerenityJediEngineHudMode.integer < 2 || g_SerenityJediEngineHudMode.integer > 3))
 	{
 		//draw it as long as it isn't full
 		CG_DrawJetpackFuel();
@@ -11769,7 +12140,7 @@ static void CG_Draw2D(void)
 		CG_DrawSprintFuel();
 	}
 
-	if (cg.snap->ps.cloakFuel < 100)
+	if (cg.snap->ps.cloakFuel < 100 && (g_SerenityJediEngineHudMode.integer < 2 || g_SerenityJediEngineHudMode.integer > 3))
 	{
 		//draw it as long as it isn't full
 		CG_DrawCloakFuel();
