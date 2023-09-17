@@ -87,7 +87,7 @@ qboolean CG_NoUseableForce(void)
 		i++;
 	}
 
-	//no useable force powers, I guess.
+	//no usable force powers, I guess.
 	return qtrue;
 }
 
@@ -3176,7 +3176,7 @@ void CG_NextForcePower_f(void)
 
 	const int current = trap->GetCurrentCmdNumber();
 	trap->GetUserCmd(current, &cmd);
-	if (cmd.buttons & BUTTON_USE || CG_NoUseableForce())
+	if (CG_NoUseableForce())
 	{
 		cg_next_inventory_f();
 		return;
@@ -3226,7 +3226,7 @@ void CG_PrevForcePower_f(void)
 
 	const int current = trap->GetCurrentCmdNumber();
 	trap->GetUserCmd(current, &cmd);
-	if (cmd.buttons & BUTTON_USE || CG_NoUseableForce())
+	if (CG_NoUseableForce())
 	{
 		cg_prev_inventory_f();
 		return;

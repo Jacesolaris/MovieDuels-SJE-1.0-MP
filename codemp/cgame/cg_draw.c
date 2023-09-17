@@ -50,6 +50,16 @@ static void CG_DrawSiegeDeathTimer(int timeRemaining);
 void CG_DrawDuelistHealth(float x, float y, float w, float h, int duelist);
 extern qboolean PM_DeathCinAnim(int anim);
 
+void CG_DrawForceSelect_sidevert(void);
+void CG_DrawForceSelect_sidetextvert(void);
+void CG_DrawForceSelect_sidehoz(void);
+void CG_DrawForceSelect_sidetexthoz(void);
+
+void CG_DrawInventorySelect_sidehoz(void);
+void CG_DrawInventorySelect_sidetexthoz(void);
+void CG_DrawInventorySelect_sidevert(void);
+void CG_DrawInventorySelect_sidetextvert(void);
+
 // used for scoreboard
 extern displayContextDef_t cgDC;
 
@@ -187,6 +197,28 @@ const char* df_cloak_ticNamevert[MAX_DFHUD_TICS] =
 	"md_cloak_tic16",
 };
 
+const char* df_force_ticNamevert[MAX_DFHUD_TICS] =
+{
+	"md_force_tic1",
+	"md_force_tic2",
+	"md_force_tic3",
+	"md_force_tic4",
+	"md_force_tic5",
+	"md_force_tic6",
+	"md_force_tic7",
+	"md_force_tic8",
+	"md_force_tic9",
+	"md_force_tic10",
+	"md_force_tic11",
+	"md_force_tic12",
+	"md_force_tic13",
+	"md_force_tic14",
+	"md_force_tic15",
+	"md_force_tic16",
+};
+
+//////////////////////////////
+
 const char* df_health_ticNamehoz[MAX_DFHUD_TICS] =
 {
 	"md_health_tichoz1",
@@ -285,6 +317,26 @@ const char* df_cloak_ticNamehoz[MAX_DFHUD_TICS] =
 	"md_cloak_tichoz14",
 	"md_cloak_tichoz15",
 	"md_cloak_tichoz16",
+};
+
+const char* df_force_ticNamehox[MAX_DFHUD_TICS] =
+{
+	"md_force_tichoz1",
+	"md_force_tichoz2",
+	"md_force_tichoz3",
+	"md_force_tichoz4",
+	"md_force_tichoz5",
+	"md_force_tichoz6",
+	"md_force_tichoz7",
+	"md_force_tichoz8",
+	"md_force_tichoz9",
+	"md_force_tichoz10",
+	"md_force_tichoz11",
+	"md_force_tichoz12",
+	"md_force_tichoz13",
+	"md_force_tichoz14",
+	"md_force_tichoz15",
+	"md_force_tichoz16",
 };
 
 const char* forceTicName[MAX_HUD_TICS] =
@@ -1359,6 +1411,101 @@ void CG_DrawMDcloakFuelVer(const menuDef_t* menu_hud)
 	}
 }
 
+void CG_DrawMDForceVer(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+	const int		maxForcePower = 100;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int force_amt = cg.snap->ps.fd.forcePower;
+	if (force_amt > maxForcePower)
+	{
+		force_amt = maxForcePower;
+	}
+
+	const int inc = (float)maxForcePower / MAX_DFHUD_TICS;
+	int curr_value = force_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_force_ticNamevert[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "force_icon_df_vert");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+
+	// Print the numeric amount
+	const itemDef_t* focus_item_amount = Menu_FindItemByName(menu_hud, "forceamount_MD_Vert");
+
+	if (focus_item_amount)
+	{
+		// Print health amount
+		trap->R_SetColor(focus_item_amount->window.foreColor);
+
+		CG_DrawNumField(
+			focus_item_amount->window.rect.x,
+			focus_item_amount->window.rect.y,
+			3,
+			ps->stats[STAT_HEALTH],
+			focus_item_amount->window.rect.w,
+			focus_item_amount->window.rect.h,
+			NUM_FONT_SMALL,
+			qfalse);
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
@@ -1778,6 +1925,102 @@ void CG_DrawMDcloakFuelhoz(const menuDef_t* menu_hud)
 		);
 
 		curr_value -= inc;
+	}
+}
+
+void CG_DrawMDForcehoz(const menuDef_t* menu_hud)
+{
+	vec4_t calc_color;
+	const playerState_t* ps = &cg.snap->ps;
+	const int		maxForcePower = 100;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	int force_amt = cg.snap->ps.fd.forcePower;
+	if (force_amt > maxForcePower)
+	{
+		force_amt = maxForcePower;
+	}
+
+	const int inc = (float)maxForcePower / MAX_DFHUD_TICS;
+	int curr_value = force_amt;
+
+	// Print the health tics, fading out the one which is partial health
+	for (int i = MAX_DFHUD_TICS - 1; i >= 0; i--)
+	{
+		const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, df_force_ticNamehox[i]);
+		const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "force_icon_df_hoz");
+
+		if (!focus_item) // This is bad
+		{
+			continue;
+		}
+
+		memcpy(calc_color, colorTable[CT_WHITE], sizeof(vec4_t));
+
+		if (curr_value <= 0) // don't show tic
+		{
+			break;
+		}
+		if (curr_value < inc) // partial tic (alpha it out)
+		{
+			const float percent = (float)curr_value / inc;
+			calc_color[3] *= percent; // Fade it out
+		}
+
+		trap->R_SetColor(calc_color);
+
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			-90,
+			focus_item->window.background
+		);
+
+		CG_DrawPic(
+			focus_item_icon->window.rect.x,
+			focus_item_icon->window.rect.y,
+			focus_item_icon->window.rect.w,
+			focus_item_icon->window.rect.h,
+			focus_item_icon->window.background
+		);
+
+		curr_value -= inc;
+	}
+
+	// Print the numeric amount
+	const itemDef_t* focus_item_amount = Menu_FindItemByName(menu_hud, "forceamount_MD_hoz");
+
+	if (focus_item_amount)
+	{
+		// Print health amount
+		trap->R_SetColor(focus_item_amount->window.foreColor);
+
+		CG_DrawNumField(
+			focus_item_amount->window.rect.x,
+			focus_item_amount->window.rect.y,
+			3,
+			ps->stats[STAT_HEALTH],
+			focus_item_amount->window.rect.w,
+			focus_item_amount->window.rect.h,
+			NUM_FONT_SMALL,
+			qfalse);
 	}
 }
 
@@ -4554,6 +4797,9 @@ void CG_DrawHUD(const centity_t* cent)
 				CG_DrawMDHealthVer(menu_hud);
 				CG_DrawMDArmourVer(menu_hud);
 
+				CG_DrawForceSelect_sidetextvert();
+				CG_DrawInventorySelect_sidetextvert();
+
 				if (cg.snap->ps.jetpackFuel < 100)
 				{
 					//draw it as long as it isn't full
@@ -4574,16 +4820,16 @@ void CG_DrawHUD(const centity_t* cent)
 				CG_DrawHUDMDLeftInnerRingvert(0, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDLeftOuterRingvert(0, SCREEN_HEIGHT - 80);
 
-				/*CG_DrawForceSelect_side();
-				CG_DrawForceSelect_text();
-
-				cg_draw_inventory_select_side();
-				CG_DrawInventorySelect_text();*/
+				CG_DrawForceSelect_sidevert();
+				CG_DrawInventorySelect_sidevert();
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels left
 			{//left hud hoz
 				CG_DrawMDHealthHoz(menu_hud);
 				CG_DrawMDArmourHoz(menu_hud);
+
+				CG_DrawForceSelect_sidetexthoz();
+				CG_DrawInventorySelect_sidetexthoz();
 
 				if (cg.snap->ps.jetpackFuel < 100)
 				{
@@ -4604,11 +4850,8 @@ void CG_DrawHUD(const centity_t* cent)
 				CG_DrawHUDMDLeftInnerRinghoz(0, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDLeftOuterRinghoz(0, SCREEN_HEIGHT - 80);
 
-				/*CG_DrawForceSelect_sidehoz();
-				CG_DrawForceSelect_texthoz();
-
-				cg_draw_inventory_select_sidehoz();
-				CG_DrawInventorySelect_texthoz();*/
+				CG_DrawForceSelect_sidehoz();
+				CG_DrawInventorySelect_sidehoz();
 			}
 			else //custom
 			{
@@ -4795,12 +5038,24 @@ void CG_DrawHUD(const centity_t* cent)
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
 			{//right hud
+				CG_DrawMDForceVer(menu_hud);
+
+
+
+
+
 				CG_DrawHUDMDRightFramevert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80); // vertical
 				CG_DrawHUDMDRightInnerRingvert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDRightOuterRingvert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
 			{//right hud
+				CG_DrawMDForcehoz(menu_hud);
+
+
+
+
+
 				CG_DrawHUDMDRightFramehoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDRightInnerRinghoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDRightOuterRinghoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
@@ -5064,6 +5319,339 @@ void CG_DrawForceSelect(void)
 			UI_CENTER | UI_SMALLFONT, colorTable[CT_ICON_BLUE]);
 	}
 }
+///////////// md side start /////////////////////////
+
+void CG_DrawForceSelect_sidevert(void)
+{// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.fd.forcePowersKnown)
+	{
+		return;
+	}
+
+	// count the number of powers owned
+	int count = 0;
+
+	for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+	{
+		if (ForcePower_Valid(i))
+		{
+			count++;
+		}
+	}
+
+	if (count == 0) // If no force powers, don't display
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (ForcePower_Valid(cg.forceSelect))
+	{
+		// Current Center Icon
+		if (cgs.media.forcePowerIcons[cg.forceSelect])
+		{
+			CG_DrawPic(27.5 - 24 / 2, 424 - (24 - 12) / 2, 24, 24, cgs.media.forcePowerIcons[cg.forceSelect]);
+		}
+	}
+}
+
+void CG_DrawForceSelect_sidetextvert(void)
+{
+	// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.fd.forcePowersKnown)
+	{
+		return;
+	}
+
+	if (cg.forceSelectTime + WEAPON_SELECT_TIME < cg.time) // Time is up for the HUD to display
+	{
+		cg.forceSelect = cg.snap->ps.fd.forcePowerSelected;
+		return;
+	}
+
+	// count the number of powers owned
+	int count = 0;
+
+	for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+	{
+		if (ForcePower_Valid(i))
+		{
+			count++;
+		}
+	}
+
+	if (count == 0) // If no force powers, don't display
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (showPowersName[cg.forceSelect])
+	{
+		CG_Text_Paint(12, 456, 0.5f, colorTable[CT_ICON_BLUE], CG_GetStringEdString("SP_INGAME", showPowersName[cg.forceSelect]), 0, 0, ITEM_TEXTSTYLE_SHADOWED, FONT_SMALL);
+	}
+}
+
+void CG_DrawForceSelect_sidehoz(void)
+{
+	// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.fd.forcePowersKnown)
+	{
+		return;
+	}
+
+	// count the number of powers owned
+	int count = 0;
+
+	for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+	{
+		if (ForcePower_Valid(i))
+		{
+			count++;
+		}
+	}
+
+	if (count == 0) // If no force powers, don't display
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (ForcePower_Valid(cg.forceSelect))
+	{
+		// Current Center Icon
+		if (cgs.media.forcePowerIcons[cg.forceSelect])
+		{
+			CG_DrawPic(50 - 24 / 2, 440.5 - (24 - 12) / 2, 24, 24, cgs.media.forcePowerIcons[cg.forceSelect]);
+		}
+	}
+}
+
+void CG_DrawForceSelect_sidetexthoz(void)
+{
+	// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.fd.forcePowersKnown)
+	{
+		return;
+	}
+
+	if (cg.forceSelectTime + WEAPON_SELECT_TIME < cg.time) // Time is up for the HUD to display
+	{
+		cg.forceSelect = cg.snap->ps.fd.forcePowerSelected;
+		return;
+	}
+
+	// count the number of powers owned
+	int count = 0;
+
+	for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+	{
+		if (ForcePower_Valid(i))
+		{
+			count++;
+		}
+	}
+
+	if (count == 0) // If no force powers, don't display
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (showPowersName[cg.forceSelect])
+	{
+		CG_Text_Paint(65, 457, 0.5f, colorTable[CT_ICON_BLUE], CG_GetStringEdString("SP_INGAME", showPowersName[cg.forceSelect]), 0, 0, ITEM_TEXTSTYLE_SHADOWED, FONT_SMALL);
+	}
+}
+
+void CG_DrawInventorySelect_sidehoz(void)
+{
+	const playerState_t* ps = &cg.snap->ps;
+	// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.stats[STAT_HOLDABLE_ITEM] || !cg.snap->ps.stats[STAT_HOLDABLE_ITEMS])
+	{
+		return;
+	}
+
+	// count the number of items owned
+	int count = 0;
+
+	for (int i = 0; i < HI_NUM_HOLDABLE; i++)
+	{
+		if (cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << i)
+		{
+			count++;
+		}
+	}
+
+	if (!count)
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (cgs.media.invenIcons[cg.itemSelect] && BG_IsItemSelectable(cg.itemSelect))
+	{
+		CG_DrawPic(21.5, 445, 7, 7, cgs.media.invenIcons[cg.itemSelect]);
+		//CG_DrawNumField(21.5, 447, 1, cg.snap->ps.inventory[cg.itemSelect], 3, 6, NUM_FONT_SMALL, qfalse);
+	}
+}
+
+void CG_DrawInventorySelect_sidetexthoz(void)
+{
+	// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.stats[STAT_HOLDABLE_ITEM] || !cg.snap->ps.stats[STAT_HOLDABLE_ITEMS])
+	{
+		return;
+	}
+
+	if (cg.invenSelectTime + WEAPON_SELECT_TIME < cg.time) // Time is up for the HUD to display
+	{
+		return;
+	}
+
+	// count the number of items owned
+	int count = 0;
+
+	for (int i = 0; i < HI_NUM_HOLDABLE; i++)
+	{
+		if (cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << i)
+		{
+			count++;
+		}
+	}
+
+	if (!count)
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (BG_IsItemSelectable(cg.itemSelect))
+	{
+		vec4_t text_color = { .312f, .75f, .621f, 1.0f };
+
+		CG_Text_Paint(9, 464, 0.5f, text_color, CG_GetStringEdString("SP_INGAME", bg_itemlist[BG_GetItemIndexByTag(cg.itemSelect, IT_HOLDABLE)].classname), 0, 0, ITEM_TEXTSTYLE_SHADOWED, FONT_SMALL);
+	}
+}
+
+void CG_DrawInventorySelect_sidevert(void)
+{
+	// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.stats[STAT_HOLDABLE_ITEM] || !cg.snap->ps.stats[STAT_HOLDABLE_ITEMS])
+	{
+		return;
+	}
+
+	// count the number of items owned
+	int count = 0;
+
+	for (int i = 0; i < HI_NUM_HOLDABLE; i++)
+	{
+		if (cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << i)
+		{
+			count++;
+		}
+	}
+
+	if (!count)
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (cgs.media.invenIcons[cg.itemSelect] && BG_IsItemSelectable(cg.itemSelect))
+	{
+		CG_DrawPic(23, 447, 10, 10, cgs.media.invenIcons[cg.itemSelect]);
+		//CG_DrawNumField(25, 447, 1, cg.snap->ps.inventory[cg.itemSelect], 3, 6, NUM_FONT_SMALL, qfalse);
+	}
+}
+
+void CG_DrawInventorySelect_sidetextvert(void)
+{
+	// don't display if dead
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cg.snap->ps.stats[STAT_HOLDABLE_ITEM] || !cg.snap->ps.stats[STAT_HOLDABLE_ITEMS])
+	{
+		return;
+	}
+
+	if (cg.invenSelectTime + WEAPON_SELECT_TIME < cg.time) // Time is up for the HUD to display
+	{
+		return;
+	}
+
+	// count the number of items owned
+	int count = 0;
+
+	for (int i = 0; i < HI_NUM_HOLDABLE; i++)
+	{
+		if (cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << i)
+		{
+			count++;
+		}
+	}
+
+	if (!count)
+	{
+		return;
+	}
+
+	trap->R_SetColor(NULL);
+
+	if (BG_IsItemSelectable(cg.itemSelect))
+	{
+		vec4_t text_color = { .312f, .75f, .621f, 1.0f };
+
+		CG_Text_Paint(9, 463, 0.5f, text_color, CG_GetStringEdString("SP_INGAME", bg_itemlist[BG_GetItemIndexByTag(cg.itemSelect, IT_HOLDABLE)].classname), 0, 0, ITEM_TEXTSTYLE_SHADOWED, FONT_SMALL);
+	}
+}
 
 /*
 ===================
@@ -5092,7 +5680,7 @@ void cg_draw_inventory_select(void)
 		return;
 	}
 
-	if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+	if (g_SerenityJediEngineHudMode.integer > 1 && g_SerenityJediEngineHudMode.integer < 4) //movie duels
 	{
 		return;
 	}
@@ -5190,11 +5778,13 @@ void cg_draw_inventory_select(void)
 	if (cgs.media.invenIcons[cg.itemSelect] && BG_IsItemSelectable(cg.itemSelect))
 	{
 		trap->R_SetColor(NULL);
-		CG_DrawPic(x - big_icon_size / 2, y - (big_icon_size - small_icon_size) / 2 + 10, big_icon_size, big_icon_size,
-			cgs.media.invenIcons[cg.itemSelect]);
+
+		CG_DrawPic(x - big_icon_size / 2, y - (big_icon_size - small_icon_size) / 2 + 10, big_icon_size, big_icon_size, cgs.media.invenIcons[cg.itemSelect]);
+
 		trap->R_SetColor(colorTable[CT_ICON_BLUE]);
 
 		const int item_ndex = BG_GetItemIndexByTag(cg.itemSelect, IT_HOLDABLE);
+
 		if (bg_itemlist[item_ndex].classname)
 		{
 			vec4_t text_color = { .312f, .75f, .621f, 1.0f };
@@ -5210,8 +5800,7 @@ void cg_draw_inventory_select(void)
 			}
 			else
 			{
-				CG_DrawProportionalString(320, y + 45, bg_itemlist[item_ndex].classname, UI_CENTER | UI_SMALLFONT,
-					text_color);
+				CG_DrawProportionalString(320, y + 45, bg_itemlist[item_ndex].classname, UI_CENTER | UI_SMALLFONT, text_color);
 			}
 		}
 	}
@@ -9311,7 +9900,7 @@ static void CG_DrawHolocronIcons(void)
 	const int icon_size = 40;
 	int i = 0;
 	int startx = 10;
-	int starty = 10; //SCREEN_HEIGHT - icon_size*3;
+	int starty = 10;
 
 	const int endx = icon_size;
 	const int endy = icon_size;
@@ -9377,6 +9966,11 @@ static void CG_DrawActivePowers(void)
 	if (cg.snap->ps.zoomMode)
 	{
 		//don't display over zoom mask
+		return;
+	}
+
+	if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+	{
 		return;
 	}
 
@@ -12192,58 +12786,46 @@ static void CG_Draw2D(void)
 				}
 			}
 
-			if (in_time > wp_time)
+			if (g_SerenityJediEngineHudMode.integer == 2) //movie duels
 			{
-				draw_select = 1;
-				best_time = cg.invenSelectTime;
 			}
-			else //only draw the most recent since they're drawn in the same place
+			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels
 			{
-				draw_select = 2;
-				best_time = cg.weaponSelectTime;
 			}
-
-			if (cg.forceSelectTime > best_time)
+			else
 			{
-				draw_select = 3;
-			}
-
-			if (!ps->m_iVehicleNum)
-			{
-				switch (draw_select)
+				if (in_time > wp_time)
 				{
-				case 1:
-					if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
+					draw_select = 1;
+					best_time = cg.invenSelectTime;
+				}
+				else //only draw the most recent since they're drawn in the same place
+				{
+					draw_select = 2;
+					best_time = cg.weaponSelectTime;
+				}
+
+				if (cg.forceSelectTime > best_time)
+				{
+					draw_select = 3;
+				}
+
+				if (!ps->m_iVehicleNum)
+				{
+					switch (draw_select)
 					{
-						//CG_DrawIconBackground();
-					}
-					else
-					{
+					case 1:
 						cg_draw_inventory_select();
-					}
-					break;
-				case 2:
-					if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
-					{
-						//CG_DrawIconBackground();
-					}
-					else
-					{
+						break;
+					case 2:
 						CG_DrawWeaponSelect();
-					}
-					break;
-				case 3:
-					if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
-					{
-						//CG_DrawIconBackground();
-					}
-					else
-					{
+						break;
+					case 3:
 						CG_DrawForceSelect();
+						break;
+					default:
+						break;
 					}
-					break;
-				default:
-					break;
 				}
 			}
 

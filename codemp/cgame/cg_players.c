@@ -5459,21 +5459,51 @@ static void CG_PlayerSplash(const centity_t* cent)
 
 static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 {
-	const int powerups = cent->currentState.powerups;
-
 	if (cg_outcastpusheffect.integer == 2) // NO EFFECT
 	{
 		//no effect
 		return;
 	}
 
-	if (!cent || !cg_renderToTextureFX.integer || cg_outcastpusheffect.integer == 1)
+	if (!cent || !cg_renderToTextureFX.integer)
+	{
+		localEntity_t* ex = CG_AllocLocalEntity();
+		ex->leType = LE_PUFF;
+		ex->refEntity.reType = RT_SPRITE;
+		ex->radius = 2.0f;
+		ex->startTime = cg.time;
+		ex->endTime = ex->startTime + 120;
+		VectorCopy(org, ex->pos.trBase);
+		ex->pos.trTime = cg.time;
+		ex->pos.trType = TR_LINEAR;
+		VectorScale(cg.refdef.viewaxis[1], 55, ex->pos.trDelta);
+		ex->color[0] = 24;
+		ex->color[1] = 32;
+		ex->color[2] = 40;
+		ex->refEntity.customShader = trap->R_RegisterShader("gfx/effects/forcePush");
+		ex = CG_AllocLocalEntity();
+		ex->leType = LE_PUFF;
+		ex->refEntity.reType = RT_SPRITE;
+		ex->refEntity.rotation = 180.0f;
+		ex->radius = 2.0f;
+		ex->startTime = cg.time;
+		ex->endTime = ex->startTime + 120;
+		VectorCopy(org, ex->pos.trBase);
+		ex->pos.trTime = cg.time;
+		ex->pos.trType = TR_LINEAR;
+		VectorScale(cg.refdef.viewaxis[1], -55, ex->pos.trDelta);
+		ex->color[0] = 24;
+		ex->color[1] = 32;
+		ex->color[2] = 40;
+		ex->refEntity.customShader = trap->R_RegisterShader("gfx/effects/forcePush");
+	}
+	else if (cg_outcastpusheffect.integer == 1)
 	{
 		localEntity_t* ex = CG_AllocLocalEntity();
 		ex->leType = LE_PUFF;
 		ex->refEntity.reType = RT_SPRITE;
 
-		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
 		{
 			ex->radius = 8.0f;
 		}
@@ -5487,7 +5517,7 @@ static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 		ex->pos.trTime = cg.time;
 		ex->pos.trType = TR_LINEAR;
 
-		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
 		{
 			VectorScale(cg.refdef.viewaxis[1], 255, ex->pos.trDelta);
 		}
@@ -5506,7 +5536,7 @@ static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 		ex->refEntity.reType = RT_SPRITE;
 		ex->refEntity.rotation = 180.0f;
 
-		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
 		{
 			ex->radius = 8.0f;
 		}
@@ -5520,7 +5550,7 @@ static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 		ex->pos.trTime = cg.time;
 		ex->pos.trType = TR_LINEAR;
 
-		if (powerups & 1 << PW_FORCE_PUSH_RHAND)
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
 		{
 			VectorScale(cg.refdef.viewaxis[1], -255, ex->pos.trDelta);
 		}
