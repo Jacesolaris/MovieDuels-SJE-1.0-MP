@@ -6689,10 +6689,10 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		pm->ps->saberFatigueChainCount++;
 	}
 
-	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_OVERLOAD)
+	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_MAX)
 	{
 		//for the sake of being able to send the value over the net within a reasonable bit count
-		pm->ps->saberFatigueChainCount = MISHAPLEVEL_MAX;
+		pm->ps->saberFatigueChainCount = MISHAPLEVEL_OVERLOAD;
 	}
 
 	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_HUDFLASH)
