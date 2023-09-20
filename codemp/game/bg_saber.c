@@ -6661,7 +6661,7 @@ void WP_BlasterFatigueRegenerate(const int override_amt)
 		}
 		if (pm->ps->BlasterAttackChainCount > BLASTERMISHAPLEVEL_MAX)
 		{
-			pm->ps->BlasterAttackChainCount = BLASTERMISHAPLEVEL_MAX;
+			pm->ps->BlasterAttackChainCount = BLASTERMISHAPLEVEL_OVERLOAD;
 		}
 	}
 }

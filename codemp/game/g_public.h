@@ -1168,4 +1168,4 @@ typedef struct gameExport_s {
 } gameExport_t;
 
 //linking of game library
-typedef gameExport_t* (QDECL* GetGameAPI_t)(int apiVersion, gameImport_t* import);
+typedef gameExport_t * (QDECL * GetGameAPI_t)(int apiVersion, gameImport_t * import);

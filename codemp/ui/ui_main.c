@@ -7800,7 +7800,7 @@ static void UI_RunMenuScript(char** args)
 				trap->Cmd_ExecuteText(EXEC_APPEND, va("Adminkick \"%i\"\n", uiInfo.playerIndexes[uiInfo.playerIndex]));
 			}
 		}
-		else if (Q_stricmp(name, "AdminMenuChangeMap") == 0) 
+		else if (Q_stricmp(name, "AdminMenuChangeMap") == 0)
 		{
 			if (ui_netGametype.integer >= 0 && ui_netGametype.integer < uiInfo.numGameTypes && ui_currentNetMap.integer >= 0 && ui_currentNetMap.integer < uiInfo.mapCount)
 			{

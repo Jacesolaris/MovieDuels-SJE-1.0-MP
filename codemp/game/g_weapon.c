@@ -717,7 +717,7 @@ void WP_FireWrist(gentity_t* ent)
 					angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 					angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 				}
-				else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+				else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 				{//walking or fatigued a bit
 					angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
 					angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
@@ -805,7 +805,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 					}
-					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 					{//walking or fatigued a bit
 						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
 						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
@@ -1364,7 +1364,7 @@ static void WP_BowcasterAltFire(gentity_t* ent)
 	missile->classname = "bowcaster_proj";
 	missile->s.weapon = WP_BOWCASTER;
 
-	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 	{
 		G_SetAnim(ent, NULL, SETANIM_BOTH, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 	}
@@ -1464,7 +1464,7 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 					}
-					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 					{//walking or fatigued a bit
 						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
 						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
@@ -1556,7 +1556,7 @@ static void WP_RepeaterAltFire(gentity_t* ent)
 	missile->classname = "repeater_alt_proj";
 	missile->s.weapon = WP_REPEATER;
 
-	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 	{
 		G_SetAnim(ent, NULL, SETANIM_BOTH, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 	}
@@ -1621,7 +1621,7 @@ static void WP_FireRepeater(gentity_t* ent, const qboolean alt_fire)
 						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 					}
-					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+					else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 					{//walking or fatigued a bit
 						angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
 						angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
@@ -1870,7 +1870,7 @@ static void WP_DEMP2_AltFire(gentity_t* ent)
 
 	VectorMA(start, DEMP2_ALT_RANGE, forward, end);
 
-	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 	{
 		G_SetAnim(ent, NULL, SETANIM_BOTH, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 	}
@@ -1993,7 +1993,7 @@ static void WP_FlechetteMainFire(gentity_t* ent)
 							angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 							angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						}
-						else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_HALF)
+						else if (PM_WalkingAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 						{//walking or fatigued a bit
 							angs[PITCH] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
 							angs[YAW] += Q_flrand(-1.1f, 1.1f) * WALKING_SPREAD;
@@ -2182,7 +2182,7 @@ static void WP_FlechetteAltFire(gentity_t* ent)
 	WP_TraceSetStart(ent, start, vec3_origin, vec3_origin);
 	//make sure our start point isn't on the other side of a wall
 
-	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 	{
 		G_SetAnim(ent, NULL, SETANIM_BOTH, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 	}
@@ -2400,7 +2400,7 @@ static void WP_FireRocket(gentity_t* ent, const qboolean alt_fire)
 		VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
 		ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
-		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
+		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 		{
 			G_SetAnim(ent, NULL, SETANIM_BOTH, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 		}
@@ -3735,7 +3735,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 	VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
 	ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
-	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 	{
 		G_SetAnim(ent, NULL, SETANIM_BOTH, BOTH_H1_S1_TR, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 	}
@@ -5375,13 +5375,13 @@ void G_AddMercBalance(const gentity_t* ent, int amount)
 
 	ent->client->ps.BlasterAttackChainCount += amount;
 
-	if (ent->client->ps.BlasterAttackChainCount < BLASTERMISHAPLEVEL_NONE)
+	if (ent->client->ps.BlasterAttackChainCount < BLASTERMISHAPLEVEL_MIN)
 	{
 		ent->client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
 	}
 	else if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MAX)
 	{
-		ent->client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_MAX;
+		ent->client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_OVERLOAD;
 	}
 }
 
@@ -5529,7 +5529,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			{
 				if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
 				{
-					G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
+					G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MIN);
 				}
 				else
 				{
@@ -5541,18 +5541,17 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 		else if (ent->s.weapon == WP_DISRUPTOR)
 		{
-			G_AddMercBalance(ent, BLASTERMISHAPLEVEL_RUNINACCURACY);
+			G_AddMercBalance(ent, BLASTERMISHAPLEVEL_THREE);
 		}
 		else
 		{
 			if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
 			{
-				G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
+				G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MIN);
 			}
 			else
 			{
-				G_AddMercBalance(ent, Q_irand(BLASTERMISHAPLEVEL_MININACCURACY,
-					BLASTERMISHAPLEVEL_TWO));
+				G_AddMercBalance(ent, Q_irand(BLASTERMISHAPLEVEL_MIN, BLASTERMISHAPLEVEL_TWO));
 				// 1 was not enough
 			}
 		}

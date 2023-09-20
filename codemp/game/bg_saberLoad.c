@@ -3009,7 +3009,7 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 qboolean WP_SaberValidForPlayerInMP(const char* saberName)
 {
 	char allowed[8] = { 0 };
-	
+
 	if (!WP_SaberParseParm(saberName, "notInMP", allowed))
 	{
 		//not defined, default is yes

@@ -318,7 +318,7 @@ void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLo
 		}
 		*/
 		//No. Bad.
-		* pqbAlreadyFound = qtrue;	// tell caller not to re-Endian or re-Shader this binary
+		*pqbAlreadyFound = qtrue;	// tell caller not to re-Endian or re-Shader this binary
 	}
 
 	ModelBin.iLastLevelUsedOn = RE_RegisterMedia_GetLevel();

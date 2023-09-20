@@ -1621,6 +1621,24 @@ typedef struct cgMedia_s {
 	qhandle_t messageLitOn;
 	qhandle_t messageLitOff;
 	qhandle_t messageObjCircle;
+
+	// weapons
+	qhandle_t weapontype_melee;
+	qhandle_t weapontype_stun_baton;
+	qhandle_t weapontype_briar_pistol;
+	qhandle_t weapontype_sbd_blaster;
+	qhandle_t weapontype_blaster_pistol;
+	qhandle_t weapontype_blaster;
+	qhandle_t weapontype_bowcaster;
+	qhandle_t weapontype_concussion;
+	qhandle_t weapontype_demp2;
+	qhandle_t weapontype_detpack;
+	qhandle_t weapontype_disruptor;
+	qhandle_t weapontype_flachette;
+	qhandle_t weapontype_repeater;
+	qhandle_t weapontype_thermal;
+	qhandle_t weapontype_rocket;
+	qhandle_t weapontype_tripmine;
 } cgMedia_t;
 
 // Stored FX handles

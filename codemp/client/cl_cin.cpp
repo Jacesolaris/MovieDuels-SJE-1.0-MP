@@ -1622,8 +1622,8 @@ int CIN_PlayCinematic(const char* arg, const int x, const int y, const int w, co
 
 	FS_Read(cin.file, 16, cinTable[currentHandle].iFile);
 
-	const unsigned short RoQID = static_cast<unsigned short>(cin.file[0]) + static_cast<unsigned short>(cin.file[1]) *256;
-	
+	const unsigned short RoQID = static_cast<unsigned short>(cin.file[0]) + static_cast<unsigned short>(cin.file[1]) * 256;
+
 	if (RoQID == 0x1084)
 	{
 		RoQ_init();

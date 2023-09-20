@@ -8210,7 +8210,7 @@ void AddFatigueKillBonus(const gentity_t* attacker, const gentity_t* victim, con
 
 	if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY)
 	{
-		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MININACCURACY;
+		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MIN;
 	}
 }
 
@@ -8234,7 +8234,7 @@ void AddFatigueMeleeBonus(const gentity_t* attacker, const gentity_t* victim)
 
 	if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY)
 	{
-		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MININACCURACY;
+		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MIN;
 	}
 }
 
@@ -8273,7 +8273,7 @@ void AddFatigueHurtBonus(const gentity_t* attacker, const gentity_t* victim, con
 
 	if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY)
 	{
-		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MININACCURACY;
+		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MIN;
 	}
 }
 
@@ -8312,7 +8312,7 @@ void AddFatigueHurtBonusMax(const gentity_t* attacker, const gentity_t* victim, 
 
 	if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY)
 	{
-		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MININACCURACY;
+		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_MIN;
 	}
 }
 

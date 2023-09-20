@@ -823,9 +823,9 @@ void BG_ReduceSaberMishapLevel(playerState_t* ps)
 	}
 	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_RUNINACCURACY)
 	{
-		ps->saberFatigueChainCount = MISHAPLEVEL_MININACCURACY;
+		ps->saberFatigueChainCount = MISHAPLEVEL_MIN;
 	}
-	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_MININACCURACY)
+	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_MIN)
 	{
 		ps->saberFatigueChainCount = MISHAPLEVEL_NONE;
 	}
@@ -5157,6 +5157,32 @@ void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade
 	saberDoClashEffect = qfalse;
 }
 
+void WP_SaberDoPerfectClash(const gentity_t* self, const int saber_num, const int blade_num)
+{
+	if (saberDoClashEffect)
+	{
+		gentity_t* te = G_TempEntity(saberClashPos, EV_SABER_PERFECTBLOCK);
+		VectorCopy(saberClashPos, te->s.origin);
+		VectorCopy(saberClashNorm, te->s.angles);
+		te->s.eventParm = saberClashEventParm;
+		te->s.otherEntityNum2 = self->s.number;
+		te->s.weapon = saber_num;
+		te->s.legsAnim = blade_num;
+
+		if (saberClashOther != -1 && PM_SaberInParry(g_entities[saberClashOther].client->ps.saber_move))
+		{
+			const gentity_t* other_owner = &g_entities[saberClashOther];
+
+			G_SetViewLock(self, saberClashPos, saberClashNorm);
+			G_SetViewLockDebounce(self);
+
+			G_SetViewLock(other_owner, saberClashPos, saberClashNorm);
+			G_SetViewLockDebounce(other_owner);
+		}
+	}
+	saberDoClashEffect = qfalse;
+}
+
 void WP_SaberBounceOnWallSound(gentity_t* ent, const int saber_num, const int blade_num)
 {
 	if (!ent || !ent->client)
@@ -8577,7 +8603,7 @@ void DownedSaberThink(gentity_t* saberent)
 			saberent->think = G_FreeEntity;
 			saberent->nextthink = level.time;
 			return;
-}
+		}
 #endif
 
 		saberReactivate(saberent, saber_own);
@@ -8726,7 +8752,7 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 			//make activation noise if we have one.
 			G_Sound(other, CHAN_WEAPON, other->client->saber[0].soundOn);
 		}
-}
+	}
 }
 
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner)
@@ -9941,7 +9967,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render
 
 		VectorCopy(self->client->ps.origin, ri->eyePoint);
 		ri->eyePoint[2] += self->client->ps.viewheight;
-}
+	}
 }
 
 #define STAFF_KICK_RANGE 16
@@ -11815,7 +11841,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 		!g2SaberInstance)
 	{
 		return;
-}
+	}
 
 #ifndef FINAL_BUILD
 	viewlock = self->client->ps.userInt1;
@@ -12934,7 +12960,14 @@ nextStep:
 				self->client->hasCurrentPosition = qtrue;
 
 				//do hit effects
-				WP_SaberDoClash(self, r_saber_num, r_blade_num);
+				if (self->client->ps.userInt3 & 1 << FLAG_PERFECTBLOCK)
+				{
+					WP_SaberDoPerfectClash(self, r_saber_num, r_blade_num);
+				}
+				else
+				{
+					WP_SaberDoClash(self, r_saber_num, r_blade_num);
+				}
 
 				r_blade_num++;
 			}

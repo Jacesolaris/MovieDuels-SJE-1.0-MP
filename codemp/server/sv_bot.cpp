@@ -702,7 +702,7 @@ void SV_BotInitCvars(void)
 	Cvar_Get("bot_interbreedwrite", "", CVAR_CHEAT); //write interbreeded bots to this file
 }
 
-extern botlib_export_t* GetBotLibAPI(int apiVersion, botlib_import_t* import);
+extern botlib_export_t * GetBotLibAPI(int apiVersion, botlib_import_t * import);
 
 // there's no such thing as this now, since the zone is unlimited, but I have to provide something
 //	so it doesn't run out of control alloc-wise (since the bot code calls this in a while() loop to free

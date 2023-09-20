@@ -408,7 +408,7 @@ void UI_LoadBots(void)
 	{
 		UI_LoadBotsFromFile(ui_md_bots_ot.string);
 	}
-	else if(*ui_md_bots_Legends.string)
+	else if (*ui_md_bots_Legends.string)
 	{
 		UI_LoadBotsFromFile(ui_md_bots_Legends.string);
 	}

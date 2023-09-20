@@ -356,7 +356,7 @@ qboolean UI_SaberProperNameForSaber(const char* saberName, char* saberProperName
 qboolean UI_SaberValidForPlayerInMP(const char* saberName)
 {
 	char allowed[8] = { 0 };
-	
+
 	if (!WP_SaberParseParm(saberName, "notInMP", allowed))
 	{//not defined, default is yes
 		return qfalse;

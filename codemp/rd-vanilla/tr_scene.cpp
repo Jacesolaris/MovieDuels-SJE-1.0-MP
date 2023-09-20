@@ -125,12 +125,12 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 {
 	int			fogIndex;
 
-	if (!tr.registered) 
+	if (!tr.registered)
 	{
 		return;
 	}
 
-	if (!h_shader) 
+	if (!h_shader)
 	{
 		ri->Printf(PRINT_DEVELOPER, S_COLOR_YELLOW  "WARNING: RE_AddPolyToScene: NULL poly shader\n");
 		return;

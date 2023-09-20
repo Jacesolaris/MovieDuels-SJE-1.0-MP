@@ -297,7 +297,7 @@ qboolean Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
 		return qfalse;
 
 	//I cannot allow ppl dueling to jump in a vehicle!
-	if (ent->client->ps.duelInProgress) 
+	if (ent->client->ps.duelInProgress)
 	{
 		return qfalse;
 	}

@@ -13000,6 +13000,7 @@ void PM_Weapon(void)
 				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 				{
 					desiredAnim = BOTH_SUPERPUSH;
+
 					pm->ps->powerups[PW_INVINCIBLE] = pm->cmd.serverTime + pm->ps->torsoTimer + 2000;
 				}
 				else

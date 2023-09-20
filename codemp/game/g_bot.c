@@ -1352,7 +1352,7 @@ static void G_LoadBots(void)
 	{
 		G_LoadBotsFromFile(md_bots_ot.string);
 	}
-	else if(*md_bots_Legends.string)
+	else if (*md_bots_Legends.string)
 	{
 		G_LoadBotsFromFile(md_bots_Legends.string);
 	}

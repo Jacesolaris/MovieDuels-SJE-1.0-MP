@@ -1909,7 +1909,6 @@ void CG_DrawMDSaberstyleFatigueVert(const centity_t* cent, const menuDef_t* menu
 
 void CG_DrawMDHiltVert(const centity_t* cent, const menuDef_t* menu_hud)
 {
-
 	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
 	{
 		return;
@@ -1940,8 +1939,6 @@ void CG_DrawMDHiltVert(const centity_t* cent, const menuDef_t* menu_hud)
 	const itemDef_t* focus_block_icon = Menu_FindItemByName(menu_hud, "md_block_vert");
 	const itemDef_t* focus_mblock_icon = Menu_FindItemByName(menu_hud, "md_mblock_vert");
 
-
-
 	if (cg.predicted_player_state.ManualBlockingFlags & 1 << HOLDINGBLOCK)
 	{
 		CG_DrawPic(
@@ -1971,6 +1968,536 @@ void CG_DrawMDHiltVert(const centity_t* cent, const menuDef_t* menu_hud)
 			focus_hilt_icon->window.rect.w,
 			focus_hilt_icon->window.rect.h,
 			focus_hilt_icon->window.background
+		);
+	}
+}
+
+///////////////////////////////////////////////
+
+void CG_DrawWeaponMelee(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_melee);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_melee);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_melee);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_melee);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_melee);
+	}
+}
+
+void CG_DrawWeaponStunBaton(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_stun_baton);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_stun_baton);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_stun_baton);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_stun_baton);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_stun_baton);
+	}
+}
+
+void CG_DrawWeaponBryarOld(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_briar_pistol);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_briar_pistol);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_briar_pistol);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_briar_pistol);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_briar_pistol);
+	}
+}
+
+void CG_DrawWeaponSBDBlaster(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_sbd_blaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_sbd_blaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_sbd_blaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_sbd_blaster);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_sbd_blaster);
+	}
+}
+
+void CG_DrawWeaponBlasterPistol(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_blaster_pistol);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_blaster_pistol);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_blaster_pistol);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_blaster_pistol);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_blaster_pistol);
+	}
+}
+
+void CG_DrawWeaponBlaster(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_blaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_blaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right vert
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_blaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right hoz
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_blaster);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_blaster);
+	}
+}
+
+void CG_DrawWeaponBowcaster(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_bowcaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_bowcaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_bowcaster);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_bowcaster);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_bowcaster);
+	}
+}
+
+void CG_DrawWeaponConcussion(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_concussion);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_concussion);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_concussion);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_concussion);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_concussion);
+	}
+}
+
+void CG_DrawWeaponDemp2(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_demp2);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_demp2);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_demp2);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_demp2);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_demp2);
+	}
+}
+
+void CG_DrawWeaponDetpack(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_detpack);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_detpack);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_detpack);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_detpack);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_detpack);
+	}
+}
+
+void CG_DrawWeaponDisruptor(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_disruptor);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_disruptor);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_disruptor);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_disruptor);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_disruptor);
+	}
+}
+
+void CG_DrawWeaponFlatchette(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_flachette);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_flachette);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_flachette);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_flachette);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_flachette);
+	}
+}
+
+void CG_DrawWeaponRepeater(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_repeater);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_repeater);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_repeater);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_repeater);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_repeater);
+	}
+}
+
+void CG_DrawWeaponThermal(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_thermal);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_thermal);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_thermal);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_thermal);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_thermal);
+	}
+}
+
+void CG_DrawWeaponRocketLauncher(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_rocket);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_rocket);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_rocket);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_rocket);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_rocket);
+	}
+}
+
+void CG_DrawWeaponTripMine(const int x, const int y)
+{
+	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_tripmine);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 1) //movie duels right
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_tripmine);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
+	{
+		CG_DrawPic(x + 36, y + 20, 20, 20, cgs.media.weapontype_tripmine);
+	}
+	else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
+	{
+		CG_DrawPic(x + 21, y + 38, 20, 20, cgs.media.weapontype_tripmine);
+	}
+	else
+	{
+		CG_DrawPic(x + 30, y + 35, 20, 20, cgs.media.weapontype_tripmine);
+	}
+}
+
+////////////////////////////////////////////////
+
+void CG_DrawMDWeaponIcon(const centity_t* cent)
+{
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cent->currentState.weapon) // We don't have a weapon right now
+	{
+		return;
+	}
+
+	if (cent->currentState.weapon == WP_SABER)
+	{
+		return;
+	}
+
+	if (cent->currentState.weapon == WP_MELEE)
+	{
+		CG_DrawWeaponMelee(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_STUN_BATON)
+	{
+		CG_DrawWeaponStunBaton(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_BRYAR_OLD)
+	{
+		//CG_DrawWeaponBryarOld(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+		CG_DrawWeaponSBDBlaster(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_BRYAR_PISTOL)
+	{
+		CG_DrawWeaponBlasterPistol(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_BLASTER)
+	{
+		CG_DrawWeaponBlaster(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_BOWCASTER)
+	{
+		CG_DrawWeaponBowcaster(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_CONCUSSION)
+	{
+		CG_DrawWeaponConcussion(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_DEMP2)
+	{
+		CG_DrawWeaponDemp2(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_DET_PACK)
+	{
+		CG_DrawWeaponDetpack(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_DISRUPTOR)
+	{
+		CG_DrawWeaponDisruptor(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_FLECHETTE)
+	{
+		CG_DrawWeaponFlatchette(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_REPEATER)
+	{
+		CG_DrawWeaponRepeater(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_THERMAL)
+	{
+		CG_DrawWeaponThermal(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_ROCKET_LAUNCHER)
+	{
+		CG_DrawWeaponRocketLauncher(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else if (cent->currentState.weapon == WP_TRIP_MINE)
+	{
+		CG_DrawWeaponTripMine(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+	else
+	{
+		CG_DrawWeaponMelee(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+	}
+}
+
+void CG_DrawMDWeaponFatigueVert(const centity_t* cent, const menuDef_t* menu_hud)
+{
+	itemDef_t* focus_item;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cent->currentState.weapon) // We don't have a weapon right now
+	{
+		return;
+	}
+
+	if (cent->currentState.weapon == WP_SABER)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	float fatigue_percent = (float)cg.snap->ps.BlasterAttackChainCount / BLASTERMISHAPLEVEL_OVERLOAD;
+
+	if (fatigue_percent < 0)
+	{
+		fatigue_percent = 0.0f;
+	}
+
+	focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_vert");
+
+	if (focus_item)
+	{
+		trap->R_SetColor(colorTable[CT_WHITE]);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y + fatigue_percent * 100,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h - fatigue_percent * 100,
+			focus_item->window.background
 		);
 	}
 }
@@ -2844,7 +3371,6 @@ void CG_DrawMDSaberstyleFatigueHoz(const centity_t* cent, const menuDef_t* menu_
 
 void CG_DrawMDHiltHoz(const centity_t* cent, const menuDef_t* menu_hud)
 {
-
 	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
 	{
 		return;
@@ -2874,8 +3400,6 @@ void CG_DrawMDHiltHoz(const centity_t* cent, const menuDef_t* menu_hud)
 	const itemDef_t* focus_item_icon = Menu_FindItemByName(menu_hud, "md_hilt_hoz");
 	const itemDef_t* focus_block_icon = Menu_FindItemByName(menu_hud, "md_block_hoz");
 	const itemDef_t* focus_mblock_icon = Menu_FindItemByName(menu_hud, "md_mblock_hoz");
-
-
 
 	if (cg.predicted_player_state.ManualBlockingFlags & 1 << HOLDINGBLOCK)
 	{
@@ -2909,6 +3433,60 @@ void CG_DrawMDHiltHoz(const centity_t* cent, const menuDef_t* menu_hud)
 			focus_item_icon->window.rect.h,
 			-90,
 			focus_item_icon->window.background
+		);
+	}
+}
+
+void CG_DrawMDWeaponFatigueHoz(const centity_t* cent, const menuDef_t* menu_hud)
+{
+	itemDef_t* focus_item;
+
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cent->currentState.weapon) // We don't have a weapon right now
+	{
+		return;
+	}
+
+	if (cent->currentState.weapon == WP_SABER)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	float fatigue_percent = (float)cg.snap->ps.BlasterAttackChainCount / BLASTERMISHAPLEVEL_OVERLOAD;
+
+	if (fatigue_percent < 0)
+	{
+		fatigue_percent = 0.0f;
+	}
+
+	focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_hoz");
+
+	if (focus_item)
+	{
+		trap->R_SetColor(colorTable[CT_WHITE]);
+
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x + fatigue_percent * 60,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h - fatigue_percent * 100,
+			-90,
+			focus_item->window.background
 		);
 	}
 }
@@ -3550,300 +4128,6 @@ static void CG_DrawCusSaberStyle(const centity_t* cent, const menuDef_t* menu_hu
 	}
 }
 
-static void CG_DrawCusweapontype(const centity_t* cent, const menuDef_t* menu_hud)
-{
-	itemDef_t* focus_item;
-
-	if (!cent->currentState.weapon) // We don't have a weapon right now
-	{
-		return;
-	}
-
-	if (cent->currentState.weapon == WP_SABER)
-	{
-		return;
-	}
-
-	// Can we find the menu?
-	if (!menu_hud)
-	{
-		return;
-	}
-
-	if (cent->currentState.weapon == WP_MELEE)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_melee");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_STUN_BATON)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_stun_baton");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_BRYAR_PISTOL)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_briar_pistol");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_BRYAR_PISTOL)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_blaster_pistol");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_BLASTER)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_blaster");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_BOWCASTER)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_bowcaster");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_CONCUSSION)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_concussion");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_DEMP2)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_demp2");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_DET_PACK)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_detpack");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_DISRUPTOR)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_disruptor");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_FLECHETTE)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_flachette");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_REPEATER)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_repeater");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_THERMAL)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_thermal");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_ROCKET_LAUNCHER)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_rocket");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else if (cent->currentState.weapon == WP_TRIP_MINE)
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_tripmine");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-	else
-	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_melee");
-
-		if (focus_item)
-		{
-			trap->R_SetColor(colorTable[CT_WHITE]);
-
-			CG_DrawPic(
-				focus_item->window.rect.x + 5,
-				focus_item->window.rect.y + 5,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h,
-				focus_item->window.background
-			);
-		}
-	}
-}
-
 /*
 ================
 CG_Drawgunfatigue
@@ -3854,7 +4138,7 @@ void CG_DrawCusgunfatigue(const menuDef_t* menu_hud)
 {
 	//render the CG_Drawgunfatigue meter.
 	vec4_t calc_color;
-	const int max_blaster_attack_chain_count = BLASTERMISHAPLEVEL_MAX;
+	const int max_blaster_attack_chain_count = BLASTERMISHAPLEVEL_OVERLOAD;
 	qboolean flash = qfalse;
 
 	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
@@ -5772,13 +6056,13 @@ void CG_DrawHUD(const centity_t* cent)
 				else if (cent->currentState.weapon == WP_MELEE)
 				{
 					CG_DrawCusgunfatigue(menu_hud);
-					CG_DrawCusweapontype(cent, menu_hud);
+					CG_DrawMDWeaponIcon(cent);
 				}
 				else
 				{
 					CG_DrawCusAmmo(cent, menu_hud);
 					CG_DrawCusgunfatigue(menu_hud);
-					CG_DrawCusweapontype(cent, menu_hud);
+					CG_DrawMDWeaponIcon(cent);
 				}
 				CG_Draw_JKA_ForcePower(cent, menu_hud);
 			}
@@ -5818,12 +6102,12 @@ void CG_DrawHUD(const centity_t* cent)
 					CG_DrawJK2GunFatigue(cent, x, y);
 				}
 
+				CG_DrawHUDJK2RightFrame2(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
+
 				if (cent->currentState.weapon == WP_STUN_BATON)
 				{
-					CG_DrawCusweapontype(cent, menu_hud);
+					CG_DrawMDWeaponIcon(cent);
 				}
-
-				CG_DrawHUDJK2RightFrame2(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 2) //movie duels right
 			{//right hud
@@ -5850,12 +6134,26 @@ void CG_DrawHUD(const centity_t* cent)
 						CG_DrawMDSaberstyleFatigueVert(cent, menu_hud);
 					}
 				}
+
+				if (cent->currentState.weapon != WP_SABER && cent->currentState.weapon != WP_MELEE)
+				{
+					CG_DrawMDWeaponFatigueVert(cent, menu_hud);
+				}
+
 				CG_DrawHUDMDRightInnerRingvert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDRightOuterRingvert(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 
 				if (cent->currentState.weapon == WP_SABER)
 				{
 					CG_DrawMDHiltVert(cent, menu_hud);
+				}
+				else if (cent->currentState.weapon == WP_MELEE)
+				{
+					CG_DrawMDWeaponIcon(cent);
+				}
+				else
+				{
+					CG_DrawMDWeaponIcon(cent);
 				}
 			}
 			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels right
@@ -5883,12 +6181,26 @@ void CG_DrawHUD(const centity_t* cent)
 						CG_DrawMDSaberstyleFatigueHoz(cent, menu_hud);
 					}
 				}
+
+				if (cent->currentState.weapon != WP_SABER && cent->currentState.weapon != WP_MELEE)
+				{
+					CG_DrawMDWeaponFatigueHoz(cent, menu_hud);
+				}
+
 				CG_DrawHUDMDRightInnerRinghoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 				CG_DrawHUDMDRightOuterRinghoz(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
 
 				if (cent->currentState.weapon == WP_SABER)
 				{
 					CG_DrawMDHiltHoz(cent, menu_hud);
+				}
+				else if (cent->currentState.weapon == WP_MELEE)
+				{
+					CG_DrawMDWeaponIcon(cent);
+				}
+				else
+				{
+					CG_DrawMDWeaponIcon(cent);
 				}
 			}
 			else //custom
@@ -5960,13 +6272,13 @@ void CG_DrawHUD(const centity_t* cent)
 				else if (cent->currentState.weapon == WP_MELEE)
 				{
 					CG_DrawCusgunfatigue(menu_hud);
-					CG_DrawCusweapontype(cent, menu_hud);
+					CG_DrawMDWeaponIcon(cent);
 				}
 				else
 				{
 					CG_DrawCusAmmo(cent, menu_hud);
 					CG_DrawCusgunfatigue(menu_hud);
-					CG_DrawCusweapontype(cent, menu_hud);
+					CG_DrawMDWeaponIcon(cent);
 				}
 				CG_DrawJK2ForcePower(cent, SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80, menu_hud);
 			}
@@ -12278,7 +12590,7 @@ static void CG_DrawWarmup(void)
 
 	w = CG_Text_Width(s, scale, FONT_MEDIUM);
 	CG_Text_Paint(320 - w / 2, 125, scale, colorWhite, s, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE, FONT_MEDIUM);
-	}
+}
 
 //==================================================================================
 /*

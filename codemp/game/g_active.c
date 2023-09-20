@@ -1290,7 +1290,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		if (!(ent->client->buttons & BUTTON_ATTACK) && !(ent->client->buttons & BUTTON_ALT_ATTACK))
 		{
 			if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MIN && ent->client->ps.weaponTime < 1)
-			{
+			{/*
 				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
 				{
 					WP_BlasterFatigueRegenerate(4);
@@ -1298,7 +1298,8 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 				else
 				{
 					WP_BlasterFatigueRegenerate(1);
-				}
+				}*/
+				WP_BlasterFatigueRegenerate(1);
 			}
 		}
 
@@ -3834,7 +3835,7 @@ void ReloadGun(gentity_t* ent)
 
 	if (IsHoldingGun(ent))
 	{
-		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
 		{
 			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");

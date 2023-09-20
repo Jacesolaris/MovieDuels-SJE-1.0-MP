@@ -1951,7 +1951,7 @@ void TryUse(gentity_t* ent)
 		ent->client->bodyGrabTime = level.time + 1000;
 		ent->client->bodyGrabIndex = target->s.number;
 		return;
-}
+	}
 #endif
 
 	if (target && target->m_pVehicle && target->client &&

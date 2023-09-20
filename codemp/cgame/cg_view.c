@@ -1705,7 +1705,7 @@ static int CG_CalcViewValues(void)
 			{
 				VectorCopy(ps->viewangles, cg.refdef.viewangles);
 			}
-}
+		}
 #else// VEH_CONTROL_SCHEME_4
 		if (cg.predicted_player_state.m_iVehicleNum //in a vehicle
 			&& BG_UnrestrainedPitchRoll(&cg.predicted_player_state,

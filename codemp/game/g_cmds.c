@@ -2614,7 +2614,7 @@ void Cmd_Punish(gentity_t* ent)
 		trap->SendServerCommand(ent - g_entities, va("print \"Client is currently dueling. Please wait for them to finish.\n\""));
 		return;
 	}
-	
+
 	if (g_entities[client_id].health > 0)
 	{
 		gentity_t* kEnt = &g_entities[client_id];
@@ -2631,7 +2631,7 @@ void Cmd_Punish(gentity_t* ent)
 		g_entities[client_id].client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
 		g_entities[client_id].client->ps.forceHandExtendTime = level.time + Q3_INFINITE;
 		g_entities[client_id].client->ps.quickerGetup = qfalse;
-		
+
 		if (kEnt->inuse && kEnt->client)
 		{
 			g_entities[client_id].flags &= ~FL_GODMODE;
@@ -2726,7 +2726,7 @@ void Cmd_AdminLogin(gentity_t* ent)
 			G_LogPrintf("%s %s\n", ent->client->pers.netname, ent->client->pers.login);
 
 			trap->SendServerCommand(-1, va("print \"%s ^7%s\n\"", ent->client->pers.netname, ent->client->pers.login));
-			
+
 			Com_Printf("-----Now type Adminmenu to see admin commands ----------\n");
 		}
 		else
@@ -3693,7 +3693,19 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 
 		if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)) // lets do a movement when changing styles // need better anims for this
 		{
-			G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			if (select_level == SS_DUAL)
+			{
+				G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			}
+			else if (select_level == SS_STAFF)
+			{
+				G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			}
+			else
+			{
+				G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			}
+			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/lowswing%i.wav", Q_irand(1, 7))));
 		}
 	}
 	else
@@ -3716,7 +3728,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 	if (level.gametype == GT_MOVIEDUELS_DUEL || level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		//rather pointless in this mode..
-		trap->SendServerCommand(ent - g_entities,va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NODUEL_GAMETYPE")));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NODUEL_GAMETYPE")));
 		return;
 	}
 
@@ -3769,7 +3781,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 
 		if (challenged->client->ps.duelIndex == ent->s.number && challenged->client->ps.duelTime >= level.time)
 		{
-			trap->SendServerCommand(-1, va("print \"%s %s %s!\n\"", challenged->client->pers.netname,G_GetStringEdString("MP_SVGAME", "PLDUELACCEPT"),ent->client->pers.netname));
+			trap->SendServerCommand(-1, va("print \"%s %s %s!\n\"", challenged->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELACCEPT"), ent->client->pers.netname));
 
 			ent->client->ps.duelInProgress = qtrue;
 			challenged->client->ps.duelInProgress = qtrue;
@@ -3794,9 +3806,9 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 			challenged->client->ps.stats[STAT_ARMOR] = 100;
 
 			//Holster their sabers now, until the duel starts (then they'll get auto-turned on to look cool)
-			G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD,0);
+			G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
-			G_SetAnim(challenged, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			G_SetAnim(challenged, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
 			if (!ent->client->ps.saberHolstered)
 			{

@@ -8670,7 +8670,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		{
 			WP_DoSpecificPower(self, ucmd, FP_LEVITATION);
 		}
-}
+	}
 
 	if (self->client->flameTime > level.time)
 	{

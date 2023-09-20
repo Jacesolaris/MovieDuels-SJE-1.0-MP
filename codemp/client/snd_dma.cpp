@@ -4740,7 +4740,7 @@ void S_StartBackgroundTrack(const char* intro, const char* loop, const qboolean 
 		// strstr() check avoids extra file-exists check at runtime if reverting from streamed music to dynamic since literal files all need at least one slash in their name (eg "music/blah")
 	{
 		const char* psLoopName = S_FileExists(sNameLoop) ? sNameLoop : sNameIntro;
-		Com_DPrintf("S_StartBackgroundTrack: Found/using non-dynamic music track '%s' (loop: '%s')\n", sNameIntro,psLoopName);
+		Com_DPrintf("S_StartBackgroundTrack: Found/using non-dynamic music track '%s' (loop: '%s')\n", sNameIntro, psLoopName);
 		S_StartBackgroundTrack_Actual(&tMusic_Info[eBGRNDTRACK_NONDYNAMIC], bMusic_IsDynamic, sNameIntro, psLoopName);
 	}
 	else

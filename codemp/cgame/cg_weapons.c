@@ -2043,7 +2043,7 @@ void CG_NextWeapon_f(void)
 		return;
 	}
 
-	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
 	{
 		return;
 	}
@@ -2127,7 +2127,7 @@ void CG_PrevWeapon_f(void)
 		return;
 	}
 
-	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
 	{
 		return;
 	}
@@ -2224,7 +2224,7 @@ void CG_Weapon_f(void)
 		return;
 	}
 
-	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
 	{
 		return;
 	}

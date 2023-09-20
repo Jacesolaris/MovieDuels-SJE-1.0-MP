@@ -864,7 +864,7 @@ static void Init_AI_Export(ai_export_t* ai) {
 GetBotLibAPI
 ============
 */
-botlib_export_t* GetBotLibAPI(const int apiVersion, botlib_import_t* import) {
+botlib_export_t * GetBotLibAPI(const int apiVersion, botlib_import_t * import) {
 	assert(import);   // bk001129 - this wasn't set for base/
 	botimport = *import;
 	assert(botimport.Print);   // bk001129 - pars pro toto

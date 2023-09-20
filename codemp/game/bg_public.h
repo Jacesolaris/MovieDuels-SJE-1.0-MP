@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-19,BuildNum-07" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-20,BuildNum-08" // build date
 
 #define	STEPSIZE		18
 
@@ -925,6 +925,7 @@ typedef enum {
 	EV_SABER_ATTACK,
 	EV_SABER_HIT,
 	EV_SABER_BLOCK,
+	EV_SABER_PERFECTBLOCK,
 	EV_SABER_BODY_HIT,
 	EV_SABER_CLASHFLARE,
 	EV_SABER_UNHOLSTER,

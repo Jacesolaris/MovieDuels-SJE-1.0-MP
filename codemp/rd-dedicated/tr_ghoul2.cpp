@@ -2249,8 +2249,8 @@ void G2_ProcessGeneratedSurfaceBolts(CGhoul2Info& ghoul2, const mdxaBone_v& bone
 			{
 				G2_ProcessSurfaceBolt(bone_ptr, nullptr, boltNum, ghoul2.mBltlist, &ghoul2.mSlist[i], mod_t);
 			}
+		}
 	}
-}
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2Time_G2_ProcessGeneratedSurfaceBolts += G2PerformanceTimer_G2_ProcessGeneratedSurfaceBolts.End();
 #endif
@@ -2950,11 +2950,11 @@ void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, const 
 				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], frameNum, checkForNewOrigin);
 			}
 		}
-			}
+	}
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2Time_G2_ConstructGhoulSkeleton += G2PerformanceTimer_G2_ConstructGhoulSkeleton.End();
 #endif
-		}
+}
 
 /*
 =================
@@ -3520,11 +3520,11 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 					{
 						boneRef[j] = 0;
 					}
-		}
-	}
+				}
+			}
 			// find the next surface
 			surf = reinterpret_cast<mdxmSurface_t*>(reinterpret_cast<byte*>(surf) + surf->ofsEnd);
-}
+		}
 		// find the next LOD
 		lod = reinterpret_cast<mdxmLOD_t*>(reinterpret_cast<byte*>(lod) + lod->ofsEnd);
 	}

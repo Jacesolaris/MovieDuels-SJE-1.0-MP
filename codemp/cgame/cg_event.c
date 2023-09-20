@@ -3148,6 +3148,115 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		}
 		break;
 
+	case EV_SABER_PERFECTBLOCK:
+		DEBUGNAME("EV_SABER_PERFECTBLOCK");
+		{
+			if (es->eventParm)
+			{
+				//saber block
+				qboolean cull_pass = qfalse;
+				int perfectblock_fxid = cgs.effects.mSaberprfectBlock;
+				qhandle_t block_sound = trap->S_RegisterSound(va("sound/weapons/saber/saber_perfectblock%d", Q_irand(1, 3)));
+
+				if (es->otherEntityNum2 >= 0 && es->otherEntityNum2 < ENTITYNUM_NONE)
+				{
+					//we have a specific person who is causing this effect, see if we should override it with any custom saber effects/sounds
+					clientInfo_t* client = NULL;
+					if (cg_entities[es->otherEntityNum2].currentState.eType == ET_NPC)
+					{
+						client = cg_entities[es->otherEntityNum2].npcClient;
+					}
+					else if (es->otherEntityNum2 < MAX_CLIENTS)
+					{
+						client = &cgs.clientinfo[es->otherEntityNum2];
+					}
+					if (client && client->infoValid)
+					{
+						int saber_num = es->weapon;
+						int blade_num = es->legsAnim;
+
+						if (WP_SaberBladeUseSecondBladeStyle(&client->saber[saber_num], blade_num))
+						{
+							//use second blade style values
+							if (client->saber[saber_num].blockEffect2)
+							{
+								//custom saber block effect
+								perfectblock_fxid = client->saber[saber_num].blockEffect2;
+							}
+							if (client->saber[saber_num].block2Sound[0])
+							{
+								block_sound = client->saber[saber_num].block2Sound[Q_irand(0, 2)];
+							}
+						}
+						else
+						{
+							if (client->saber[saber_num].blockEffect)
+							{
+								perfectblock_fxid = client->saber[saber_num].blockEffect;
+							}
+							if (client->saber[saber_num].blockSound[0])
+							{
+								block_sound = client->saber[saber_num].blockSound[Q_irand(0, 2)];
+							}
+						}
+					}
+				}
+				if (cg.mInRMG)
+				{
+					trace_t tr;
+					vec3_t vec_sub;
+
+					VectorSubtract(cg.refdef.vieworg, es->origin, vec_sub);
+
+					if (VectorLength(vec_sub) < 5000)
+					{
+						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
+
+						if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
+						{
+							cull_pass = qtrue;
+						}
+					}
+				}
+				else
+				{
+					cull_pass = qtrue;
+				}
+
+				if (cull_pass)
+				{
+					vec3_t fx_dir;
+
+					VectorCopy(es->angles, fx_dir);
+					if (!fx_dir[0] && !fx_dir[1] && !fx_dir[2])
+					{
+						fx_dir[1] = 1;
+					}
+					trap->S_StartSound(es->origin, es->number, CHAN_AUTO, block_sound);
+					trap->FX_PlayEffectID(perfectblock_fxid, es->origin, fx_dir, -1, -1, qfalse);
+				}
+			}
+			else
+			{
+				//projectile block
+				vec3_t fx_dir;
+				VectorCopy(es->angles, fx_dir);
+				if (!fx_dir[0] && !fx_dir[1] && !fx_dir[2])
+				{
+					fx_dir[1] = 1;
+				}
+				if (Q_irand(0, 1))
+				{
+					trap->FX_PlayEffectID(cgs.effects.mBlasterDeflectpassthrough, es->origin, fx_dir, -1, -1, qfalse);
+				}
+				else
+				{
+					trap->FX_PlayEffectID(cgs.effects.mBlasterDeflect, es->origin, fx_dir, -1, -1, qfalse);
+				}
+			}
+		}
+		break;
+
 	case EV_SABER_BODY_HIT:
 		DEBUGNAME("EV_SABER_BODY_HIT");
 		{
