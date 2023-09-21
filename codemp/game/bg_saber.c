@@ -6659,7 +6659,7 @@ void WP_BlasterFatigueRegenerate(const int override_amt)
 		{
 			pm->ps->BlasterAttackChainCount--;
 		}
-		if (pm->ps->BlasterAttackChainCount > BLASTERMISHAPLEVEL_MAX)
+		if (pm->ps->BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD)
 		{
 			pm->ps->BlasterAttackChainCount = BLASTERMISHAPLEVEL_OVERLOAD;
 		}

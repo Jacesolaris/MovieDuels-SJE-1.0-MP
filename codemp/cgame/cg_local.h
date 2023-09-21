@@ -1538,6 +1538,17 @@ typedef struct cgMedia_s {
 	qhandle_t demp2ShellShader;
 
 	qhandle_t cursor;
+	qhandle_t cursor_anakin;
+	qhandle_t cursor_jk;
+	qhandle_t cursor_katarn;
+	qhandle_t cursor_kylo;
+	qhandle_t cursor_luke;
+	qhandle_t cursor_obiwan;
+	qhandle_t cursor_oldrepublic;
+	qhandle_t cursor_quigon;
+	qhandle_t cursor_rey;
+	qhandle_t cursor_vader;
+	qhandle_t cursor_windu;
 	qhandle_t selectCursor;
 	qhandle_t sizeCursor;
 

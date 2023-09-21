@@ -43,6 +43,7 @@ extern qboolean PM_InKataAnim(int anim);
 extern qboolean PM_StandingAtReadyAnim(int anim);
 extern qboolean PM_WalkingOrRunningAnim(int anim);
 extern qboolean PM_SaberInnonblockableAttack(int anim);
+extern qboolean in_camera;
 
 #define MIN_SABERBLADE_DRAW_LENGTH 0.5f
 
@@ -4987,7 +4988,7 @@ static void CG_PlayerPowerups(centity_t* cent)
 
 #ifdef BASE_COMPAT
 	// quad gives a dlight
-	if (powerups & 1 << PW_MEDITATE)
+	/*if (powerups & 1 << PW_MEDITATE)
 	{
 		if (cg.snap->ps.fd.forcePower < 50)
 		{
@@ -4997,7 +4998,7 @@ static void CG_PlayerPowerups(centity_t* cent)
 		{
 			trap->R_AddLightToScene(cent->lerpOrigin, 200 + (rand() & 31), 0.2f, 0.2f, 1);
 		}
-	}
+	}*/
 #endif // BASE_COMPAT
 
 	if (cent->currentState.eType == ET_NPC)
@@ -19549,7 +19550,8 @@ SkipTrueView:
 	}
 
 	if (cent->currentState.powerups & 1 << PW_MEDITATE
-		&& health > 1)
+		&& cg.snap->ps.fd.forcePower > 80
+		&& health > 1 && !in_camera)
 	{
 		if (cent->ghoul2)
 		{
@@ -19559,8 +19561,7 @@ SkipTrueView:
 
 			VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
-			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,
-				cgs.game_models, cent->modelScale);
+			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,cgs.game_models, cent->modelScale);
 
 			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ef_org);
 			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fx_ang);
@@ -19578,6 +19579,7 @@ SkipTrueView:
 			axis[2][2] = bolt_matrix.matrix[2][2];
 
 			trap->FX_PlayEntityEffectID(cgs.effects.forceInvincibility, ef_org, axis, -1, -1, -1, -1);
+			trap->R_AddLightToScene(cent->lerpOrigin, 200 + (rand() & 31), 0.2f, 0.2f, 1);
 		}
 	}
 

@@ -662,6 +662,18 @@ void AssetCache(void)
 	uiInfo.uiDC.Assets.scrollBarThumb = trap->R_RegisterShaderNoMip(ASSET_SCROLL_THUMB);
 	uiInfo.uiDC.Assets.sliderBar = trap->R_RegisterShaderNoMip(ASSET_SLIDER_BAR);
 	uiInfo.uiDC.Assets.sliderThumb = trap->R_RegisterShaderNoMip(ASSET_SLIDER_THUMB);
+	//
+	uiInfo.uiDC.Assets.cursor_anakin = trap->R_RegisterShaderNoMip(ASSET_ANAKIN);
+	uiInfo.uiDC.Assets.cursor_jk = trap->R_RegisterShaderNoMip(ASSET_JK);
+	uiInfo.uiDC.Assets.cursor_katarn = trap->R_RegisterShaderNoMip(ASSET_KATARN);
+	uiInfo.uiDC.Assets.cursor_kylo = trap->R_RegisterShaderNoMip(ASSET_KYLO);
+	uiInfo.uiDC.Assets.cursor_luke = trap->R_RegisterShaderNoMip(ASSET_LUKE);
+	uiInfo.uiDC.Assets.cursor_obiwan = trap->R_RegisterShaderNoMip(ASSET_OBIWAN);
+	uiInfo.uiDC.Assets.cursor_oldrepublic = trap->R_RegisterShaderNoMip(ASSET_OLDREPUBLIC);
+	uiInfo.uiDC.Assets.cursor_quigon = trap->R_RegisterShaderNoMip(ASSET_QUIGON);
+	uiInfo.uiDC.Assets.cursor_rey = trap->R_RegisterShaderNoMip(ASSET_RAY);
+	uiInfo.uiDC.Assets.cursor_vader = trap->R_RegisterShaderNoMip(ASSET_VADER);
+	uiInfo.uiDC.Assets.cursor_windu = trap->R_RegisterShaderNoMip(ASSET_WINDU);
 
 	// Icons for various server settings.
 	uiInfo.uiDC.Assets.needPass = trap->R_RegisterShaderNoMip("gfx/menus/needpass");
@@ -1234,6 +1246,129 @@ qboolean Asset_Parse(int handle)
 			uiInfo.uiDC.Assets.cursor = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
 			continue;
 		}
+
+		if (Q_stricmp(token.string, "cursor_anakin") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_anakin'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_anakin = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_jk") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_jk'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_jk = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_katarn") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_katarn'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_katarn = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_kylo") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_kylo'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_kylo = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_luke") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_luke'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_luke = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_obiwan") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_obiwan'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_obiwan = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_oldrepublic") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_oldrepublic'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_oldrepublic = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_quigon") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_quigon'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_quigon = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_rey") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_rey'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_rey = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_vader") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_vader'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_vader = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_windu") == 0)
+		{
+			if (!PC_String_Parse(handle, &uiInfo.uiDC.Assets.cursorStr))
+			{
+				Com_Printf(S_COLOR_YELLOW, "Bad 1st parameter for keyword 'cursor_windu'");
+				return qfalse;
+			}
+			uiInfo.uiDC.Assets.cursor_windu = trap->R_RegisterShaderNoMip(uiInfo.uiDC.Assets.cursorStr);
+			continue;
+		}
+
+		//////////////////////////////////////////////////////////////////////////////////////////
 
 		// gradientbar
 		if (Q_stricmp(token.string, "gradientbar") == 0)
@@ -11001,11 +11136,61 @@ void UI_Refresh(int realtime)
 	}
 	// draw cursor
 	UI_SetColor(NULL);
+
 	if (Menu_Count() > 0 && trap->Key_GetCatcher() & KEYCATCH_UI)
 	{
-		UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f,
-			uiInfo.uiDC.Assets.cursor);
-		//UI_DrawHandlePic( uiInfo.uiDC.cursorx, uiInfo.uiDC.cursory, 48, 48, uiInfo.uiDC.Assets.cursor);
+		if (g_cursor.integer == 0)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor);
+		}
+		else if (g_cursor.integer == 1)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_anakin);
+		}
+		else if (g_cursor.integer == 2)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_jk);
+		}
+		else if (g_cursor.integer == 3)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_katarn);
+		}
+		else if (g_cursor.integer == 4)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_kylo);
+		}
+		else if (g_cursor.integer == 5)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_luke);
+		}
+		else if (g_cursor.integer == 6)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_obiwan);
+		}
+		else if (g_cursor.integer == 7)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_oldrepublic);
+		}
+		else if (g_cursor.integer == 8)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_quigon);
+		}
+		else if (g_cursor.integer == 9)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_rey);
+		}
+		else if (g_cursor.integer == 10)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_vader);
+		}
+		else if (g_cursor.integer == 11)
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_windu);
+		}
+		else
+		{
+			UI_DrawHandlePic((float)uiInfo.uiDC.cursorx, (float)uiInfo.uiDC.cursory, 40.0f, 40.0f, uiInfo.uiDC.Assets.cursor_kylo);
+		}
 	}
 
 	if (ui_rankChange.integer)

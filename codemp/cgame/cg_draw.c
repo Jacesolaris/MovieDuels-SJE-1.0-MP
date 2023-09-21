@@ -2451,8 +2451,6 @@ void CG_DrawMDWeaponIcon(const centity_t* cent)
 
 void CG_DrawMDWeaponFatigueVert(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	itemDef_t* focus_item;
-
 	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
 	{
 		return;
@@ -2486,19 +2484,25 @@ void CG_DrawMDWeaponFatigueVert(const centity_t* cent, const menuDef_t* menu_hud
 		fatigue_percent = 0.0f;
 	}
 
-	focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_vert");
+	const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_vert");
 
 	if (focus_item)
 	{
 		trap->R_SetColor(colorTable[CT_WHITE]);
 
-		CG_DrawPic(
-			focus_item->window.rect.x,
-			focus_item->window.rect.y + fatigue_percent * 100,
-			focus_item->window.rect.w,
-			focus_item->window.rect.h - fatigue_percent * 100,
-			focus_item->window.background
-		);
+		if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
+		{
+		}
+		else
+		{
+			CG_DrawPic(
+				focus_item->window.rect.x,
+				focus_item->window.rect.y + fatigue_percent * 100,
+				focus_item->window.rect.w,
+				focus_item->window.rect.h - fatigue_percent * 100,
+				focus_item->window.background
+			);
+		}
 	}
 }
 
@@ -3439,8 +3443,6 @@ void CG_DrawMDHiltHoz(const centity_t* cent, const menuDef_t* menu_hud)
 
 void CG_DrawMDWeaponFatigueHoz(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	itemDef_t* focus_item;
-
 	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
 	{
 		return;
@@ -3474,20 +3476,26 @@ void CG_DrawMDWeaponFatigueHoz(const centity_t* cent, const menuDef_t* menu_hud)
 		fatigue_percent = 0.0f;
 	}
 
-	focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_hoz");
+	const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_hoz");
 
 	if (focus_item)
 	{
 		trap->R_SetColor(colorTable[CT_WHITE]);
 
-		CG_DrawRotatePic2(
-			focus_item->window.rect.x + fatigue_percent * 60,
-			focus_item->window.rect.y,
-			focus_item->window.rect.w,
-			focus_item->window.rect.h - fatigue_percent * 100,
-			-90,
-			focus_item->window.background
-		);
+		if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
+		{
+		}
+		else
+		{
+			CG_DrawRotatePic2(
+				focus_item->window.rect.x + fatigue_percent * 60,
+				focus_item->window.rect.y,
+				focus_item->window.rect.w,
+				focus_item->window.rect.h - fatigue_percent * 100,
+				-90,
+				focus_item->window.background
+			);
+		}
 	}
 }
 
@@ -6335,11 +6343,6 @@ void CG_DrawForceSelect(void)
 		return;
 	}
 
-	if (g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) //movie duels
-	{
-		return;
-	}
-
 	// count the number of powers owned
 	int count = 0;
 
@@ -6665,7 +6668,7 @@ void CG_DrawInventorySelect_sidehoz(void)
 
 	if (cgs.media.invenIcons[cg.itemSelect] && BG_IsItemSelectable(cg.itemSelect))
 	{
-		CG_DrawPic(21.5, 445, 7, 7, cgs.media.invenIcons[cg.itemSelect]);
+		CG_DrawPic(21.5, 445, 7, 6.5, cgs.media.invenIcons[cg.itemSelect]);
 		//CG_DrawNumField(21.5, 447, 1, cg.snap->ps.inventory[cg.itemSelect], 3, 6, NUM_FONT_SMALL, qfalse);
 	}
 }
@@ -6747,7 +6750,7 @@ void CG_DrawInventorySelect_sidevert(void)
 
 	if (cgs.media.invenIcons[cg.itemSelect] && BG_IsItemSelectable(cg.itemSelect))
 	{
-		CG_DrawPic(23, 447, 10, 10, cgs.media.invenIcons[cg.itemSelect]);
+		CG_DrawPic(23, 447, 10, 9.5, cgs.media.invenIcons[cg.itemSelect]);
 		//CG_DrawNumField(25, 447, 1, cg.snap->ps.inventory[cg.itemSelect], 3, 6, NUM_FONT_SMALL, qfalse);
 	}
 }
@@ -13929,10 +13932,10 @@ static void CG_Draw2D(void)
 				}
 			}
 
-			if (g_SerenityJediEngineHudMode.integer == 2) //movie duels
+			if (g_SerenityJediEngineHudMode.integer == 2 && !cg_drawSelectionScrollBar.integer) //movie duels
 			{
 			}
-			else if (g_SerenityJediEngineHudMode.integer == 3) //movie duels
+			else if (g_SerenityJediEngineHudMode.integer == 3 && !cg_drawSelectionScrollBar.integer) //movie duels
 			{
 			}
 			else
@@ -13958,13 +13961,34 @@ static void CG_Draw2D(void)
 					switch (draw_select)
 					{
 					case 1:
-						cg_draw_inventory_select();
+						if ((g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) && !cg_drawSelectionScrollBar.integer)
+						{
+							//
+						}
+						else
+						{
+							cg_draw_inventory_select();
+						}
 						break;
 					case 2:
-						CG_DrawWeaponSelect();
+						if ((g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) && !cg_drawSelectionScrollBar.integer)
+						{
+							//
+						}
+						else
+						{
+							CG_DrawWeaponSelect();
+						}
 						break;
 					case 3:
-						CG_DrawForceSelect();
+						if ((g_SerenityJediEngineHudMode.integer == 2 || g_SerenityJediEngineHudMode.integer == 3) && !cg_drawSelectionScrollBar.integer)
+						{
+							//
+						}
+						else
+						{
+							CG_DrawForceSelect();
+						}
 						break;
 					default:
 						break;

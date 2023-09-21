@@ -98,6 +98,19 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define ASSET_SCROLL_THUMB          "gfx/menus/scrollbar_thumb.tga"
 #define ASSET_SLIDER_BAR			"menu/new/slider"
 #define ASSET_SLIDER_THUMB			"menu/new/sliderthumb"
+//
+#define ASSET_ANAKIN		"gfx/menus/cursor_anakin.tga"
+#define ASSET_JK			"gfx/menus/cursor_jk.tga"
+#define ASSET_KATARN		"gfx/menus/cursor_katarn.tga"
+#define ASSET_KYLO			"gfx/menus/cursor_kylo.tga"
+#define ASSET_LUKE			"gfx/menus/cursor_luke.tga"
+#define ASSET_OBIWAN		"gfx/menus/cursor_obiwan.tga"
+#define ASSET_OLDREPUBLIC	"gfx/menus/cursor_oldrepublic.tga"
+#define ASSET_QUIGON		"gfx/menus/cursor_quigon.tga"
+#define ASSET_RAY			"gfx/menus/cursor_rey.tga"
+#define ASSET_VADER			"gfx/menus/cursor_vader.tga"
+#define ASSET_WINDU			"gfx/menus/cursor_windu.tga"
+
 #define SCROLLBAR_SIZE 16.0
 #define SLIDER_WIDTH 128.0
 #define SLIDER_HEIGHT 16.0
@@ -360,6 +373,17 @@ typedef struct cachedAssets_s {
 	qhandle_t	qhMediumFont;
 	qhandle_t	qhBigFont;
 	qhandle_t cursor;
+	qhandle_t cursor_anakin;
+	qhandle_t cursor_jk;
+	qhandle_t cursor_katarn;
+	qhandle_t cursor_kylo;
+	qhandle_t cursor_luke;
+	qhandle_t cursor_obiwan;
+	qhandle_t cursor_oldrepublic;
+	qhandle_t cursor_quigon;
+	qhandle_t cursor_rey;
+	qhandle_t cursor_vader;
+	qhandle_t cursor_windu;
 	qhandle_t gradientBar;
 	qhandle_t scrollBarArrowUp;
 	qhandle_t scrollBarArrowDown;

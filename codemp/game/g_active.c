@@ -1287,20 +1287,9 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			ent->health--;
 		}
 
-		if (!(ent->client->buttons & BUTTON_ATTACK) && !(ent->client->buttons & BUTTON_ALT_ATTACK))
+		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_NONE && ent->client->ps.weaponTime < 1)
 		{
-			if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MIN && ent->client->ps.weaponTime < 1)
-			{/*
-				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
-				{
-					WP_BlasterFatigueRegenerate(4);
-				}
-				else
-				{
-					WP_BlasterFatigueRegenerate(1);
-				}*/
-				WP_BlasterFatigueRegenerate(1);
-			}
+			WP_BlasterFatigueRegenerate(1);
 		}
 
 		if (ent->client->ps.fd.forcePowersActive & 1 << FP_SEE)

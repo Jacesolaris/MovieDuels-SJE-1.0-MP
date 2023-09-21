@@ -5375,11 +5375,11 @@ void G_AddMercBalance(const gentity_t* ent, int amount)
 
 	ent->client->ps.BlasterAttackChainCount += amount;
 
-	if (ent->client->ps.BlasterAttackChainCount < BLASTERMISHAPLEVEL_MIN)
+	if (ent->client->ps.BlasterAttackChainCount < BLASTERMISHAPLEVEL_NONE)
 	{
 		ent->client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_NONE;
 	}
-	else if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MAX)
+	else if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD)
 	{
 		ent->client->ps.BlasterAttackChainCount = BLASTERMISHAPLEVEL_OVERLOAD;
 	}

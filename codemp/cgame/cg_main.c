@@ -1798,7 +1798,21 @@ static void CG_RegisterGraphics(void)
 	cgs.media.defendShader = trap->R_RegisterShaderNoMip("ui/assets/statusbar/defend.tga");
 	cgs.media.retrieveShader = trap->R_RegisterShaderNoMip("ui/assets/statusbar/retrieve.tga");
 	cgs.media.escortShader = trap->R_RegisterShaderNoMip("ui/assets/statusbar/escort.tga");
+	
 	cgs.media.cursor = trap->R_RegisterShaderNoMip("menu/art/3_cursor2");
+
+	cgs.media.cursor_anakin = trap->R_RegisterShaderNoMip("gfx/menus/cursor_anakin.tga");
+	cgs.media.cursor_jk = trap->R_RegisterShaderNoMip("gfx/menus/cursor_jk.tga");
+	cgs.media.cursor_katarn = trap->R_RegisterShaderNoMip("gfx/menus/cursor_katarn.tga");
+	cgs.media.cursor_kylo = trap->R_RegisterShaderNoMip("gfx/menus/cursor_kylo.tga");
+	cgs.media.cursor_luke = trap->R_RegisterShaderNoMip("gfx/menus/cursor_luke.tga");
+	cgs.media.cursor_obiwan = trap->R_RegisterShaderNoMip("gfx/menus/cursor_obiwan.tga");
+	cgs.media.cursor_oldrepublic = trap->R_RegisterShaderNoMip("gfx/menus/cursor_oldrepublic.tga");
+	cgs.media.cursor_quigon = trap->R_RegisterShaderNoMip("gfx/menus/cursor_quigon.tga");
+	cgs.media.cursor_rey = trap->R_RegisterShaderNoMip("gfx/menus/cursor_rey.tga");
+	cgs.media.cursor_vader = trap->R_RegisterShaderNoMip("gfx/menus/cursor_vader.tga");
+	cgs.media.cursor_windu = trap->R_RegisterShaderNoMip("gfx/menus/cursor_windu.tga");
+
 	cgs.media.sizeCursor = trap->R_RegisterShaderNoMip("ui/assets/sizecursor.tga");
 	cgs.media.selectCursor = trap->R_RegisterShaderNoMip("ui/assets/selectcursor.tga");
 	//cgs.media.hitmarkerGraphic = trap->R_RegisterShaderNoMip("gfx/2d/crosshair_hitmarker.tga");
@@ -2150,6 +2164,118 @@ qboolean CG_Asset_Parse(const int handle)
 			cgDC.Assets.cursor = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
 			continue;
 		}
+
+		if (Q_stricmp(token.string, "cursor_anakin") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_anakin = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_jk") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_jk = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_katarn") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_katarn = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_kylo") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_kylo = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_luke") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_luke = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_obiwan") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_obiwan = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_oldrepublic") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_oldrepublic = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_quigon") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_quigon = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_rey") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_rey = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_vader") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_vader = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		if (Q_stricmp(token.string, "cursor_windu") == 0)
+		{
+			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr))
+			{
+				return qfalse;
+			}
+			cgDC.Assets.cursor_windu = trap->R_RegisterShaderNoMip(cgDC.Assets.cursorStr);
+			continue;
+		}
+
+		////////////////////////////////////////////////////////////////////////////////
 
 		if (Q_stricmp(token.string, "fadeClamp") == 0)
 		{
@@ -2736,6 +2862,18 @@ void CG_AssetCache()
 	cgDC.Assets.scrollBarThumb = trap->R_RegisterShaderNoMip(ASSET_SCROLL_THUMB);
 	cgDC.Assets.sliderBar = trap->R_RegisterShaderNoMip(ASSET_SLIDER_BAR);
 	cgDC.Assets.sliderThumb = trap->R_RegisterShaderNoMip(ASSET_SLIDER_THUMB);
+	//
+	cgDC.Assets.cursor_anakin = trap->R_RegisterShaderNoMip(ASSET_ANAKIN);
+	cgDC.Assets.cursor_jk = trap->R_RegisterShaderNoMip(ASSET_JK);
+	cgDC.Assets.cursor_katarn = trap->R_RegisterShaderNoMip(ASSET_KATARN);
+	cgDC.Assets.cursor_kylo = trap->R_RegisterShaderNoMip(ASSET_KYLO);
+	cgDC.Assets.cursor_luke = trap->R_RegisterShaderNoMip(ASSET_LUKE);
+	cgDC.Assets.cursor_obiwan = trap->R_RegisterShaderNoMip(ASSET_OBIWAN);
+	cgDC.Assets.cursor_oldrepublic = trap->R_RegisterShaderNoMip(ASSET_OLDREPUBLIC);
+	cgDC.Assets.cursor_quigon = trap->R_RegisterShaderNoMip(ASSET_QUIGON);
+	cgDC.Assets.cursor_rey = trap->R_RegisterShaderNoMip(ASSET_RAY);
+	cgDC.Assets.cursor_vader = trap->R_RegisterShaderNoMip(ASSET_VADER);
+	cgDC.Assets.cursor_windu = trap->R_RegisterShaderNoMip(ASSET_WINDU);
 }
 
 /*
