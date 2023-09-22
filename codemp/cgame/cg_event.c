@@ -3053,13 +3053,13 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 							if (client->saber[saber_num].block2Sound[0])
 							{
 								//custom hit sound
-								if (cg.snap->ps.fd.blockPoints < BLOCKPOINTS_HALF)
+								if (cg.snap->ps.fd.blockPoints > BLOCKPOINTS_HALF || cent->currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
 								{
-									knock_sound = client->saber[saber_num].block2Sound[Q_irand(0, 2)];
+									block_sound = client->saber[saber_num].block2Sound[Q_irand(0, 2)];
 								}
 								else
 								{
-									block_sound = client->saber[saber_num].block2Sound[Q_irand(0, 2)];
+									knock_sound = client->saber[saber_num].block2Sound[Q_irand(0, 2)];
 								}
 							}
 						}
@@ -3068,7 +3068,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 							if (client->saber[saber_num].blockEffect)
 							{
 								//custom saber block effect
-								if (cent->currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
+								if (cg.snap->ps.fd.blockPoints > BLOCKPOINTS_HALF || cent->currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
 								{
 									perfectblock_fxid = client->saber[saber_num].blockEffect;
 								}
@@ -3080,13 +3080,13 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 							if (client->saber[saber_num].blockSound[0])
 							{
 								//custom hit sound
-								if (cg.snap->ps.fd.blockPoints < BLOCKPOINTS_HALF)
+								if (cg.snap->ps.fd.blockPoints > BLOCKPOINTS_HALF || cent->currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
 								{
-									knock_sound = client->saber[saber_num].blockSound[Q_irand(0, 2)];
+									block_sound = client->saber[saber_num].blockSound[Q_irand(0, 2)];
 								}
 								else
 								{
-									block_sound = client->saber[saber_num].blockSound[Q_irand(0, 2)];
+									knock_sound = client->saber[saber_num].blockSound[Q_irand(0, 2)];
 								}
 							}
 						}
@@ -3156,7 +3156,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				//saber block
 				qboolean cull_pass = qfalse;
 				int perfectblock_fxid = cgs.effects.mSaberprfectBlock;
-				qhandle_t block_sound = trap->S_RegisterSound(va("sound/weapons/saber/saber_perfectblock%d", Q_irand(1, 3)));
+				qhandle_t block_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberblock%d", Q_irand(1, 90)));
 
 				if (es->otherEntityNum2 >= 0 && es->otherEntityNum2 < ENTITYNUM_NONE)
 				{

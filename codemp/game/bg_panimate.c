@@ -6193,7 +6193,7 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 			}
 			else if (saber_anim_level == SS_MEDIUM)
 			{
-				const float realisticanimscale = 0.95f;
+				const float realisticanimscale = 1.0f;
 				*anim_speed *= realisticanimscale;
 			}
 			else if (saber_anim_level == SS_STRONG)

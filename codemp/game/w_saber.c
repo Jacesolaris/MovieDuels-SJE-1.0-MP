@@ -256,7 +256,7 @@ void G_Stagger(gentity_t* hit_ent)
 	}
 }
 
-void G_FatigueBPKnockaway(gentity_t* blocker)
+void g_fatigue_bp_knockaway(gentity_t* blocker)
 {
 	if (PM_InGetUp(&blocker->client->ps) || PM_InForceGetUp(&blocker->client->ps))
 	{
@@ -12960,7 +12960,8 @@ nextStep:
 				self->client->hasCurrentPosition = qtrue;
 
 				//do hit effects
-				if (self->client->ps.userInt3 & 1 << FLAG_PERFECTBLOCK)
+
+				if (self->client->ps.fd.blockPoints > BLOCKPOINTS_HALF || self->client->ps.userInt3 & 1 << FLAG_PERFECTBLOCK)
 				{
 					WP_SaberDoPerfectClash(self, r_saber_num, r_blade_num);
 				}

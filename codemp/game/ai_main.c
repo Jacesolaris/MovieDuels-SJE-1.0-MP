@@ -5647,12 +5647,7 @@ int scan_for_enemies(bot_state_t* bs)
 				//make us think the Jedi Master is close so we'll attack him above all
 				distcheck = 1;
 			}
-			if (g_entities[bs->client].health < 75)
-			{
-				//I need a doctor!
-				request_siege_assistance(bs, REQUEST_MEDIC);
-			}
-			else if (g_entities[bs->client].health < 30)
+			if (g_entities[bs->client].health < 30)
 			{
 				//Sniper!
 				request_siege_assistance(bs, REQUEST_MEDIC);
@@ -5904,12 +5899,7 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 				//make us think the Jedi Master is close so we'll attack him above all
 				distcheck = 1;
 			}
-			if (g_entities[bs->client].health < 75)
-			{
-				//I need a doctor!
-				request_siege_assistance(bs, REQUEST_MEDIC);
-			}
-			else if (g_entities[bs->client].health < 30)
+			if (g_entities[bs->client].health < 30)
 			{
 				//Sniper!
 				request_siege_assistance(bs, REQUEST_MEDIC);
