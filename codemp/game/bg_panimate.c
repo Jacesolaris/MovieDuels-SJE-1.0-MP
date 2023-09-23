@@ -101,6 +101,7 @@ qboolean PM_RestAnim(const int anim)
 	{
 	case BOTH_MEDITATE: // default taunt
 	case BOTH_MEDITATE1: // default taunt
+	case BOTH_MEDITATE_SABER: // default taunt
 		return qtrue;
 	default:;
 	}

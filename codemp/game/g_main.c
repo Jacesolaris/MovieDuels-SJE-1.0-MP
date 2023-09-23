@@ -4831,7 +4831,7 @@ void G_RunFrame(const int levelTime)
 				if (ent->client->sprintkDebRecharge < level.time && !ent->client->IsSprinting)
 				{
 					ent->client->ps.sprintFuel++;
-					if (PM_RestAnim(ent->client->ps.legsAnim) || PM_CrouchAnim(ent->client->ps.legsAnim))
+					if (PM_RestAnim(ent->client->ps.torsoAnim) || PM_CrouchAnim(ent->client->ps.legsAnim))
 					{
 						ent->client->sprintkDebRecharge = level.time + ENHANCED_REFUEL_RATE;
 					}

@@ -5354,9 +5354,14 @@ tryFire:
 	}
 }
 
-void G_AddMercBalance(const gentity_t* ent, int amount)
+void G_AddBlasterAttackChainCount(const gentity_t* ent, int amount)
 {
 	if (ent->r.svFlags & SVF_BOT)
+	{
+		return;
+	}
+
+	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MAX)
 	{
 		return;
 	}
@@ -5392,7 +5397,7 @@ FireWeapon
 */
 int BG_EmplacedView(vec3_t base_angles, vec3_t angles, float* new_yaw, float constraint);
 
-qboolean DoesnotDrainMishap(const gentity_t* ent)
+qboolean doesnot_drain_mishap(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -5410,6 +5415,8 @@ qboolean DoesnotDrainMishap(const gentity_t* ent)
 	return qfalse;
 }
 
+extern void FireOverheatFail(gentity_t* ent);
+extern qboolean PM_ReloadAnim(int anim);
 void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 {
 	float alert = 256;
@@ -5438,15 +5445,20 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 	}
 
-	/*if (ent->client->ps.PlayerEffectFlags & 1 << PEF_FREEZING)
+	if (ent && ent->client && ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
+	{
+		if (!(ent->r.svFlags & SVF_BOT))
+		{
+			FireOverheatFail(ent);
+			return;
+		}
+	}
+
+	if (PM_ReloadAnim(ent->client->ps.torsoAnim))
 	{
 		return;
 	}
 
-	if (ent->client->frozenTime > 0)
-	{
-		return;
-	}*/
 	// set aiming directions
 	if (ent->client && ent->s.weapon == WP_EMPLACED_GUN && ent->client->ps.emplacedIndex)
 	{
@@ -5514,26 +5526,27 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	}
 
 	calcmuzzle_point(ent, forward, vright, muzzle);
+
 	if (ent->client->ps.eFlags & EF3_DUAL_WEAPONS)
 	{
 		calcmuzzle_point2(ent, forward, vright, muzzle2);
 	}
 
-	if (!DoesnotDrainMishap(ent))
+	if (!doesnot_drain_mishap(ent) && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_MAX)
 	{
 		if (ent->s.weapon == WP_REPEATER)
 		{
 			ent->client->cloneFired++;
 
-			if (ent->client->cloneFired == 2)
+			if (ent->client->cloneFired == 4)
 			{
 				if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
 				{
-					G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MIN);
+					G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_MIN);
 				}
 				else
 				{
-					G_AddMercBalance(ent, BLASTERMISHAPLEVEL_TWO);
+					G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_TWO);
 				}
 
 				ent->client->cloneFired = 0;
@@ -5541,18 +5554,25 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 		else if (ent->s.weapon == WP_DISRUPTOR)
 		{
-			G_AddMercBalance(ent, BLASTERMISHAPLEVEL_THREE);
+			G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_TWO);
 		}
 		else
 		{
-			if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
+			ent->client->BoltsFired++;
+
+			if (ent->client->BoltsFired == 2)
 			{
-				G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MIN);
-			}
-			else
-			{
-				G_AddMercBalance(ent, Q_irand(BLASTERMISHAPLEVEL_MIN, BLASTERMISHAPLEVEL_TWO));
-				// 1 was not enough
+				if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
+				{
+					G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_MIN);
+				}
+				else
+				{
+					G_AddBlasterAttackChainCount(ent, Q_irand(BLASTERMISHAPLEVEL_MIN, BLASTERMISHAPLEVEL_TWO));
+					// 1 was not enough
+				}
+
+				ent->client->BoltsFired = 0;
 			}
 		}
 	}

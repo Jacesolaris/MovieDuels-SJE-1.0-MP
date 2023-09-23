@@ -1393,7 +1393,7 @@ qboolean DoesnotDrainMishap(const gentity_t* ent)
 	return qfalse;
 }
 
-void G_AddMercBalance(const gentity_t* ent, int amount)
+void G_AddBlasterAttackChainCount(const gentity_t* ent, int amount)
 {
 	if (ent->s.client_num >= MAX_CLIENTS)
 	{
@@ -1692,11 +1692,11 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 					{
 						if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
 						{
-							G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
+							G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_MININACCURACY);
 						}
 						else
 						{
-							G_AddMercBalance(ent, BLASTERMISHAPLEVEL_TWO);
+							G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_TWO);
 						}
 
 						ent->client->cloneFired = 0;
@@ -1708,24 +1708,24 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 
 					if (ent->client->DekaFired == 5)
 					{
-						G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
+						G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_MININACCURACY);
 
 						ent->client->DekaFired = 0;
 					}
 				}
 				else if (ent->s.weapon == WP_DISRUPTOR)
 				{
-					G_AddMercBalance(ent, BLASTERMISHAPLEVEL_RUNINACCURACY);
+					G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_RUNINACCURACY);
 				}
 				else
 				{
 					if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
 					{
-						G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
+						G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_MININACCURACY);
 					}
 					else
 					{
-						G_AddMercBalance(ent, Q_irand(BLASTERMISHAPLEVEL_MININACCURACY,
+						G_AddBlasterAttackChainCount(ent, Q_irand(BLASTERMISHAPLEVEL_MININACCURACY,
 							BLASTERMISHAPLEVEL_TWO)); // 1 was not enough
 					}
 				}

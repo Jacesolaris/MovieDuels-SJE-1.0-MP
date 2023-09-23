@@ -724,10 +724,6 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 		{
 			return;
 		}
-		/*if (cg.time - cent->muzzleOverheatTime > MUZZLE_FLASH_TIME)
-		{
-			return;
-		}*/
 	}
 
 	if (ps || cg.renderingThirdPerson || cg_trueguns.integer
@@ -806,7 +802,7 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 			}
 		}
 
-		if (cg.time - cent->muzzleOverheatTime <= MUZZLE_FLASH_TIME + 10)
+		if (cg.time - cent->muzzleOverheatTime <= MUZZLE_FLASH_TIME + 30)
 		{
 			if (cent->currentState.weapon == WP_REPEATER ||
 				cent->currentState.weapon == WP_FLECHETTE ||
@@ -1156,10 +1152,6 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 		{
 			return;
 		}
-		/*if (cg.time - cent->muzzleOverheatTime > MUZZLE_FLASH_TIME)
-		{
-			return;
-		}*/
 	}
 
 	if (ps || cg.renderingThirdPerson || cg_trueguns.integer
@@ -1233,7 +1225,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 			}
 		}
 
-		if (cg.time - cent->muzzleOverheatTime <= MUZZLE_FLASH_TIME + 10)
+		if (cg.time - cent->muzzleOverheatTime <= MUZZLE_FLASH_TIME + 30)
 		{
 			if (cent->currentState.weapon == WP_REPEATER ||
 				cent->currentState.weapon == WP_FLECHETTE ||
@@ -2582,6 +2574,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 	int c;
 
 	const entityState_t* ent = &cent->currentState;
+
 	if (ent->weapon == WP_NONE)
 	{
 		return;
@@ -2596,25 +2589,6 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 	{
 		return;
 	}
-
-	/*if (cent->currentState.PlayerEffectFlags & 1 << PEF_FREEZING)
-	{
-		return;
-	}
-
-	if (CG_IsMindTricked(cent->currentState.trickedentindex,
-		cent->currentState.trickedentindex2,
-		cent->currentState.trickedentindex3,
-		cent->currentState.trickedentindex4,
-		cg.snap->ps.client_num))
-	{
-		return;
-	}
-
-	if (cent->currentState.frozenTime > 0)
-	{
-		return;
-	}*/
 
 	const weaponInfo_t* weap = &cg_weapons[ent->weapon];
 

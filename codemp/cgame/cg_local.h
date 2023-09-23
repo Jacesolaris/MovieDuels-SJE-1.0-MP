@@ -365,7 +365,6 @@ typedef struct clientInfo_s {
 
 	int			saberAttackChainCount;
 	int         saberFatigueChainCount;
-	int			BlasterAttackChainCount;
 	int			blockPoints;
 	int			saber_anim_level;
 
@@ -521,7 +520,6 @@ typedef struct centity_s {
 
 	int			    saberAttackChainCount;
 	int             saberFatigueChainCount;
-	int			    BlasterAttackChainCount;
 
 	int				shieldHitTime;
 	int				shieldRechargeTime;

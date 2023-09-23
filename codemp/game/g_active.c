@@ -2762,6 +2762,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
+			else if (ent->client->ps.weapon == WP_MELEE) //MP
+			{
+				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, TORSO_HANDSIGNAL4, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+			}
 			else if (ent->client->saber[0].tauntAnim != -1)
 			{
 				anim = ent->client->saber[0].tauntAnim;
@@ -2930,7 +2941,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_BOW:
 			if (ent->client->ps.weapon != WP_SABER) //MP
@@ -2957,6 +2967,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
+				}
+			}
+			else if (ent->client->ps.weapon == WP_MELEE) //MP
+			{
+				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
 			else if (ent->client->saber[0].bowAnim != -1)
@@ -3008,7 +3029,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_MEDITATE:
 			if (ent->client->ps.weapon != WP_SABER) //MP
@@ -3046,6 +3066,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
+			else if (ent->client->ps.weapon == WP_MELEE) //MP
+			{
+				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					anim = BOTH_MEDITATE;
+				}
+			}
 			else if (ent->client->saber[0].meditateAnim != -1)
 			{
 				anim = ent->client->saber[0].meditateAnim;
@@ -3079,7 +3110,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					anim = BOTH_MEDITATE;
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_FLOURISH:
 			if (ent->client->ps.weapon != WP_SABER) //MP
@@ -3095,13 +3125,11 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 						if (ent->client->ps.weapon == WP_DISRUPTOR)
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_TUSKENTAUNT1,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_TUSKENTAUNT1,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, TORSO_HANDSIGNAL2,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, TORSO_HANDSIGNAL2,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 					}
 				}
@@ -3124,6 +3152,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 					}
+				}
+			}
+			else if (ent->client->ps.weapon == WP_MELEE) //MP
+			{
+				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
 			else if (ent->client->saber[0].flourishAnim != -1)
@@ -3222,7 +3261,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				ent->client->ps.saberHolstered = 0;
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_GLOAT:
 			if (ent->client->ps.weapon != WP_SABER) //MP
@@ -3267,6 +3305,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 					}
+				}
+			}
+			else if (ent->client->ps.weapon == WP_MELEE) //MP
+			{
+				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
 			else if (ent->client->saber[0].gloatAnim != -1)
@@ -3378,7 +3427,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_SURRENDER:
 			if (ent->client->ps.weapon != WP_SABER) //MP
@@ -3470,7 +3518,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_RELOAD:
 		{
@@ -3643,7 +3690,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				default:;
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 		}
 		break;
 		default:;
@@ -3662,6 +3708,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				NPC_SetAnim(ent, parts, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			}
+			G_AddEvent(ent, EV_TAUNT, taunt);
 		}
 	}
 }
@@ -3824,7 +3871,7 @@ void ReloadGun(gentity_t* ent)
 
 	if (IsHoldingGun(ent))
 	{
-		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
+		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 		{
 			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -3901,6 +3948,18 @@ void ReloadGun(gentity_t* ent)
 			ent->client->ps.weaponTime = ent->client->ps.torsoTimer;
 			bg_reduce_blaster_mishap_level_advanced(&ent->client->ps);
 		}
+	}
+}
+
+void FireOverheatFail(gentity_t* ent)
+{
+	if (IsHoldingGun(ent))
+	{
+		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
+		G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
+		G_Damage(ent, NULL, NULL, NULL, ent->r.currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		ent->reloadTime = level.time + PainTime(ent);
 	}
 }
 

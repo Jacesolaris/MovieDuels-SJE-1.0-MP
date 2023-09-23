@@ -2060,76 +2060,76 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_TAUNT:
 		DEBUGNAME("EV_TAUNT");
+
+		int sound_index = 0;
+
+		switch (es->eventParm)
 		{
-			int sound_index = 0;
+		case TAUNT_TAUNT:
+			if (Q_irand(0, 1))
 			{
-				switch (es->eventParm)
+				sound_index = CG_CustomSound(es->number, va("*anger%d.wav", Q_irand(1, 3)));
+			}
+			else
+			{
+				sound_index = CG_CustomSound(es->number, va("*taunt%d.wav", Q_irand(1, 3)));
+				if (!sound_index)
 				{
-				case TAUNT_TAUNT:
-				default:
-					if (Q_irand(0, 1))
+					sound_index = CG_CustomSound(es->number, va("*anger%d.wav", Q_irand(1, 3)));
+				}
+			}
+			break;
+		case TAUNT_BOW:
+			sound_index = CG_CustomSound(es->number, "*pushfail");
+			break;
+		case TAUNT_MEDITATE:
+			sound_index = CG_CustomSound(es->number, "*pushfail");
+			break;
+		case TAUNT_FLOURISH:
+			if (Q_irand(0, 1))
+			{
+				sound_index = CG_CustomSound(es->number, va("*deflect%d.wav", Q_irand(1, 3)));
+				if (!sound_index)
+				{
+					sound_index = CG_CustomSound(es->number, va("*gloat%d.wav", Q_irand(1, 3)));
+					if (!sound_index)
 					{
 						sound_index = CG_CustomSound(es->number, va("*anger%d.wav", Q_irand(1, 3)));
 					}
-					else
-					{
-						sound_index = CG_CustomSound(es->number, va("*taunt%d.wav", Q_irand(1, 3)));
-						if (!sound_index)
-						{
-							sound_index = CG_CustomSound(es->number, va("*anger%d.wav", Q_irand(1, 3)));
-						}
-					}
-					break;
-				case TAUNT_BOW:
-					CG_TryPlayCustomSound(NULL, es->number, CHAN_VOICE, "*pushfail.wav");
-					break;
-				case TAUNT_MEDITATE:
-					CG_TryPlayCustomSound(NULL, es->number, CHAN_VOICE, "*pushfail.wav");
-					break;
-				case TAUNT_FLOURISH:
-					if (Q_irand(0, 1))
-					{
-						sound_index = CG_CustomSound(es->number, va("*deflect%d.wav", Q_irand(1, 3)));
-						if (!sound_index)
-						{
-							sound_index = CG_CustomSound(es->number, va("*gloat%d.wav", Q_irand(1, 3)));
-							if (!sound_index)
-							{
-								sound_index = CG_CustomSound(es->number, va("*anger%d.wav", Q_irand(1, 3)));
-							}
-						}
-					}
-					else
-					{
-						sound_index = CG_CustomSound(es->number, va("*gloat%d.wav", Q_irand(1, 3)));
-						if (!sound_index)
-						{
-							sound_index = CG_CustomSound(es->number, va("*deflect%d.wav", Q_irand(1, 3)));
-							if (!sound_index)
-							{
-								sound_index = CG_CustomSound(es->number, va("*anger%d.wav", Q_irand(1, 3)));
-							}
-						}
-					}
-					break;
-				case TAUNT_GLOAT:
-					sound_index = CG_CustomSound(es->number, va("*victory%d.wav", Q_irand(1, 3)));
-					break;
-				case TAUNT_SURRENDER:
-					sound_index = CG_CustomSound(es->number, va("*confuse%d.wav", Q_irand(1, 3)));
-					break;
-				case TAUNT_RELOAD:
-					break;
 				}
 			}
-			if (!sound_index)
+			else
 			{
-				sound_index = CG_CustomSound(es->number, "*taunt.wav");
+				sound_index = CG_CustomSound(es->number, va("*gloat%d.wav", Q_irand(1, 3)));
+				if (!sound_index)
+				{
+					sound_index = CG_CustomSound(es->number, va("*deflect%d.wav", Q_irand(1, 3)));
+					if (!sound_index)
+					{
+						sound_index = CG_CustomSound(es->number, va("*anger%d.wav", Q_irand(1, 3)));
+					}
+				}
 			}
-			if (sound_index)
-			{
-				trap->S_StartSound(NULL, es->number, CHAN_VOICE, sound_index);
-			}
+			break;
+		case TAUNT_GLOAT:
+			sound_index = CG_CustomSound(es->number, va("*victory%d.wav", Q_irand(1, 3)));
+			break;
+		case TAUNT_SURRENDER:
+			sound_index = CG_CustomSound(es->number, va("*confuse%d.wav", Q_irand(1, 3)));
+			break;
+		case TAUNT_RELOAD:
+			break;
+		default:
+			sound_index = CG_CustomSound(es->number, "*taunt");
+			break;
+		}
+		if (!sound_index)
+		{
+			sound_index = CG_CustomSound(es->number, "*taunt");
+		}
+		if (sound_index)
+		{
+			trap->S_StartSound(NULL, es->number, CHAN_VOICE, sound_index);
 		}
 		break;
 

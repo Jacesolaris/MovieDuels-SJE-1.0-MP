@@ -81,6 +81,8 @@ char* cg_customSoundNames[MAX_CUSTOM_SOUNDS] = {
 	"*taunt1",
 	"*taunt2",
 	"*taunt3",
+	"*taunt4",
+	"*taunt5",
 	"*deflect1",
 	"*deflect2",
 	"*deflect3",
@@ -168,6 +170,8 @@ const char* cg_customJediSoundNames[MAX_CUSTOM_JEDI_SOUNDS] =
 	"*taunt1",
 	"*taunt2",
 	"*taunt3",
+	"*taunt4",
+	"*taunt5",
 	"*jchase1",
 	"*jchase2",
 	"*jchase3",
@@ -196,6 +200,8 @@ const char* cg_customDuelSoundNames[MAX_CUSTOM_DUEL_SOUNDS] =
 	"*taunt1",
 	"*taunt2",
 	"*taunt3",
+	"*taunt4",
+	"*taunt5",
 	"*deflect1",
 	"*deflect2",
 	"*deflect3",
@@ -385,8 +391,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 			//npc only
 			return ci->jediSounds[i];
 		}
-		if (client_num >= MAX_CLIENTS && i < num_c_call_sounds && strcmp(l_sound_name, cg_customCalloutSoundNames[i]) ==
-			0)
+		if (client_num >= MAX_CLIENTS && i < num_c_call_sounds && strcmp(l_sound_name, cg_customCalloutSoundNames[i]) == 0)
 		{
 			//npc only
 			return ci->calloutSounds[i];
@@ -4990,11 +4995,7 @@ static void CG_PlayerPowerups(centity_t* cent)
 	// quad gives a dlight
 	/*if (powerups & 1 << PW_MEDITATE)
 	{
-		if (cg.snap->ps.fd.forcePower < 50)
-		{
-			trap->R_AddLightToScene(cent->lerpOrigin, 200 + (rand() & 31), 1, 0.2f, 0.2f);
-		}
-		else
+		if (cg.snap->ps.fd.forcePower > 80)
 		{
 			trap->R_AddLightToScene(cent->lerpOrigin, 200 + (rand() & 31), 0.2f, 0.2f, 1);
 		}
@@ -9318,6 +9319,7 @@ void CG_DoEp1Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 		cgs.media.sfxSaberTrailShader = trap->R_RegisterShader("SFX_Sabers/saber_trail");
 		ignite = cgs.media.purpleIgniteFlare;
 		break;
+	case SABER_BLUE:
 		glow = cgs.media.blueEp1GlowShader;
 		blade = cgs.media.ep1SaberCoreShader;
 		cgs.media.sfxSaberEndShader = trap->R_RegisterShader("SFX_Sabers/saber_end");
@@ -19561,7 +19563,7 @@ SkipTrueView:
 
 			VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
-			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,cgs.game_models, cent->modelScale);
+			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time, cgs.game_models, cent->modelScale);
 
 			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ef_org);
 			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fx_ang);

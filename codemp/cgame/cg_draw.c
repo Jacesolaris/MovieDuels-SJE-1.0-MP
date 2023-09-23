@@ -1786,6 +1786,11 @@ void CG_DrawMDSaberstyleFatigueVert(const centity_t* cent, const menuDef_t* menu
 		fatigue_percent = 0.0f;
 	}
 
+	if (fatigue_percent > 0.95f)
+	{
+		return;
+	}
+
 	// draw the current saber style in this window
 	switch (cg.predicted_player_state.fd.saberDrawAnimLevel)
 	{
@@ -1973,7 +1978,6 @@ void CG_DrawMDHiltVert(const centity_t* cent, const menuDef_t* menu_hud)
 }
 
 ///////////////////////////////////////////////
-
 void CG_DrawWeaponMelee(const int x, const int y)
 {
 	if (g_SerenityJediEngineHudMode.integer == 0) //movie duels right
@@ -2449,6 +2453,55 @@ void CG_DrawMDWeaponIcon(const centity_t* cent)
 	}
 }
 
+void CG_DrawMDWeaponfatigueIconVert(const centity_t* cent, const menuDef_t* menu_hud)
+{
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cent->currentState.weapon) // We don't have a weapon right now
+	{
+		return;
+	}
+
+	if (cent->currentState.weapon == WP_SABER)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.BlasterAttackChainCount > 0.1f)
+	{
+		return;
+	}
+
+	const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_vert");
+
+	if (focus_item)
+	{
+		trap->R_SetColor(colorTable[CT_WHITE]);
+
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			focus_item->window.background
+		);
+	}
+}
+
 void CG_DrawMDWeaponFatigueVert(const centity_t* cent, const menuDef_t* menu_hud)
 {
 	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
@@ -2477,11 +2530,21 @@ void CG_DrawMDWeaponFatigueVert(const centity_t* cent, const menuDef_t* menu_hud
 		return;
 	}
 
+	if (!cg.snap->ps.BlasterAttackChainCount)
+	{
+		return;
+	}
+
 	float fatigue_percent = (float)cg.snap->ps.BlasterAttackChainCount / BLASTERMISHAPLEVEL_OVERLOAD;
 
 	if (fatigue_percent < 0)
 	{
 		fatigue_percent = 0.0f;
+	}
+
+	if (fatigue_percent > 0.95f)
+	{
+		return;
 	}
 
 	const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_vert");
@@ -2490,19 +2553,13 @@ void CG_DrawMDWeaponFatigueVert(const centity_t* cent, const menuDef_t* menu_hud
 	{
 		trap->R_SetColor(colorTable[CT_WHITE]);
 
-		if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
-		{
-		}
-		else
-		{
-			CG_DrawPic(
-				focus_item->window.rect.x,
-				focus_item->window.rect.y + fatigue_percent * 100,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h - fatigue_percent * 100,
-				focus_item->window.background
-			);
-		}
+		CG_DrawPic(
+			focus_item->window.rect.x,
+			focus_item->window.rect.y + fatigue_percent * 100,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h - fatigue_percent * 100,
+			focus_item->window.background
+		);
 	}
 }
 
@@ -3245,6 +3302,11 @@ void CG_DrawMDSaberstyleFatigueHoz(const centity_t* cent, const menuDef_t* menu_
 		fatigue_percent = 0.0f;
 	}
 
+	if (fatigue_percent > 0.95f)
+	{
+		return;
+	}
+
 	// draw the current saber style in this window
 	switch (cg.predicted_player_state.fd.saberDrawAnimLevel)
 	{
@@ -3441,6 +3503,56 @@ void CG_DrawMDHiltHoz(const centity_t* cent, const menuDef_t* menu_hud)
 	}
 }
 
+void CG_DrawMDWeaponfatigueIconHoz(const centity_t* cent, const menuDef_t* menu_hud)
+{
+	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (!cent->currentState.weapon) // We don't have a weapon right now
+	{
+		return;
+	}
+
+	if (cent->currentState.weapon == WP_SABER)
+	{
+		return;
+	}
+
+	// Can we find the menu?
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	if (cg.snap->ps.BlasterAttackChainCount > 0.1f)
+	{
+		return;
+	}
+
+	const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_hoz");
+
+	if (focus_item)
+	{
+		trap->R_SetColor(colorTable[CT_WHITE]);
+
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x ,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h,
+			-90,
+			focus_item->window.background
+		);
+	}
+}
+
 void CG_DrawMDWeaponFatigueHoz(const centity_t* cent, const menuDef_t* menu_hud)
 {
 	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
@@ -3469,11 +3581,21 @@ void CG_DrawMDWeaponFatigueHoz(const centity_t* cent, const menuDef_t* menu_hud)
 		return;
 	}
 
+	if (!cg.snap->ps.BlasterAttackChainCount)
+	{
+		return;
+	}
+
 	float fatigue_percent = (float)cg.snap->ps.BlasterAttackChainCount / BLASTERMISHAPLEVEL_OVERLOAD;
 
 	if (fatigue_percent < 0)
 	{
 		fatigue_percent = 0.0f;
+	}
+
+	if (fatigue_percent > 0.95f)
+	{
+		return;
 	}
 
 	const itemDef_t* focus_item = Menu_FindItemByName(menu_hud, "md_blasterstyle_hoz");
@@ -3482,20 +3604,14 @@ void CG_DrawMDWeaponFatigueHoz(const centity_t* cent, const menuDef_t* menu_hud)
 	{
 		trap->R_SetColor(colorTable[CT_WHITE]);
 
-		if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
-		{
-		}
-		else
-		{
-			CG_DrawRotatePic2(
-				focus_item->window.rect.x + fatigue_percent * 60,
-				focus_item->window.rect.y,
-				focus_item->window.rect.w,
-				focus_item->window.rect.h - fatigue_percent * 100,
-				-90,
-				focus_item->window.background
-			);
-		}
+		CG_DrawRotatePic2(
+			focus_item->window.rect.x + fatigue_percent * 60,
+			focus_item->window.rect.y,
+			focus_item->window.rect.w,
+			focus_item->window.rect.h - fatigue_percent * 100,
+			-90,
+			focus_item->window.background
+		);
 	}
 }
 
@@ -4191,6 +4307,7 @@ void CG_DrawCusgunfatigue(const menuDef_t* menu_hud)
 	}
 
 	const float inc = (float)max_blaster_attack_chain_count / MAX_HUD_TICS;
+
 	float value = cg.snap->ps.BlasterAttackChainCount;
 
 	for (int i = MAX_HUD_TICS - 1; i >= 0; i--)
@@ -6145,6 +6262,8 @@ void CG_DrawHUD(const centity_t* cent)
 
 				if (cent->currentState.weapon != WP_SABER && cent->currentState.weapon != WP_MELEE)
 				{
+
+					CG_DrawMDWeaponfatigueIconVert(cent, menu_hud);
 					CG_DrawMDWeaponFatigueVert(cent, menu_hud);
 				}
 
@@ -6192,6 +6311,7 @@ void CG_DrawHUD(const centity_t* cent)
 
 				if (cent->currentState.weapon != WP_SABER && cent->currentState.weapon != WP_MELEE)
 				{
+					CG_DrawMDWeaponfatigueIconHoz(cent, menu_hud);
 					CG_DrawMDWeaponFatigueHoz(cent, menu_hud);
 				}
 

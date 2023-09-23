@@ -94,7 +94,6 @@ typedef struct playerInfo_s {
 	qhandle_t		barrelModel;
 	qhandle_t		flashModel;
 	vec3_t			flashDlightColor;
-	int				muzzleFlashTime;
 
 	// currently in use drawing parms
 	vec3_t			viewAngles;
@@ -121,8 +120,6 @@ typedef struct playerInfo_s {
 	float			barrelAngle;
 	int				barrelTime;
 
-	int				realWeapon;
-	int				muzzleOverheatTime;
 } playerInfo_t;
 
 // new ui stuff

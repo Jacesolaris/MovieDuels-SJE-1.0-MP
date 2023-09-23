@@ -5746,7 +5746,7 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		return qfalse;
 	}
 
-	if (dodger->client->ps.legsAnim == BOTH_MEDITATE || dodger->client->ps.legsAnim == BOTH_MEDITATE_SABER)
+	if (PM_RestAnim(dodger->client->ps.torsoAnim))
 	{//can't dodge while meditating.
 		return qfalse;
 	}
@@ -6344,7 +6344,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		return qfalse;
 	}
 
-	if (dodger->client->ps.legsAnim == BOTH_MEDITATE || dodger->client->ps.legsAnim == BOTH_MEDITATE_SABER)
+	if (PM_RestAnim(dodger->client->ps.torsoAnim))
 	{//can't dodge while meditating.
 		return qfalse;
 	}
@@ -13148,7 +13148,7 @@ qboolean manual_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (PM_RestAnim(defender->client->ps.legsAnim))
+	if (PM_RestAnim(defender->client->ps.torsoAnim))
 	{
 		return qfalse;
 	}

@@ -8864,7 +8864,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 				{
 					wp_force_power_regenerate(self, 4); //jedi master regenerates 4 times as fast
 				}
-				else if (PM_RestAnim(self->client->ps.legsAnim))
+				else if (PM_RestAnim(self->client->ps.torsoAnim))
 				{
 					wp_force_power_regenerate(self, 10);
 					BG_ReduceSaberMishapLevel(&self->client->ps);
@@ -9053,7 +9053,7 @@ void WP_BlockPointsUpdate(const gentity_t* self)
 
 				self->client->ps.fd.BlockPointsRegenDebounceTime = level.time + self->client->ps.fd.BlockPointRegenRate;
 
-				if (PM_RestAnim(self->client->ps.legsAnim))
+				if (PM_RestAnim(self->client->ps.torsoAnim))
 				{
 					wp_block_points_regenerate(self, 4);
 					self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoTimer + 3000;

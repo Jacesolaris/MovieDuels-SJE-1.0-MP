@@ -6057,7 +6057,11 @@ weapChecks:
 						newmove = saber_moveData[curmove].chain_attack;
 						//we assume they're attacking, even if they're not
 						pm->ps->saberAttackChainCount++;
-						pm->ps->saberFatigueChainCount++;
+
+						if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
+						{
+							pm->ps->saberFatigueChainCount++;
+			}
 					}
 				}
 				else
@@ -6686,7 +6690,11 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 	{
 		//continuing with a kata, increment attack counter
 		pm->ps->saberAttackChainCount++;
-		pm->ps->saberFatigueChainCount++;
+
+		if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
+		{
+			pm->ps->saberFatigueChainCount++;
+		}
 	}
 
 	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_MAX)
