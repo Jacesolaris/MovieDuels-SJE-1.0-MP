@@ -83,10 +83,11 @@ extern void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int
 #define BLASTER_VELOCITY			2300
 #define BLASTER_NPC_VEL_CUT			0.5f
 #define BLASTER_NPC_HARD_VEL_CUT	0.7f
-#define BLASTER_DAMAGE				20
-#define	BLASTER_NPC_DAMAGE_EASY		6
-#define	BLASTER_NPC_DAMAGE_NORMAL	14
-#define	BLASTER_NPC_DAMAGE_HARD		18
+#define BLASTER_DAMAGE				25
+#define	BLASTER_NPC_DAMAGE_EASY		8
+#define	BLASTER_NPC_DAMAGE_NORMAL	20
+#define	BLASTER_NPC_DAMAGE_HARD		35
+#define	SJE_BLASTER_NPC_DAMAGE_HARD		50
 
 // Tenloss Disruptor
 //----------
@@ -103,7 +104,7 @@ extern void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int
 
 // Wookiee Bowcaster
 //----------
-#define	BOWCASTER_DAMAGE			30
+#define	BOWCASTER_DAMAGE			45
 #define	BOWCASTER_VELOCITY			1600
 #define BOWCASTER_SPLASH_DAMAGE		0
 #define BOWCASTER_SPLASH_RADIUS		0
@@ -117,7 +118,7 @@ extern void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int
 //----------
 #define REPEATER_SPREAD				0.3f
 #define REPEATER_NPC_SPREAD			0.7f
-#define	REPEATER_DAMAGE				8
+#define	REPEATER_DAMAGE				10
 #define	REPEATER_VELOCITY			2000
 
 #define REPEATER_ALT_SIZE				3	// half of bbox size
@@ -570,13 +571,14 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 //---------------------------------------------------------
 {
 	const int velocity = BLASTER_VELOCITY;
+	const int damage = BLASTER_DAMAGE;
 
 	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BLASTER;
 
-	if (ent->s.eType == ET_NPC)
+	if (ent->s.eType == ET_NPC || ent->r.svFlags & SVF_BOT)
 	{
 		if (g_npcspskill.integer == 0)
 		{
@@ -593,7 +595,6 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 	}
 	else
 	{
-		const int damage = BLASTER_DAMAGE;
 		missile->damage = damage;
 	}
 
@@ -5445,7 +5446,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 	}
 
-	if (ent && ent->client && ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FOURTEEN)
+	if (ent && ent->client && ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FOURTEEN)
 	{
 		if (!(ent->r.svFlags & SVF_BOT))
 		{
@@ -5454,7 +5455,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 	}
 
-	if (PM_ReloadAnim(ent->client->ps.torsoAnim))
+	if (ent && ent->client && PM_ReloadAnim(ent->client->ps.torsoAnim))
 	{
 		return;
 	}

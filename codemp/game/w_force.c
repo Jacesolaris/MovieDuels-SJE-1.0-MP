@@ -6438,7 +6438,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 						if (walk_check(push_target[x])
 							|| push_target[x]->client->ps.fd.blockPoints >= BLOCKPOINTS_HALF && push_target[x]->client->
 							pers.cmd.buttons & BUTTON_BLOCK
-							|| push_target[x]->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_HEAVYER && !
+							|| push_target[x]->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_TWELVE && !
 							BG_IsUsingHeavyWeap(&push_target[x]->client->ps)
 							&& in_front(push_target[x]->client->ps.origin, self->client->ps.origin,
 								self->client->ps.viewangles, -0.7f))
@@ -6558,7 +6558,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 						if (walk_check(push_target[x])
 							|| push_target[x]->client->ps.fd.blockPoints >= BLOCKPOINTS_HALF && push_target[x]->client->
 							pers.cmd.buttons & BUTTON_BLOCK
-							|| push_target[x]->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_HEAVYER && !
+							|| push_target[x]->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_TWELVE && !
 							BG_IsUsingHeavyWeap(&push_target[x]->client->ps)
 							&& in_front(push_target[x]->client->ps.origin, self->client->ps.origin,
 								self->client->ps.viewangles, -0.7f))

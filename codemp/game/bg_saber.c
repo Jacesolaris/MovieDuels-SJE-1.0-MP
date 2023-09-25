@@ -6061,7 +6061,7 @@ weapChecks:
 						if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
 						{
 							pm->ps->saberFatigueChainCount++;
-			}
+						}
 					}
 				}
 				else
