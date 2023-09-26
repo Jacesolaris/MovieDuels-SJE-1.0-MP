@@ -4208,7 +4208,7 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(self->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(self->client->ps.torsoAnim))
 	{
 		if (BG_HopAnim(self->client->ps.legsAnim) //in dodge hop
 			|| BG_InRoll(&self->client->ps, self->client->ps.legsAnim)
@@ -5741,7 +5741,7 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.torsoAnim))
 	{
 		return qfalse;
 	}
@@ -6339,7 +6339,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.torsoAnim))
 	{
 		return qfalse;
 	}

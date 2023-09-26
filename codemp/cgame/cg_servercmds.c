@@ -360,6 +360,7 @@ extern const char* cg_customExtraSoundNames[MAX_CUSTOM_EXTRA_SOUNDS];
 extern const char* cg_customJediSoundNames[MAX_CUSTOM_JEDI_SOUNDS];
 extern const char* cg_customDuelSoundNames[MAX_CUSTOM_DUEL_SOUNDS];
 extern const char* cg_customCalloutSoundNames[MAX_CUSTOM_CALLOUT_SOUNDS];
+extern const char* cg_customMovieDuelsSoundNames[MAX_CUSTOM_MOVIEDUELSOUNDS_SOUNDS];
 
 static const char* GetCustomSoundForType(const int setType, const int index)
 {
@@ -379,6 +380,8 @@ static const char* GetCustomSoundForType(const int setType, const int index)
 		return cg_customDuelSoundNames[index];
 	case 7:
 		return cg_customCalloutSoundNames[index];
+	case 8:
+		return cg_customMovieDuelsSoundNames[index];
 	default:
 		assert(0);
 		return NULL;
@@ -410,6 +413,9 @@ void SetCustomSoundForType(clientInfo_t* ci, const int setType, const int index,
 	case 7:
 		ci->calloutSounds[index] = sfx;
 		break;
+	case 8:
+		ci->movieduelssounds[index] = sfx;
+		break;
 	default:
 		assert(0);
 		break;
@@ -439,6 +445,9 @@ static void CG_RegisterCustomSounds(clientInfo_t* ci, const int setType, const c
 		break;
 	case 6:
 		iTableEntries = MAX_CUSTOM_CALLOUT_SOUNDS;
+		break;
+	case 7:
+		iTableEntries = MAX_CUSTOM_MOVIEDUELSOUNDS_SOUNDS;
 		break;
 	default:
 		assert(0);
@@ -1501,11 +1510,11 @@ static void CG_KillGhoul2_f(void)
 				Com_Printf("WARNING: Tried to kill a client ghoul2 instance with a kg2 command!\n");
 #endif
 				return;
-			}
+		}
 
 			CG_KillCEntityG2(indexNum);
-		}
 	}
+}
 }
 
 static void CG_KillLoopSounds_f(void)

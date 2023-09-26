@@ -1207,6 +1207,7 @@ void bot_input_to_user_command(bot_input_t* bi, usercmd_t* ucmd, int delta_angle
 	if (bi->actionflags & ACTION_KICK) ucmd->buttons |= BUTTON_KICK;
 	if (bi->actionflags & ACTION_USE) ucmd->buttons |= BUTTON_BOTUSE;
 	if (bi->actionflags & ACTION_BLOCK) ucmd->buttons |= BUTTON_BLOCK;
+	if (bi->actionflags & ACTION_GLOAT) ucmd->buttons |= BUTTON_GLOAT;
 
 	if (use_time < level.time && Q_irand(1, 10) < 5)
 	{
@@ -1374,12 +1375,10 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& !bs->doAttack
 			&& !bs->doAltAttack
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
-				bs->currentEnemy->r.currentOrigin) < 300
+			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < 300
 			|| gesturetime[bs->cur_ps.client_num] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || gesturetime[bs->cur_ps.client_num] >
-				level.time)
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || gesturetime[bs->cur_ps.client_num] > level.time)
 			{
 				const int saber_range = SABER_ATTACK_RANGE;
 
@@ -1397,7 +1396,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				gesturetime[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+				gesturetime[bs->cur_ps.client_num] = level.time + 40000 / check_val;
 			}
 			else
 			{
@@ -1409,6 +1408,44 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 		{
 			// Reset.
 			gesturetime[bs->cur_ps.client_num] = 0;
+		}
+	}
+
+	if (nexttaunt[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	{
+		if (bs->currentEnemy
+			&& bs->currentEnemy->client
+			&& bs->currentEnemy->health > 0
+			&& bs->jumpTime <= level.time // Don't gesture during jumping...
+			&& !bs->doAttack
+			&& !bs->doAltAttack
+			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
+				bs->currentEnemy->r.currentOrigin) < 300
+			|| nexttaunt[bs->cur_ps.client_num] > level.time)
+		{
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || nexttaunt[bs->cur_ps.client_num] >
+				level.time)
+			{
+				bi.actionflags |= ACTION_GLOAT;
+
+				int check_val = bot_thinklevel.integer;
+
+				if (check_val <= 0)
+					check_val = 1;
+
+				nexttaunt[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+			}
+			else
+			{
+				// Reset.
+				nexttaunt[bs->cur_ps.client_num] = 0;
+			}
+		}
+		else
+		{
+			// Reset.
+			nexttaunt[bs->cur_ps.client_num] = 0;
 		}
 	}
 
@@ -3788,8 +3825,8 @@ void check_for_shorter_routes(bot_state_t* bs, const int newwpindex)
 			bs->forceJumping = bs->jumpTime;
 #endif
 		}
+		}
 	}
-}
 
 //Find the origin location of a given entity
 void find_origins(const gentity_t* ent, vec3_t origin)
@@ -5948,8 +5985,7 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 				//You have a shitty weapon. Follow me.
 				request_siege_assistance(bs, TACTICAL_FOLLOW);
 
-				if (botstates[i] && g_entities[i].client->sess.sessionTeam == g_entities[bs->client].client->sess.
-					sessionTeam)
+				if (botstates[i] && g_entities[i].client->sess.sessionTeam == g_entities[bs->client].client->sess.sessionTeam)
 
 					request_siege_assistance(bs, Q_irand(REPLY_YES, REPLY_COMING));
 			}
@@ -5957,19 +5993,16 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 			{
 				//You have a sniper. Stay where you're at.
 				request_siege_assistance(bs, TACTICAL_HOLDPOSITION);
-				if (botstates[i] && g_entities[i].client->sess.sessionTeam == g_entities[bs->client].client->sess.
-					sessionTeam)
+				if (botstates[i] && g_entities[i].client->sess.sessionTeam == g_entities[bs->client].client->sess.sessionTeam)
 
 					request_siege_assistance(bs, Q_irand(REPLY_YES, REPLY_COMING));
 			}
-			else if (level.gametype != GT_MOVIEDUELS_FFA && g_entities[i].client->ps.weapon == g_entities[bs->client].client->ps.
-				weapon)
+			else if (level.gametype != GT_MOVIEDUELS_FFA && g_entities[i].client->ps.weapon == g_entities[bs->client].client->ps.weapon)
 			{
 				//We have the same weapon. Split up.
 				request_siege_assistance(bs, TACTICAL_SPLIT);
 
-				if (botstates[i] && g_entities[i].client->sess.sessionTeam == g_entities[bs->client].client->sess.
-					sessionTeam)
+				if (botstates[i] && g_entities[i].client->sess.sessionTeam == g_entities[bs->client].client->sess.sessionTeam)
 
 					request_siege_assistance(bs, REPLY_YES);
 			}
@@ -11251,7 +11284,7 @@ void standard_bot_ai(bot_state_t* bs)
 				}
 			}
 		}
-	}
+}
 
 	if (!use_the_force)
 	{

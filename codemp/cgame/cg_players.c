@@ -226,6 +226,40 @@ const char* cg_customCalloutSoundNames[MAX_CUSTOM_CALLOUT_SOUNDS] =
 	NULL
 };
 
+const char* cg_customMovieDuelsSoundNames[MAX_CUSTOM_MOVIEDUELSOUNDS_SOUNDS] =
+{
+	"*anger1",
+	"*anger2",
+	"*anger3",
+	"*combat1",
+	"*combat2",
+	"*combat3",
+	"*confuse1",
+	"*confuse2",
+	"*confuse3",
+	"*deflect1",
+	"*deflect2",
+	"*deflect3",
+	"*giveup1",
+	"*giveup2",
+	"*giveup3",
+	"*giveup4",
+	"*gloat1",
+	"*gloat2",
+	"*gloat3",
+	"*pushfail",
+	"*taunt",
+	"*taunt1",
+	"*taunt2",
+	"*taunt3",
+	"*taunt4",
+	"*taunt5",
+	"*victory1",
+	"*victory2",
+	"*victory3",
+	NULL
+};
+
 void CG_Disintegration(centity_t* cent, refEntity_t* ent);
 
 /*
@@ -244,6 +278,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 	int num_c_jedi_sounds = 0;
 	int num_c_siege_sounds = 0;
 	int num_c_duel_sounds = 0;
+	int num_c_movieduels_sounds = 0;
 	int num_c_call_sounds = 0;
 	char l_sound_name[MAX_QPATH];
 
@@ -333,7 +368,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 
 	if (cgs.gametype >= GT_MOVIEDUELS_TEAM || com_buildScript.integer)
 	{
-		//siege only
+		//movieduels only
 		for (i = 0; i < MAX_CUSTOM_SIEGE_SOUNDS; i++)
 		{
 			if (!bg_customSiegeSoundNames[i])
@@ -344,11 +379,32 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 		}
 	}
 
-	/*if (cgs.gametype == GT_MOVIEDUELS_DUEL
+	if (cgs.gametype == GT_MOVIEDUELS_DUEL
 		|| cgs.gametype == GT_MOVIEDUELS_POWERDUEL
-		|| com_buildScript.integer)*/
+		|| com_buildScript.integer)
 	{
 		//Duel only
+		for (i = 0; i < MAX_CUSTOM_SOUNDS; i++)
+		{
+			if (!cg_customDuelSoundNames[i])
+			{
+				num_c_duel_sounds = i;
+				break;
+			}
+		}
+	}
+
+	if (cgs.gametype >= GT_MOVIEDUELS_FFA || com_buildScript.integer)
+	{
+		//movieduels
+		for (i = 0; i < MAX_CUSTOM_SOUNDS; i++)
+		{
+			if (!cg_customMovieDuelsSoundNames[i])
+			{
+				num_c_movieduels_sounds = i;
+				break;
+			}
+		}
 		for (i = 0; i < MAX_CUSTOM_SOUNDS; i++)
 		{
 			if (!cg_customDuelSoundNames[i])
@@ -375,8 +431,12 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 			//siege only
 			return ci->duelSounds[i];
 		}
-		if (client_num >= MAX_CLIENTS && i < num_c_com_sounds && strcmp(l_sound_name, cg_customCombatSoundNames[i]) ==
-			0)
+		if (i < num_c_movieduels_sounds && strcmp(l_sound_name, cg_customMovieDuelsSoundNames[i]) == 0)
+		{
+			//siege only
+			return ci->movieduelssounds[i];
+		}
+		if (client_num >= MAX_CLIENTS && i < num_c_com_sounds && strcmp(l_sound_name, cg_customCombatSoundNames[i]) == 0)
 		{
 			//npc only
 			return ci->combatSounds[i];
@@ -1140,6 +1200,90 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 		}
 	}
 
+	if (cgs.gametype >= GT_MOVIEDUELS_FFA || com_buildScript.integer)
+	{
+		//load the sounds then
+		for (i = 0; i < MAX_CUSTOM_MOVIEDUELSOUNDS_SOUNDS; i++)
+		{
+			s = cg_customMovieDuelsSoundNames[i];
+			if (!s)
+			{
+				break;
+			}
+
+			Com_sprintf(sound_name, sizeof sound_name, "%s", s + 1);
+			COM_StripExtension(sound_name, sound_name, sizeof sound_name);
+			//strip the extension because we might want .mp3's
+
+			ci->movieduelssounds[i] = 0;
+			// if the model didn't load use the sounds of the default model
+			if (sound_path[0])
+			{
+				ci->movieduelssounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", sound_path, sound_name));
+			}
+			else
+			{
+				if (modelloaded)
+				{
+					ci->movieduelssounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", dir, sound_name));
+				}
+			}
+
+			if (!ci->movieduelssounds[i])
+			{
+				//failed the load, try one out of the generic path
+				if (is_female)
+				{
+					ci->movieduelssounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_sound_path, sound_name));
+				}
+				else
+				{
+					ci->movieduelssounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_sound_path, sound_name));
+				}
+			}
+		}
+
+		for (i = 0; i < MAX_CUSTOM_DUEL_SOUNDS; i++)
+		{
+			s = cg_customDuelSoundNames[i];
+			if (!s)
+			{
+				break;
+			}
+
+			Com_sprintf(sound_name, sizeof sound_name, "%s", s + 1);
+			COM_StripExtension(sound_name, sound_name, sizeof sound_name);
+			//strip the extension because we might want .mp3's
+
+			ci->duelSounds[i] = 0;
+			// if the model didn't load use the sounds of the default model
+			if (sound_path[0])
+			{
+				ci->duelSounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", sound_path, sound_name));
+			}
+			else
+			{
+				if (modelloaded)
+				{
+					ci->duelSounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", dir, sound_name));
+				}
+			}
+
+			if (!ci->duelSounds[i])
+			{
+				//failed the load, try one out of the generic path
+				if (is_female)
+				{
+					ci->duelSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_sound_path, sound_name));
+				}
+				else
+				{
+					ci->duelSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_sound_path, sound_name));
+				}
+			}
+		}
+	}
+
 	trap->S_Shutup(qfalse);
 }
 
@@ -1432,6 +1576,7 @@ static void CG_CopyClientInfoModel(const clientInfo_t* from, clientInfo_t* to)
 	memcpy(to->sounds, from->sounds, sizeof to->sounds);
 	memcpy(to->siegeSounds, from->siegeSounds, sizeof to->siegeSounds);
 	memcpy(to->duelSounds, from->duelSounds, sizeof to->duelSounds);
+	memcpy(to->movieduelssounds, from->movieduelssounds, sizeof to->movieduelssounds);
 }
 
 /*
@@ -1527,28 +1672,12 @@ static qboolean CG_ScanForExistingClientInfo(clientInfo_t* ci, const int client_
 					memcpy(ci->sounds, match->sounds, sizeof ci->sounds);
 					memcpy(ci->siegeSounds, match->siegeSounds, sizeof ci->siegeSounds);
 					memcpy(ci->duelSounds, match->duelSounds, sizeof ci->duelSounds);
+					memcpy(ci->movieduelssounds, match->movieduelssounds, sizeof ci->movieduelssounds);
 
 					//We can share this pointer, because it already belongs to this client.
 					//The pointer itself and the ghoul2 instance is never actually changed, just passed between
 					//clientinfo structures.
 					ci->ghoul2Model = match->ghoul2Model;
-
-					//Don't need to do this I guess, whenever this function is called the saber stuff should
-					//already be taken care of in the new info.
-					/*
-					while (k < MAX_SABERS)
-					{
-						if (match->ghoul2Weapons[k] && match->ghoul2Weapons[k] != ci->ghoul2Weapons[k])
-						{
-							if (ci->ghoul2Weapons[k])
-							{
-								trap->G2API_CleanGhoul2Models(&ci->ghoul2Weapons[k]);
-							}
-							ci->ghoul2Weapons[k] = match->ghoul2Weapons[k];
-						}
-						k++;
-					}
-					*/
 				}
 			}
 			else
@@ -2763,13 +2892,13 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 					//hmm, just try on the player model, then?
 					anim_event->eventData[AED_BOLTINDEX] = trap->G2API_AddBolt(cent->ghoul2, 0, anim_event->stringData);
 				}
-			}
+	}
 			else
 			{
 				anim_event->eventData[AED_BOLTINDEX] = trap->G2API_AddBolt(cent->ghoul2, 0, anim_event->stringData);
 			}
 			anim_event->stringData[0] = 0;
-		}
+}
 		if (anim_event->eventData[AED_BOLTINDEX] != -1)
 		{
 			vec3_t l_angles;
@@ -3255,7 +3384,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		{
 			first_frame = anim->firstFrame;
 			last_frame = anim->firstFrame + anim->numFrames;
-		}
+	}
 
 		if (cg_animBlend.integer)
 		{
@@ -4105,8 +4234,8 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 #if 0
 			VectorClear(cent->lerpOriginOffset);
 #endif
-		}
-	}
+				}
+			}
 
 	if (cent->isRagging)
 	{
@@ -4122,7 +4251,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 			//ik must be reset before ragdoll is started, or you'll get some interesting results.
 			trap->G2API_SetBoneIKState(cent->ghoul2, cg.time, NULL, IKS_NONE, NULL);
 			cent->ikStatus = qfalse;
-		}
+	}
 
 		//these will be used as "base" frames for the ragoll settling.
 		t_parms.start_frame = bgAllAnims[cent->localAnimIndex].anims[rag_anim].firstFrame;
@@ -4180,7 +4309,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 					cg.time, current_frame, blend_time);
 				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", current_frame, current_frame + 1, flags, anim_speed,
 					cg.time, current_frame, blend_time);
-			}
+		}
 		}
 #endif
 		CG_G2SetBoneAngles(cent->ghoul2, 0, "upper_lumbar", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
@@ -4400,13 +4529,13 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 			{
 				trap->G2API_RagForceSolve(cent->ghoul2, qtrue);
 			}
-		}
+						}
 
 		return qtrue;
-	}
+					}
 
 	return qfalse;
-}
+				}
 
 //set the bone angles of this client entity based on data from the server -rww
 void CG_G2ServerBoneAngles(const centity_t* cent)
@@ -13096,7 +13225,7 @@ CheckTrail:
 						default:
 							VectorSet(rgb1, 0.0f, 64.0f, 255.0f);
 							break;
-						}
+					}
 
 						//Here we will use the happy process of filling a struct in with arguments and passing it to a trap function
 						//so that we can take the struct and fill in an actual CTrail type using the data within it once we get it
@@ -13255,16 +13384,16 @@ CheckTrail:
 
 							trap->FX_AddPrimitive(&fx);
 						}
-					}
 				}
 			}
+		}
 
 			// we must always do this, even if we aren't active..otherwise we won't know where to pick up from
 			VectorCopy(org, saber_trail->base);
 			VectorMA(end, 3.0f, axis[0], saber_trail->tip);
 			saber_trail->lastTime = cg.time;
-		}
 	}
+}
 	else
 	{
 		// Use the supremely hacky SFX Sabers.
@@ -14063,7 +14192,7 @@ JustDoIt:
 			}
 		}
 	}
-}
+			}
 
 int CG_IsMindTricked(const int trick_index1, const int trick_index2, const int trick_index3, const int trick_index4,
 	const int client)
@@ -14475,10 +14604,10 @@ int CG_HandleAppendedSkin(const char* model_name)
 				skin_id = trap->R_RegisterSkin(use_skin_name);
 			}
 		}
-	}
+}
 
 	return skin_id;
-}
+		}
 
 //Create a temporary ghoul2 instance and get the gla name so we can try loading animation data and sounds.
 void BG_GetVehicleModelName(char* modelName, const char* vehicleName, size_t len);
@@ -20160,7 +20289,7 @@ stillDoSaber:
 				}
 
 				k++;
-			}
+					}
 			if (ci->saber[l].numBlades > 2)
 			{
 				//add a single glow for the saber based on all the blade colors combined
@@ -20168,8 +20297,8 @@ stillDoSaber:
 			}
 
 			l++;
-		}
-	}
+				}
+			}
 
 	if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 	{
@@ -21003,7 +21132,7 @@ stillDoSaber:
 		cgBoneAnglePostSet.refreshSet = qfalse;
 	}
 #endif
-}
+		}
 
 //=====================================================================
 
@@ -21166,4 +21295,4 @@ void CG_ResetPlayerEntity(centity_t* cent)
 	{
 		trap->Print("%i ResetPlayerEntity yaw=%i\n", cent->currentState.number, cent->pe.torso.yawAngle);
 	}
-}
+	}

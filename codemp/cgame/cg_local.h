@@ -191,13 +191,14 @@ typedef struct playerEntity_s {
 // client model and other color coded effects
 // this is regenerated each time a client's configstring changes,
 // usually as a result of a userinfo (name, model, etc) change
-#define	MAX_CUSTOM_COMBAT_SOUNDS	40
-#define	MAX_CUSTOM_EXTRA_SOUNDS	40
-#define	MAX_CUSTOM_JEDI_SOUNDS	40
-#define MAX_CUSTOM_DUEL_SOUNDS	40
-#define MAX_CUSTOM_CALLOUT_SOUNDS 40
+#define	MAX_CUSTOM_COMBAT_SOUNDS	60
+#define	MAX_CUSTOM_EXTRA_SOUNDS	60
+#define	MAX_CUSTOM_JEDI_SOUNDS	60
+#define MAX_CUSTOM_DUEL_SOUNDS	60
+#define MAX_CUSTOM_CALLOUT_SOUNDS 60
+#define MAX_CUSTOM_MOVIEDUELSOUNDS_SOUNDS 60
 
-#define	MAX_CUSTOM_SOUNDS	40 //rww - Note that for now these must all be the same, because of the way I am
+#define	MAX_CUSTOM_SOUNDS	60 //rww - Note that for now these must all be the same, because of the way I am
 							   //cycling through them and comparing for custom sounds.
 
 typedef struct clientInfo_s {
@@ -301,6 +302,7 @@ typedef struct clientInfo_s {
 	sfxHandle_t		siegeSounds[MAX_CUSTOM_SIEGE_SOUNDS];
 	sfxHandle_t		duelSounds[MAX_CUSTOM_DUEL_SOUNDS];
 	sfxHandle_t		calloutSounds[MAX_CUSTOM_CALLOUT_SOUNDS];
+	sfxHandle_t		movieduelssounds[MAX_CUSTOM_MOVIEDUELSOUNDS_SOUNDS];
 
 	int				legsAnim;
 	int				torsoAnim;
