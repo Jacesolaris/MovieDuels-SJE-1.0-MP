@@ -622,7 +622,7 @@ void WP_FireTurboLaserMissile(gentity_t* ent, vec3_t start, vec3_t dir)
 	missile->classname = "turbo_proj";
 	missile->s.weapon = WP_TURRET;
 
-	missile->damage = ent->damage; //FIXME: externalize
+	missile->damage = ent->damage;
 	missile->splashDamage = ent->splashDamage; //FIXME: externalize
 	missile->splashRadius = ent->splashRadius; //FIXME: externalize
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
