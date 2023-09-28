@@ -593,10 +593,9 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 			missile->damage = BLASTER_NPC_DAMAGE_HARD;
 		}
 	}
-	else
-	{
-		missile->damage = damage;
-	}
+
+	missile->damage = damage;
+
 
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	missile->methodOfDeath = MOD_BLASTER;

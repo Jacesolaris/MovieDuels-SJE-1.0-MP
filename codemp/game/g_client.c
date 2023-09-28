@@ -5042,7 +5042,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "darthplagueis")
 			|| Class_Model(model, "savage_opress"))
 		{
-			client->pers.botmodelscale = BOTZIZE_MASSIVE;
+			client->pers.botmodelscale = BOTZIZE_LARGE;
 			client->pers.nextbotclass = BCLASS_LORDVADER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{

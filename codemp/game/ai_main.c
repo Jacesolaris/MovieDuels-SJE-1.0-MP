@@ -1396,7 +1396,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				gesturetime[bs->cur_ps.client_num] = level.time + 40000 / check_val;
+				gesturetime[bs->cur_ps.client_num] = level.time + 20000 / check_val;
 			}
 			else
 			{
@@ -1424,8 +1424,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				bs->currentEnemy->r.currentOrigin) < 300
 			|| nexttaunt[bs->cur_ps.client_num] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || nexttaunt[bs->cur_ps.client_num] >
-				level.time)
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || nexttaunt[bs->cur_ps.client_num] > level.time)
 			{
 				bi.actionflags |= ACTION_GLOAT;
 
@@ -1434,7 +1433,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				nexttaunt[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+				nexttaunt[bs->cur_ps.client_num] = level.time + 30000 / check_val;
 			}
 			else
 			{
@@ -1528,7 +1527,6 @@ void remove_color_escape_sequences(char* text)
 BotAI
 ==============
 */
-extern vmCvar_t bot_cpu_usage;
 
 int bot_ai(const int client, const float thinktime)
 {
@@ -1599,7 +1597,6 @@ int bot_ai(const int client, const float thinktime)
 	start = trap->Milliseconds();
 #endif
 	standard_bot_ai(bs);
-	bs->full_thinktime = level.time + (100 - bot_cpu_usage.integer);
 #ifdef _DEBUG
 	end = trap->Milliseconds();
 
@@ -3825,8 +3822,8 @@ void check_for_shorter_routes(bot_state_t* bs, const int newwpindex)
 			bs->forceJumping = bs->jumpTime;
 #endif
 		}
-		}
 	}
+}
 
 //Find the origin location of a given entity
 void find_origins(const gentity_t* ent, vec3_t origin)
@@ -11284,7 +11281,7 @@ void standard_bot_ai(bot_state_t* bs)
 				}
 			}
 		}
-}
+	}
 
 	if (!use_the_force)
 	{

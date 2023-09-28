@@ -64,19 +64,12 @@ extern qboolean PM_SuperBreakLoseAnim(int anim);
 extern qboolean ButterFingers(gentity_t* saberent, gentity_t* saber_owner, const gentity_t* other, const trace_t* tr);
 extern qboolean PM_SaberInnonblockableAttack(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
-extern qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throw_dir);
-extern void PM_VelocityForsaber_move(const playerState_t* ps, vec3_t throw_dir);
 extern int G_GetParryForBlock(int block);
-extern qboolean WP_SaberParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-extern qboolean WP_SaberBlockedBounceBlock(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-extern qboolean WP_SaberFatiguedParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
 extern qboolean WP_SaberMBlockDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern qboolean WP_SaberBlockNonRandom(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern qboolean WP_SaberBouncedSaberDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern void wp_block_points_regenerate_over_ride(const gentity_t* self, int override_amt);
-extern qboolean WP_SaberNPCParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-extern qboolean WP_SaberNPCFatiguedParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
 void sab_beh_animate_heavy_slow_bounce_attacker(gentity_t* attacker);
 extern void G_StaggerAttacker(gentity_t* atk);
 extern void G_BounceAttacker(gentity_t* atk);
@@ -812,6 +805,11 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				{
 					attacker->client->ps.userInt3 |= 1 << FLAG_BLOCKED;
 				}
+
+				if (!(attacker->r.svFlags & SVF_BOT))
+				{
+					CGCam_BlockShakeMP(attacker->s.origin, attacker, 0.45f, 100);
+				}
 			}
 			else
 			{
@@ -823,7 +821,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				sab_beh_attack_blocked(attacker, blocker, qfalse);
 			}
 
-			if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
+			if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
 			{
 				Com_Printf(S_COLOR_YELLOW"Attackers Attack was Blocked\n");
 			}
@@ -838,7 +836,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				G_Stagger(blocker);
 			}
 
-			if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
+			if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
 			{
 				Com_Printf(S_COLOR_ORANGE"Attacker All the rest of the types of contact\n");
 			}
@@ -970,20 +968,16 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					//Spamming block + attack buttons
 					if (blocker->client->ps.fd.blockPoints <= BLOCKPOINTS_HALF)
 					{
-						//WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
 						WP_SaberFatiguedParryDirection(blocker, hit_loc, qfalse);
 					}
 					else
 					{
-						if (attacker->client->ps.fd.saber_anim_level == SS_DESANN || attacker->client->ps.fd.saber_anim_level ==
-							SS_STRONG)
+						if (attacker->client->ps.fd.saber_anim_level == SS_DESANN || attacker->client->ps.fd.saber_anim_level == SS_STRONG)
 						{
-							//WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
 							WP_SaberFatiguedParryDirection(blocker, hit_loc, qfalse);
 						}
 						else
 						{
-							//WP_SaberParry(blocker, attacker, saber_num, blade_num);
 							WP_SaberBlockNonRandom(blocker, hit_loc, qfalse);
 						}
 					}
@@ -1017,20 +1011,16 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			{
 				if (blocker->client->ps.fd.blockPoints <= BLOCKPOINTS_HALF)
 				{
-					//WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
 					WP_SaberFatiguedParryDirection(blocker, hit_loc, qfalse);
 				}
 				else
 				{
-					if (attacker->client->ps.fd.saber_anim_level == SS_DESANN || attacker->client->ps.fd.saber_anim_level ==
-						SS_STRONG)
+					if (attacker->client->ps.fd.saber_anim_level == SS_DESANN || attacker->client->ps.fd.saber_anim_level == SS_STRONG)
 					{
-						//WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
 						WP_SaberFatiguedParryDirection(blocker, hit_loc, qfalse);
 					}
 					else
 					{
-						//WP_SaberBlockedBounceBlock(blocker, attacker, saber_num, blade_num);
 						WP_SaberBouncedSaberDirection(blocker, hit_loc, qfalse);
 					}
 				}

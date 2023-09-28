@@ -130,14 +130,7 @@ extern void G_ClearEnemy(gentity_t* self);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern void wp_block_points_regenerate(const gentity_t* self, int override_amt);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
-qboolean WP_SaberParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-qboolean WP_SaberBlockedBounceBlock(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-qboolean WP_SaberFatiguedParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-qboolean WP_SaberBouncedSaberDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
-qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern void wp_block_points_regenerate_over_ride(const gentity_t* self, int override_amt);
-qboolean WP_SaberNPCParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-qboolean WP_SaberNPCFatiguedParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
 extern qboolean BG_FullBodyTauntAnim(int anim);
 extern int PM_InGrappleMove(int anim);
 extern qboolean PM_SaberInKillMove(int move);
@@ -4963,14 +4956,6 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 
 	gentity_t* te = G_TempEntity(impactpoint, EV_SABER_HIT);
 
-	/*if (!(self->r.svFlags & SVF_BOT))
-	{
-		if (victim->health >= 1)
-		{
-			CGCam_BlockShakeMP(self->s.origin, self, 0.25f, 100);
-		}
-	}*/
-
 	if (te)
 	{
 		te->s.otherEntityNum = victim->s.number;
@@ -5333,25 +5318,6 @@ static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3
 	else if (DotProduct(length, up) < 0)
 	{
 		self->client->ps.userInt1 |= LOCK_MOVEUP;
-	}
-}
-
-void AnimateKnockaway(gentity_t* self, vec3_t impact)
-{
-	//do an knockaway.
-	if (!PM_SaberInKnockaway(self->client->ps.saber_move) && !PM_InKnockDown(&self->client->ps))
-	{
-		if (!PM_SaberInParry(self->client->ps.saber_move))
-		{
-			WP_SaberBlockNonRandom(self, impact, qfalse);
-			self->client->ps.saber_move = PM_KnockawayForParry(self->client->ps.saberBlocked);
-			self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
-		}
-		else
-		{
-			self->client->ps.saber_move = G_KnockawayForParry(self->client->ps.saber_move);
-			self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
-		}
 	}
 }
 
@@ -7395,13 +7361,14 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 				if (victim->health >= 1)
 				{
 					CGCam_BlockShakeMP(self->s.origin, self, 0.25f, 100);
+
+					G_SaberBounce(self, victim);
 				}
 			}
 		}
 
 		//We need the final damage total to know if we need to bounce the saber back or not.
 		G_Damage(victim, self, self, dir, tr.endpos, dmg, dflags, MOD_SABER);
-		G_SaberBounce(self, victim);
 		wp_saber_specific_do_hit(self, r_saber_num, r_blade_num, victim, tr.endpos, dmg);
 
 		if (victim->health <= 0)
@@ -7592,9 +7559,20 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		do_full_routine = qfalse;
 	}
 
-	if (!(self->r.svFlags & SVF_BOT) && !(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
+	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 	{
-		return;
+		if (self->r.svFlags & SVF_BOT)
+		{
+			//bots just randomly parry to make up for them not intelligently parrying.
+			if (self->client->ps.weapon == WP_SABER && (BG_SabersOff(&self->client->ps) || self->client->ps.saberInFlight))
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
 	}
 
 	if (!walk_check(self)
@@ -8102,7 +8080,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				blocker->client->ps.saberBlocked = blockedfor_quad(closest_swing_quad);
 				blocker->client->ps.userInt3 |= 1 << FLAG_PREBLOCK;
 			}
-			else if (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK)
+			else if (blocker->health > 0)
 			{
 				wp_saber_block_non_random_missile(blocker, incoming->r.currentOrigin, qtrue);
 			}
@@ -11798,8 +11776,6 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 
 	saberInfo_t* saber1 = BG_MySaber(self->client_num, 0);
 
-	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-
 #ifndef FINAL_BUILD
 	int viewlock = 0;
 #endif
@@ -12442,10 +12418,7 @@ nextStep:
 
 				saberent->s.saberInFlight = qtrue;
 
-				if (saber1 && saber1
-					->
-					type == SABER_VADER
-					)
+				if (saber1 && saber1->type == SABER_VADER)
 				{
 					saberent->s.apos.trType = TR_LINEAR;
 					saberent->s.apos.trDelta[0] = 0;
@@ -12891,12 +12864,11 @@ nextStep:
 				else if (self->client->hasCurrentPosition && d_saberInterpolate.integer == 2)
 				{
 					//Super duper interplotation system
-					if (level.time - self->client->saber[r_saber_num].blade[r_blade_num].trail.lastTime < 100 && (
-						BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex) || self_holding_block))
+					if (level.time - self->client->saber[r_saber_num].blade[r_blade_num].trail.lastTime < 100
+						&& (BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex)))
 					{
 						vec3_t olddir;
-						float dist = (d_saberBoxTraceSize.value + self->client->saber[r_saber_num].blade[r_blade_num].
-							radius) * 0.5f;
+						float dist = (d_saberBoxTraceSize.value + self->client->saber[r_saber_num].blade[r_blade_num].radius) * 0.5f;
 						VectorSubtract(self->client->saber[r_saber_num].blade[r_blade_num].trail.tip,
 							self->client->saber[r_saber_num].blade[r_blade_num].trail.base, olddir);
 						VectorNormalize(olddir);
@@ -13004,7 +12976,7 @@ finalUpdate:
 	}
 
 	G_UpdateClientAnims(self, anim_speed_scale);
-}
+	}
 
 int WP_MissileBlockForBlock(const int saber_block)
 {
@@ -15149,7 +15121,7 @@ int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projecti
 		return 0;
 	}
 
-	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK))
+	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 	{
 		if (self->r.svFlags & SVF_BOT)
 		{
@@ -15943,291 +15915,6 @@ void WP_BlockPointsDrain(const gentity_t* self, const int fatigue)
 		//Pop the Fatigued flag
 		self->client->ps.userInt3 |= 1 << FLAG_BLOCKDRAINED;
 	}
-}
-
-qboolean WP_SaberNPCParry(gentity_t* blocker, gentity_t* attacker, const int saber_num, const int blade_num)
-{
-	const qboolean other_holding_block = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Normal Blocking
-	const qboolean other_active_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse; //Active Blocking
-	const qboolean other_m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
-	//Perfect Blocking
-	const qboolean npc_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING ? qtrue : qfalse;
-
-	if (!blocker || !blocker->client || !attacker)
-	{
-		return qfalse;
-	}
-	if (PM_SuperBreakLoseAnim(blocker->client->ps.torsoAnim)
-		|| PM_SuperBreakWinAnim(blocker->client->ps.torsoAnim))
-	{
-		return qfalse;
-	}
-
-	if (blocker->s.number
-		|| other_holding_block
-		|| other_active_blocking
-		|| other_m_blocking
-		|| npc_blocking
-		|| manual_saberblocking(blocker) // already in a block position it will override
-		|| blocker->client->ps.saberManualBlockingTime > level.time)
-	{
-		//either an NPC or a player who is blocking
-		if (!PM_SaberInTransitionAny(blocker->client->ps.saber_move)
-			&& !PM_SaberInBounce(blocker->client->ps.saber_move)
-			&& !PM_SaberInKnockaway(blocker->client->ps.saber_move)
-			&& !BG_InKnockDown(blocker->client->ps.legsAnim)
-			&& !BG_InKnockDown(blocker->client->ps.torsoAnim))
-		{
-			//I'm not attacking, in transition or in a bounce or knockaway, so play a parry
-			WP_SaberBlockNonRandom(blocker, saberHitLocation, qfalse);
-		}
-
-		blocker->client->ps.saberEventFlags |= SEF_PARRIED;
-
-		//since it was parried, take away any damage done
-		wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
-
-		//tell the victim to get mad at me
-		if (blocker->enemy != attacker && blocker->client->playerTeam != attacker->client->playerTeam)
-		{
-			//they're not mad at me and they're not on my team
-			G_ClearEnemy(blocker);
-			G_SetEnemy(blocker, attacker);
-		}
-		return qtrue;
-	}
-	return qfalse;
-}
-
-qboolean WP_SaberParry(gentity_t* blocker, gentity_t* attacker, const int saber_num, const int blade_num)
-{
-	const qboolean other_holding_block = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Normal Blocking
-	const qboolean other_active_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse; //Active Blocking
-	const qboolean other_m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
-	//Perfect Blocking
-	const qboolean npc_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING ? qtrue : qfalse;
-
-	if (!blocker || !blocker->client || !attacker)
-	{
-		return qfalse;
-	}
-	if (PM_SuperBreakLoseAnim(blocker->client->ps.torsoAnim)
-		|| PM_SuperBreakWinAnim(blocker->client->ps.torsoAnim))
-	{
-		return qfalse;
-	}
-
-	if (blocker->s.number
-		|| other_holding_block
-		|| other_active_blocking
-		|| other_m_blocking
-		|| npc_blocking
-		|| manual_saberblocking(blocker) // already in a block position it will override
-		|| blocker->client->ps.saberManualBlockingTime > level.time)
-	{
-		//either an NPC or a player who is blocking
-		if (!PM_SaberInTransitionAny(blocker->client->ps.saber_move)
-			&& !PM_SaberInBounce(blocker->client->ps.saber_move)
-			&& !PM_SaberInKnockaway(blocker->client->ps.saber_move)
-			&& !BG_InKnockDown(blocker->client->ps.legsAnim)
-			&& !BG_InKnockDown(blocker->client->ps.torsoAnim))
-		{
-			//I'm not attacking, in transition or in a bounce or knockaway, so play a parry
-			WP_SaberBlockNonRandom(blocker, saberHitLocation, qfalse);
-		}
-
-		blocker->client->ps.saberEventFlags |= SEF_PARRIED;
-
-		//since it was parried, take away any damage done
-		wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
-
-		//tell the victim to get mad at me
-		if (blocker->enemy != attacker && blocker->client->playerTeam != attacker->client->playerTeam)
-		{
-			//they're not mad at me and they're not on my team
-			G_ClearEnemy(blocker);
-			G_SetEnemy(blocker, attacker);
-		}
-		return qtrue;
-	}
-	return qfalse;
-}
-
-qboolean WP_SaberBlockedBounceBlock(gentity_t* blocker, gentity_t* attacker, const int saber_num, const int blade_num)
-{
-	const qboolean other_holding_block = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Normal Blocking
-	const qboolean other_active_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse; //Active Blocking
-	const qboolean other_m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
-	//Perfect Blocking
-	const qboolean npc_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING ? qtrue : qfalse;
-
-	if (!blocker || !blocker->client || !attacker)
-	{
-		return qfalse;
-	}
-	if (PM_SuperBreakLoseAnim(blocker->client->ps.torsoAnim)
-		|| PM_SuperBreakWinAnim(blocker->client->ps.torsoAnim))
-	{
-		return qfalse;
-	}
-
-	if (blocker->s.number
-		|| other_holding_block
-		|| other_active_blocking
-		|| other_m_blocking
-		|| npc_blocking
-		|| manual_saberblocking(blocker) // already in a block position it will override
-		|| blocker->client->ps.saberManualBlockingTime > level.time)
-	{
-		//either an NPC or a player who is blocking
-		if (!PM_SaberInTransitionAny(blocker->client->ps.saber_move)
-			&& !PM_SaberInBounce(blocker->client->ps.saber_move)
-			&& !PM_SaberInKnockaway(blocker->client->ps.saber_move)
-			&& !BG_InKnockDown(blocker->client->ps.legsAnim)
-			&& !BG_InKnockDown(blocker->client->ps.torsoAnim))
-		{
-			//I'm not attacking, in transition or in a bounce or knockaway, so play a parry
-			WP_SaberBouncedSaberDirection(blocker, saberHitLocation, qfalse);
-		}
-
-		blocker->client->ps.saberEventFlags |= SEF_PARRIED;
-
-		//since it was parried, take away any damage done
-		wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
-
-		//tell the victim to get mad at me
-		if (blocker->enemy != attacker && blocker->client->playerTeam != attacker->client->playerTeam)
-		{
-			//they're not mad at me and they're not on my team
-			G_ClearEnemy(blocker);
-			G_SetEnemy(blocker, attacker);
-		}
-		return qtrue;
-	}
-	return qfalse;
-}
-
-qboolean WP_SaberFatiguedParry(gentity_t* blocker, gentity_t* attacker, const int saber_num, const int blade_num)
-{
-	const qboolean other_holding_block = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Normal Blocking
-	const qboolean other_active_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse; //Active Blocking
-	const qboolean other_m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
-	//Perfect Blocking
-	const qboolean npc_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING ? qtrue : qfalse;
-
-	if (!blocker || !blocker->client || !attacker)
-	{
-		return qfalse;
-	}
-	if (PM_SuperBreakLoseAnim(blocker->client->ps.torsoAnim)
-		|| PM_SuperBreakWinAnim(blocker->client->ps.torsoAnim))
-	{
-		return qfalse;
-	}
-
-	if (blocker->s.number
-		|| other_holding_block
-		|| other_active_blocking
-		|| other_m_blocking
-		|| npc_blocking
-		|| manual_saberblocking(blocker) // already in a block position it will override
-		|| blocker->client->ps.saberManualBlockingTime > level.time)
-	{
-		//either an NPC or a player who is blocking
-		if (!PM_SaberInTransitionAny(blocker->client->ps.saber_move)
-			&& !PM_SaberInBounce(blocker->client->ps.saber_move)
-			&& !PM_SaberInKnockaway(blocker->client->ps.saber_move)
-			&& !BG_InKnockDown(blocker->client->ps.legsAnim)
-			&& !BG_InKnockDown(blocker->client->ps.torsoAnim))
-		{
-			//I'm not attacking, in transition or in a bounce or knockaway, so play a parry
-			WP_SaberFatiguedParryDirection(blocker, saberHitLocation, qfalse);
-		}
-
-		blocker->client->ps.saberEventFlags |= SEF_PARRIED;
-
-		//since it was parried, take away any damage done
-		wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
-
-		//tell the victim to get mad at me
-		if (blocker->enemy != attacker && blocker->client->playerTeam != attacker->client->playerTeam)
-		{
-			//they're not mad at me and they're not on my team
-			G_ClearEnemy(blocker);
-			G_SetEnemy(blocker, attacker);
-		}
-		return qtrue;
-	}
-	return qfalse;
-}
-
-qboolean WP_SaberNPCFatiguedParry(gentity_t* blocker, gentity_t* attacker, const int saber_num, const int blade_num)
-{
-	const qboolean other_holding_block = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Normal Blocking
-	const qboolean other_active_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse; //Active Blocking
-	const qboolean other_m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
-	//Perfect Blocking
-	const qboolean npc_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING ? qtrue : qfalse;
-
-	if (!blocker || !blocker->client || !attacker)
-	{
-		return qfalse;
-	}
-	if (PM_SuperBreakLoseAnim(blocker->client->ps.torsoAnim)
-		|| PM_SuperBreakWinAnim(blocker->client->ps.torsoAnim))
-	{
-		return qfalse;
-	}
-
-	if (blocker->s.number
-		|| other_holding_block
-		|| other_active_blocking
-		|| other_m_blocking
-		|| npc_blocking
-		|| manual_saberblocking(blocker) // already in a block position it will override
-		|| blocker->client->ps.saberManualBlockingTime > level.time)
-	{
-		//either an NPC or a player who is blocking
-		if (!PM_SaberInTransitionAny(blocker->client->ps.saber_move)
-			&& !PM_SaberInBounce(blocker->client->ps.saber_move)
-			&& !PM_SaberInKnockaway(blocker->client->ps.saber_move)
-			&& !BG_InKnockDown(blocker->client->ps.legsAnim)
-			&& !BG_InKnockDown(blocker->client->ps.torsoAnim))
-		{
-			//I'm not attacking, in transition or in a bounce or knockaway, so play a parry
-			WP_SaberFatiguedParryDirection(blocker, saberHitLocation, qfalse);
-		}
-
-		blocker->client->ps.saberEventFlags |= SEF_PARRIED;
-
-		//since it was parried, take away any damage done
-		wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
-
-		//tell the victim to get mad at me
-		if (blocker->enemy != attacker && blocker->client->playerTeam != attacker->client->playerTeam)
-		{
-			//they're not mad at me and they're not on my team
-			G_ClearEnemy(blocker);
-			G_SetEnemy(blocker, attacker);
-		}
-		return qtrue;
-	}
-	return qfalse;
 }
 
 void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other)

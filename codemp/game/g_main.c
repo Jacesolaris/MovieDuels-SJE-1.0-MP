@@ -4892,8 +4892,7 @@ void G_RunFrame(const int levelTime)
 				}
 			}
 
-			if (!level.intermissiontime && !(ent->client->ps.pm_flags & PMF_FOLLOW) && ent->client->sess.sessionTeam !=
-				TEAM_SPECTATOR)
+			if (!level.intermissiontime && !(ent->client->ps.pm_flags & PMF_FOLLOW) && ent->client->sess.sessionTeam != TEAM_SPECTATOR)
 			{
 				WP_ForcePowersUpdate(ent, &ent->client->pers.cmd);
 				wp_saber_position_update(ent, &ent->client->pers.cmd);

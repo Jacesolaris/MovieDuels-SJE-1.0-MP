@@ -6166,12 +6166,8 @@ void CG_DrawHUD(const centity_t* cent)
 				if (cent->currentState.weapon == WP_SABER)
 				{
 					CG_DrawCusSaberStyle(cent, menu_hud);
-
-					if (!cent->currentState.saberHolstered)
-					{
-						CG_DrawJK2blockingMode(cent, menu_hud);
-						CG_DrawJK2SaberFatigue(cent, 560, 400);
-					}
+					CG_DrawJK2blockingMode(cent, menu_hud);
+					CG_DrawJK2SaberFatigue(cent, 560, 400);
 				}
 				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saberHolstered)
 				{
@@ -6202,12 +6198,8 @@ void CG_DrawHUD(const centity_t* cent)
 				{
 					CG_DrawJK2ForcePower(cent, SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80, menu_hud);
 					CG_DrawJK2Ammo(cent, SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
-
-					if (!cent->currentState.saberHolstered)
-					{
-						CG_DrawJK2blockingMode(cent, menu_hud);
-						CG_DrawJK2SaberFatigue(cent, x, y);
-					}
+					CG_DrawJK2blockingMode(cent, menu_hud);
+					CG_DrawJK2SaberFatigue(cent, x, y);
 				}
 				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saberHolstered)
 				{
@@ -6254,10 +6246,7 @@ void CG_DrawHUD(const centity_t* cent)
 
 				if (cent->currentState.weapon == WP_SABER)
 				{
-					if (!cent->currentState.saberHolstered)
-					{
-						CG_DrawMDSaberstyleFatigueVert(cent, menu_hud);
-					}
+					CG_DrawMDSaberstyleFatigueVert(cent, menu_hud);
 				}
 
 				if (cent->currentState.weapon != WP_SABER && cent->currentState.weapon != WP_MELEE)
@@ -6303,10 +6292,7 @@ void CG_DrawHUD(const centity_t* cent)
 
 				if (cent->currentState.weapon == WP_SABER)
 				{
-					if (!cent->currentState.saberHolstered)
-					{
-						CG_DrawMDSaberstyleFatigueHoz(cent, menu_hud);
-					}
+					CG_DrawMDSaberstyleFatigueHoz(cent, menu_hud);
 				}
 
 				if (cent->currentState.weapon != WP_SABER && cent->currentState.weapon != WP_MELEE)
@@ -6385,12 +6371,8 @@ void CG_DrawHUD(const centity_t* cent)
 				if (cent->currentState.weapon == WP_SABER)
 				{
 					CG_DrawCusSaberStyle(cent, menu_hud);
-
-					if (!cent->currentState.saberHolstered)
-					{
-						CG_DrawJK2blockingMode(cent, menu_hud);
-						CG_DrawJK2SaberFatigue(cent, 560, 400);
-					}
+					CG_DrawJK2blockingMode(cent, menu_hud);
+					CG_DrawJK2SaberFatigue(cent, 560, 400);
 				}
 				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saberHolstered)
 				{
