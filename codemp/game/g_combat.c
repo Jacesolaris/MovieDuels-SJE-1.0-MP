@@ -3690,15 +3690,6 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 
 			self->client->ps.pm_type = s_pm_type;
 
-			//if ((dflags&DAMAGE_DISMEMBER)
-			//	&& G_DoDismemberment(self, self->pos1, meansOfDeath, damage, hit_loc))
-			//{//we did dismemberment and our death anim is okay to override
-			//	if (hit_loc == HL_HAND_RT && self->locationDamage[hit_loc] >= Q3_INFINITE && self->client->ps.groundEntityNum != ENTITYNUM_NONE)
-			//	{//just lost our right hand and we're on the ground, use the special anim
-			//		NPC_SetAnim(self, SETANIM_BOTH, BOTH_RIGHTHANDCHOPPEDOFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-			//	}
-			//}
-
 			if (means_of_death == MOD_SABER
 				|| means_of_death == MOD_TURBLAST
 				|| means_of_death == MOD_FLECHETTE

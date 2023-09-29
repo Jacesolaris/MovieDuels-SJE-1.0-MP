@@ -56,7 +56,6 @@ extern qboolean PM_MeleeblockAnim(int anim);
 extern qboolean PM_BoltBlockingAnim(int anim);
 extern qboolean PM_SaberInSpecial(int move);
 saber_moveName_t PM_SaberLungeAttackMove(qboolean noSpecials);
-extern qboolean ValidAnimFileIndex(int index);
 extern qboolean PM_InOnGroundAnims(const playerState_t* ps);
 extern qboolean PM_LockedAnim(int anim);
 extern qboolean PM_SaberInReturn(int move);
@@ -5831,9 +5830,6 @@ weapChecks:
 	{
 		return;
 	}
-
-	//this is never a valid regular saber attack button
-	pm->cmd.buttons &= ~BUTTON_ALT_ATTACK;
 
 	if (!delayed_fire)
 	{

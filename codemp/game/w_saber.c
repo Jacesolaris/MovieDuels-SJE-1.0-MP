@@ -8056,35 +8056,32 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		}
 		else //player
 		{
+
 			gentity_t* blocker = &g_entities[incoming->r.ownerNum];
 
-			//make sure your saber is on but only if it's turned off now.
 			if (self->client->ps.saberHolstered == 2)
 			{
 				WP_ActivateSaber(self);
 			}
-
 			if (closest_swing_block && blocker->health > 0)
 			{
 				blocker->client->ps.saberBlocked = blockedfor_quad(closest_swing_quad);
 				blocker->client->ps.userInt3 |= 1 << FLAG_PREBLOCK;
 			}
-			else if (blocker->health > 0)
+			else if (blocker->health > 0 && (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING))
 			{
 				wp_saber_block_non_random_missile(blocker, incoming->r.currentOrigin, qtrue);
 			}
 			else
 			{
 				vec3_t diff, start, end;
-				float scale;
 				VectorSubtract(incoming->r.currentOrigin, self->r.currentOrigin, diff);
-				scale = VectorLength(diff);
+				float scale = VectorLength(diff);
 				VectorNormalize2(incoming->s.pos.trDelta, ent_dir);
 				VectorMA(incoming->r.currentOrigin, scale, ent_dir, start);
 				VectorCopy(self->r.currentOrigin, end);
 				end[2] += self->maxs[2] * 0.75f;
-				trap->Trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, qfalse,
-					0, 0);
+				trap->Trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, qfalse, 0, 0);
 
 				jedi_dodge_evasion(self, incoming->owner, &trace, HL_NONE);
 			}
@@ -12965,7 +12962,7 @@ finalUpdate:
 	}
 
 	G_UpdateClientAnims(self, anim_speed_scale);
-	}
+}
 
 int WP_MissileBlockForBlock(const int saber_block)
 {
@@ -13164,10 +13161,14 @@ qboolean manual_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (SaberAttacking(defender) && defender->r.svFlags & SVF_BOT)
+	if (SaberAttacking(defender))
 	{
-		//bots just randomly parry to make up for them not intelligently parrying.
-		return qtrue;
+		if (defender->r.svFlags & SVF_BOT)
+		{
+			//bots just randomly parry to make up for them not intelligently parrying.
+			return qtrue;
+		}
+		return qfalse;
 	}
 
 	if (!(defender->client->buttons & BUTTON_BLOCK))
