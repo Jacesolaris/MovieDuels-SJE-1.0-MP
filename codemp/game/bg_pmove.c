@@ -14402,6 +14402,11 @@ static void PM_BotGesture(void)
 		return;
 	}
 
+	if (PM_SaberInAttack(pm->ps->saber_move) || pm->ps->saberLockTime >= pm->cmd.serverTime)
+	{
+		return;
+	}
+
 	if (!pm->ps->m_iVehicleNum)
 	{
 		if (pm->cmd.buttons & BUTTON_GESTURE)
@@ -14870,8 +14875,8 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 					ps->delta_angles[i] = -yawClamp - cmd->angles[i];
 					temp = -yawClamp;
 				}
+			}
 		}
-	}
 #else //VEH_CONTROL_SCHEME_4
 		if (pm_entVeh && BG_UnrestrainedPitchRoll(ps, pm_entVeh->m_pVehicle))
 		{
@@ -14902,7 +14907,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 			}
 		}
 		ps->viewangles[i] = SHORT2ANGLE(temp);
-}
+	}
 
 	//manual dodge
 	if (ps->ManualBlockingFlags & 1 << MBF_MELEEDODGE)
@@ -15868,7 +15873,7 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 		pm->ps->zoomMode == 1 && pm->ps->zoomLockTime < pm->cmd.serverTime)
 	{
 		ps->speed *= 0.5f;
-}
+	}
 
 	if (ps->fd.forceGripCripple && pm->ps->persistant[PERS_TEAM] != TEAM_SPECTATOR)
 	{
@@ -15942,7 +15947,7 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 			ps->speed *= 1.30f;
 		}
 #endif
-		}
+	}
 	else if (BG_SprintSaberAnim(pm->ps->legsAnim))
 	{
 #ifdef _GAME
@@ -16062,12 +16067,12 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 					{
 						ps->speed = ps->legsTimer / 5.0;
 					}
-	}
+				}
 				else
 				{
 					ps->speed = ps->legsTimer / 2.0; // slow up the roll?
 				}
-	}
+			}
 #else
 			if (ps->legsAnim == BOTH_ROLL_B)
 			{
@@ -16112,7 +16117,7 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 				ps->speed = 600;
 			}
 			//Automatically slow down as the roll ends.
-}
+		}
 	}
 
 	saber = BG_MySaber(ps->client_num, 0);
@@ -16782,7 +16787,7 @@ static void BG_G2ClientSpineAngles(void* ghoul2, const int motionBolt, vec3_t ce
 	{
 		doCorr = qtrue;
 		*corrTime = time + 1000; //continue correcting for a second after to smooth things out. SP doesn't need this for whatever reason but I can't find a way around it.
-}
+	}
 	else if (*corrTime >= time)
 	{
 		if (!PM_FlippingAnim(cent->legsAnim)
@@ -17968,7 +17973,7 @@ void PM_VehFaceHyperspacePoint(bgEntity_t* veh)
 				veh->playerState->eFlags2 |= EF2_HYPERSPACE;
 			}
 		}
-}
+	}
 }
 
 #else //VEH_CONTROL_SCHEME_4
@@ -18792,7 +18797,7 @@ void PmoveSingle(pmove_t* pmove)
 	else if (pm->cmd.buttons & BUTTON_GRAPPLE)
 	{
 		stiffenedUp = qtrue;
-}
+	}
 	else if (PM_InAmputateMove(pm->ps->legsAnim))
 	{
 		//can't move
@@ -19433,7 +19438,7 @@ void PmoveSingle(pmove_t* pmove)
 #endif
 		}
 		noAnimate = qtrue;
-		}
+	}
 
 	if (pm_entSelf->s.NPC_class != CLASS_VEHICLE
 		&& pm->ps->m_iVehicleNum)
@@ -19604,7 +19609,7 @@ void PmoveSingle(pmove_t* pmove)
 		//riding a vehicle, see if we should do some anim overrides
 		PM_VehicleWeaponAnimate();
 	}
-	}
+}
 
 /*
 ================
@@ -20096,193 +20101,193 @@ qboolean PM_CheckRollGetup(void)
 			//higher rank I am, more likely I am to roll away!
 #endif
 			)
-	{
-		//roll away!
-		int anim;
-		qboolean forceGetUp = qfalse;
-		if (pm->cmd.forwardmove > 0)
 		{
-			if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
-				|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
-				|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+			//roll away!
+			int anim;
+			qboolean forceGetUp = qfalse;
+			if (pm->cmd.forwardmove > 0)
 			{
-				anim = BOTH_GETUP_FROLL_F;
-			}
-			else
-			{
-				anim = BOTH_GETUP_BROLL_F;
-			}
-			forceGetUp = qtrue;
-		}
-		else if (pm->cmd.forwardmove < 0)
-		{
-			if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
-				|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
-				|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
-			{
-				anim = BOTH_GETUP_FROLL_B;
-			}
-			else
-			{
-				anim = BOTH_GETUP_BROLL_B;
-			}
-			forceGetUp = qtrue;
-		}
-		else if (pm->cmd.rightmove > 0)
-		{
-			if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
-				|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
-				|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
-			{
-				anim = BOTH_GETUP_FROLL_R;
-			}
-			else
-			{
-				anim = BOTH_GETUP_BROLL_R;
-			}
-		}
-		else if (pm->cmd.rightmove < 0)
-		{
-			if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
-				|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
-				|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
-			{
-				anim = BOTH_GETUP_FROLL_L;
-			}
-			else
-			{
-				anim = BOTH_GETUP_BROLL_L;
-			}
-		}
-		else
-		{
-			//racc - If no move, then randomly select a roll move.  This only only works for NPCs.
-			if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
-				|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
-				|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
-				|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
-			{
-				//on your front
-				anim = PM_irand_timesync(BOTH_GETUP_FROLL_B, BOTH_GETUP_FROLL_R);
-			}
-			else
-			{
-				anim = PM_irand_timesync(BOTH_GETUP_BROLL_B, BOTH_GETUP_BROLL_R);
-			}
-		}
-
-		if (pm->ps->client_num >= MAX_CLIENTS)
-		{
-			//racc - NPCs do roll safety checks to make sure they can safely roll in that direction.
-			if (!PM_CheckRollSafety(anim, 64))
-			{
-				//oops, try other one
 				if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
 					|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
 					|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
 					|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
 					|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
 				{
-					if (anim == BOTH_GETUP_FROLL_R)
-					{
-						anim = BOTH_GETUP_FROLL_L;
-					}
-					else if (anim == BOTH_GETUP_FROLL_F)
-					{
-						anim = BOTH_GETUP_FROLL_B;
-					}
-					else if (anim == BOTH_GETUP_FROLL_B)
-					{
-						anim = BOTH_GETUP_FROLL_F;
-					}
-					else
-					{
-						anim = BOTH_GETUP_FROLL_L;
-					}
-					if (!PM_CheckRollSafety(anim, 64))
-					{
-						//neither side is clear, screw it
-						return qfalse;
-					}
+					anim = BOTH_GETUP_FROLL_F;
 				}
 				else
 				{
-					if (anim == BOTH_GETUP_BROLL_R)
-					{
-						anim = BOTH_GETUP_BROLL_L;
-					}
-					else if (anim == BOTH_GETUP_BROLL_F)
-					{
-						anim = BOTH_GETUP_BROLL_B;
-					}
-					else if (anim == BOTH_GETUP_FROLL_B)
-					{
-						anim = BOTH_GETUP_BROLL_F;
-					}
-					else
-					{
-						anim = BOTH_GETUP_BROLL_L;
-					}
-					if (!PM_CheckRollSafety(anim, 64))
-					{
-						//neither side is clear, screw it
-						return qfalse;
-					}
+					anim = BOTH_GETUP_BROLL_F;
+				}
+				forceGetUp = qtrue;
+			}
+			else if (pm->cmd.forwardmove < 0)
+			{
+				if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
+					|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
+					|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+				{
+					anim = BOTH_GETUP_FROLL_B;
+				}
+				else
+				{
+					anim = BOTH_GETUP_BROLL_B;
+				}
+				forceGetUp = qtrue;
+			}
+			else if (pm->cmd.rightmove > 0)
+			{
+				if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
+					|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
+					|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+				{
+					anim = BOTH_GETUP_FROLL_R;
+				}
+				else
+				{
+					anim = BOTH_GETUP_BROLL_R;
 				}
 			}
-		}
-		pm->cmd.rightmove = pm->cmd.forwardmove = 0;
-		if (PM_LockedAnim(pm->ps->torsoAnim))
-		{
-			//need to be able to override this anim
-			pm->ps->torsoTimer = 0;
-		}
-		if (PM_LockedAnim(pm->ps->legsAnim))
-		{
-			//need to be able to override this anim
-			pm->ps->legsTimer = 0;
-		}
-		PM_SetAnim(SETANIM_BOTH, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS);
-		pm->ps->weaponTime = pm->ps->torsoTimer - 300; //don't attack until near end of this anim
-		pm->ps->saber_move = pm->ps->saberBounceMove = LS_READY;
-		//don't finish whatever saber anim you may have been in
-		pm->ps->saberBlocked = BLOCKED_NONE;
-		if (forceGetUp)
-		{
-#ifdef _GAME
-			if (self && self->client && self->client->playerTeam == NPCTEAM_ENEMY
-				&& self->NPC && self->NPC->blockedSpeechDebounceTime < level.time
-				&& !Q_irand(0, 1))
+			else if (pm->cmd.rightmove < 0)
 			{
-				//racc - evil NPCs sometimes taunt when they use the force to jump up from a knockdown.
-				PM_AddEvent(Q_irand(EV_COMBAT1, EV_COMBAT3));
-				self->NPC->blockedSpeechDebounceTime = level.time + 1000;
-		}
-			if (self->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
-			{
-				//short burst
-				G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/force/jumpsmall.mp3"));
+				if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
+					|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
+					|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+				{
+					anim = BOTH_GETUP_FROLL_L;
+				}
+				else
+				{
+					anim = BOTH_GETUP_BROLL_L;
+				}
 			}
 			else
 			{
-				//holding it
-				G_PreDefSound(self->client->ps.origin, PDSOUND_FORCEJUMP);
+				//racc - If no move, then randomly select a roll move.  This only only works for NPCs.
+				if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
+					|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
+					|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
+					|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+				{
+					//on your front
+					anim = PM_irand_timesync(BOTH_GETUP_FROLL_B, BOTH_GETUP_FROLL_R);
+				}
+				else
+				{
+					anim = PM_irand_timesync(BOTH_GETUP_BROLL_B, BOTH_GETUP_BROLL_R);
+				}
 			}
+
+			if (pm->ps->client_num >= MAX_CLIENTS)
+			{
+				//racc - NPCs do roll safety checks to make sure they can safely roll in that direction.
+				if (!PM_CheckRollSafety(anim, 64))
+				{
+					//oops, try other one
+					if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
+						|| pm->ps->legsAnim == BOTH_KNOCKDOWN5
+						|| pm->ps->legsAnim == BOTH_SLAPDOWNRIGHT
+						|| pm->ps->legsAnim == BOTH_SLAPDOWNLEFT
+						|| pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+					{
+						if (anim == BOTH_GETUP_FROLL_R)
+						{
+							anim = BOTH_GETUP_FROLL_L;
+						}
+						else if (anim == BOTH_GETUP_FROLL_F)
+						{
+							anim = BOTH_GETUP_FROLL_B;
+						}
+						else if (anim == BOTH_GETUP_FROLL_B)
+						{
+							anim = BOTH_GETUP_FROLL_F;
+						}
+						else
+						{
+							anim = BOTH_GETUP_FROLL_L;
+						}
+						if (!PM_CheckRollSafety(anim, 64))
+						{
+							//neither side is clear, screw it
+							return qfalse;
+						}
+					}
+					else
+					{
+						if (anim == BOTH_GETUP_BROLL_R)
+						{
+							anim = BOTH_GETUP_BROLL_L;
+						}
+						else if (anim == BOTH_GETUP_BROLL_F)
+						{
+							anim = BOTH_GETUP_BROLL_B;
+						}
+						else if (anim == BOTH_GETUP_FROLL_B)
+						{
+							anim = BOTH_GETUP_BROLL_F;
+						}
+						else
+						{
+							anim = BOTH_GETUP_BROLL_L;
+						}
+						if (!PM_CheckRollSafety(anim, 64))
+						{
+							//neither side is clear, screw it
+							return qfalse;
+						}
+					}
+				}
+			}
+			pm->cmd.rightmove = pm->cmd.forwardmove = 0;
+			if (PM_LockedAnim(pm->ps->torsoAnim))
+			{
+				//need to be able to override this anim
+				pm->ps->torsoTimer = 0;
+			}
+			if (PM_LockedAnim(pm->ps->legsAnim))
+			{
+				//need to be able to override this anim
+				pm->ps->legsTimer = 0;
+			}
+			PM_SetAnim(SETANIM_BOTH, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS);
+			pm->ps->weaponTime = pm->ps->torsoTimer - 300; //don't attack until near end of this anim
+			pm->ps->saber_move = pm->ps->saberBounceMove = LS_READY;
+			//don't finish whatever saber anim you may have been in
+			pm->ps->saberBlocked = BLOCKED_NONE;
+			if (forceGetUp)
+			{
+#ifdef _GAME
+				if (self && self->client && self->client->playerTeam == NPCTEAM_ENEMY
+					&& self->NPC && self->NPC->blockedSpeechDebounceTime < level.time
+					&& !Q_irand(0, 1))
+				{
+					//racc - evil NPCs sometimes taunt when they use the force to jump up from a knockdown.
+					PM_AddEvent(Q_irand(EV_COMBAT1, EV_COMBAT3));
+					self->NPC->blockedSpeechDebounceTime = level.time + 1000;
+				}
+				if (self->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
+				{
+					//short burst
+					G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/force/jumpsmall.mp3"));
+				}
+				else
+				{
+					//holding it
+					G_PreDefSound(self->client->ps.origin, PDSOUND_FORCEJUMP);
+				}
 #endif
-			//launch off ground?
-			pm->ps->weaponTime = 300; //just to make sure it's cleared
-	}
-		return qtrue;
-}
+				//launch off ground?
+				pm->ps->weaponTime = 300; //just to make sure it's cleared
+			}
+			return qtrue;
+		}
 	}
 	return qfalse;
 }
@@ -20446,7 +20451,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 						//racc - enemy bots talk a little smack if they
 						PM_AddEvent(Q_irand(EV_COMBAT1, EV_COMBAT3));
 						self->NPC->blockedSpeechDebounceTime = level.time + 1000;
-				}
+					}
 					if (self->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
 					{
 						//short burst
@@ -20460,7 +20465,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 #endif
 					//launch off ground?
 					pm->ps->weaponTime = 300; //just to make sure it's cleared
-			}
+				}
 				if (PM_LockedAnim(pm->ps->torsoAnim))
 				{
 					//need to be able to override this anim
@@ -20476,9 +20481,9 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 				//don't finish whatever saber anim you may have been in
 				pm->ps->saberBlocked = BLOCKED_NONE;
 				return qtrue;
-		}
+			}
 			return PM_CrouchGetup(crouchheight);
-}
+		}
 		if (pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
 		{
 			//racc - apprenently this move has a special cmd for it.

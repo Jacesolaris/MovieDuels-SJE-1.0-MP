@@ -2046,14 +2046,17 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		if (cg_rollSounds.integer == 1)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
+			//play all jump sounds
 		}
 		else if (cg_rollSounds.integer == 2 && cg.snap->ps.client_num != es->number)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
+			//only play other players' jump sounds
 		}
 		else if (cg_rollSounds.integer > 2 && cg.snap->ps.client_num == es->number)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
+			//only play my jump sounds
 		}
 		trap->S_StartSound(NULL, es->number, CHAN_BODY, cgs.media.rollSound);
 		break;
