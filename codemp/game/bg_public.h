@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-29,BuildNum-15" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-30,BuildNum-16" // build date
 
 #define	STEPSIZE		18
 
@@ -270,7 +270,7 @@ typedef enum
 #define TOSS_DEBOUNCE_TIME				5000
 
 typedef enum {
-	GT_FFA,				// free for all
+	GT_FFA,				      // free for all
 	GT_MOVIEDUELS_FFA,				// free for all
 	GT_MOVIEDUELS_HOLOCRON,		// holocron ffa
 	GT_MOVIEDUELS_JEDIMASTER,		// jedi master

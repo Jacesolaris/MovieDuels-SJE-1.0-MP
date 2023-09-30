@@ -290,34 +290,52 @@ saber_moveData_t saber_moveData[LS_MOVE_MAX] = {
 	{"StfKickSpin", BOTH_A7_KICK_S, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_NO, LS_READY, LS_S_R2L, 200}, // LS_KICK_S
 	{"StfKickBkFwd", BOTH_A7_KICK_BF, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_NO, LS_READY, LS_S_R2L, 200}, // LS_KICK_BF
 	{"StfKickSplit", BOTH_A7_KICK_RL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_NO, LS_READY, LS_S_R2L, 200}, // LS_KICK_RL
-	{"StfKickFwdAir", BOTH_A7_KICK_F_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},	// LS_KICK_F_AIR
-	{"StfKickFwdAir2", BOTH_A7_KICK_F_AIR2, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},// LS_KICK_F_AIR2
-	{"StfKickBackAir", BOTH_A7_KICK_B_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},// LS_KICK_B_AIR
-	{"StfKickRightAir", BOTH_A7_KICK_R_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},// LS_KICK_R_AIR
-	{"StfKickLeftAir", BOTH_A7_KICK_L_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},// LS_KICK_L_AIR
+	{"StfKickFwdAir", BOTH_A7_KICK_F_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_KICK_F_AIR
+	{"StfKickFwdAir2", BOTH_A7_KICK_F_AIR2, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_KICK_F_AIR2
+	{"StfKickBackAir", BOTH_A7_KICK_B_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_KICK_B_AIR
+	{"StfKickRightAir", BOTH_A7_KICK_R_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_KICK_R_AIR
+	{"StfKickLeftAir", BOTH_A7_KICK_L_AIR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_KICK_L_AIR
 	{"StabDown", BOTH_STABDOWN, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200}, // LS_STABDOWN
-	{"StabDownbhd", BOTH_STABDOWN_BACKHAND, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},	// LS_STABDOWN_BACKHAND
-	{"StabDownStf", BOTH_STABDOWN_STAFF, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},// LS_STABDOWN_STAFF
-	{"StabDownDual", BOTH_STABDOWN_DUAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},	// LS_STABDOWN_DUAL
-	{"dualspinprot", BOTH_A6_SABERPROTECT, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 500},	// LS_DUAL_SPIN_PROTECT
-	{"dualspinprotgrie", BOTH_GRIEVOUS_PROTECT, Q_R, Q_R,AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 500},	// LS_DUAL_SPIN_PROTECT_GRIE
-	{"StfSoulCal", BOTH_A7_SOULCAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 500},	// LS_STAFF_SOULCAL
-	{"specialyoda", BOTH_YODA_SPECIAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000},	// LS_YODA_SPECIAL
+	{"StabDownbhd", BOTH_STABDOWN_BACKHAND, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_STABDOWN_BACKHAND
+	{"StabDownStf", BOTH_STABDOWN_STAFF, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_STABDOWN_STAFF
+	{"StabDownDual", BOTH_STABDOWN_DUAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200},
+	// LS_STABDOWN_DUAL
+	{"dualspinprot", BOTH_A6_SABERPROTECT, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 500},
+	// LS_DUAL_SPIN_PROTECT
+	{"dualspinprotgrie", BOTH_GRIEVOUS_PROTECT, Q_R, Q_R,AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 500},
+	// LS_DUAL_SPIN_PROTECT_GRIE
+	{"StfSoulCal", BOTH_A7_SOULCAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 500},
+	// LS_STAFF_SOULCAL
+	{"specialyoda", BOTH_YODA_SPECIAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000},
+	// LS_YODA_SPECIAL
 	{"specialfast", BOTH_A1_SPECIAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000}, // LS_A1_SPECIAL
 	{"specialmed", BOTH_A2_SPECIAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000}, // LS_A2_SPECIAL
 	{"specialstr", BOTH_A3_SPECIAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000}, // LS_A3_SPECIAL
 	{"specialtav", BOTH_A4_SPECIAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000}, // LS_A4_SPECIAL
 	{"specialdes", BOTH_A5_SPECIAL, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000}, // LS_A5_SPECIAL
-	{"specialgri", BOTH_GRIEVOUS_SPIN, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000},	// LS_GRIEVOUS_SPECIAL
-	{"upsidedwnatk", BOTH_FLIP_ATTACK7, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},	// LS_UPSIDE_DOWN_ATTACK
-	{"pullatkstab", BOTH_PULL_IMPALE_STAB, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},	// LS_PULL_ATTACK_STAB
-	{"pullatkswing", BOTH_PULL_IMPALE_SWING, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},	// LS_PULL_ATTACK_SWING
-	{"AloraSpinAtk", BOTH_ALORA_SPIN_SLASH, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},	// LS_SPINATTACK_ALORA
+	{"specialgri", BOTH_GRIEVOUS_SPIN, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 2000},
+	// LS_GRIEVOUS_SPECIAL
+	{"upsidedwnatk", BOTH_FLIP_ATTACK7, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
+	// LS_UPSIDE_DOWN_ATTACK
+	{"pullatkstab", BOTH_PULL_IMPALE_STAB, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
+	// LS_PULL_ATTACK_STAB
+	{"pullatkswing", BOTH_PULL_IMPALE_SWING, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
+	// LS_PULL_ATTACK_SWING
+	{"AloraSpinAtk", BOTH_ALORA_SPIN_SLASH, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
+	// LS_SPINATTACK_ALORA
 	{"Dual FB Atk", BOTH_A6_FB, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_DUAL_FB
 	{"Dual LR Atk", BOTH_A6_LR, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_DUAL_LR
 	{"StfHiltBash", BOTH_A7_HILT, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_HILT_BASH
 	{"StfsmackRight", BOTH_SMACK_R, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_SMACK_R
 	{"StfsmackLeft", BOTH_SMACK_L, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_SMACK_L
+
 	//starts
 	{"TL2BR St", BOTH_S1_S1_TL, Q_R, Q_TL, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_A_TL2BR, LS_A_TL2BR, 200}, // LS_S_TL2BR
 	{"L2R St", BOTH_S1_S1__L, Q_R, Q_L, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_A_L2R, LS_A_L2R, 200}, // LS_S_L2R
@@ -326,6 +344,7 @@ saber_moveData_t saber_moveData[LS_MOVE_MAX] = {
 	{"R2L St", BOTH_S1_S1__R, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_A_R2L, LS_A_R2L, 200}, // LS_S_R2L
 	{"TR2BL St", BOTH_S1_S1_TR, Q_R, Q_TR, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_A_TR2BL, LS_A_TR2BL, 200}, // LS_S_TR2BL
 	{"T2B St", BOTH_S1_S1_T_, Q_R, Q_T, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_A_T2B, LS_A_T2B, 200}, // LS_S_T2B
+
 	//returns
 	{"TL2BR Ret", BOTH_R1_BR_S1, Q_BR, Q_R, AFLAG_FINISH, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_R_TL2BR
 	{"L2R Ret", BOTH_R1__R_S1, Q_R, Q_R, AFLAG_FINISH, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_R_L2R
@@ -334,6 +353,7 @@ saber_moveData_t saber_moveData[LS_MOVE_MAX] = {
 	{"R2L Ret", BOTH_R1__L_S1, Q_L, Q_R, AFLAG_FINISH, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_R_R2L
 	{"TR2BL Ret", BOTH_R1_BL_S1, Q_BL, Q_R, AFLAG_FINISH, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_R_TR2BL
 	{"T2B Ret", BOTH_R1_B__S1, Q_B, Q_R, AFLAG_FINISH, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_R_T2B
+
 	//Transitions
 	{"BR2R Trans", BOTH_T1_BR__R, Q_BR, Q_R, AFLAG_ACTIVE, 100, BLK_NO, LS_R_L2R, LS_A_R2L, 150},
 	//# Fast arc bottom right to right
@@ -5928,16 +5948,16 @@ weapChecks:
 						if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
 						{
 							pm->ps->saberFatigueChainCount++;
-						}
-					}
-				}
+			}
+		}
+	}
 				else
 #endif
 				{
 					//player gets his by directional control
 					newmove = saber_moveData[curmove].chain_idle; //oops, not attacking, so don't chain
 				}
-			}
+}
 			else
 			{
 				PM_Setsaber_move(LS_READY);
@@ -6105,7 +6125,7 @@ weapChecks:
 				{
 					//NPCs use more randomized attacks the more skilled they are
 					newmove = PM_NPCSaberAttackFromQuad(saber_moveData[curmove].endQuad);
-				}
+			}
 				else
 #endif
 				{
@@ -6143,7 +6163,7 @@ weapChecks:
 					//cannot chain this time
 					newmove = saber_moveData[curmove].chain_idle;
 				}
-			}
+		}
 
 			if (newmove != LS_NONE)
 			{
@@ -6530,9 +6550,9 @@ void WP_BlasterFatigueRegenerate(const int override_amt)
 		{
 			pm->ps->BlasterAttackChainCount--;
 		}
-		if (pm->ps->BlasterAttackChainCount > BLASTERMISHAPLEVEL_OVERLOAD)
+		if (pm->ps->BlasterAttackChainCount > BLASTERMISHAPLEVEL_MAX)
 		{
-			pm->ps->BlasterAttackChainCount = BLASTERMISHAPLEVEL_OVERLOAD;
+			pm->ps->BlasterAttackChainCount = BLASTERMISHAPLEVEL_MAX;
 		}
 	}
 }
@@ -6564,10 +6584,10 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		}
 	}
 
-	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_MAX)
+	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_OVERLOAD)
 	{
 		//for the sake of being able to send the value over the net within a reasonable bit count
-		pm->ps->saberFatigueChainCount = MISHAPLEVEL_OVERLOAD;
+		pm->ps->saberFatigueChainCount = MISHAPLEVEL_MAX;
 	}
 
 	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_HUDFLASH)
@@ -6898,7 +6918,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		}
 
 		parts = SETANIM_TORSO;
-	}
+			}
 
 	if (!pm->ps->m_iVehicleNum)
 	{
@@ -7209,7 +7229,7 @@ saberInfo_t* BG_MySaber(int client_num, int saber_num)
 #endif
 
 	return NULL;
-}
+		}
 
 qboolean PM_DoKick(void)
 {
@@ -7241,13 +7261,34 @@ qboolean PM_DoKick(void)
 				switch (kick_move)
 				{
 				case LS_KICK_F:
+					kick_move = LS_KICK_F_AIR;
+					break;
+				case LS_KICK_F2:
 					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:
 					kick_move = LS_KICK_B_AIR;
 					break;
+				case LS_KICK_B2:
+					kick_move = LS_KICK_B_AIR;
+					break;
+				case LS_KICK_B3:
+					kick_move = LS_KICK_B_AIR;
+					break;
+				case LS_SLAP_R:
+					kick_move = LS_KICK_R_AIR;
+					break;
+				case LS_SMACK_R:
+					kick_move = LS_KICK_R_AIR;
+					break;
 				case LS_KICK_R:
 					kick_move = LS_KICK_R_AIR;
+					break;
+				case LS_SLAP_L:
+					kick_move = LS_KICK_L_AIR;
+					break;
+				case LS_SMACK_L:
+					kick_move = LS_KICK_L_AIR;
 					break;
 				case LS_KICK_L:
 					kick_move = LS_KICK_L_AIR;

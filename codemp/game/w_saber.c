@@ -48,7 +48,6 @@ extern qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, i
 	vec3_t blade_dir, int mod);
 extern int G_GetHitLocation(const gentity_t* target, vec3_t ppoint);
 int saberSpinSound = 0;
-void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 extern saber_moveName_t PM_SaberBounceForAttack(int move);
 qboolean PM_SaberInTransition(int move);
 qboolean PM_SaberInDeflect(int move);
@@ -130,6 +129,8 @@ extern void G_ClearEnemy(gentity_t* self);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern void wp_block_points_regenerate(const gentity_t* self, int override_amt);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
+qboolean WP_SaberBouncedSaberDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
+qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern void wp_block_points_regenerate_over_ride(const gentity_t* self, int override_amt);
 extern qboolean BG_FullBodyTauntAnim(int anim);
 extern int PM_InGrappleMove(int anim);
@@ -143,10 +144,8 @@ extern qboolean PM_SaberInOverHeadSlash(saber_moveName_t saber_move);
 extern qboolean PM_SaberInBackAttack(saber_moveName_t saber_move);
 qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
 void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trace);
-qboolean manual_saberblocking(const gentity_t* defender);
 int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projectile);
-extern void G_ThrownDeathAnimForDeathAnim(gentity_t* hit_ent, vec3_t impactPoint);
-extern void g_kick_throw(gentity_t* targ, const vec3_t new_dir, float push);
+void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 
 float VectorBlockDistance(vec3_t v1, vec3_t v2)
 {
@@ -808,13 +807,13 @@ void BG_ReduceSaberMishapLevel(playerState_t* ps)
 	}
 	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_FOUR)
 	{
-		ps->saberFatigueChainCount = MISHAPLEVEL_SNIPER;
+		ps->saberFatigueChainCount = MISHAPLEVEL_THREE;
 	}
-	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_SNIPER)
+	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_THREE)
 	{
-		ps->saberFatigueChainCount = MISHAPLEVEL_RUNINACCURACY;
+		ps->saberFatigueChainCount = MISHAPLEVEL_TWO;
 	}
-	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_RUNINACCURACY)
+	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_TWO)
 	{
 		ps->saberFatigueChainCount = MISHAPLEVEL_MIN;
 	}
@@ -922,16 +921,6 @@ qboolean G_CanBeEnemy(const gentity_t* self, const gentity_t* enemy)
 	//ptrs!
 	if (!self->inuse || !enemy->inuse || !self->client || !enemy->client)
 		return qfalse;
-
-	if (self->client->ps.duelInProgress && self->client->ps.duelIndex != enemy->s.number)
-	{ //dueling but not with this person
-		return qfalse;
-	}
-
-	if (enemy->client->ps.duelInProgress && enemy->client->ps.duelIndex != self->s.number)
-	{ //other guy dueling but not with me
-		return qfalse;
-	}
 
 	if (level.gametype < GT_MOVIEDUELS_TEAM)
 		return qtrue;
@@ -4291,6 +4280,7 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 		// don't get Dodge.
 		return qfalse;
 	}
+
 	if (!walk_check(self)
 		|| PM_SaberInAttack(self->client->ps.saber_move)
 		|| PM_SaberInStart(self->client->ps.saber_move))
@@ -5013,108 +5003,15 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 	}
 }
 
-extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean break_saber_lock);
+extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
+	qboolean break_saber_lock);
 static qboolean saberDoClashEffect = qfalse;
 static vec3_t saberClashPos = { 0 };
 static vec3_t saberClashNorm = { 0 };
 static int saberClashEventParm = 1;
 static int saberClashOther = -1; //the client_num for the other player involved in the saber clash.
-extern qboolean G_EntIsBreakable(int entityNum);
 static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3_t impact_normal);
 static QINLINE void G_SetViewLockDebounce(const gentity_t* self);
-
-void WP_SaberRadiusDamage(gentity_t* ent, vec3_t point, float radius, int damage, float knockBack)
-{
-	if (!ent || !ent->client)
-	{
-		return;
-	}
-	else if (radius <= 0.0f || (damage <= 0 && knockBack <= 0))
-	{
-		return;
-	}
-	else
-	{
-		vec3_t		mins, maxs, entDir;
-		int			radiusEnts[128];
-		gentity_t* radiusEnt = NULL;
-		int			numEnts, i;
-		float		dist;
-
-		//Setup the bbox to search in
-		for (i = 0; i < 3; i++)
-		{
-			mins[i] = point[i] - radius;
-			maxs[i] = point[i] + radius;
-		}
-
-		//Get the number of entities in a given space
-		numEnts = trap->EntitiesInBox(mins, maxs, radiusEnts, 128);
-
-		for (i = 0; i < numEnts; i++)
-		{
-			radiusEnt = &g_entities[radiusEnts[i]];
-			if (!radiusEnt->inuse)
-			{
-				continue;
-			}
-
-			if (radiusEnt == ent)
-			{//Skip myself
-				continue;
-			}
-
-			if (radiusEnt->client == NULL)
-			{//must be a client
-				if (G_EntIsBreakable(radiusEnt->s.number))
-				{//damage breakables within range, but not as much
-					G_Damage(radiusEnt, ent, ent, vec3_origin, radiusEnt->r.currentOrigin, 10, 0, MOD_MELEE);
-				}
-				continue;
-			}
-
-			if ((radiusEnt->client->ps.eFlags2 & EF2_HELD_BY_MONSTER))
-			{//can't be one being held
-				continue;
-			}
-
-			VectorSubtract(radiusEnt->r.currentOrigin, point, entDir);
-			dist = VectorNormalize(entDir);
-			if (dist <= radius)
-			{//in range
-				if (damage > 0)
-				{//do damage
-					int points = ceil((float)damage * dist / radius);
-					G_Damage(radiusEnt, ent, ent, vec3_origin, radiusEnt->r.currentOrigin, points, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
-				}
-				if (knockBack > 0)
-				{//do knockback
-					if (radiusEnt->client
-						&& radiusEnt->client->NPC_class != CLASS_RANCOR
-						&& radiusEnt->client->NPC_class != CLASS_ATST
-						&& !(radiusEnt->flags & FL_NO_KNOCKBACK))//don't throw them back
-					{
-						float knockbackStr = knockBack * dist / radius;
-						entDir[2] += 0.1f;
-						VectorNormalize(entDir);
-						g_throw(radiusEnt, entDir, knockbackStr);
-						if (radiusEnt->health > 0)
-						{//still alive
-							if (knockbackStr > 50)
-							{//close enough and knockback high enough to possibly knock down
-								if (dist < (radius * 0.5f)
-									|| radiusEnt->client->ps.groundEntityNum != ENTITYNUM_NONE)
-								{//within range of my fist or within ground-shaking range and not in the air
-									G_Knockdown(radiusEnt, ent, entDir, 500, qtrue);//, ent, entDir, 500, qtrue );
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
 
 void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade_num)
 {
@@ -5142,30 +5039,38 @@ void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade
 	saberDoClashEffect = qfalse;
 }
 
-void WP_SaberDoPerfectClash(const gentity_t* self, const int saber_num, const int blade_num)
+void WP_SaberBounceSound(gentity_t* ent, const int saber_num, const int blade_num)
 {
-	if (saberDoClashEffect)
+	if (!ent || !ent->client)
 	{
-		gentity_t* te = G_TempEntity(saberClashPos, EV_SABER_PERFECTBLOCK);
-		VectorCopy(saberClashPos, te->s.origin);
-		VectorCopy(saberClashNorm, te->s.angles);
-		te->s.eventParm = saberClashEventParm;
-		te->s.otherEntityNum2 = self->s.number;
-		te->s.weapon = saber_num;
-		te->s.legsAnim = blade_num;
-
-		if (saberClashOther != -1 && PM_SaberInParry(g_entities[saberClashOther].client->ps.saber_move))
-		{
-			const gentity_t* other_owner = &g_entities[saberClashOther];
-
-			G_SetViewLock(self, saberClashPos, saberClashNorm);
-			G_SetViewLockDebounce(self);
-
-			G_SetViewLock(other_owner, saberClashPos, saberClashNorm);
-			G_SetViewLockDebounce(other_owner);
-		}
+		return;
 	}
-	saberDoClashEffect = qfalse;
+	const int index = Q_irand(1, 64);
+	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].bounceSound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounceSound[Q_irand(0, 2)]);
+	}
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].bounce2Sound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounce2Sound[Q_irand(0, 2)]);
+	}
+
+	else if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].blockSound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].blockSound[Q_irand(0, 2)]);
+	}
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].block2Sound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].block2Sound[Q_irand(0, 2)]);
+	}
+	else
+	{
+		G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saberbounce%d.wav", index)));
+	}
 }
 
 void WP_SaberBounceOnWallSound(gentity_t* ent, const int saber_num, const int blade_num)
@@ -5321,6 +5226,25 @@ static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3
 	}
 }
 
+void AnimateKnockaway(gentity_t* self, vec3_t impact)
+{
+	//do an knockaway.
+	if (!PM_SaberInKnockaway(self->client->ps.saber_move) && !PM_InKnockDown(&self->client->ps))
+	{
+		if (!PM_SaberInParry(self->client->ps.saber_move))
+		{
+			WP_SaberBlockNonRandom(self, impact, qfalse);
+			self->client->ps.saber_move = PM_KnockawayForParry(self->client->ps.saberBlocked);
+			self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
+		}
+		else
+		{
+			self->client->ps.saber_move = G_KnockawayForParry(self->client->ps.saber_move);
+			self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
+		}
+	}
+}
+
 void AnimateStun(gentity_t* self, gentity_t* inflictor, vec3_t impact)
 {
 	//place self into a stunned state.
@@ -5350,7 +5274,7 @@ void AnimateStun(gentity_t* self, gentity_t* inflictor, vec3_t impact)
 			{
 			case 0:
 			default:
-				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT5), 3000);
+				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT3), 3000);
 				break;
 			case 1:
 				G_AddVoiceEvent(self, Q_irand(EV_ANGER1, EV_ANGER1), 3000);
@@ -5372,7 +5296,7 @@ void AnimateStun(gentity_t* self, gentity_t* inflictor, vec3_t impact)
 			{
 			case 0:
 			default:
-				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT5), 3000);
+				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT3), 3000);
 				break;
 			case 1:
 				G_AddVoiceEvent(self, Q_irand(EV_ANGER1, EV_ANGER1), 3000);
@@ -5394,7 +5318,7 @@ void AnimateStun(gentity_t* self, gentity_t* inflictor, vec3_t impact)
 			{
 			case 0:
 			default:
-				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT5), 3000);
+				G_AddVoiceEvent(self, Q_irand(EV_TAUNT1, EV_TAUNT3), 3000);
 				break;
 			case 1:
 				G_AddVoiceEvent(self, Q_irand(EV_ANGER1, EV_ANGER1), 3000);
@@ -5610,10 +5534,629 @@ qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3_t forw
 
 extern qboolean PM_InKnockDown(const playerState_t* ps);
 //Returns qfalse if hit effects/damage is still suppose to be applied.
-qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
+qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
 {
 	int dodge_anim = -1;
 	int dpcost = BasicWeaponBlockCosts[mod];
+	const int saved_dmg = *dmg;
+	qboolean no_action = qfalse;
+
+	if (in_camera)
+	{
+		return qfalse;
+	}
+
+	if (self->NPC &&
+		(self->client->NPC_class == CLASS_STORMTROOPER
+			|| self->client->NPC_class == CLASS_STORMCOMMANDO
+			|| self->client->NPC_class == CLASS_SWAMPTROOPER
+			|| self->client->NPC_class == CLASS_CLONETROOPER
+			|| self->client->NPC_class == CLASS_IMPWORKER
+			|| self->client->NPC_class == CLASS_IMPERIAL
+			|| self->client->NPC_class == CLASS_SABER_DROID
+			|| self->client->NPC_class == CLASS_ASSASSIN_DROID
+			|| self->client->NPC_class == CLASS_GONK
+			|| self->client->NPC_class == CLASS_MOUSE
+			|| self->client->NPC_class == CLASS_PROBE
+			|| self->client->NPC_class == CLASS_PROTOCOL
+			|| self->client->NPC_class == CLASS_R2D2
+			|| self->client->NPC_class == CLASS_R5D2
+			|| self->client->NPC_class == CLASS_SEEKER
+			|| self->client->NPC_class == CLASS_INTERROGATOR))
+	{
+		// don't get Dodge.
+		return qfalse;
+	}
+
+	if (dpcost == -1)
+	{
+		//can't dodge this.
+		return qfalse;
+	}
+
+	if (!self || !self->client || !self->inuse || self->health <= 0)
+	{
+		return qfalse;
+	}
+
+	if (self->client->ps.stats[STAT_DODGE] < 30)
+	{
+		//Not enough dodge
+		return qfalse;
+	}
+
+	//check for private duel conditions
+	if (shooter && shooter->client)
+	{
+		if (shooter->client->ps.duelInProgress && shooter->client->ps.duelIndex != self->s.number)
+		{
+			//enemy client is in duel with someone else.
+			return qfalse;
+		}
+
+		if (self->client->ps.duelInProgress && self->client->ps.duelIndex != shooter->s.number)
+		{
+			//we're in a duel with someone else.
+			return qfalse;
+		}
+	}
+
+	if (BG_HopAnim(self->client->ps.legsAnim) //in dodge hop
+		|| BG_InRoll(&self->client->ps, self->client->ps.legsAnim)
+		&& self->client->ps.userInt3 & 1 << FLAG_DODGEROLL //in dodge roll
+		|| mod != MOD_SABER && self->client->ps.forceHandExtend == HANDEXTEND_DODGE)
+	{
+		//already doing a dodge
+		return qtrue;
+	}
+
+	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE
+		&& mod != MOD_REPEATER_ALT_SPLASH
+		&& mod != MOD_FLECHETTE_ALT_SPLASH
+		&& mod != MOD_ROCKET_SPLASH
+		&& mod != MOD_ROCKET_HOMING_SPLASH
+		&& mod != MOD_THERMAL_SPLASH
+		&& mod != MOD_TRIP_MINE_SPLASH
+		&& mod != MOD_TIMED_MINE_SPLASH
+		&& mod != MOD_DET_PACK_SPLASH)
+	{
+		//can't dodge direct fire in mid-air
+		return qfalse;
+	}
+
+	if (PM_InKnockDown(&self->client->ps)
+		|| BG_InRoll(&self->client->ps, self->client->ps.legsAnim)
+		|| BG_InKnockDown(self->client->ps.legsAnim))
+	{
+		//can't Dodge while knocked down or getting up from knockdown.
+		return qfalse;
+	}
+
+	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	{
+		//can't dodge in mid-air
+		return qfalse;
+	}
+
+	if (self->client->ps.forceHandExtend == HANDEXTEND_CHOKE
+		|| PM_InGrappleMove(self->client->ps.torsoAnim) > 1)
+	{
+		//in some effect that stops me from moving on my own
+		return qfalse;
+	}
+
+	if (mod == MOD_MELEE)
+	{
+		//don't dodge melee attacks for now.
+		return qfalse;
+	}
+
+	if (BG_IsAlreadyinTauntAnim(self->client->ps.torsoAnim))
+	{
+		return qfalse;
+	}
+
+	if (self->client->ps.weapon == WP_SABER)
+	{
+		return qfalse; //dont do if we are already blocking
+	}
+
+	if (self->client->ps.weapon == WP_SABER && self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+	{
+		return qfalse; //dont do if we are already blocking
+	}
+
+	if (self->client->ps.weapon == WP_SABER && PM_CrouchingAnim(self->client->ps.legsAnim))
+	{
+		return qfalse; //dont do if we are already blocking
+	}
+
+	if (self->client->ps.weapon == WP_SABER && PM_SaberInAttack(self->client->ps.saber_move))
+	{
+		return qfalse; //dont do if we are already blocking
+	}
+
+	if (self->r.svFlags & SVF_BOT
+		&& self->client->ps.weapon == WP_SABER
+		&& self->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
+		// if your not a mando or jedi or low FP then you cant dodge
+	{
+		return qfalse;
+	}
+
+	if (self->r.svFlags & SVF_BOT
+		&& (self->client->ps.weapon != WP_SABER &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
+			self->client->pers.botclass != BCLASS_BOBAFETT)
+		|| self->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
+		// if your not a mando or jedi or low FP then you cant dodge
+	{
+		return qfalse;
+	}
+
+	if (self->client->ps.fd.forcePower < FATIGUE_DODGE && !(self->r.svFlags & SVF_BOT))
+	{
+		//Not enough dodge
+		return qfalse;
+	}
+
+	if (mod == MOD_SABER && shooter && shooter->client)
+	{
+		//special saber moves have special effects.
+		if (shooter->client->ps.saber_move == LS_A_LUNGE
+			|| shooter->client->ps.saber_move == LS_SPINATTACK
+			|| shooter->client->ps.saber_move == LS_SPINATTACK_DUAL
+			|| shooter->client->ps.saber_move == LS_SPINATTACK_GRIEV)
+		{
+			//attacker is doing lunge special
+			if (self->client->ps.userInt3 & 1 << FLAG_FATIGUED)
+			{
+				//can't dodge a lunge special while fatigued
+				return qfalse;
+			}
+		}
+
+		if (PM_SuperBreakWinAnim(shooter->client->ps.torsoAnim) && self->client->ps.fd.forcePower < 50)
+		{
+			//can't block super breaks if we're low on DP.
+			return qfalse;
+		}
+
+		if (!walk_check(self)
+			|| PM_SaberInAttack(self->client->ps.saber_move)
+			|| PM_SaberInStart(self->client->ps.saber_move))
+		{
+			if (self->NPC)
+			{
+				//can't Dodge saber swings while running or in swing.
+				return qtrue;
+			}
+			return qfalse;
+		}
+	}
+
+	if (*dmg <= DODGE_MINDAM && mod != MOD_REPEATER && mod != MOD_SABER)
+	{
+		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM));
+		no_action = qtrue;
+	}
+	else if (self->client->ps.forceHandExtend == HANDEXTEND_DODGE)
+	{
+		//you're already dodging but you got hit again.
+		dpcost = 0;
+	}
+
+	if (mod == MOD_DISRUPTOR_SNIPER && shooter && shooter->client)
+	{
+		int damage = 0;
+
+		if (shooter->genericValue6 <= 10)
+		{
+			damage = 10;
+		}
+		else if (shooter->genericValue6 <= 25)
+		{
+			damage = 20;
+		}
+		else if (shooter->genericValue6 < 59)
+		{
+			damage = 50;
+		}
+		else if (shooter->genericValue6 == 60)
+		{
+			damage = 100;
+		}
+
+		if (self->client->ps.stats[STAT_DODGE] > damage)
+		{
+			dpcost = damage;
+		}
+		else
+		{
+			return qfalse;
+		}
+	}
+
+	if (self->r.svFlags & SVF_BOT) //bots only get 1
+	{
+		PM_AddFatigue(&self->client->ps, FATIGUE_DODGEINGBOT);
+	}
+	else
+	{
+		PM_AddFatigue(&self->client->ps, FATIGUE_DODGEING);
+	}
+
+	if (no_action)
+	{
+		return qtrue;
+	}
+
+	if (mod == MOD_REPEATER_ALT_SPLASH
+		|| mod == MOD_FLECHETTE_ALT_SPLASH
+		|| mod == MOD_ROCKET_SPLASH
+		|| mod == MOD_ROCKET_HOMING_SPLASH
+		|| mod == MOD_THERMAL_SPLASH
+		|| mod == MOD_TRIP_MINE_SPLASH
+		|| mod == MOD_TIMED_MINE_SPLASH
+		|| mod == MOD_DET_PACK_SPLASH
+		|| mod == MOD_ROCKET)
+	{
+		//splash damage dodge, dodged by throwing oneself away from the blast into a knockdown
+		vec3_t blow_back_dir;
+		int blow_back_power = saved_dmg;
+		VectorSubtract(self->client->ps.origin, dmg_origin, blow_back_dir);
+		VectorNormalize(blow_back_dir);
+
+		if (blow_back_power > 1000)
+		{
+			//clamp blow back power level
+			blow_back_power = 1000;
+		}
+		blow_back_power *= 2;
+		g_throw(self, blow_back_dir, blow_back_power);
+		G_Knockdown(self, shooter, blow_back_dir, 600, qtrue);
+		return qtrue;
+	}
+
+	/*===========================================================================
+	doing a positional dodge for direct hit damage (like sabers or blaster bolts)
+	===========================================================================*/
+	if (hit_loc == -1)
+	{
+		//Use the last surface impact data as the hit location
+		if (d_saberGhoul2Collision.integer && self->client
+			&& self->client->g2LastSurfaceModel == G2MODEL_PLAYER
+			&& self->client->g2LastSurfaceTime == level.time)
+		{
+			char hit_surface[MAX_QPATH];
+
+			trap->G2API_GetSurfaceName(self->ghoul2, self->client->g2LastSurfaceHit, 0, hit_surface);
+
+			if (hit_surface[0])
+			{
+				G_GetHitLocFromSurfName(self, hit_surface, &hit_loc, dmg_origin, vec3_origin, vec3_origin, MOD_SABER);
+			}
+		}
+		else
+		{
+			//ok, that didn't work.  Try the old math way.
+			hit_loc = G_GetHitLocation(self, dmg_origin);
+		}
+	}
+
+	switch (hit_loc)
+	{
+	case HL_NONE:
+		return qfalse;
+
+	case HL_FOOT_RT:
+	case HL_FOOT_LT:
+		dodge_anim = Q_irand(BOTH_HOP_L, BOTH_HOP_R);
+		break;
+	case HL_LEG_RT:
+	case HL_LEG_LT:
+		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			self->client->jetPackOn = qtrue;
+			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
+			Boba_FlyStart(self);
+			self->client->ps.fd.forceJumpCharge = 280;
+			self->client->jetPackTime = level.time + 30000;
+		}
+		else
+		{
+			dodge_anim = Q_irand(BOTH_HOP_L, BOTH_HOP_R);
+		}
+		break;
+
+	case HL_BACK_RT:
+		dodge_anim = BOTH_DODGE_FL;
+		break;
+	case HL_CHEST_RT:
+		dodge_anim = BOTH_DODGE_FR;
+		break;
+	case HL_BACK_LT:
+		dodge_anim = BOTH_DODGE_FR;
+		break;
+	case HL_CHEST_LT:
+		dodge_anim = BOTH_DODGE_FR;
+		break;
+	case HL_BACK:
+		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			self->client->jetPackOn = qtrue;
+			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
+			Boba_FlyStart(self);
+			self->client->ps.fd.forceJumpCharge = 280;
+			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
+		}
+		else
+		{
+			dodge_anim = Q_irand(BOTH_DODGE_FL, BOTH_DODGE_FR);
+		}
+		break;
+	case HL_CHEST:
+		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			self->client->jetPackOn = qtrue;
+			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
+			Boba_FlyStart(self);
+			self->client->ps.fd.forceJumpCharge = 280;
+			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
+		}
+		else
+		{
+			dodge_anim = BOTH_DODGE_B;
+		}
+		break;
+	case HL_WAIST:
+		if (self->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			self->client->jetPackOn = qtrue;
+			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
+			Boba_FlyStart(self);
+			self->client->ps.fd.forceJumpCharge = 280;
+			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
+		}
+		else
+		{
+			dodge_anim = Q_irand(BOTH_DODGE_L, BOTH_DODGE_R);
+		}
+		break;
+	case HL_ARM_RT:
+	case HL_HAND_RT:
+		dodge_anim = BOTH_DODGE_L;
+		break;
+	case HL_ARM_LT:
+	case HL_HAND_LT:
+		dodge_anim = BOTH_DODGE_R;
+		break;
+	case HL_HEAD:
+		dodge_anim = BOTH_CROUCHDODGE;
+		break;
+	default:
+		return qfalse;
+	}
+
+	if (dodge_anim != -1)
+	{
+		if (self->client->ps.forceHandExtend != HANDEXTEND_DODGE && !PM_InKnockDown(&self->client->ps))
+		{
+			//do a simple dodge
+			DoNormalDodge(self, dodge_anim);
+		}
+		else
+		{
+			//can't just do a simple dodge
+			int rolled;
+			vec3_t tangles;
+			vec3_t forward;
+			vec3_t right;
+			vec3_t impactpoint;
+			int x;
+			int fall_check_max;
+
+			VectorSubtract(dmg_origin, self->client->ps.origin, impactpoint);
+			VectorNormalize(impactpoint);
+
+			VectorSet(tangles, 0, self->client->ps.viewangles[YAW], 0);
+
+			AngleVectors(tangles, forward, right, NULL);
+
+			const float fdot = DotProduct(impactpoint, forward);
+			const float rdot = DotProduct(impactpoint, right);
+
+			if (PM_InKnockDown(&self->client->ps))
+			{
+				//ground dodge roll
+				fall_check_max = 2;
+				if (rdot < 0)
+				{
+					//Right
+					if (self->client->ps.legsAnim == BOTH_KNOCKDOWN3
+						|| self->client->ps.legsAnim == BOTH_KNOCKDOWN5
+						|| self->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+					{
+						rolled = BOTH_GETUP_FROLL_R;
+					}
+					else
+					{
+						rolled = BOTH_GETUP_BROLL_R;
+					}
+				}
+				else
+				{
+					//left
+					if (self->client->ps.legsAnim == BOTH_KNOCKDOWN3
+						|| self->client->ps.legsAnim == BOTH_KNOCKDOWN5
+						|| self->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+					{
+						rolled = BOTH_GETUP_FROLL_L;
+					}
+					else
+					{
+						rolled = BOTH_GETUP_BROLL_L;
+					}
+				}
+			}
+			else
+			{
+				//normal Dodge rolls.
+				fall_check_max = 4;
+				if (fabs(fdot) > fabs(rdot))
+				{
+					//Forward/Back
+					if (fdot < 0)
+					{
+						//Forward
+						rolled = BOTH_HOP_F;
+					}
+					else
+					{
+						//Back
+						rolled = BOTH_HOP_B;
+					}
+				}
+				else
+				{
+					//Right/Left
+					if (rdot < 0)
+					{
+						//Right
+						rolled = BOTH_HOP_R;
+					}
+					else
+					{
+						//Left
+						rolled = BOTH_HOP_L;
+					}
+				}
+			}
+
+			for (x = 0; x < fall_check_max; x++)
+			{
+				//check for a valid rolling direction..namely someplace where we
+				//won't roll off cliffs
+				if (DodgeRollCheck(self, rolled, forward, right))
+				{
+					//passed check
+					break;
+				}
+
+				//otherwise, rotate to try the next possible direction
+				//reset to start of possible moves if we're at the end of the list
+				//for the perspective roll type.
+				if (rolled == BOTH_GETUP_BROLL_R)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_BROLL_L;
+				}
+				else if (rolled == BOTH_GETUP_BROLL_L)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_BROLL_R;
+				}
+				else if (rolled == BOTH_GETUP_FROLL_R)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_FROLL_L;
+				}
+				else if (rolled == BOTH_GETUP_FROLL_L)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_FROLL_R;
+				}
+				else if (rolled == BOTH_ROLL_R)
+				{
+					//reset to start of the possible normal roll directions
+					rolled = BOTH_ROLL_F;
+				}
+				else if (rolled == BOTH_HOP_R)
+				{
+					//reset to the start of possible hop directions
+					rolled = BOTH_HOP_F;
+				}
+				else
+				{
+					//just advance the roll move
+					rolled++;
+				}
+			}
+
+			if (x == fall_check_max)
+			{
+				//we don't have a valid position to dodge roll to. just do a normal dodge
+				DoNormalDodge(self, dodge_anim);
+			}
+			else
+			{
+				//ok, we can do the dodge hops/rolls
+				if (PM_InKnockDown(&self->client->ps)
+					|| BG_HopAnim(rolled))
+				{
+					//ground dodge roll
+					G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, rolled,
+						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+				}
+				else
+				{
+					//normal dodge roll
+					self->client->ps.legsTimer = 0;
+					self->client->ps.legsAnim = 0;
+					G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, rolled,
+						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 150);
+					G_AddEvent(self, EV_ROLL, 0);
+					self->r.maxs[2] = self->client->ps.crouchheight;
+					self->client->ps.viewheight = DEFAULT_VIEWHEIGHT;
+					self->client->ps.pm_flags &= ~PMF_DUCKED;
+					self->client->ps.pm_flags |= PMF_ROLLING;
+				}
+
+				//set the dodge roll flag
+				self->client->ps.userInt3 |= 1 << FLAG_DODGEROLL;
+
+				//set weapontime
+				self->client->ps.weaponTime = self->client->ps.torsoTimer;
+
+				//clear out the old dodge move.
+				self->client->ps.forceHandExtend = HANDEXTEND_NONE;
+				self->client->ps.forceDodgeAnim = 0;
+				self->client->ps.forceHandExtendTime = 0;
+				self->client->ps.saber_move = LS_NONE;
+				G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
+			}
+		}
+		return qtrue;
+	}
+	return qfalse;
+}
+
+qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
+{
+	int dodge_anim = -1;
+	int dpcost = BasicWeaponBlockCosts[MOD_SABER];
 	const int saved_dmg = *dmg;
 	qboolean no_action = qfalse;
 
@@ -5701,18 +6244,12 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		return qfalse;
 	}
 
-	if (mod == MOD_MELEE)
-	{
-		//don't dodge melee attacks for now.
-		return qfalse;
-	}
-
 	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.torsoAnim))
 	{
 		return qfalse;
 	}
 
-	if (PM_RestAnim(dodger->client->ps.torsoAnim))
+	if (dodger->client->ps.legsAnim == BOTH_MEDITATE || dodger->client->ps.legsAnim == BOTH_MEDITATE_SABER)
 	{//can't dodge while meditating.
 		return qfalse;
 	}
@@ -5727,33 +6264,40 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		return qfalse; //dont do if we are already blocking
 	}
 
-	if (dodger->r.svFlags & SVF_BOT
-		&& dodger->client->ps.weapon == WP_SABER
-		&& dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
-		// if your not a mando or jedi or low FP then you cant dodge
-	{
-		return qfalse;
-	}
-
 	if (!(dodger->client->pers.cmd.buttons & BUTTON_USE) && !(dodger->r.svFlags & SVF_BOT))
 	{
 		return qfalse;
 	}
 
-	if (dodger->r.svFlags & SVF_BOT
-		&& (dodger->client->ps.weapon != WP_SABER &&
-			dodger->client->pers.botclass != BCLASS_MANDOLORIAN &&
-			dodger->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
-			dodger->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
-			dodger->client->pers.botclass != BCLASS_JANGO_NOJP &&
-			dodger->client->pers.botclass != BCLASS_BOBAFETT)
-		|| dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
-		// if your not a mando or jedi or low FP then you cant dodge
+	if (dodger->r.svFlags & SVF_BOT //A bot
+		&& dodger->client->ps.weapon == WP_SABER // with a saber
+		&& (dodger->client->ps.fd.blockPoints <= FATIGUE_DODGEINGBOT ||
+			dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT ||
+			dodger->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY))// if your low then you cant dodge
 	{
 		return qfalse;
 	}
 
-	if (dodger->client->ps.fd.forcePower < FATIGUE_DODGE && !(dodger->r.svFlags & SVF_BOT))
+	if ((dodger->r.svFlags & SVF_BOT
+		&& dodger->client->ps.weapon != WP_SABER
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN2
+		&& dodger->client->pers.botclass != BCLASS_BOBAFETT))// if your not a mando or jedi then you cant dodge
+	{
+		return qfalse;
+	}
+
+	if (dodger->r.svFlags & SVF_BOT
+		&& dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+		&& dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+		&& dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+		&& dodger->client->pers.botclass == BCLASS_BOBAFETT && dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT)// if your a mando low FP then you cant dodge
+	{
+		return qfalse;
+	}
+
+	if (dodger->client->ps.fd.forcePower < dpcost + FATIGUE_DODGEING && !(dodger->r.svFlags & SVF_BOT)) //player
 	{
 		//Not enough dodge
 		return qfalse;
@@ -5785,16 +6329,11 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 			|| PM_SaberInAttack(dodger->client->ps.saber_move)
 			|| PM_SaberInStart(dodger->client->ps.saber_move))
 		{
-			if (dodger->NPC)
-			{
-				//can't Dodge saber swings while running or in swing.
-				return qtrue;
-			}
 			return qfalse;
 		}
 	}
 
-	if (*dmg <= DODGE_MINDAM && mod != MOD_REPEATER && mod != MOD_SABER)
+	if (*dmg <= DODGE_MINDAM && mod == MOD_SABER)
 	{
 		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM));
 		no_action = qtrue;
@@ -5803,37 +6342,6 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 	{
 		//you're already dodging but you got hit again.
 		dpcost = 0;
-	}
-
-	if (mod == MOD_DISRUPTOR_SNIPER && attacker && attacker->client)
-	{
-		int damage = 0;
-
-		if (attacker->genericValue6 <= 10)
-		{
-			damage = 10;
-		}
-		else if (attacker->genericValue6 <= 25)
-		{
-			damage = 20;
-		}
-		else if (attacker->genericValue6 < 59)
-		{
-			damage = 50;
-		}
-		else if (attacker->genericValue6 == 60)
-		{
-			damage = 100;
-		}
-
-		if (dodger->client->ps.fd.forcePower > damage)
-		{
-			dpcost = damage;
-		}
-		else
-		{
-			return qfalse;
-		}
 	}
 
 	if (dodger->r.svFlags & SVF_BOT) //bots only get 1
@@ -5917,8 +6425,7 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
@@ -5950,8 +6457,7 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
@@ -5970,8 +6476,7 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
@@ -5990,8 +6495,7 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
 			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
 			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
@@ -6214,574 +6718,6 @@ qboolean G_DoDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, in
 	return qfalse;
 }
 
-qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
-{
-	int dodge_anim = -1;
-	int dpcost = BasicWeaponBlockCosts[MOD_SABER];
-	const int saved_dmg = *dmg;
-	qboolean no_action = qfalse;
-
-	if (in_camera)
-	{
-		return qfalse;
-	}
-
-	if (dodger->NPC &&
-		(dodger->client->NPC_class == CLASS_STORMTROOPER
-			|| dodger->client->NPC_class == CLASS_STORMCOMMANDO
-			|| dodger->client->NPC_class == CLASS_SWAMPTROOPER
-			|| dodger->client->NPC_class == CLASS_CLONETROOPER
-			|| dodger->client->NPC_class == CLASS_IMPWORKER
-			|| dodger->client->NPC_class == CLASS_IMPERIAL
-			|| dodger->client->NPC_class == CLASS_SABER_DROID
-			|| dodger->client->NPC_class == CLASS_ASSASSIN_DROID
-			|| dodger->client->NPC_class == CLASS_GONK
-			|| dodger->client->NPC_class == CLASS_MOUSE
-			|| dodger->client->NPC_class == CLASS_PROBE
-			|| dodger->client->NPC_class == CLASS_PROTOCOL
-			|| dodger->client->NPC_class == CLASS_R2D2
-			|| dodger->client->NPC_class == CLASS_R5D2
-			|| dodger->client->NPC_class == CLASS_SEEKER
-			|| dodger->client->NPC_class == CLASS_INTERROGATOR))
-	{
-		// don't get Dodge.
-		return qfalse;
-	}
-
-	if (dpcost == -1)
-	{
-		//can't dodge this.
-		return qfalse;
-	}
-
-	if (!dodger || !dodger->client || !dodger->inuse || dodger->health <= 0)
-	{
-		return qfalse;
-	}
-
-	//check for private duel conditions
-	if (attacker && attacker->client)
-	{
-		if (attacker->client->ps.duelInProgress && attacker->client->ps.duelIndex != dodger->s.number)
-		{
-			//enemy client is in duel with someone else.
-			return qfalse;
-		}
-
-		if (dodger->client->ps.duelInProgress && dodger->client->ps.duelIndex != attacker->s.number)
-		{
-			//we're in a duel with someone else.
-			return qfalse;
-		}
-	}
-
-	if (BG_HopAnim(dodger->client->ps.legsAnim) //in dodge hop
-		|| BG_InRoll(&dodger->client->ps, dodger->client->ps.legsAnim)
-		&& dodger->client->ps.userInt3 & 1 << FLAG_DODGEROLL //in dodge roll
-		|| mod != MOD_SABER && dodger->client->ps.forceHandExtend == HANDEXTEND_DODGE)
-	{
-		//already doing a dodge
-		return qtrue;
-	}
-
-	if (dodger->client->ps.groundEntityNum == ENTITYNUM_NONE)
-	{
-		//can't dodge direct fire in mid-air
-		return qfalse;
-	}
-
-	if (PM_InKnockDown(&dodger->client->ps)
-		|| BG_InRoll(&dodger->client->ps, dodger->client->ps.legsAnim)
-		|| BG_InKnockDown(dodger->client->ps.legsAnim))
-	{
-		//can't Dodge while knocked down or getting up from knockdown.
-		return qfalse;
-	}
-
-	if (dodger->client->ps.forceHandExtend == HANDEXTEND_CHOKE
-		|| PM_InGrappleMove(dodger->client->ps.torsoAnim) > 1)
-	{
-		//in some effect that stops me from moving on my own
-		return qfalse;
-	}
-
-	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.torsoAnim))
-	{
-		return qfalse;
-	}
-
-	if (PM_RestAnim(dodger->client->ps.torsoAnim))
-	{//can't dodge while meditating.
-		return qfalse;
-	}
-
-	if (dodger->client->ps.weapon == WP_SABER && dodger->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
-	{
-		return qfalse; //dont do if we are already blocking
-	}
-
-	if (dodger->client->ps.weapon == WP_SABER && PM_CrouchingAnim(dodger->client->ps.legsAnim))
-	{
-		return qfalse; //dont do if we are already blocking
-	}
-
-	if (!(dodger->client->pers.cmd.buttons & BUTTON_USE) && !(dodger->r.svFlags & SVF_BOT))
-	{
-		return qfalse;
-	}
-
-	if (dodger->r.svFlags & SVF_BOT //A bot
-		&& dodger->client->ps.weapon == WP_SABER // with a saber
-		&& (dodger->client->ps.fd.blockPoints <= FATIGUE_DODGEINGBOT ||
-			dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT ||
-			dodger->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY))// if your low then you cant dodge
-	{
-		return qfalse;
-	}
-
-	if ((dodger->r.svFlags & SVF_BOT
-		&& dodger->client->ps.weapon != WP_SABER
-		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN
-		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN1
-		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN2
-		&& dodger->client->pers.botclass != BCLASS_JANGO_NOJP
-		&& dodger->client->pers.botclass != BCLASS_BOBAFETT))// if your not a mando or jedi then you cant dodge
-	{
-		return qfalse;
-	}
-
-	if (dodger->r.svFlags & SVF_BOT
-		&& (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP
-			|| dodger->client->pers.botclass == BCLASS_BOBAFETT) && dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT)// if your a mando low FP then you cant dodge
-	{
-		return qfalse;
-	}
-
-	if (dodger->client->ps.fd.forcePower < dpcost + FATIGUE_DODGEING && !(dodger->r.svFlags & SVF_BOT)) //player
-	{
-		//Not enough dodge
-		return qfalse;
-	}
-
-	if (mod == MOD_SABER && attacker && attacker->client)
-	{
-		//special saber moves have special effects.
-		if (attacker->client->ps.saber_move == LS_A_LUNGE
-			|| attacker->client->ps.saber_move == LS_SPINATTACK
-			|| attacker->client->ps.saber_move == LS_SPINATTACK_DUAL
-			|| attacker->client->ps.saber_move == LS_SPINATTACK_GRIEV)
-		{
-			//attacker is doing lunge special
-			if (dodger->client->ps.userInt3 & 1 << FLAG_FATIGUED)
-			{
-				//can't dodge a lunge special while fatigued
-				return qfalse;
-			}
-		}
-
-		if (PM_SuperBreakWinAnim(attacker->client->ps.torsoAnim) && dodger->client->ps.fd.forcePower < 50)
-		{
-			//can't block super breaks if we're low on DP.
-			return qfalse;
-		}
-
-		if (!walk_check(dodger)
-			|| PM_SaberInAttack(dodger->client->ps.saber_move)
-			|| PM_SaberInStart(dodger->client->ps.saber_move))
-		{
-			return qfalse;
-		}
-	}
-
-	if (*dmg <= DODGE_MINDAM_SABER && mod == MOD_SABER)
-	{
-		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM_SABER));
-		no_action = qtrue;
-	}
-	else if (dodger->client->ps.forceHandExtend == HANDEXTEND_DODGE)
-	{//you're already dodging but you got hit again.
-		dpcost = 0;
-	}
-
-	if (dodger->r.svFlags & SVF_BOT) //bots only get 1
-	{
-		PM_AddFatigue(&dodger->client->ps, FATIGUE_DODGEINGBOT);
-	}
-	else
-	{
-		PM_AddFatigue(&dodger->client->ps, dpcost);
-	}
-
-	if (no_action)
-	{
-		return qtrue;
-	}
-
-	if (mod == MOD_REPEATER_ALT_SPLASH
-		|| mod == MOD_FLECHETTE_ALT_SPLASH
-		|| mod == MOD_ROCKET_SPLASH
-		|| mod == MOD_ROCKET_HOMING_SPLASH
-		|| mod == MOD_THERMAL_SPLASH
-		|| mod == MOD_TRIP_MINE_SPLASH
-		|| mod == MOD_TIMED_MINE_SPLASH
-		|| mod == MOD_DET_PACK_SPLASH
-		|| mod == MOD_ROCKET)
-	{
-		//splash damage dodge, dodged by throwing oneself away from the blast into a knockdown
-		vec3_t blow_back_dir;
-		int blow_back_power = saved_dmg;
-		VectorSubtract(dodger->client->ps.origin, dmg_origin, blow_back_dir);
-		VectorNormalize(blow_back_dir);
-
-		if (blow_back_power > 1000)
-		{
-			//clamp blow back power level
-			blow_back_power = 1000;
-		}
-		blow_back_power *= 2;
-		g_throw(dodger, blow_back_dir, blow_back_power);
-		G_Knockdown(dodger, attacker, blow_back_dir, 600, qtrue);
-		return qtrue;
-	}
-
-	/*===========================================================================
-	doing a positional dodge for direct hit damage (like sabers or blaster bolts)
-	===========================================================================*/
-	if (hit_loc == -1)
-	{
-		//Use the last surface impact data as the hit location
-		if (d_saberGhoul2Collision.integer && dodger->client
-			&& dodger->client->g2LastSurfaceModel == G2MODEL_PLAYER
-			&& dodger->client->g2LastSurfaceTime == level.time)
-		{
-			char hit_surface[MAX_QPATH];
-
-			trap->G2API_GetSurfaceName(dodger->ghoul2, dodger->client->g2LastSurfaceHit, 0, hit_surface);
-
-			if (hit_surface[0])
-			{
-				G_GetHitLocFromSurfName(dodger, hit_surface, &hit_loc, dmg_origin, vec3_origin, vec3_origin, MOD_SABER);
-			}
-		}
-		else
-		{
-			//ok, that didn't work.  Try the old math way.
-			hit_loc = G_GetHitLocation(dodger, dmg_origin);
-		}
-	}
-
-	switch (hit_loc)
-	{
-	case HL_NONE:
-		return qfalse;
-
-	case HL_FOOT_RT:
-	case HL_FOOT_LT:
-		dodge_anim = Q_irand(BOTH_HOP_L, BOTH_HOP_R);
-		break;
-	case HL_LEG_RT:
-	case HL_LEG_LT:
-		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
-		{
-			dodger->client->jetPackOn = qtrue;
-			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
-			Boba_FlyStart(dodger);
-			dodger->client->ps.fd.forceJumpCharge = 280;
-			dodger->client->jetPackTime = level.time + 30000;
-		}
-		else
-		{
-			dodge_anim = Q_irand(BOTH_HOP_L, BOTH_HOP_R);
-		}
-		break;
-
-	case HL_BACK_RT:
-		dodge_anim = BOTH_DODGE_FL;
-		break;
-	case HL_CHEST_RT:
-		dodge_anim = BOTH_DODGE_FR;
-		break;
-	case HL_BACK_LT:
-		dodge_anim = BOTH_DODGE_FR;
-		break;
-	case HL_CHEST_LT:
-		dodge_anim = BOTH_DODGE_FR;
-		break;
-	case HL_BACK:
-		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
-		{
-			dodger->client->jetPackOn = qtrue;
-			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
-			Boba_FlyStart(dodger);
-			dodger->client->ps.fd.forceJumpCharge = 280;
-			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
-		}
-		else
-		{
-			dodge_anim = Q_irand(BOTH_DODGE_FL, BOTH_DODGE_FR);
-		}
-		break;
-	case HL_CHEST:
-		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
-		{
-			dodger->client->jetPackOn = qtrue;
-			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
-			Boba_FlyStart(dodger);
-			dodger->client->ps.fd.forceJumpCharge = 280;
-			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
-		}
-		else
-		{
-			dodge_anim = BOTH_DODGE_B;
-		}
-		break;
-	case HL_WAIST:
-		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
-			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
-			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
-			|| dodger->client->pers.botclass == BCLASS_JANGO_NOJP)
-		{
-			dodger->client->jetPackOn = qtrue;
-			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
-			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
-			Boba_FlyStart(dodger);
-			dodger->client->ps.fd.forceJumpCharge = 280;
-			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
-		}
-		else
-		{
-			dodge_anim = Q_irand(BOTH_DODGE_L, BOTH_DODGE_R);
-		}
-		break;
-	case HL_ARM_RT:
-	case HL_HAND_RT:
-		dodge_anim = BOTH_DODGE_L;
-		break;
-	case HL_ARM_LT:
-	case HL_HAND_LT:
-		dodge_anim = BOTH_DODGE_R;
-		break;
-	case HL_HEAD:
-		dodge_anim = BOTH_CROUCHDODGE;
-		break;
-	default:
-		return qfalse;
-	}
-
-	if (dodge_anim != -1)
-	{
-		if (dodger->client->ps.forceHandExtend != HANDEXTEND_DODGE && !PM_InKnockDown(&dodger->client->ps))
-		{
-			//do a simple dodge
-			DoNormalDodge(dodger, dodge_anim);
-		}
-		else
-		{
-			//can't just do a simple dodge
-			int rolled;
-			vec3_t tangles;
-			vec3_t forward;
-			vec3_t right;
-			vec3_t impactpoint;
-			int x;
-			int fall_check_max;
-
-			VectorSubtract(dmg_origin, dodger->client->ps.origin, impactpoint);
-			VectorNormalize(impactpoint);
-
-			VectorSet(tangles, 0, dodger->client->ps.viewangles[YAW], 0);
-
-			AngleVectors(tangles, forward, right, NULL);
-
-			const float fdot = DotProduct(impactpoint, forward);
-			const float rdot = DotProduct(impactpoint, right);
-
-			if (PM_InKnockDown(&dodger->client->ps))
-			{
-				//ground dodge roll
-				fall_check_max = 2;
-
-				if (rdot < 0)
-				{
-					//Right
-					if (dodger->client->ps.legsAnim == BOTH_KNOCKDOWN3
-						|| dodger->client->ps.legsAnim == BOTH_KNOCKDOWN5
-						|| dodger->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
-					{
-						rolled = BOTH_GETUP_FROLL_R;
-					}
-					else
-					{
-						rolled = BOTH_GETUP_BROLL_R;
-					}
-				}
-				else
-				{
-					//left
-					if (dodger->client->ps.legsAnim == BOTH_KNOCKDOWN3
-						|| dodger->client->ps.legsAnim == BOTH_KNOCKDOWN5
-						|| dodger->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
-					{
-						rolled = BOTH_GETUP_FROLL_L;
-					}
-					else
-					{
-						rolled = BOTH_GETUP_BROLL_L;
-					}
-				}
-			}
-			else
-			{
-				//normal Dodge rolls.
-				fall_check_max = 4;
-
-				if (fabs(fdot) > fabs(rdot))
-				{
-					//Forward/Back
-					if (fdot < 0)
-					{
-						//Forward
-						rolled = BOTH_HOP_F;
-					}
-					else
-					{
-						//Back
-						rolled = BOTH_HOP_B;
-					}
-				}
-				else
-				{
-					//Right/Left
-					if (rdot < 0)
-					{
-						//Right
-						rolled = BOTH_HOP_R;
-					}
-					else
-					{
-						//Left
-						rolled = BOTH_HOP_L;
-					}
-				}
-			}
-
-			for (x = 0; x < fall_check_max; x++)
-			{
-				if (DodgeRollCheck(dodger, rolled, forward, right))
-				{
-					//passed check
-					break;
-				}
-
-				//otherwise, rotate to try the next possible direction
-				//reset to start of possible moves if we're at the end of the list
-				//for the perspective roll type.
-				if (rolled == BOTH_GETUP_BROLL_R)
-				{
-					//there's only two possible evasions in this mode.
-					rolled = BOTH_GETUP_BROLL_L;
-				}
-				else if (rolled == BOTH_GETUP_BROLL_L)
-				{
-					//there's only two possible evasions in this mode.
-					rolled = BOTH_GETUP_BROLL_R;
-				}
-				else if (rolled == BOTH_GETUP_FROLL_R)
-				{
-					//there's only two possible evasions in this mode.
-					rolled = BOTH_GETUP_FROLL_L;
-				}
-				else if (rolled == BOTH_GETUP_FROLL_L)
-				{
-					//there's only two possible evasions in this mode.
-					rolled = BOTH_GETUP_FROLL_R;
-				}
-				else if (rolled == BOTH_ROLL_R)
-				{
-					//reset to start of the possible normal roll directions
-					rolled = BOTH_ROLL_F;
-				}
-				else if (rolled == BOTH_HOP_R)
-				{
-					//reset to the start of possible hop directions
-					rolled = BOTH_HOP_F;
-				}
-				else
-				{
-					//just advance the roll move
-					rolled++;
-				}
-			}
-
-			if (x == fall_check_max)
-			{
-				//we don't have a valid position to dodge roll to. just do a normal dodge
-				DoNormalDodge(dodger, dodge_anim);
-			}
-			else
-			{
-				//ok, we can do the dodge hops/rolls
-				if (PM_InKnockDown(&dodger->client->ps)
-					|| BG_HopAnim(rolled))
-				{
-					//ground dodge roll
-					G_SetAnim(dodger, &dodger->client->pers.cmd, SETANIM_BOTH, rolled, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-				}
-				else
-				{
-					//normal dodge roll
-					dodger->client->ps.legsTimer = 0;
-					dodger->client->ps.legsAnim = 0;
-					G_SetAnim(dodger, &dodger->client->pers.cmd, SETANIM_BOTH, rolled, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 150);
-					G_AddEvent(dodger, EV_ROLL, 0);
-					dodger->r.maxs[2] = dodger->client->ps.crouchheight;
-					dodger->client->ps.viewheight = DEFAULT_VIEWHEIGHT;
-					dodger->client->ps.pm_flags &= ~PMF_DUCKED;
-					dodger->client->ps.pm_flags |= PMF_ROLLING;
-				}
-
-				//set the dodge roll flag
-				dodger->client->ps.userInt3 |= 1 << FLAG_DODGEROLL;
-
-				//set weapontime
-				dodger->client->ps.weaponTime = dodger->client->ps.torsoTimer;
-
-				//clear out the old dodge move.
-				dodger->client->ps.forceHandExtend = HANDEXTEND_NONE;
-				dodger->client->ps.forceDodgeAnim = 0;
-				dodger->client->ps.forceHandExtendTime = 0;
-				dodger->client->ps.saber_move = LS_NONE;
-				G_Sound(dodger, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
-			}
-		}
-		return qtrue;
-	}
-	return qfalse;
-}
-
 static int hit_loc[MAX_SABER_VICTIMS];
 static vec3_t saberHitLocation;
 static qboolean hitDismember[MAX_SABER_VICTIMS];
@@ -6857,6 +6793,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	static trace_t tr;
 	static vec3_t dir;
 	static vec3_t saber_tr_mins, saber_tr_maxs;
+	// ReSharper disable once CppEntityAssignedButNoRead
 	static int self_saber_level;
 	int dmg;
 	qboolean idle_damage = qfalse;
@@ -6871,11 +6808,16 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	const float hilt_radius = self->client->saber[r_saber_num].blade[r_blade_num].radius * 1.2f;
 	const qboolean saber_in_kill_move = PM_SaberInKillMove(self->client->ps.saber_move);
 
-	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;	//Normal Blocking
-	const qboolean self_active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse; //Active Blocking
-	const qboolean self_m_blocking = self->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;//Perfect Blocking
+	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	//Normal Blocking
+	const qboolean self_active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
+		? qtrue
+		: qfalse; //Active Blocking
+	const qboolean self_m_blocking = self->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
+	//Perfect Blocking
 
-	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberEntityNum && self->client->ps.fd.saber_anim_levelBase != SS_DUAL)
+	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberEntityNum && self->client->ps.fd.saber_anim_levelBase
+		!= SS_DUAL)
 	{
 		// register as a hit so we don't do a lot of interpolation.
 		self->client->ps.saberBlocked = BLOCKED_NONE;
@@ -6899,23 +6841,27 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	/////////////////////////////SABERBLADE BOX SIZE///////////////////////////////////////
 	if (self->client->ps.weaponTime <= 0) //
 	{
-		VectorClear(saber_tr_mins);
-		VectorClear(saber_tr_maxs);
-	}
-	else if (self_holding_block || self_active_blocking || self_m_blocking ||
-		BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex))
+		//
+		VectorClear(saber_tr_mins); //
+		VectorClear(saber_tr_maxs); //
+	} //
+	else if (self_holding_block || self_active_blocking || self_m_blocking || //
+		BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex)) //
 	{
-		//Setting things up so the game always does realistic box traces for the sabers.
-		saber_box_size += (d_saberBoxTraceSize.value + hilt_radius * 0.5f) * 3.0f;
-		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size);
-		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 4);
-	}
-	else
+		//Setting things up so the game always does realistic box traces for the sabers.    //
+		saber_box_size += (d_saberBoxTraceSize.value + hilt_radius * 0.5f) * 3.0f; //
+		//
+		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size); //
+		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 4); //
+	} //
+	else //
 	{
-		saber_box_size += self->client->saber[r_saber_num].blade[r_blade_num].radius * 0.5f;
-		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size);
-		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 3);
-	}
+		//
+		saber_box_size += self->client->saber[r_saber_num].blade[r_blade_num].radius * 0.5f; //
+		//
+		VectorSet(saber_tr_mins, -saber_box_size, -saber_box_size, -saber_box_size); //
+		VectorSet(saber_tr_maxs, saber_box_size * 3, saber_box_size * 3, saber_box_size * 3); //
+	} //
 	/////////////////////////////SABERBLADE BOX SIZE///////////////////////////////////////
 
 	const int real_trace_result = g_real_trace(self, &tr, saber_start, saber_tr_mins, saber_tr_maxs, saber_end,
@@ -6956,9 +6902,20 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					{
 						dmg = SABER_MAXHITDAMAGE;
 					}
+					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+					{
+						dmg = SABER_NORHITDAMAGE;
+					}
 					else
 					{
-						dmg = SABER_MAXHITDAMAGE;
+						if (g_saberdebug.integer)
+						{
+							dmg = SABER_DEBUGTDAMAGE;
+						}
+						else
+						{
+							dmg = SABER_MAXHITDAMAGE;
+						}
 					}
 				}
 				else
@@ -6974,9 +6931,20 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					{
 						dmg = SABER_MAXHITDAMAGE;
 					}
+					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+					{
+						dmg = SABER_NORHITDAMAGE;
+					}
 					else
 					{
-						dmg = SABER_STANDARDHITDAMAGE;
+						if (g_saberdebug.integer)
+						{
+							dmg = SABER_DEBUGTDAMAGE;
+						}
+						else
+						{
+							dmg = SABER_STANDARDHITDAMAGE;
+						}
 					}
 				}
 			}
@@ -6993,9 +6961,20 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 				{
 					dmg = SABER_MAXHITDAMAGE;
 				}
-				else
+				else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
 				{
 					dmg = SABER_NORHITDAMAGE;
+				}
+				else
+				{
+					if (g_saberdebug.integer)
+					{
+						dmg = SABER_DEBUGTDAMAGE;
+					}
+					else
+					{
+						dmg = SABER_NORHITDAMAGE;
+					}
 				}
 			}
 		}
@@ -7011,6 +6990,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			else if (saber_in_kill_move)
 			{
 				dmg = SABER_MAXHITDAMAGE;
+			}
+			else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+			{
+				dmg = SABER_NORHITDAMAGE;
 			}
 			else
 			{
@@ -7435,7 +7418,8 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					//do bounce sound & force feedback
 					WP_SaberBounceOnWallSound(self, r_saber_num, r_blade_num);
 					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
-					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad - Q_BR);
+					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad -
+						Q_BR);
 				}
 				else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK &&
 					!PM_SaberInAttackPure(self->client->ps.saber_move) &&
@@ -7448,7 +7432,8 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					//reflect from wall
 					//do bounce sound & force feedback
 					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
-					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad - Q_BR);
+					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad -
+						Q_BR);
 				}
 			}
 			else
@@ -7539,17 +7524,18 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		self->client->ps.hasLookTarget = qfalse;
 	}
 
-	if (self->client->ps.weapon != WP_SABER && self->client->NPC_class != CLASS_BOBAFETT
-		&& self->client->pers.botclass != BCLASS_BOBAFETT
-		&& self->client->pers.botclass != BCLASS_JANGO_NOJP
-		&& self->client->pers.botclass != BCLASS_MANDOLORIAN
-		&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
-		&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
+	if (self->client->ps.weapon != WP_SABER) //saber not here
 	{
+		return;
+	}
+	else if (self->client->ps.weapon == WP_SABER && BG_SabersOff(&self->client->ps))
+	{
+		//saber not currently in use or available, attempt to use our hands instead.
 		do_full_routine = qfalse;
 	}
-	else if (self->client->ps.saberInFlight)
+	else if (self->client->ps.weapon == WP_SABER && self->client->ps.saberInFlight)
 	{
+		//saber not currently in use or available, attempt to use our hands instead.
 		do_full_routine = qfalse;
 	}
 
@@ -7619,11 +7605,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	if (BG_SabersOff(&self->client->ps) && self->client->NPC_class != CLASS_BOBAFETT
-		&& self->client->pers.botclass != BCLASS_BOBAFETT
-		&& self->client->pers.botclass != BCLASS_JANGO_NOJP
-		&& self->client->pers.botclass != BCLASS_MANDOLORIAN
-		&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
-		&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
+		|| self->client->pers.botclass != BCLASS_BOBAFETT
+		|| self->client->pers.botclass != BCLASS_MANDOLORIAN1
+		|| self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 	{
 		if (self->s.eType != ET_NPC)
 		{
@@ -7800,8 +7784,6 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				{
 					//TD is close enough to hurt me, I'm on the ground and the thing is at rest or behind me and about to blow up, or I don't have force-push so force-jump!
 					if (self->client->pers.botclass == BCLASS_BOBAFETT
-						|| self->client->pers.botclass == BCLASS_JANGO_NOJP
-						|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 						|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 						|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 					{
@@ -7812,8 +7794,6 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				}
 				else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
 					&& self->client->pers.botclass != BCLASS_BOBAFETT
-					&& self->client->pers.botclass != BCLASS_JANGO_NOJP
-					&& self->client->pers.botclass != BCLASS_MANDOLORIAN
 					&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
 					&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 				{
@@ -7845,8 +7825,6 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 						//make the gesture
 						if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
 							&& self->client->pers.botclass != BCLASS_BOBAFETT
-							&& self->client->pers.botclass != BCLASS_JANGO_NOJP
-							&& self->client->pers.botclass != BCLASS_MANDOLORIAN
 							&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
 							&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 						{
@@ -7880,8 +7858,6 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			{
 				//try to evade it
 				if (self->client->pers.botclass == BCLASS_BOBAFETT
-					|| self->client->pers.botclass == BCLASS_JANGO_NOJP
-					|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 					|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 					|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 				{
@@ -7892,8 +7868,6 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			}
 			else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
 				&& self->client->pers.botclass != BCLASS_BOBAFETT
-				&& self->client->pers.botclass != BCLASS_JANGO_NOJP
-				&& self->client->pers.botclass != BCLASS_MANDOLORIAN
 				&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
 				&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 			{
@@ -8016,12 +7990,10 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			{
 				Jedi_Ambush(self);
 			}
-			if ((self->client->NPC_class == CLASS_BOBAFETT
+			if (self->client->NPC_class == CLASS_BOBAFETT
 				|| self->client->pers.botclass == BCLASS_BOBAFETT
-				|| self->client->pers.botclass == BCLASS_JANGO_NOJP
-				|| self->client->pers.botclass == BCLASS_MANDOLORIAN
 				|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
-				|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
+				|| self->client->pers.botclass == BCLASS_MANDOLORIAN2
 				&& self->client->ps.eFlags2 & EF2_FLYING //moveType == MT_FLYSWIM
 				&& incoming->methodOfDeath != MOD_ROCKET_HOMING)
 			{
@@ -8044,11 +8016,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			{
 				//make sure to turn on your saber if it's not on
 				if (self->client->NPC_class != CLASS_BOBAFETT
-					&& self->client->pers.botclass != BCLASS_BOBAFETT
-					&& self->client->pers.botclass != BCLASS_JANGO_NOJP
-					&& self->client->pers.botclass != BCLASS_MANDOLORIAN
-					&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
-					&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
+					|| self->client->pers.botclass != BCLASS_BOBAFETT
+					|| self->client->pers.botclass != BCLASS_MANDOLORIAN1
+					|| self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 				{
 					WP_ActivateSaber(self);
 				}
@@ -8056,7 +8026,6 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		}
 		else //player
 		{
-
 			gentity_t* blocker = &g_entities[incoming->r.ownerNum];
 
 			if (self->client->ps.saberHolstered == 2)
@@ -8351,7 +8320,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 
 #define THROWN_SABER_COMP
 
-static QINLINE void saber_moveBack(gentity_t* ent)
+static QINLINE void saberMoveBack(gentity_t* ent)
 {
 	vec3_t origin, old_org;
 
@@ -8491,7 +8460,7 @@ void MakeDeadSaber(const gentity_t* ent)
 	//fall off in the direction the real saber was headed
 	VectorCopy(ent->s.pos.trDelta, saberent->s.pos.trDelta);
 
-	saber_moveBack(saberent);
+	saberMoveBack(saberent);
 	saberent->s.pos.trType = TR_GRAVITY;
 
 	trap->LinkEntity((sharedEntity_t*)saberent);
@@ -8598,7 +8567,7 @@ void DownedSaberThink(gentity_t* saberent)
 		saber_own->client->ps.saberCanThrow = qfalse;
 
 		return;
-	}
+		}
 
 	if ((saber_own->client->pers.cmd.buttons & BUTTON_ATTACK
 		&& !PM_SaberInMassiveBounce(saber_own->client->ps.torsoAnim)
@@ -8651,11 +8620,11 @@ void DownedSaberThink(gentity_t* saberent)
 		saberent->s.apos.trType = TR_STATIONARY;
 
 		return;
-	}
+		}
 
 	G_RunObject(saberent);
 	saberent->nextthink = level.time;
-}
+	}
 
 void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
@@ -8687,7 +8656,7 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 
 		self->r.contents = CONTENTS_LIGHTSABER;
 
-		G_Sound(self, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.wav"));
+		G_Sound(self, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 
 		other->client->ps.saberInFlight = qfalse;
 		other->client->ps.saberEntityState = 0;
@@ -8716,8 +8685,8 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 			//make activation noise if we have one.
 			G_Sound(other, CHAN_WEAPON, other->client->saber[0].soundOn);
 		}
+		}
 	}
-}
 
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner)
 {
@@ -9341,7 +9310,7 @@ void saberBackToOwner(gentity_t* saberent)
 
 		VectorNormalize(dir);
 
-		saber_moveBack(saberent);
+		saberMoveBack(saberent);
 		VectorCopy(saberent->r.currentOrigin, saberent->s.pos.trBase);
 
 		if (saber_owner->client->ps.fd.forcePowerLevel[FP_SABERTHROW] >= FORCE_LEVEL_3)
@@ -9392,12 +9361,11 @@ void saberBackToOwner(gentity_t* saberent)
 		if (saber_owner->client->ps.forceHandExtend != HANDEXTEND_SABERPULL && owner_len <= 180)
 		{
 			saber_owner->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;
-			saber_owner->client->ps.forceHandExtendTime = level.time + 100;
 		}
 
 		if (owner_len <= 32)
 		{
-			G_Sound(saberent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.wav"));
+			G_Sound(saberent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 
 			saber_owner->client->ps.saberInFlight = qfalse;
 			saber_owner->client->ps.saberEntityState = 0;
@@ -9445,7 +9413,7 @@ void saberBackToOwner(gentity_t* saberent)
 			return;
 		}
 
-		saber_moveBack(saberent);
+		saberMoveBack(saberent);
 	}
 
 	saberent->nextthink = level.time;
@@ -9665,7 +9633,7 @@ void saberFirstThrown(gentity_t* saberent)
 
 		if (level.time > SABER_BOTRETRIEVE_DELAY)
 		{
-			saber_moveBack(saberent);
+			saberMoveBack(saberent);
 		}
 
 		VectorCopy(saberent->r.currentOrigin, saberent->s.pos.trBase);
@@ -10228,6 +10196,10 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 	}
 	return qtrue;
 }
+
+extern void G_ThrownDeathAnimForDeathAnim(gentity_t* hit_ent, vec3_t impactPoint);
+
+extern void g_kick_throw(gentity_t* targ, const vec3_t new_dir, float push);
 
 gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, vec3_t kick_end, const int kick_damage,
 	const float kick_push,
@@ -11762,6 +11734,8 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 
 	saberInfo_t* saber1 = BG_MySaber(self->client_num, 0);
 
+	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+
 #ifndef FINAL_BUILD
 	int viewlock = 0;
 #endif
@@ -11825,7 +11799,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 			self->client->ps.ammo[AMMO_THERMAL]--;
 			G_SetAnim(self, NULL, SETANIM_TORSO, BOTH_MELEE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 		}
-	}
+}
 
 	if (PM_PunchAnim(self->client->ps.torsoAnim))
 	{
@@ -12404,7 +12378,10 @@ nextStep:
 
 				saberent->s.saberInFlight = qtrue;
 
-				if (saber1 && saber1->type == SABER_VADER)
+				if (saber1 && saber1
+					->
+					type == SABER_VADER
+					)
 				{
 					saberent->s.apos.trType = TR_LINEAR;
 					saberent->s.apos.trDelta[0] = 0;
@@ -12850,11 +12827,12 @@ nextStep:
 				else if (self->client->hasCurrentPosition && d_saberInterpolate.integer == 2)
 				{
 					//Super duper interplotation system
-					if (level.time - self->client->saber[r_saber_num].blade[r_blade_num].trail.lastTime < 100
-						&& (BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex)))
+					if (level.time - self->client->saber[r_saber_num].blade[r_blade_num].trail.lastTime < 100 && (
+						BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex) || self_holding_block))
 					{
 						vec3_t olddir;
-						float dist = (d_saberBoxTraceSize.value + self->client->saber[r_saber_num].blade[r_blade_num].radius) * 0.5f;
+						float dist = (d_saberBoxTraceSize.value + self->client->saber[r_saber_num].blade[r_blade_num].
+							radius) * 0.5f;
 						VectorSubtract(self->client->saber[r_saber_num].blade[r_blade_num].trail.tip,
 							self->client->saber[r_saber_num].blade[r_blade_num].trail.base, olddir);
 						VectorNormalize(olddir);
@@ -12918,15 +12896,7 @@ nextStep:
 				self->client->hasCurrentPosition = qtrue;
 
 				//do hit effects
-
-				if (self->client->ps.fd.blockPoints > BLOCKPOINTS_HALF || self->client->ps.userInt3 & 1 << FLAG_PERFECTBLOCK)
-				{
-					WP_SaberDoPerfectClash(self, r_saber_num, r_blade_num);
-				}
-				else
-				{
-					WP_SaberDoClash(self, r_saber_num, r_blade_num);
-				}
+				WP_SaberDoClash(self, r_saber_num, r_blade_num);
 
 				r_blade_num++;
 			}
@@ -13106,7 +13076,7 @@ qboolean manual_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (PM_RestAnim(defender->client->ps.torsoAnim))
+	if (PM_RestAnim(defender->client->ps.legsAnim))
 	{
 		return qfalse;
 	}
@@ -13286,11 +13256,8 @@ qboolean manual_meleeblocking(const gentity_t* defender) //Is this guy blocking 
 
 qboolean manual_melee_dodging(const gentity_t* defender) //Is this guy dodgeing or not?
 {
-	if (defender->client->NPC_class == BCLASS_BOBAFETT ||
-		defender->client->pers.botclass == BCLASS_JANGO_NOJP ||
-		defender->client->pers.botclass == BCLASS_MANDOLORIAN ||
-		defender->client->pers.botclass == BCLASS_MANDOLORIAN1 ||
-		defender->client->pers.botclass == BCLASS_MANDOLORIAN2)
+	if (defender->client->NPC_class == BCLASS_BOBAFETT || defender->client->pers.botclass == BCLASS_MANDOLORIAN || defender->
+		client->pers.botclass == BCLASS_MANDOLORIAN1 || defender->client->pers.botclass == BCLASS_MANDOLORIAN2)
 	{
 		return qfalse;
 	}
@@ -15434,7 +15401,7 @@ void SaberBallisticsThink(gentity_t* saber_ent)
 		if (owner_len <= 32)
 		{
 			//racc - picked up the saber.
-			G_Sound(saber_ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/sabercatch.mp3"));
+			G_Sound(saber_ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 			G_SetAnim(saber_owner, NULL, SETANIM_TORSO, BOTH_STAND1TO2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
 			saber_ent->s.eFlags &= ~EF_MISSILE_STICK;

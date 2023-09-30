@@ -700,7 +700,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 	if (PM_SaberInnonblockableAttack(attacker->client->ps.torsoAnim))
 	{
 		//perfect Blocking
-		if (m_blocking) // A perfectly timed block  This is what the attacker does
+		if (m_blocking) // A perfectly timed block
 		{
 			sab_beh_saber_should_be_disarmed_attacker(attacker, blocker);
 			//just so attacker knows that he was blocked
@@ -820,7 +820,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				sab_beh_attack_blocked(attacker, blocker, qfalse);
 			}
 
-			if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
+			if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 			{
 				Com_Printf(S_COLOR_YELLOW"Attackers Attack was Blocked\n");
 			}
@@ -944,7 +944,8 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					{
 						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 					}
-					G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+					G_Sound(blocker, CHAN_AUTO,
+						G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 					if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 					{
@@ -1139,7 +1140,8 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 			blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;
 
-			G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+			G_Sound(blocker, CHAN_AUTO,
+				G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 			if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 			{
@@ -1178,5 +1180,5 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 }
 
 /////////Functions//////////////
-
+//
 /////////////////////// 20233 new build ////////////////////////////////

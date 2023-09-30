@@ -5317,7 +5317,7 @@ void CG_DrawJK2SaberFatigue(const centity_t* cent, const int x, const int y)
 				cg.messageLitActive = qfalse;
 			}
 		}
-		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_RUNINACCURACY)
+		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_TWO)
 		{
 			if (!(cg.time / 600 & 1))
 			{
@@ -5389,7 +5389,7 @@ void CG_DrawJK2SaberFatigue(const centity_t* cent, const int x, const int y)
 				cg.messageLitActive = qfalse;
 			}
 		}
-		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_RUNINACCURACY)
+		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_TWO)
 		{
 			if (!(cg.time / 600 & 1))
 			{
