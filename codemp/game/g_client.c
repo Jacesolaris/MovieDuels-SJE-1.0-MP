@@ -4409,26 +4409,11 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (Class_Model(model, "cc/main")
-			|| Class_Model(model, "sdt/")
-			|| Class_Model(model, "bs/")
-			|| Class_Model(model, "snowtrooper")
+		else if (Class_Model(model, "snowtrooper")
 			|| Class_Model(model, "snowtrooper/blue")
 			|| Class_Model(model, "snowtrooper/red")
-			|| Class_Model(model, "arc")
-			|| Class_Model(model, "cn")
-			|| Class_Model(model, "cp")
-			|| Class_Model(model, "ccm")
-			|| Class_Model(model, "ccm/main")
-			|| Class_Model(model, "cc/")
-			|| Class_Model(model, "gideon")
-			|| Class_Model(model, "darktrooper_tv_mp")
 			|| Class_Model(model, "stormtrooper")
-			|| Class_Model(model, "thrawn")
-			|| Class_Model(model, "hera")
 			|| Class_Model(model, "stormtrooper/officer")
-			|| Class_Model(model, "TR_8R")
-			|| Class_Model(model, "TR_8R_normal")
 			|| Class_Model(model, "FN-2187")
 			|| Class_Model(model, "stormtrooper_tfa")
 			|| Class_Model(model, "stormie_tfa")
@@ -4437,6 +4422,58 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "stormtrooper/red")
 			|| Class_Model(model, "stormtrooper/main")
 			|| Class_Model(model, "stormtrooper/main2")
+			|| Class_Model(model, "swamptrooper")
+			|| Class_Model(model, "swamptrooper/blue")
+			|| Class_Model(model, "swamptrooper/red")
+			|| Class_Model(model, "First_Order_Riot_Trooper")
+			|| Class_Model(model, "sullustan")
+			|| Class_Model(model, "rex_old")
+			|| Class_Model(model, "rex_endor")
+			|| Class_Model(model, "bossk")
+			|| Class_Model(model, "greedo")
+			|| Class_Model(model, "bolla_ropal_mp")
+			|| Class_Model(model, "bibfortuna")
+			|| Class_Model(model, "greef")
+			|| Class_Model(model, "caradune")
+			|| Class_Model(model, "hondo")
+			|| Class_Model(model, "vizam")
+			|| Class_Model(model, "stshock")
+			|| Class_Model(model, "stshock/commander")
+			|| Class_Model(model, "501st_stormie")
+			|| Class_Model(model, "shadow_stormtrooper")
+			|| Class_Model(model, "evotrooper")
+			|| Class_Model(model, "evotrooper/shadow")
+			|| Class_Model(model, "satine"))
+		{
+			client->pers.botmodelscale = BOTZIZE_NORMAL;
+			client->pers.nextbotclass = BCLASS_STORMTROOPER;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "cc/main")
+			|| Class_Model(model, "sdt/")
+			|| Class_Model(model, "bs/")
+			|| Class_Model(model, "arc")
+			|| Class_Model(model, "cn")
+			|| Class_Model(model, "cp")
+			|| Class_Model(model, "ccm")
+			|| Class_Model(model, "ccm/main")
+			|| Class_Model(model, "cc/")
+			|| Class_Model(model, "gideon")
+			|| Class_Model(model, "darktrooper_tv_mp")
+			|| Class_Model(model, "thrawn")
+			|| Class_Model(model, "hera")
+			|| Class_Model(model, "TR_8R")
+			|| Class_Model(model, "TR_8R_normal")
 			|| Class_Model(model, "bh")
 			|| Class_Model(model, "ct")
 			|| Class_Model(model, "ct/main2")
@@ -4452,38 +4489,16 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "smuggler2/default")
 			|| Class_Model(model, "trooper1/default")
 			|| Class_Model(model, "trooper2/default")
-			|| Class_Model(model, "swamptrooper")
-			|| Class_Model(model, "swamptrooper/blue")
-			|| Class_Model(model, "swamptrooper/red")
-			|| Class_Model(model, "First_Order_Riot_Trooper")
-			|| Class_Model(model, "sullustan")
 			|| Class_Model(model, "clonetrooper_p1_mp")
 			|| Class_Model(model, "clonetrooper_p2_mp")
-			|| Class_Model(model, "rex_old")
-			|| Class_Model(model, "rex_endor")
 			|| Class_Model(model, "md_clone_assassin")
-			|| Class_Model(model, "bossk")
-			|| Class_Model(model, "greedo")
-			|| Class_Model(model, "bolla_ropal_mp")
 			|| Class_Model(model, "deathtrooper")
 			|| Class_Model(model, "deathtrooper/commander")
 			|| Class_Model(model, "shoretrooper")
 			|| Class_Model(model, "shoretrooper/tank")
 			|| Class_Model(model, "shoretrooper/elite")
-			|| Class_Model(model, "bibfortuna")
-			|| Class_Model(model, "greef")
-			|| Class_Model(model, "caradune")
-			|| Class_Model(model, "hondo")
-			|| Class_Model(model, "vizam")
-			|| Class_Model(model, "stshock")
-			|| Class_Model(model, "stshock/commander")
-			|| Class_Model(model, "501st_stormie")
 			|| Class_Model(model, "501st_stormie/officer")
-			|| Class_Model(model, "shadow_stormtrooper")
-			|| Class_Model(model, "evotrooper")
-			|| Class_Model(model, "evotrooper/shadow")
 			|| Class_Model(model, "jumptrooper_tfu")
-			|| Class_Model(model, "satine")
 			|| Class_Model(model, "md_clo_cody")
 			|| Class_Model(model, "md_clo_rex")
 			|| Class_Model(model, "md_clo_fox")
@@ -4505,7 +4520,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "md_clo_shadow"))
 		{
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
-			client->pers.nextbotclass = BCLASS_STORMTROOPER;
+			client->pers.nextbotclass = BCLASS_CLONETROOPER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
 				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
@@ -5652,8 +5667,8 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 				//	client->pers.connected = CON_DISCONNECTED;
 				return "Too many connections from the same IP";
 			}
-		}
 	}
+}
 
 	if (ent->inuse)
 	{
@@ -6316,7 +6331,7 @@ tryTorso:
 				//want to remove the support bone too then
 				trap->G2API_SetBoneAnim(self->ghoul2, 0, "lhumerus", 0, 1, 0, 0, level.time, -1, 0);
 				trap->G2API_RemoveBone(self->ghoul2, "lhumerus", 0);
-			}
+	}
 
 			assert(brokenBone);
 
@@ -6326,7 +6341,7 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
-		}
+}
 	}
 #endif
 }
@@ -7557,6 +7572,15 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_CRYOBAN] = FORCE_LEVEL_3;
 					client->ps.ammo[AMMO_THERMAL] = 4;
 					break;
+				case BCLASS_CLONETROOPER:
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
+					client->ps.stats[STAT_ARMOR] = 100;
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_REPEATER;
+					client->skillLevel[SK_REPEATER] = FORCE_LEVEL_3;
+					client->ps.ammo[AMMO_BLASTER] = 900;
+					client->ps.ammo[AMMO_POWERCELL] = 500;
+					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
+					break;
 				case BCLASS_PLAYER:
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BLASTER;
 					client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
@@ -8035,7 +8059,6 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
 		case BCLASS_STORMTROOPER:
-			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 2 << HI_SEEKER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SHIELD;
 			client->ps.stats[STAT_ARMOR] = 100;
@@ -8322,6 +8345,14 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
+		case BCLASS_CLONETROOPER:
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SHIELD;
+			client->ps.stats[STAT_ARMOR] = 100;
+			client->ps.stats[STAT_MAX_HEALTH] = 100;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
+			break;
 		case BCLASS_PLAYER:
 			client->ps.stats[STAT_ARMOR] = 100;
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
@@ -8449,6 +8480,7 @@ void ClientSpawn(gentity_t* ent)
 		case BCLASS_IPPERIALAGENT1:
 		case BCLASS_IPPERIALAGENT2:
 		case BCLASS_IPPERIALAGENT3:
+		case BCLASS_CLONETROOPER:
 		case BCLASS_PLAYER:
 			client->ps.fd.forcePowerLevel[FP_HEAL] = FORCE_LEVEL_0;
 			client->ps.fd.forcePowerLevel[FP_LEVITATION] = FORCE_LEVEL_0;

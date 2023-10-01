@@ -62,7 +62,7 @@ extern void G_Stagger(gentity_t* hit_ent);
 extern void g_fatigue_bp_knockaway(gentity_t* blocker);
 extern qboolean PM_SuperBreakLoseAnim(int anim);
 extern qboolean ButterFingers(gentity_t* saberent, gentity_t* saber_owner, const gentity_t* other, const trace_t* tr);
-extern qboolean PM_SaberInnonblockableAttack(int anim);
+extern qboolean pm_saber_innonblockable_attack(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern int G_GetParryForBlock(int block);
 extern qboolean WP_SaberMBlockDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
@@ -398,7 +398,7 @@ void sab_beh_animate_small_bounce(gentity_t* attacker)
 	else
 	{
 		attacker->client->ps.userInt3 |= 1 << FLAG_SLOWBOUNCE;
-		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad -Q_BR);
+		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad - Q_BR);
 		attacker->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
 	}
 }
@@ -592,7 +592,7 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 	{
 		//self is solo faking
 		//set self
-		sab_beh_add_balance(attacker, 1);
+		sab_beh_add_balance(attacker, MPCOST_PARRIED);
 		//set otherOwner
 
 		if (WP_SabersCheckLock(attacker, blocker))
@@ -601,7 +601,7 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 			attacker->client->ps.saberBlocked = BLOCKED_NONE;
 			blocker->client->ps.saberBlocked = BLOCKED_NONE;
 		}
-		sab_beh_add_balance(blocker, -1);
+		sab_beh_add_balance(blocker, -MPCOST_PARRIED);
 	}
 	else if (!atkfake && otherfake)
 	{
@@ -613,9 +613,9 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 			blocker->client->ps.userInt3 |= 1 << FLAG_SABERLOCK_ATTACKER;
 			blocker->client->ps.saberBlocked = BLOCKED_NONE;
 		}
-		sab_beh_add_balance(attacker, -1);
+		sab_beh_add_balance(attacker, -MPCOST_PARRIED);
 		//set otherOwner
-		sab_beh_add_balance(blocker, 1);
+		sab_beh_add_balance(blocker, MPCOST_PARRIED);
 	}
 	else if (atkfake && otherfake)
 	{
@@ -629,15 +629,15 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 			blocker->client->ps.userInt3 |= 1 << FLAG_SABERLOCK_ATTACKER;
 			blocker->client->ps.saberBlocked = BLOCKED_NONE;
 		}
-		sab_beh_add_balance(attacker, 1);
+		sab_beh_add_balance(attacker, MPCOST_PARRIED);
 		//set otherOwner
-		sab_beh_add_balance(blocker, 1);
+		sab_beh_add_balance(blocker, MPCOST_PARRIED);
 	}
 	else if (PM_SaberInKata(attacker->client->ps.saber_move))
 	{
-		sab_beh_add_balance(attacker, 1);
+		sab_beh_add_balance(attacker, MPCOST_PARRIED);
 		//set otherOwner
-		sab_beh_add_balance(blocker, -1);
+		sab_beh_add_balance(blocker, -MPCOST_PARRIED);
 
 		if (blocker->client->ps.fd.blockPoints < BLOCKPOINTS_TEN)
 		{
@@ -654,9 +654,9 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 	}
 	else if (PM_SaberInKata(blocker->client->ps.saber_move))
 	{
-		sab_beh_add_balance(attacker, -1);
+		sab_beh_add_balance(attacker, -MPCOST_PARRIED);
 		//set otherOwner
-		sab_beh_add_balance(blocker, 1);
+		sab_beh_add_balance(blocker, MPCOST_PARRIED);
 
 		if (attacker->client->ps.fd.blockPoints < BLOCKPOINTS_TEN)
 		{
@@ -675,9 +675,9 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 	{
 		//either both are faking or neither is faking.  Either way, it's cancelled out
 		//set self
-		sab_beh_add_balance(attacker, 1);
+		sab_beh_add_balance(attacker, MPCOST_PARRIED);
 		//set otherOwner
-		sab_beh_add_balance(blocker, 1);
+		sab_beh_add_balance(blocker, MPCOST_PARRIED);
 
 		sab_beh_attack_blocked(attacker, blocker, qtrue);
 
@@ -690,6 +690,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 {
 	//if the attack is blocked -(Im the attacker)
 	const qboolean accurate_parry = g_accurate_blocking(blocker, attacker, hit_loc); // Perfect Normal Blocking
+
 	const qboolean blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;	//Normal Blocking (just holding block button)
 	const qboolean m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse; //perfect Blocking (Timed Block)
 	const qboolean active_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse; //Active Blocking (Holding Block button + Attack button)
@@ -697,7 +698,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 
 	const qboolean atkfake = attacker->client->ps.userInt3 & 1 << FLAG_ATTACKFAKE ? qtrue : qfalse;
 
-	if (PM_SaberInnonblockableAttack(attacker->client->ps.torsoAnim))
+	if (pm_saber_innonblockable_attack(attacker->client->ps.torsoAnim))
 	{
 		//perfect Blocking
 		if (m_blocking) // A perfectly timed block
@@ -722,7 +723,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 	else if (BG_SaberInNonIdleDamageMove(&blocker->client->ps, blocker->localAnimIndex))
 	{
 		//and blocker is attacking
-		if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
+		if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
 		{
 			Com_Printf(S_COLOR_YELLOW"Both Attacker and Blocker are now attacking\n");
 		}
@@ -732,11 +733,11 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 	else if (PM_SuperBreakWinAnim(attacker->client->ps.torsoAnim))
 	{
 		//attacker was attempting a superbreak and he hit someone who could block the move, rail him for screwing up.
-		sab_beh_add_balance(attacker, 1);
+		sab_beh_add_balance(attacker, MPCOST_PARRIED);
 
 		sab_beh_animate_heavy_slow_bounce_attacker(attacker);
 
-		sab_beh_add_balance(blocker, -1);
+		sab_beh_add_balance(blocker, -MPCOST_PARRIED);
 		if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 		{
 			Com_Printf(S_COLOR_YELLOW"Attacker Super break win / fail\n");
@@ -762,7 +763,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 			sab_beh_add_balance(blocker, MPCOST_PARRYING_ATTACKFAKE);
 			sab_beh_add_mishap_Fake_attacker(attacker, blocker);
 
-			if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
+			if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
 			{
 				Com_Printf(S_COLOR_YELLOW"Attackers Attack Fake was P-Blocked\n");
 			}
@@ -770,7 +771,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 		else
 		{
 			//otherwise, the defender stands a good chance of having his defensive broken.
-			sab_beh_add_balance(attacker, -1);
+			sab_beh_add_balance(attacker, -MPCOST_PARRIED);
 
 			if (WP_SabersCheckLock(attacker, blocker))
 			{
@@ -779,7 +780,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				blocker->client->ps.saberBlocked = BLOCKED_NONE;
 			}
 
-			if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
+			if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
 			{
 				Com_Printf(S_COLOR_YELLOW"Attacker forced a saberlock\n");
 			}
@@ -820,6 +821,8 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				sab_beh_attack_blocked(attacker, blocker, qfalse);
 			}
 
+			sab_beh_add_balance(blocker, -MPCOST_PARRIED);
+
 			if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 			{
 				Com_Printf(S_COLOR_YELLOW"Attackers Attack was Blocked\n");
@@ -831,13 +834,27 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 
 			if (!m_blocking)
 			{
-				sab_beh_attack_blocked(attacker, blocker, qtrue);
-				G_Stagger(blocker);
-			}
+				if (pm_saber_innonblockable_attack(blocker->client->ps.torsoAnim))
+				{
+					sab_beh_animate_heavy_slow_bounce_attacker(attacker);
 
-			if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
-			{
-				Com_Printf(S_COLOR_ORANGE"Attacker All the rest of the types of contact\n");
+					sab_beh_add_balance(blocker, -MPCOST_PARRIED);
+					if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
+					{
+						Com_Printf(S_COLOR_ORANGE"Attack an Unblockable attack\n");
+					}
+				}
+				else
+				{
+					sab_beh_attack_blocked(attacker, blocker, qtrue);
+
+					G_Stagger(blocker);
+
+					if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
+					{
+						Com_Printf(S_COLOR_ORANGE"Attacker All the rest of the types of contact\n");
+					}
+				}
 			}
 		}
 	}
@@ -853,7 +870,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 	const qboolean active_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse; //Active Blocking
 	const qboolean npc_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING ? qtrue : qfalse;//Active NPC Blocking
 
-	if (!PM_SaberInnonblockableAttack(attacker->client->ps.torsoAnim))
+	if (!pm_saber_innonblockable_attack(attacker->client->ps.torsoAnim))
 	{
 		if (blocker->client->ps.fd.blockPoints <= BLOCKPOINTS_FATIGUE) // blocker has less than 20BP
 		{
@@ -935,17 +952,11 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 					blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;
 
-					if (attacker->r.svFlags & SVF_BOT) //NPC only
-					{
-						g_do_m_block_response(attacker);
-					}
-
 					if (!(blocker->r.svFlags & SVF_BOT))
 					{
 						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 					}
-					G_Sound(blocker, CHAN_AUTO,
-						G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+					G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 					if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 					{
@@ -1025,11 +1036,6 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					}
 				}
 
-				if (!(blocker->r.svFlags & SVF_BOT))
-				{
-					CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
-				}
-
 				if (blocker->r.svFlags & SVF_BOT) //NPC only
 				{
 					//
@@ -1038,9 +1044,19 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				{
 					PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_TEN);
 				}
+
+				if (attacker->r.svFlags & SVF_BOT) //NPC only
+				{
+					wp_block_points_regenerate_over_ride(attacker, BLOCKPOINTS_DANGER);
+				}
 				if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 				{
 					Com_Printf(S_COLOR_CYAN"Blocker Holding block button only (spamming block) cost 10\n");
+				}
+
+				if (!(blocker->r.svFlags & SVF_BOT))
+				{
+					CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 				}
 
 				//just so blocker knows that he has parried the attacker
@@ -1085,11 +1101,12 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					}
 					else
 					{
+						WP_SaberMBlockDirection(blocker, hit_loc, qfalse);
+
 						if (blocker->r.svFlags & SVF_BOT) //NPC only
 						{
 							g_do_m_block_response(blocker);
 						}
-						WP_SaberMBlockDirection(blocker, hit_loc, qfalse);
 
 						if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 						{

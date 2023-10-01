@@ -5948,16 +5948,16 @@ weapChecks:
 						if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
 						{
 							pm->ps->saberFatigueChainCount++;
-			}
-		}
-	}
+						}
+					}
+				}
 				else
 #endif
 				{
 					//player gets his by directional control
 					newmove = saber_moveData[curmove].chain_idle; //oops, not attacking, so don't chain
 				}
-}
+			}
 			else
 			{
 				PM_Setsaber_move(LS_READY);
@@ -6125,7 +6125,7 @@ weapChecks:
 				{
 					//NPCs use more randomized attacks the more skilled they are
 					newmove = PM_NPCSaberAttackFromQuad(saber_moveData[curmove].endQuad);
-			}
+				}
 				else
 #endif
 				{
@@ -6163,7 +6163,7 @@ weapChecks:
 					//cannot chain this time
 					newmove = saber_moveData[curmove].chain_idle;
 				}
-		}
+			}
 
 			if (newmove != LS_NONE)
 			{
@@ -6918,7 +6918,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		}
 
 		parts = SETANIM_TORSO;
-			}
+	}
 
 	if (!pm->ps->m_iVehicleNum)
 	{
@@ -7229,7 +7229,7 @@ saberInfo_t* BG_MySaber(int client_num, int saber_num)
 #endif
 
 	return NULL;
-		}
+}
 
 qboolean PM_DoKick(void)
 {
@@ -7450,23 +7450,21 @@ qboolean BG_SaberInFullDamageMove(const playerState_t* ps, const int anim_index)
 		//in attack animation
 		if ((ps->saber_move == LS_A_FLIP_STAB || ps->saber_move == LS_A_FLIP_SLASH
 			|| ps->saber_move == BOTH_JUMPFLIPSTABDOWN || ps->saber_move == BOTH_JUMPFLIPSLASHDOWN1)
-			&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.95f)) //assumes that the dude is
+			&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.75f)) //assumes that the dude is
 		{
 			//flip attacks shouldn't do damage during the whole move.
 			return qtrue;
 		}
 
-		if ((ps->saber_move == BOTH_ROLL_STAB
-			|| ps->saber_move == LS_ROLL_STAB) && (torso_anim_point >= 0.30f && torso_anim_point <= 0.95f))
+		if ((ps->saber_move == BOTH_ROLL_STAB || ps->saber_move == LS_ROLL_STAB)
+			&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.95f))
 		{
 			//don't do damage during the follow thru part of the roll stab.
 			return qtrue;
 		}
 
-		if ((ps->saber_move == BOTH_STABDOWN || ps->saber_move == BOTH_STABDOWN_STAFF || ps->saber_move ==
-			BOTH_STABDOWN_DUAL
-			|| ps->saber_move == LS_STABDOWN || ps->saber_move == LS_STABDOWN_STAFF || ps->saber_move ==
-			LS_STABDOWN_DUAL)
+		if ((ps->saber_move == BOTH_STABDOWN || ps->saber_move == BOTH_STABDOWN_STAFF || ps->saber_move == BOTH_STABDOWN_DUAL
+			|| ps->saber_move == LS_STABDOWN || ps->saber_move == LS_STABDOWN_STAFF || ps->saber_move == LS_STABDOWN_DUAL)
 			&& (torso_anim_point >= 0.35f && torso_anim_point <= 0.95f))
 		{
 			//don't do damage during the follow thru part of the stab.
@@ -7489,7 +7487,7 @@ qboolean BG_SaberInPartialDamageMove(const playerState_t* ps, const int anim_ind
 
 	if ((ps->saber_move == LS_A_FLIP_STAB || ps->saber_move == LS_A_FLIP_SLASH
 		|| ps->saber_move == BOTH_JUMPFLIPSTABDOWN || ps->saber_move == BOTH_JUMPFLIPSLASHDOWN1)
-		&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.95f)) //assumes that the dude is
+		&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.75f)) //assumes that the dude is
 	{
 		//flip attacks shouldn't do damage during the whole move.
 		return qtrue;
