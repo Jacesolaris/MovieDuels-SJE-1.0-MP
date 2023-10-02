@@ -89,6 +89,12 @@ qboolean PM_SaberStanceAnim(const int anim)
 	case BOTH_SABEROBI_STANCE: //obiwan
 	case BOTH_SABEREADY_STANCE: //ready
 	case BOTH_SABER_REY_STANCE: //rey
+	case BOTH_STAND_SABER_ON_IDLE:
+	case BOTH_STAND_SABER_ON_IDLE_DUELS:
+	case BOTH_STAND_SABER_ON_IDLE_STAFF:
+	case BOTH_STAND_SABER_ON:
+	case BOTH_STAND_SABER_ON_DUELS:
+	case BOTH_STAND_SABER_ON_STAFF:
 		return qtrue;
 	default:;
 	}
@@ -294,6 +300,12 @@ qboolean PM_InSaberStandAnim(const int anim)
 	case BOTH_SABEROBI_STANCE: //obiwan
 	case BOTH_SABEREADY_STANCE: //ready
 	case BOTH_SABER_REY_STANCE: //rey
+	case BOTH_STAND_SABER_ON_IDLE:
+	case BOTH_STAND_SABER_ON_IDLE_DUELS:
+	case BOTH_STAND_SABER_ON_IDLE_STAFF:
+	case BOTH_STAND_SABER_ON:
+	case BOTH_STAND_SABER_ON_DUELS:
+	case BOTH_STAND_SABER_ON_STAFF:
 		return qtrue;
 	default:
 		return qfalse;
@@ -437,7 +449,7 @@ qboolean PM_SaberInAttack(const int move)
 	case LS_TAUNTAUN_ATTACK_RIGHT:
 	case LS_TAUNTAUN_ATTACK_LEFT:
 	case LS_KICK_F:
-	case LS_KICK_F2:
+	case LS_KICK_F_MD:
 	case LS_KICK_B:
 	case LS_KICK_B2:
 	case LS_KICK_B3:
@@ -664,6 +676,7 @@ qboolean PM_InAnimForsaber_move(int anim, const int saber_move)
 	case BOTH_FORCELONGLEAP_ATTACK2:
 	case BOTH_A7_KICK_F:
 	case BOTH_A7_KICK_F2:
+	case BOTH_KICK_F_MD:
 	case BOTH_A7_KICK_B:
 	case BOTH_A7_KICK_B2:
 	case BOTH_A7_KICK_B3:
@@ -956,10 +969,10 @@ qboolean PM_BoltBlockingAnim(const int anim)
 		//
 	case BOTH_B7_TR___:
 	case BOTH_B6_TR___:
-	case BOTH_K1_S1_TR_ALT:
+	case BOTH_K1_S1_TR_MD:
 	case BOTH_B7_TL___:
 	case BOTH_B6_TL___:
-	case BOTH_K1_S1_TL_ALT:
+	case BOTH_K1_S1_TL_MD:
 	case BOTH_B7_BR___:
 	case BOTH_B6_BR___:
 	case BOTH_B1_BR___:
@@ -1202,7 +1215,7 @@ qboolean PM_SaberInSpecial(const int move)
 	case LS_TAUNTAUN_ATTACK_RIGHT:
 	case LS_TAUNTAUN_ATTACK_LEFT:
 	case LS_KICK_F:
-	case LS_KICK_F2:
+	case LS_KICK_F_MD:
 	case LS_KICK_B:
 	case LS_KICK_B2:
 	case LS_KICK_B3:
@@ -1252,7 +1265,7 @@ qboolean PM_kick_move(const int move)
 	switch (move)
 	{
 	case LS_KICK_F:
-	case LS_KICK_F2:
+	case LS_KICK_F_MD:
 	case LS_KICK_B:
 	case LS_KICK_B2:
 	case LS_KICK_B3:
@@ -1511,6 +1524,7 @@ qboolean pm_saber_in_special_attack(const int anim)
 	case BOTH_VT_ATL_S:
 	case BOTH_A7_KICK_F:
 	case BOTH_A7_KICK_F2:
+	case BOTH_KICK_F_MD:
 	case BOTH_A7_KICK_B:
 	case BOTH_A7_KICK_B2:
 	case BOTH_A7_KICK_B3:
@@ -1650,6 +1664,7 @@ qboolean PM_KickingAnim(const int anim)
 	{
 	case BOTH_A7_KICK_F:
 	case BOTH_A7_KICK_F2:
+	case BOTH_KICK_F_MD:
 	case BOTH_A7_KICK_B:
 	case BOTH_A7_KICK_B2:
 	case BOTH_A7_KICK_B3:
@@ -2386,6 +2401,12 @@ qboolean PM_StandingAnim(const int anim)
 	case BOTH_ATTACK3:
 	case BOTH_ATTACK5:
 	case BOTH_ATTACK6:
+	case BOTH_STAND_SABER_ON_IDLE:
+	case BOTH_STAND_SABER_ON_IDLE_DUELS:
+	case BOTH_STAND_SABER_ON_IDLE_STAFF:
+	case BOTH_STAND_SABER_ON:
+	case BOTH_STAND_SABER_ON_DUELS:
+	case BOTH_STAND_SABER_ON_STAFF:
 		return qtrue;
 	default:;
 	}
@@ -2429,6 +2450,12 @@ qboolean PM_StandingAtReadyAnim(const int anim)
 	case TORSO_WEAPONIDLE2:
 	case TORSO_WEAPONIDLE3:
 	case TORSO_WEAPONIDLE4:
+	case BOTH_STAND_SABER_ON_IDLE:
+	case BOTH_STAND_SABER_ON_IDLE_DUELS:
+	case BOTH_STAND_SABER_ON_IDLE_STAFF:
+	case BOTH_STAND_SABER_ON:
+	case BOTH_STAND_SABER_ON_DUELS:
+	case BOTH_STAND_SABER_ON_STAFF:
 		return qtrue;
 	default:;
 	}
@@ -3332,8 +3359,8 @@ int pm_power_level_for_saber_anims(const playerState_t* ps)
 		//
 	case BOTH_BLOCKATTACK_LEFT:
 	case BOTH_BLOCKATTACK_RIGHT:
-	case BOTH_K1_S1_TR_ALT:
-	case BOTH_K1_S1_TL_ALT:
+	case BOTH_K1_S1_TR_MD:
+	case BOTH_K1_S1_TL_MD:
 	case BOTH_K1_S1_TR_OLD:
 	case BOTH_K1_S1_TL_OLD:
 	case BOTH_K1_S1_TR_PB:
@@ -4570,6 +4597,7 @@ qboolean BG_FullBodyTauntAnim(const int anim)
 	case BOTH_BOW:
 	case BOTH_MEDITATE:
 	case BOTH_MEDITATE1:
+	case BOTH_MEDITATE_SABER: // default taunt
 	case BOTH_SHOWOFF_FAST:
 	case BOTH_SHOWOFF_MEDIUM:
 	case BOTH_SHOWOFF_STRONG:
@@ -6591,6 +6619,9 @@ qboolean BG_SprintSaberAnim(const int anim)
 	{
 	case BOTH_SPRINT_SABER:
 	case BOTH_SPRINT_SABER_MP:
+	case BOTH_SPRINT_SINGLE_LIGHTSABER:
+	case BOTH_SPRINT_STAFF_LIGHTSABER:
+	case BOTH_SPRINT_DUAL_LIGHTSABER:
 		return qtrue;
 	default:;
 	}
@@ -6623,6 +6654,12 @@ qboolean manual_saberreadyanim(const int anim)
 	case BOTH_SABEROBI_STANCE: //obiwan
 	case BOTH_SABEREADY_STANCE: //ready
 	case BOTH_SABER_REY_STANCE: //rey
+	case BOTH_STAND_SABER_ON_IDLE:
+	case BOTH_STAND_SABER_ON_IDLE_DUELS:
+	case BOTH_STAND_SABER_ON_IDLE_STAFF:
+	case BOTH_STAND_SABER_ON:
+	case BOTH_STAND_SABER_ON_DUELS:
+	case BOTH_STAND_SABER_ON_STAFF:
 		return qtrue;
 	default:;
 	}

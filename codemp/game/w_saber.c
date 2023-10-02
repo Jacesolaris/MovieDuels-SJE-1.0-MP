@@ -9163,7 +9163,7 @@ qboolean saberCheckKnockdown_BrokenParry(gentity_t* saberent, gentity_t* saberOw
 	return qfalse;
 }
 
-qboolean BG_InExtraDefensesaber_move(int move);
+extern qboolean BG_InExtraDefensesaber_move(int move);
 
 //Called upon an enemy actually slashing into a thrown saber
 qboolean saberCheckKnockdown_Smashed(gentity_t* saberent, gentity_t* saberOwner, const gentity_t* other,
@@ -10003,7 +10003,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F
-		|| pusher->client->ps.legsAnim == BOTH_A7_KICK_F2
+		|| pusher->client->ps.legsAnim == BOTH_KICK_F_MD
 		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK1
 		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK2
 		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK3) //for the front kick
@@ -10013,7 +10013,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F2)
+		if (pusher->client->ps.legsAnim == BOTH_KICK_F_MD)
 		{
 			G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/swing%d", Q_irand(1, 4))));
 		}
@@ -11014,6 +11014,7 @@ static void G_KickSomeMofos(gentity_t* ent)
 			break;
 		case BOTH_A7_KICK_F:
 		case BOTH_A7_KICK_F2:
+		case BOTH_KICK_F_MD:
 			kick_sound_on_walls = qtrue;
 			if (elapsed_time >= 250 && remaining_time >= 250)
 			{
@@ -13707,7 +13708,7 @@ qboolean WP_SaberMBlockDirection(gentity_t* self, vec3_t hitloc, const qboolean 
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_B6_TR___, SETANIM_AFLAG_PACE, 0);
 				break;
 			default:
-				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TR_ALT, SETANIM_AFLAG_PACE, 0);
+				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TR_MD, SETANIM_AFLAG_PACE, 0);
 				break;
 			}
 			self->client->ps.weaponTime = Q_irand(300, 600);
@@ -13723,7 +13724,7 @@ qboolean WP_SaberMBlockDirection(gentity_t* self, vec3_t hitloc, const qboolean 
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_B6_TL___, SETANIM_AFLAG_PACE, 0);
 				break;
 			default:
-				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TL_ALT, SETANIM_AFLAG_PACE, 0);
+				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TL_MD, SETANIM_AFLAG_PACE, 0);
 				break;
 			}
 			self->client->ps.weaponTime = Q_irand(300, 600);
@@ -13762,7 +13763,7 @@ qboolean WP_SaberMBlockDirection(gentity_t* self, vec3_t hitloc, const qboolean 
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_B6_TR___, SETANIM_AFLAG_PACE, 0);
 				break;
 			default:
-				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TR_ALT, SETANIM_AFLAG_PACE, 0);
+				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TR_MD, SETANIM_AFLAG_PACE, 0);
 				break;
 			}
 			self->client->ps.weaponTime = Q_irand(300, 600);
@@ -13778,7 +13779,7 @@ qboolean WP_SaberMBlockDirection(gentity_t* self, vec3_t hitloc, const qboolean 
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_B6_TL___, SETANIM_AFLAG_PACE, 0);
 				break;
 			default:
-				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TL_ALT, SETANIM_AFLAG_PACE, 0);
+				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_K1_S1_TL_MD, SETANIM_AFLAG_PACE, 0);
 				break;
 			}
 			self->client->ps.weaponTime = Q_irand(300, 600);
@@ -15224,7 +15225,7 @@ saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 			if (self->client->ps.groundEntityNum != ENTITYNUM_NONE && self->client->ps.weapon == WP_SABER && !
 				BG_SabersOff(&self->client->ps))
 			{
-				kick_move = LS_KICK_F2;
+				kick_move = LS_KICK_F_MD;
 			}
 			else
 			{
@@ -15268,7 +15269,7 @@ saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 				case LS_KICK_F:
 					kick_move = LS_KICK_F_AIR;
 					break;
-				case LS_KICK_F2:
+				case LS_KICK_F_MD:
 					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:

@@ -279,7 +279,7 @@ saber_moveData_t saber_moveData[LS_MOVE_MAX] = {
 	{"TauntaunAtkL", BOTH_VT_ATL_S, Q_L, Q_T, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
 	// LS_TAUNTAUN_ATTACK_LEFT
 	{"StfKickFwd", BOTH_A7_KICK_F, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200}, // LS_KICK_F
-	{"StfKickFwd2", BOTH_A7_KICK_F2, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200}, // LS_KICK_F2
+	{"StfKickFwd2", BOTH_KICK_F_MD, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200}, // LS_KICK_F_MD
 	{"StfKickBack", BOTH_A7_KICK_B, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200}, // LS_KICK_B
 	{"StfKickBack2", BOTH_A7_KICK_B2, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200}, // LS_KICK_B2
 	{"StfKickBack3", BOTH_A7_KICK_B3, Q_R, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_S_R2L, 200}, // LS_KICK_B3
@@ -512,9 +512,9 @@ saber_moveData_t saber_moveData[LS_MOVE_MAX] = {
 	{"Reflect Attack_F", BOTH_P7_S7_T_, Q_R, Q_TL, AFLAG_ACTIVE, 50, BLK_WIDE, LS_R_BL2TR, LS_A_TR2BL, 150},
 	// LS_REFLECT_ATTACK_FRONT,
 
-	{"Block Full_R", BOTH_K1_S1_TR_ALT, Q_R, Q_TL, AFLAG_ACTIVE, 50, BLK_WIDE, LS_R_BL2TR, LS_A_TR2BL, 150},
+	{"Block Full_R", BOTH_K1_S1_TR_MD, Q_R, Q_TL, AFLAG_ACTIVE, 50, BLK_WIDE, LS_R_BL2TR, LS_A_TR2BL, 150},
 	// LS_BLOCK_FULL_RIGHT,
-	{"Block Full_L", BOTH_K1_S1_TL_ALT, Q_R, Q_TL, AFLAG_ACTIVE, 50, BLK_WIDE, LS_R_BL2TR, LS_A_TR2BL, 150},
+	{"Block Full_L", BOTH_K1_S1_TL_MD, Q_R, Q_TL, AFLAG_ACTIVE, 50, BLK_WIDE, LS_R_BL2TR, LS_A_TR2BL, 150},
 	// LS_BLOCK_FULL_LEFT,
 
 	{"Block Perfect_R", BOTH_K1_S1_TR_PB, Q_R, Q_TL, AFLAG_ACTIVE, 50, BLK_WIDE, LS_R_BL2TR, LS_A_TR2BL, 150},
@@ -3607,7 +3607,7 @@ void PM_TryAirKick(const saber_moveName_t kick_move)
 					PM_Setsaber_move(LS_KICK_F);
 					break;
 				case LS_KICK_F_AIR2:
-					PM_Setsaber_move(LS_KICK_F2);
+					PM_Setsaber_move(LS_KICK_F_MD);
 					break;
 				case LS_KICK_B_AIR:
 					PM_Setsaber_move(LS_KICK_B);
@@ -3696,7 +3696,7 @@ int PM_CheckKick(void)
 				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && !
 					BG_SabersOff(pm->ps))
 				{
-					kick_move = LS_KICK_F2;
+					kick_move = LS_KICK_F_MD;
 				}
 				else
 				{
@@ -3799,7 +3799,7 @@ int PM_MeleeMoveForConditions(void)
 				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && !
 					BG_SabersOff(pm->ps))
 				{
-					kick_move = LS_KICK_F2;
+					kick_move = LS_KICK_F_MD;
 				}
 				else
 				{
@@ -5275,7 +5275,7 @@ void PM_WeaponLightsaber(void)
 					if (kick_move == LS_HILT_BASH)
 					{
 						//yeah.. no hilt to bash with!
-						kick_move = LS_KICK_F2;
+						kick_move = LS_KICK_F_MD;
 					}
 					if (kick_move != -1)
 					{
@@ -5596,9 +5596,25 @@ weapChecks:
 		{
 			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_MP, SETANIM_FLAG_NORMAL);
 		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_SABER)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_SABER, SETANIM_FLAG_NORMAL);
+		}
 		else if (pm->ps->legsAnim == BOTH_SPRINT_SABER_MP)
 		{
 			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_SABER_MP, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_SINGLE_LIGHTSABER)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_SINGLE_LIGHTSABER, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_STAFF_LIGHTSABER)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_STAFF_LIGHTSABER, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_DUAL_LIGHTSABER)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_DUAL_LIGHTSABER, SETANIM_FLAG_NORMAL);
 		}
 		else if (pm->ps->legsAnim == BOTH_RUN3)
 		{
@@ -5607,6 +5623,62 @@ weapChecks:
 		else if (pm->ps->legsAnim == BOTH_RUN3_MP)
 		{
 			PM_SetAnim(SETANIM_TORSO, BOTH_RUN3_MP, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_JOG_BAZOOKA)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_JOG_BAZOOKA, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_JOG_BLASTER)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_JOG_BLASTER, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_JOG_DOUBLE_PISTOL)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_JOG_DOUBLE_PISTOL, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_JOG_GRENADE)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_JOG_GRENADE, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_JOG_HEAVY)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_JOG_HEAVY, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_JOG_MINIGUN)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_JOG_MINIGUN, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_JOG_PISTOL)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_JOG_PISTOL, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_BAZOOKA)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_BAZOOKA, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_BLASTER)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_BLASTER, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_DOUBLE_PISTOL)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_DOUBLE_PISTOL, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_GRENADE)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_GRENADE, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_HEAVY)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_HEAVY, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_MINIGUN)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_MINIGUN, SETANIM_FLAG_NORMAL);
+		}
+		else if (pm->ps->legsAnim == BOTH_SPRINT_PISTOL)
+		{
+			PM_SetAnim(SETANIM_TORSO, BOTH_SPRINT_PISTOL, SETANIM_FLAG_NORMAL);
 		}
 		else if (pm->ps->legsAnim == BOTH_RUN4)
 		{
@@ -5776,7 +5848,7 @@ weapChecks:
 						case LS_KICK_F:
 							kick_move = LS_KICK_F_AIR;
 							break;
-						case LS_KICK_F2:
+						case LS_KICK_F_MD:
 							kick_move = LS_KICK_F_AIR2;
 							break;
 						case LS_KICK_B:
@@ -6248,11 +6320,27 @@ weapChecks:
 			case BOTH_VADERWALK2:
 			case BOTH_SPRINT:
 			case BOTH_SPRINT_MP:
+			case BOTH_SPRINT_SABER:
 			case BOTH_SPRINT_SABER_MP:
+			case BOTH_SPRINT_SINGLE_LIGHTSABER:
 			case BOTH_RUN1:
 			case BOTH_RUN2:
 			case BOTH_RUN3:
 			case BOTH_RUN3_MP:
+			case BOTH_JOG_BAZOOKA:
+			case BOTH_JOG_BLASTER:
+			case BOTH_JOG_DOUBLE_PISTOL:
+			case BOTH_JOG_GRENADE:
+			case BOTH_JOG_HEAVY:
+			case BOTH_JOG_MINIGUN:
+			case BOTH_JOG_PISTOL:
+			case BOTH_SPRINT_BAZOOKA:
+			case BOTH_SPRINT_BLASTER:
+			case BOTH_SPRINT_DOUBLE_PISTOL:
+			case BOTH_SPRINT_GRENADE:
+			case BOTH_SPRINT_HEAVY:
+			case BOTH_SPRINT_MINIGUN:
+			case BOTH_SPRINT_PISTOL:
 			case BOTH_RUN4:
 			case BOTH_RUN5:
 			case BOTH_RUN6:
@@ -6262,6 +6350,8 @@ weapChecks:
 			case BOTH_RUN10:
 			case BOTH_RUN_STAFF:
 			case BOTH_RUN_DUAL:
+			case BOTH_SPRINT_STAFF_LIGHTSABER:
+			case BOTH_SPRINT_DUAL_LIGHTSABER:
 			case BOTH_RUNBACK1:
 			case BOTH_RUNBACK2:
 			case BOTH_RUNBACK_STAFF:
@@ -7022,11 +7112,16 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			{
 				parts = SETANIM_BOTH;
 			}
-			else if (!(pm->ps->pm_flags & PMF_DUCKED)
-				&& (new_move == LS_SPINATTACK_DUAL || new_move == LS_SPINATTACK || new_move == LS_SPINATTACK_GRIEV ||
-					new_move == LS_GRIEVOUS_SPECIAL))
+			else if ((new_move == LS_SPINATTACK_DUAL || new_move == LS_SPINATTACK || new_move == LS_SPINATTACK_GRIEV ||	new_move == LS_GRIEVOUS_SPECIAL))
 			{
-				parts = SETANIM_BOTH;
+				if (pm->ps->pm_flags & PMF_DUCKED)
+				{
+					parts = SETANIM_BOTH;
+				}
+				else
+				{
+					parts = SETANIM_TORSO;
+				}
 			}
 		}
 
@@ -7094,7 +7189,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 				{
 					//wasn't playing that attack before
 					if (new_move != LS_KICK_F
-						&& new_move != LS_KICK_F2
+						&& new_move != LS_KICK_F_MD
 						&& new_move != LS_KICK_B
 						&& new_move != LS_KICK_B2
 						&& new_move != LS_KICK_B3
@@ -7263,7 +7358,7 @@ qboolean PM_DoKick(void)
 				case LS_KICK_F:
 					kick_move = LS_KICK_F_AIR;
 					break;
-				case LS_KICK_F2:
+				case LS_KICK_F_MD:
 					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:
@@ -7355,7 +7450,7 @@ qboolean PM_DoSlap(void)
 				case LS_KICK_F:
 					kick_move = LS_KICK_F_AIR;
 					break;
-				case LS_KICK_F2:
+				case LS_KICK_F_MD:
 					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:

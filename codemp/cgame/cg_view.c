@@ -1190,6 +1190,7 @@ qboolean CG_CalcFOVFromX(float fov_x)
 
 		if (cg.snap->ps.legsAnim == BOTH_MEDITATE
 			|| cg.snap->ps.legsAnim == BOTH_MEDITATE1
+			|| cg.snap->ps.legsAnim == BOTH_MEDITATE_SABER
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH1
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH2
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH3
@@ -1219,6 +1220,7 @@ qboolean CG_CalcFOVFromX(float fov_x)
 
 		if (cg.snap->ps.legsAnim == BOTH_MEDITATE
 			|| cg.snap->ps.legsAnim == BOTH_MEDITATE1
+			|| cg.snap->ps.legsAnim == BOTH_MEDITATE_SABER
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH1
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH2
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH3
@@ -1799,6 +1801,7 @@ static int CG_CalcViewValues(void)
 
 		if (cg.snap->ps.legsAnim == BOTH_MEDITATE
 			|| cg.snap->ps.legsAnim == BOTH_MEDITATE1
+			|| cg.snap->ps.legsAnim == BOTH_MEDITATE_SABER
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH1
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH2
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH3
@@ -1828,6 +1831,7 @@ static int CG_CalcViewValues(void)
 
 		if (cg.snap->ps.legsAnim == BOTH_MEDITATE
 			|| cg.snap->ps.legsAnim == BOTH_MEDITATE1
+			|| cg.snap->ps.legsAnim == BOTH_MEDITATE_SABER
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH1
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH2
 			|| cg.snap->ps.legsAnim == BOTH_CROUCH3

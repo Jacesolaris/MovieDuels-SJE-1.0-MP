@@ -8787,8 +8787,8 @@ qboolean PM_RunningAnim(const int anim)
 	case BOTH_RUN9:
 	case BOTH_RUN10:
 	case BOTH_SPRINT_SABER:
-	case BOTH_SPRINT_MP:
 	case BOTH_SPRINT_SABER_MP:
+	case BOTH_SPRINT_MP:
 	case SBD_RUNBACK_NORMAL:
 	case SBD_RUNING_WEAPON:
 	case SBD_RUNBACK_WEAPON:
@@ -9739,9 +9739,6 @@ static void PM_Footsteps(void)
 			&& !PM_SaberInBrokenParry(pm->ps->saber_move)
 			|| PM_SaberStanceAnim(pm->ps->legsAnim)
 			|| PM_SaberDrawPutawayAnim(pm->ps->legsAnim)
-			|| pm->ps->legsAnim == BOTH_SPINATTACK6 //not a full-body spin, just spinning the saber
-			|| pm->ps->legsAnim == BOTH_SPINATTACK7 //not a full-body spin, just spinning the saber
-			|| pm->ps->legsAnim == BOTH_SPINATTACKGRIEVOUS //not a full-body spin, just spinning the saber
 			|| pm->ps->legsAnim == BOTH_BUTTON_HOLD
 			|| pm->ps->legsAnim == BOTH_BUTTON_RELEASE
 			|| pm->ps->legsAnim == BOTH_THERMAL_READY
@@ -9767,11 +9764,7 @@ static void PM_Footsteps(void)
 	//
 	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0] + pm->ps->velocity[1] * pm->ps->velocity[1]);
 
-	if (pm->ps->saber_move == LS_SPINATTACK)
-	{
-		PM_ContinueLegsAnim(pm->ps->torsoAnim);
-	}
-	else if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		// airborne leaves position in cycle intact, but doesn't advance
 		if (pm->waterlevel > 1)
@@ -9942,12 +9935,7 @@ static void PM_Footsteps(void)
 		return;
 	}
 
-	if (pm->ps->saber_move == LS_SPINATTACK)
-	{
-		bobmove = 0.2f;
-		PM_ContinueLegsAnim(pm->ps->torsoAnim);
-	}
-	else if (pm->ps->pm_flags & PMF_DUCKED)
+	if (pm->ps->pm_flags & PMF_DUCKED)
 	{
 		int rolled = 0;
 
@@ -10299,7 +10287,7 @@ static void PM_Footsteps(void)
 							}
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10377,7 +10365,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN3_MP;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10431,7 +10419,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN6;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10503,7 +10491,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN7;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10556,7 +10544,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN6;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10712,7 +10700,7 @@ static void PM_Footsteps(void)
 									{
 										if (holding_block && pm->ps->sprintFuel > 15) // staff sprint here
 										{
-											PM_SetAnim(SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
+											PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_STAFF_LIGHTSABER, set_anim_flags);
 
 											if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 											{
@@ -10783,7 +10771,7 @@ static void PM_Footsteps(void)
 											}
 											else
 											{
-												PM_SetAnim(SETANIM_BOTH, BOTH_RUN_DUAL, set_anim_flags);
+												PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_DUAL_LIGHTSABER, set_anim_flags);
 											}
 
 											if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
@@ -10866,13 +10854,17 @@ static void PM_Footsteps(void)
 										}
 										else
 										{
-											if (holding_block && pm->ps->sprintFuel > 10) // single sprint here
+											if (holding_block && pm->ps->sprintFuel > 15) // single sprint here
 											{
-												PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SABER_MP, set_anim_flags);
+												PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SINGLE_LIGHTSABER, set_anim_flags);
 
-												if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+												if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 												{
-													pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+													pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+												}
+												if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
+												{
+													pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 													g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 													if (pm->ps->sprintFuel < 17) // single sprint here
@@ -13475,7 +13467,7 @@ void PM_Weapon(void)
 							case LS_KICK_F:
 								kick_move = LS_KICK_F_AIR;
 								break;
-							case LS_KICK_F2:
+							case LS_KICK_F_MD:
 								kick_move = LS_KICK_F_AIR2;
 								break;
 							case LS_KICK_B:
@@ -14071,7 +14063,7 @@ void PM_Weapon(void)
 								case LS_KICK_F:
 									kick_move = LS_KICK_F_AIR;
 									break;
-								case LS_KICK_F2:
+								case LS_KICK_F_MD:
 									kick_move = LS_KICK_F_AIR2;
 									break;
 								case LS_KICK_B:
@@ -14156,7 +14148,7 @@ void PM_Weapon(void)
 					if (kick_move == LS_HILT_BASH)
 					{
 						//yeah.. no hilt to bash with!
-						kick_move = LS_KICK_F2;
+						kick_move = LS_KICK_F_MD;
 					}
 
 					if (kick_move != -1)
@@ -14176,7 +14168,7 @@ void PM_Weapon(void)
 								case LS_KICK_F:
 									kick_move = LS_KICK_F_AIR;
 									break;
-								case LS_KICK_F2:
+								case LS_KICK_F_MD:
 									kick_move = LS_KICK_F_AIR2;
 									break;
 								case LS_KICK_B:
@@ -15883,40 +15875,6 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 			ps->speed *= 0.2f;
 	}
 
-	// slow down spin/crouch if un-nerfed
-#ifdef _GAME
-	if (!(m_nerf.integer & 1 << EOC_SPINATTACK) && (ps->saber_move == LS_SPINATTACK_DUAL || ps->saber_move ==
-		LS_SPINATTACK || ps->saber_move == LS_SPINATTACK_GRIEV))
-#else
-	if (!(cgs.m_nerf & 1 << EOC_SPINATTACK) && (ps->saber_move == LS_SPINATTACK_DUAL || ps->saber_move == LS_SPINATTACK
-		|| ps->saber_move == LS_SPINATTACK_GRIEV))
-#endif
-	{
-		ps->speed *= 0.5;
-	}
-
-	// slow down dual specials if un-nerfed
-#ifdef _GAME
-	if (!(m_nerf.integer & 1 << EOC_DUALSPECIAL) && (ps->saber_move == LS_JUMPATTACK_DUAL || ps->saber_move ==
-		LS_GRIEVOUS_LUNGE))
-#else
-	if (!(cgs.m_nerf & 1 << EOC_DUALSPECIAL) && (ps->saber_move == LS_JUMPATTACK_DUAL || ps->saber_move ==
-		LS_GRIEVOUS_LUNGE))
-#endif
-	{
-		ps->speed *= 0.66;
-	}
-
-	// slow down staff specials if un-nerfed
-#ifdef _GAME
-	if (!(m_nerf.integer & 1 << EOC_STAFFSPECIAL) && ps->saber_move == LS_JUMPATTACK_STAFF_RIGHT)
-#else
-	if (!(cgs.m_nerf & 1 << EOC_STAFFSPECIAL) && ps->saber_move == LS_JUMPATTACK_STAFF_RIGHT)
-#endif
-	{
-		ps->speed *= 0.66;
-	}
-
 	if (pm->ps->stats[STAT_HEALTH] <= 25)
 	{
 		//move slower when low on health
@@ -17581,15 +17539,6 @@ static QINLINE void PM_CmdForsaber_moves(usercmd_t* ucmd)
 		}
 		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
 	}
-	//STAFF/DUAL SPIN ATTACK
-	else if (pm->ps->saber_move == LS_SPINATTACK ||
-		pm->ps->saber_move == LS_SPINATTACK_DUAL ||
-		pm->ps->saber_move == LS_SPINATTACK_GRIEV)
-	{
-		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
-		//lock their viewangles during these attacks.
-		PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, ucmd);
-	}
 	else if (PM_SaberInBrokenParry(pm->ps->saber_move))
 	{
 		//you can't move while stunned.
@@ -18477,6 +18426,10 @@ void PmoveSingle(pmove_t* pmove)
 			{
 				PM_SetAnim(SETANIM_BOTH, BOTH_MEDITATE_END1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			}
+			else if (pm->ps->legsAnim == BOTH_MEDITATE_SABER)
+			{
+				PM_SetAnim(SETANIM_BOTH, BOTH_MEDITATE_SABER_END, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
 			else
 			{
 				pm->ps->legsTimer = pm->ps->torsoTimer = 0;
@@ -18492,6 +18445,13 @@ void PmoveSingle(pmove_t* pmove)
 				}
 			}
 			if (pm->ps->legsAnim == BOTH_MEDITATE1)
+			{
+				if (pm->ps->legsTimer < 100)
+				{
+					pm->ps->legsTimer = 100;
+				}
+			}
+			if (pm->ps->legsAnim == BOTH_MEDITATE_SABER)
 			{
 				if (pm->ps->legsTimer < 100)
 				{
@@ -18519,6 +18479,15 @@ void PmoveSingle(pmove_t* pmove)
 		pm->cmd.buttons = 0;
 	}
 	else if (pm->ps->legsAnim == BOTH_MEDITATE_END1 && pm->ps->legsTimer > 0)
+	{
+		stiffenedUp = qtrue;
+		PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
+		pm->cmd.rightmove = 0;
+		pm->cmd.upmove = 0;
+		pm->cmd.forwardmove = 0;
+		pm->cmd.buttons = 0;
+	}
+	else if (pm->ps->legsAnim == BOTH_MEDITATE_SABER_END && pm->ps->legsTimer > 0)
 	{
 		stiffenedUp = qtrue;
 		PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);

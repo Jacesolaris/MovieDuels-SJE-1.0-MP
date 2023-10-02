@@ -952,6 +952,11 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 					blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;
 
+					if (attacker->r.svFlags & SVF_BOT) //NPC only
+					{
+						g_do_m_block_response(attacker);
+					}
+
 					if (!(blocker->r.svFlags & SVF_BOT))
 					{
 						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);

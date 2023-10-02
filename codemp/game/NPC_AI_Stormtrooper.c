@@ -3547,7 +3547,7 @@ void NPC_BSST_Attack(void)
 		&& !PM_InKnockDown(&NPCS.NPC->client->ps))
 	{
 		if (NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_F
-			|| NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_F2
+			|| NPCS.NPC->client->ps.torsoAnim == BOTH_KICK_F_MD
 			|| NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_B2
 			|| NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_B)
 		{
@@ -3586,7 +3586,7 @@ void NPC_BSST_Attack(void)
 						NPC_SetAnim(NPCS.NPC->enemy, SETANIM_BOTH, knockAnim,
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
-					else if (NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_F2)
+					else if (NPCS.NPC->client->ps.torsoAnim == BOTH_KICK_F_MD)
 					{
 						g_throw(NPCS.NPC->enemy, smack_dir, 30);
 						NPC_SetAnim(NPCS.NPC->enemy, SETANIM_BOTH, BOTH_KNOCKDOWN5,
@@ -3626,7 +3626,7 @@ void NPC_BSST_Attack(void)
 			if (TIMER_Done(NPCS.NPC, "attackDelay"))
 			{
 				//animate me
-				const int swing_anim = Q_irand(BOTH_A7_KICK_F, BOTH_A7_KICK_F2);
+				const int swing_anim = Q_irand(BOTH_A7_KICK_F, BOTH_KICK_F_MD);
 				G_Sound(NPCS.NPC->enemy, CHAN_AUTO, G_SoundIndex("sound/weapons/melee/kick2.mp3"));
 				NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, swing_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				TIMER_Set(NPCS.NPC, "attackDelay", NPCS.NPC->client->ps.torsoTimer + Q_irand(2500, 4500));
@@ -3777,7 +3777,7 @@ void NPC_BSST_Attack(void)
 		&& !PM_InKnockDown(&NPCS.NPC->client->ps)) //not knocked down ) )
 	{
 		if (NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_F
-			|| NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_F2
+			|| NPCS.NPC->client->ps.torsoAnim == BOTH_KICK_F_MD
 			|| NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_B2
 			|| NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_B)
 		{
@@ -3816,7 +3816,7 @@ void NPC_BSST_Attack(void)
 						NPC_SetAnim(NPCS.NPC->enemy, SETANIM_BOTH, knockAnim,
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
-					else if (NPCS.NPC->client->ps.torsoAnim == BOTH_A7_KICK_F2)
+					else if (NPCS.NPC->client->ps.torsoAnim == BOTH_KICK_F_MD)
 					{
 						g_throw(NPCS.NPC->enemy, smack_dir, 65);
 						NPC_SetAnim(NPCS.NPC->enemy, SETANIM_BOTH, BOTH_KNOCKDOWN5,
@@ -3857,7 +3857,7 @@ void NPC_BSST_Attack(void)
 			if (TIMER_Done(NPCS.NPC, "attackDelay"))
 			{
 				//animate me
-				const int swing_anim = Q_irand(BOTH_A7_KICK_F, BOTH_A7_KICK_F2);
+				const int swing_anim = Q_irand(BOTH_A7_KICK_F, BOTH_KICK_F_MD);
 				G_Sound(NPCS.NPC->enemy, CHAN_AUTO, G_SoundIndex("sound/weapons/melee/kick3.mp3"));
 				NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, swing_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				TIMER_Set(NPCS.NPC, "attackDelay", NPCS.NPC->client->ps.torsoTimer + Q_irand(1000, 3000));

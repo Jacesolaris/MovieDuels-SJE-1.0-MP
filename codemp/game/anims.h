@@ -3417,6 +3417,8 @@ typedef enum //# animNumber_e
 	//# Full jedi sprint
 	BOTH_SPRINT_SABER_MP,
 	//# Full jedi sprint
+	BOTH_SPRINT_SINGLE_LIGHTSABER,
+	//# Full jedi sprint
 
 	BOTH_DOWNTOPRONE,
 	//Prone down
@@ -4304,6 +4306,13 @@ typedef enum //# animNumber_e
 	BOTH_SABER_REY_STANCE,
 	BOTH_KENOBI_LIGHTNINGBLOCK,
 
+	BOTH_SABERTAVION_STANCE_JKA,
+	BOTH_SABERDESANN_STANCE_JKA,
+	BOTH_SABERFAST_STANCE_JKA,
+	BOTH_SABERSLOW_STANCE_JKA,
+	BOTH_SABERDUAL_STANCE_JKA,
+	BOTH_SABERSTAFF_STANCE_JKA,
+
 	BOTH_GRIEVOUS_PROTECT,
 	BOTH_P6_S6_TG_,
 	//Grievous top block
@@ -4422,8 +4431,8 @@ typedef enum //# animNumber_e
 
 	BOTH_FACEPROTECT,
 
-	BOTH_K1_S1_TL_ALT,
-	BOTH_K1_S1_TR_ALT,
+	BOTH_K1_S1_TL_MD,
+	BOTH_K1_S1_TR_MD,
 
 	BOTH_K1_S1_TL_OLD,
 	BOTH_K1_S1_TR_OLD,
@@ -4478,11 +4487,6 @@ typedef enum //# animNumber_e
 	//# Block shot/saber top right
 	BOTH_P7_S7_T__MD,
 	//# Block shot/saber top
-
-	BOTH_K1_S1_TL_MD,
-	//# knockaway saber top left
-	BOTH_K1_S1_TR_MD,
-	//# knockaway saber top right
 
 	BOTH_SLAP_R,
 	BOTH_SLAP_L,
@@ -4584,7 +4588,6 @@ typedef enum //# animNumber_e
 	BOTH_SPRINT_MINIGUN,
 	BOTH_SPRINT_PISTOL,
 
-	BOTH_SPRINT_SINGLE_LIGHTSABER,
 	BOTH_SPRINT_STAFF_LIGHTSABER,
 	BOTH_SPRINT_DUAL_LIGHTSABER,
 

@@ -2089,10 +2089,15 @@ void G_CheckClientIdleSabers(gentity_t* ent, usercmd_t* ucmd)
 			switch (ent->client->ps.legsAnim)
 			{
 			case BOTH_STAND1IDLE1:
+			case BOTH_STAND9IDLE1:
+			case BOTH_STAND_SABER_ON_IDLE:
+			case BOTH_STAND_SABER_ON_IDLE_DUELS:
+			case BOTH_STAND_SABER_ON_IDLE_STAFF:
 			case BOTH_STAND2IDLE1:
 			case BOTH_STAND2IDLE2:
 			case BOTH_STAND3IDLE1:
 			case BOTH_STAND5IDLE1:
+			case BOTH_STANDYODAIDLE_STICK:
 			case BOTH_MENUIDLE1:
 				ent->client->ps.legsTimer = 0;
 				broke_out = qtrue;
@@ -2102,10 +2107,15 @@ void G_CheckClientIdleSabers(gentity_t* ent, usercmd_t* ucmd)
 			switch (ent->client->ps.torsoAnim)
 			{
 			case BOTH_STAND1IDLE1:
+			case BOTH_STAND9IDLE1:
+			case BOTH_STAND_SABER_ON_IDLE:
+			case BOTH_STAND_SABER_ON_IDLE_DUELS:
+			case BOTH_STAND_SABER_ON_IDLE_STAFF:
 			case BOTH_STAND2IDLE1:
 			case BOTH_STAND2IDLE2:
 			case BOTH_STAND3IDLE1:
 			case BOTH_STAND5IDLE1:
+			case BOTH_STANDYODAIDLE_STICK:
 			case BOTH_MENUIDLE1:
 				ent->client->ps.torsoTimer = 0;
 				break;
@@ -3100,7 +3110,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 					else
 					{
-						anim = BOTH_MEDITATE1;
+						anim = BOTH_MEDITATE;
 					}
 				}
 			}
@@ -3145,7 +3155,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 					}
 					ent->client->ps.saberHolstered = 2;
-					anim = BOTH_MEDITATE;
+					anim = BOTH_MEDITATE_SABER;
 				}
 			}
 			break;
