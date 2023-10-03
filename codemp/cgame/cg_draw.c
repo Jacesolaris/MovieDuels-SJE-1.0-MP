@@ -8397,8 +8397,7 @@ float cg_draw_radar(float y)
 	color[3] = 0.6f;
 	trap->R_SetColor(color);
 
-	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11,
-		cgs.media.radarScanShader);
+	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11,cgs.media.radarScanShader);
 	CG_DrawPic(RADAR_X + x_offset, y, RADAR_RADIUS * 2, RADAR_RADIUS * 2, cgs.media.radarShader);
 
 	if (cgs.gametype == GT_FFA)
