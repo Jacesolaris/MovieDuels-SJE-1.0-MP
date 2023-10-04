@@ -1339,10 +1339,10 @@ void wp_force_power_regenerate(const gentity_t* self, const int override_amt)
 
 void wp_block_points_regenerate(const gentity_t* self, const int override_amt)
 {
-	const qboolean holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
-	if (!holding_block)
+	if (!is_holding_block_button)
 	{
 		if (self->client->ps.fd.blockPoints < BLOCK_POINTS_MAX)
 		{
@@ -8848,7 +8848,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
-	const qboolean holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
 	if (!using_force
@@ -8882,7 +8882,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 					wp_force_power_regenerate(self, 8);
 					BG_ReduceSaberMishapLevel(&self->client->ps);
 				}
-				else if (holding_block || active_blocking)
+				else if (is_holding_block_button || active_blocking)
 				{
 					//regen half as fast
 					self->client->ps.fd.forcePowerRegenDebounceTime += 2000; //1 point per 1 seconds.. super slow
@@ -9035,7 +9035,7 @@ powersetcheck:
 
 void WP_BlockPointsUpdate(const gentity_t* self)
 {
-	const qboolean holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
 	if (!(self->r.svFlags & SVF_BOT))
@@ -9049,7 +9049,7 @@ void WP_BlockPointsUpdate(const gentity_t* self)
 			&& !PM_SaberInParry(self->client->ps.saber_move)
 			&& !PM_SaberInReturn(self->client->ps.saber_move)
 			&& !PM_Saberinstab(self->client->ps.saber_move)
-			&& !holding_block
+			&& !is_holding_block_button
 			&& !(self->client->buttons & BUTTON_BLOCK))
 		{
 			//when not using the block, regenerate at 10 points per second

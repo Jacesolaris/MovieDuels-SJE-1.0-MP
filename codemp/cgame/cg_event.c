@@ -1768,15 +1768,14 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			centity_t* enemy;
 			clientInfo_t* enemy_client = NULL;
 			clientInfo_t* client = NULL;
-			int index = 1;
+			int index = Q_irand(1, 9);
 
 			if (es->eventParm < 0 && es->eventParm >= ENTITYNUM_WORLD)
 			{
 				//invalid entity number.  This is possible with limited bits of eventParm
 				break;
 			}
-			enemy = &cg_entities[es->eventParm];
-			index = Q_irand(1, 9);
+			enemy = &cg_entities[es->eventParm];			
 
 			if (!enemy || !enemy->ghoul2 || !cent || !cent->ghoul2)
 			{
@@ -1817,17 +1816,16 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				qhandle_t lock_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberlock%d.mp3", index));
 
 				//get our blade
-				trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin,
-					cg.time, cgs.game_models, cent->modelScale);
+				trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin,	cg.time, cgs.game_models, cent->modelScale);
 				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, our_base);
 				BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, temp);
 				VectorMA(our_base, client->saber[0].blade[0].length, temp, our_tip);
 				//get their blade.
-				trap->G2API_GetBoltMatrix(enemy->ghoul2, 1, 0, &bolt_matrix, enemy->lerpAngles, enemy->lerpOrigin,
-					cg.time, cgs.game_models, enemy->modelScale);
+				trap->G2API_GetBoltMatrix(enemy->ghoul2, 1, 0, &bolt_matrix, enemy->lerpAngles, enemy->lerpOrigin,cg.time, cgs.game_models, enemy->modelScale);
 				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, their_base);
 				BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, temp);
 				VectorMA(their_base, client->saber[0].blade[0].length, temp, their_tip);
+
 				ShortestLineSegBewteen2LineSegs(our_base, our_tip, their_base, their_tip, flash_point, temp);
 
 				if (cg.mInRMG)
@@ -1838,6 +1836,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					if (VectorLength(vec_sub) < 5000)
 					{
 						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, flash_point, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
+
 						if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
 						{
 							cull_pass = qtrue;

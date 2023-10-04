@@ -4144,7 +4144,7 @@ int CheckArmor(const gentity_t* ent, const int damage, const int dflags, const i
 
 void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 
 void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, const int dflags, const int mod)
 {
@@ -4170,7 +4170,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 		}
 	}
 
-	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !G_StandardHumanoid(targ))
+	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !g_standard_humanoid(targ))
 	{
 		return;
 	}
@@ -4227,7 +4227,7 @@ void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_
 		}
 	}
 
-	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !G_StandardHumanoid(targ))
+	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !g_standard_humanoid(targ))
 	{
 		return;
 	}
@@ -7523,7 +7523,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		Team_CheckHurtCarrier(targ, attacker);
 	}
 
-	if (targ->client && G_StandardHumanoid(targ))
+	if (targ->client && g_standard_humanoid(targ))
 	{
 		// set the last client who damaged the target
 		targ->client->lasthurt_client = attacker->s.number;
@@ -7539,7 +7539,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		}
 	}
 
-	if (targ->client && attacker->client && targ->health > 0 && G_StandardHumanoid(targ))
+	if (targ->client && attacker->client && targ->health > 0 && g_standard_humanoid(targ))
 	{
 		//do head shots
 		if (inflictor->s.weapon == WP_BLASTER

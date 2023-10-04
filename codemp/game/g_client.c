@@ -5667,8 +5667,8 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 				//	client->pers.connected = CON_DISCONNECTED;
 				return "Too many connections from the same IP";
 			}
+		}
 	}
-}
 
 	if (ent->inuse)
 	{
@@ -6331,7 +6331,7 @@ tryTorso:
 				//want to remove the support bone too then
 				trap->G2API_SetBoneAnim(self->ghoul2, 0, "lhumerus", 0, 1, 0, 0, level.time, -1, 0);
 				trap->G2API_RemoveBone(self->ghoul2, "lhumerus", 0);
-	}
+			}
 
 			assert(brokenBone);
 
@@ -6341,7 +6341,7 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
-}
+		}
 	}
 #endif
 }
@@ -9095,7 +9095,7 @@ void ClientDisconnect(const int client_num)
 	G_ClearClientLog(client_num);
 }
 
-qboolean G_StandardHumanoid(gentity_t* self)
+qboolean g_standard_humanoid(gentity_t* self)
 {
 	char gla_name[MAX_QPATH];
 

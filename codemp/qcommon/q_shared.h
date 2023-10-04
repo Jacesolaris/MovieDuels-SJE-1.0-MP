@@ -1605,7 +1605,7 @@ typedef struct siegePers_s
 
 #define BOTZIZE_SMALLEST	65
 #define BOTZIZE_SMALLER		75
-#define BOTZIZE_SMALL		90
+#define BOTZIZE_SMALL		95
 #define BOTZIZE_NORMAL		100
 #define BOTZIZE_TALL		110
 #define BOTZIZE_LARGE		120

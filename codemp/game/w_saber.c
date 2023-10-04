@@ -2554,7 +2554,7 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 	}
 }
 
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 
 void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 {
@@ -2573,7 +2573,7 @@ void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 		return;
 	}
 
-	if (!G_StandardHumanoid(victim))
+	if (!g_standard_humanoid(victim))
 	{
 		return;
 	}
@@ -9911,12 +9911,12 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 {
 	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
-	const qboolean holding_block = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean npc_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
 	//NPC Blocking
 
-	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (holding_block || active_blocking) && !(hit_ent->r.svFlags & SVF_BOT))
+	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || active_blocking) && !(hit_ent->r.svFlags & SVF_BOT))
 		//player only
 	{
 		if (hit_ent->client->ps.fd.blockPoints > 50)
@@ -13061,7 +13061,7 @@ float manual_forceblocking(const gentity_t* defender)
 	return qtrue;
 }
 
-qboolean is_holding_block_button(const gentity_t* defender)
+qboolean Block_Button_Held(const gentity_t* defender)
 {
 	if (defender->client->ps.pm_flags & PMF_BLOCK_HELD)
 	{
@@ -13357,7 +13357,7 @@ int PlayerCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can 
 {
 	vec3_t p_l_angles, p_l_fwd;
 
-	const qboolean holding_block = defender->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = defender->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
 	if (!defender || !defender->client)
@@ -13365,7 +13365,7 @@ int PlayerCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can 
 		//non-humanoids can't absorb kicks.
 		return qfalse;
 	}
-	if (!holding_block) // Must be holding Block button
+	if (!is_holding_block_button) // Must be holding Block button
 	{
 		// Not doing any blocking can't absorb kicks.
 		return qfalse;

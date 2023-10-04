@@ -74,7 +74,8 @@ extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
 extern qboolean PM_SaberInBashedAnim(int anim);
 extern qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t velocity);
-extern qboolean BG_SprintSaberAnim(int anim);
+extern qboolean BG_SaberSprintAnim(int anim);
+extern qboolean BG_WeaponSprintAnim(int anim);
 extern qboolean PM_SaberLockBreakAnim(int anim); //bg_panimate.c
 extern qboolean PM_SuperBreakWinAnim(int anim);
 
@@ -2667,7 +2668,7 @@ typedef enum tauntTypes_e
 qboolean IsHoldingGun(const gentity_t* ent);
 extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
 extern qboolean PM_CrouchAnim(int anim);
-extern qboolean is_holding_block_button(const gentity_t* defender);
+extern qboolean Block_Button_Held(const gentity_t* defender);
 void ReloadGun(gentity_t* ent);
 void CancelReload(gentity_t* ent);
 
@@ -2710,7 +2711,7 @@ extern qboolean PM_RestAnim(int anim);
 void G_SetTauntAnim(gentity_t* ent, int taunt)
 {
 	const saberInfo_t* saber1 = BG_MySaber(ent->client_num, 0);
-	const qboolean holding_block = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
 	// dead clients dont get to spam taunt
@@ -2746,7 +2747,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 		}
 	}
 
-	if (holding_block || is_holding_block_button(ent))
+	if (is_holding_block_button || Block_Button_Held(ent))
 	{
 		return;
 	}
@@ -3949,7 +3950,27 @@ void ReloadGun(gentity_t* ent)
 	{
 		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 		{
-			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			if (ent->s.weapon == WP_BRYAR_OLD || ent->s.weapon == WP_BRYAR_PISTOL)
+			{
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_FAIL_PISTOL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			else if (ent->s.weapon == WP_DISRUPTOR || ent->s.weapon == WP_BOWCASTER || ent->s.weapon == WP_DEMP2 || ent->s.weapon == WP_BLASTER)
+			{
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_FAIL_BLASTER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			else if (ent->s.weapon == WP_REPEATER || ent->s.weapon == WP_FLECHETTE || ent->s.weapon == WP_CONCUSSION)
+			{
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_FAIL_MINIGUN, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			else if (ent->s.weapon == WP_ROCKET_LAUNCHER)
+			{
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_FAIL_BAZOOKA, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			else
+			{
+				NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+
 			G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 			G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
 			G_Damage(ent, NULL, NULL, NULL, ent->r.currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
@@ -3957,33 +3978,33 @@ void ReloadGun(gentity_t* ent)
 		}
 		else
 		{
-			if (ent->s.weapon == WP_BRYAR_OLD || ent->s.weapon == WP_BLASTER || ent->s.weapon == WP_BRYAR_PISTOL)
+			if (ent->s.weapon == WP_BRYAR_OLD || ent->s.weapon == WP_BRYAR_PISTOL)
 			{
 				if (ent->client->ps.ammo[AMMO_BLASTER] < ClipSize(AMMO_BLASTER, ent))
 				{
 					ent->client->ps.ammo[AMMO_BLASTER] += MagazineSize(AMMO_BLASTER, ent);
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_PISTOL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reload.mp3");
 					ent->reloadTime = level.time + ReloadTime(ent);
 				}
 				else
 				{
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE_PISTOL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/recharge.mp3");
 				}
 			}
-			else if (ent->s.weapon == WP_DISRUPTOR || ent->s.weapon == WP_BOWCASTER || ent->s.weapon == WP_DEMP2)
+			else if (ent->s.weapon == WP_DISRUPTOR || ent->s.weapon == WP_BOWCASTER || ent->s.weapon == WP_DEMP2 || ent->s.weapon == WP_BLASTER)
 			{
 				if (ent->client->ps.ammo[AMMO_POWERCELL] < ClipSize(AMMO_POWERCELL, ent))
 				{
 					ent->client->ps.ammo[AMMO_POWERCELL] += MagazineSize(AMMO_POWERCELL, ent);
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_BLASTER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reload.mp3");
 					ent->reloadTime = level.time + ReloadTime(ent);
 				}
 				else
 				{
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE_BLASTER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/recharge.mp3");
 				}
 			}
@@ -3992,13 +4013,13 @@ void ReloadGun(gentity_t* ent)
 				if (ent->client->ps.ammo[AMMO_METAL_BOLTS] < ClipSize(AMMO_METAL_BOLTS, ent))
 				{
 					ent->client->ps.ammo[AMMO_METAL_BOLTS] += MagazineSize(AMMO_METAL_BOLTS, ent);
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_MINIGUN, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reload.mp3");
 					ent->reloadTime = level.time + ReloadTime(ent);
 				}
 				else
 				{
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE_MINIGUN, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/recharge.mp3");
 				}
 			}
@@ -4007,13 +4028,13 @@ void ReloadGun(gentity_t* ent)
 				if (ent->client->ps.ammo[AMMO_ROCKETS] < ClipSize(AMMO_ROCKETS, ent))
 				{
 					ent->client->ps.ammo[AMMO_ROCKETS] += MagazineSize(AMMO_ROCKETS, ent);
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOAD_BAZOOKA, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reload.mp3");
 					ent->reloadTime = level.time + ReloadTime(ent);
 				}
 				else
 				{
-					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RECHARGE_BAZOOKA, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/recharge.mp3");
 				}
 			}
@@ -4031,7 +4052,27 @@ void FireOverheatFail(gentity_t* ent)
 {
 	if (IsHoldingGun(ent))
 	{
-		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		if (ent->s.weapon == WP_BRYAR_OLD || ent->s.weapon == WP_BRYAR_PISTOL)
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		else if (ent->s.weapon == WP_DISRUPTOR || ent->s.weapon == WP_BOWCASTER || ent->s.weapon == WP_DEMP2 || ent->s.weapon == WP_BLASTER)
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		else if (ent->s.weapon == WP_REPEATER || ent->s.weapon == WP_FLECHETTE || ent->s.weapon == WP_CONCUSSION)
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		else if (ent->s.weapon == WP_ROCKET_LAUNCHER)
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ROCKETFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+		else
+		{
+			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		}
+
 		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
 		G_Damage(ent, NULL, NULL, NULL, ent->r.currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
@@ -4174,7 +4215,7 @@ once for each server frame, which makes for smooth demo recording.
 */
 extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean player_locked;
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 extern void Weapon_AltStun_Fire(gentity_t* ent);
 
 void ClientThink_real(gentity_t* ent)
@@ -4827,8 +4868,6 @@ void ClientThink_real(gentity_t* ent)
 			{
 				ucmd->rightmove = -64;
 			}
-
-			//ent->client->ps.speed = ent->client->ps.basespeed = NPC_GetRunSpeed( ent );
 		}
 		client->ps.basespeed = client->ps.speed;
 	}
@@ -4865,25 +4904,61 @@ void ClientThink_real(gentity_t* ent)
 			{
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
-					client->ps.speed *= 1.50f;
+					if (client->pers.botclass == BCLASS_LORDVADER)
+					{
+						client->ps.speed *= 1.15f;
+					}
+					else if (client->pers.botclass == BCLASS_YODA)
+					{
+						client->ps.speed *= 1.60f;
+					}
+					else
+					{
+						client->ps.speed *= 1.50f;
+					}
 				}
 			}
 		}
-		else if (BG_SprintSaberAnim(ent->client->ps.legsAnim))
+		else if (BG_SaberSprintAnim(ent->client->ps.legsAnim))
 		{
 			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING)
 			{
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
-					client->ps.speed *= 1.60f;
+					if (client->pers.botclass == BCLASS_LORDVADER)
+					{
+						client->ps.speed *= 1.15f;
+					}
+					else if (client->pers.botclass == BCLASS_YODA)
+					{
+						client->ps.speed *= 1.65f;
+					}
+					else
+					{
+						client->ps.speed *= 1.60f;
+					}
 				}
 			}
 		}
-		else if (ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+		else if (BG_WeaponSprintAnim(client->ps.legsAnim))
 		{
-			if (!(ent->r.svFlags & SVF_BOT))
+			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 			{
-				client->ps.speed *= 1.30f;
+				if (!(ent->r.svFlags & SVF_BOT))
+				{
+					if (client->pers.botclass == BCLASS_LORDVADER)
+					{
+						client->ps.speed *= 1.10f;
+					}
+					else if (client->pers.botclass == BCLASS_YODA)
+					{
+						client->ps.speed *= 1.30f;
+					}
+					else
+					{
+						client->ps.speed *= 1.20f;
+					}
+				}
 			}
 		}
 		else if (client->ps.weapon == WP_BRYAR_PISTOL ||

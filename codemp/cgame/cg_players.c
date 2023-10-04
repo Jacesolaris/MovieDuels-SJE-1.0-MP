@@ -3311,7 +3311,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 	int flags = BONE_ANIM_OVERRIDE_FREEZE;
 	const float old_speed = lf->animationSpeed;
 
-	const qboolean holding_block = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	const qboolean active_blocking = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
 		? qtrue
 		: qfalse;
@@ -3417,7 +3417,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		if (!PM_WalkingOrRunningAnim(cent->currentState.legsAnim) && !PM_InKataAnim(cent->currentState.torsoAnim))
 		{
 			//make smooth animations
-			if ((active_blocking || holding_block) && cent->currentState.saber_move == LS_READY)
+			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				blend_time *= 1.8f;
 			}
@@ -3437,7 +3437,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				resume_frame = qtrue;
 			}
 			lf->animationTorsoSpeed = anim_speed_mult;
-			if ((active_blocking || holding_block) && cent->currentState.saber_move == LS_READY)
+			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				blend_time *= 1.8f;
 			}
@@ -3848,7 +3848,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 
 	const int client_num = cent->currentState.client_num;
 
-	const qboolean holding_block = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	const qboolean active_blocking = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
 		? qtrue
 		: qfalse;
@@ -3908,7 +3908,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 		if (!PM_WalkingOrRunningAnim(cent->currentState.legsAnim) && !PM_InKataAnim(cent->currentState.torsoAnim))
 		{
 			//make smooth animations
-			if ((active_blocking || holding_block) && cent->currentState.saber_move == LS_READY)
+			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				speed_scale *= 0.3f;
 			}
