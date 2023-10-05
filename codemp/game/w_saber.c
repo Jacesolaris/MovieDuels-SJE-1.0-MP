@@ -8184,7 +8184,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 						G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage, dflags, MOD_SABER);
 					}
 
-					te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
+					te = G_TempEntity(tr.endpos, EV_SABER_HIT);
 					te->s.otherEntityNum = ent->s.number;
 					te->s.otherEntityNum2 = saber_owner->s.number;
 					te->s.weapon = 0; //saber_num

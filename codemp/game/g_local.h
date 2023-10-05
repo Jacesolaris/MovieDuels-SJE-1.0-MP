@@ -1116,6 +1116,8 @@ struct gclient_s
 	int cloneFired;
 	int BoltsFired;
 	int Dash_Count;
+
+	int VaderBreathTime;
 };
 
 //animations

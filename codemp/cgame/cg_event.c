@@ -3421,7 +3421,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				}
 				else
 				{
-					trap->FX_PlayEffectID(cgs.effects.mSaberBodyHit, es->origin, fx_dir, -1, -1, qfalse);
+					trap->FX_PlayEffectID(cgs.effects.mSaberlimb_Bolton, es->origin, fx_dir, -1, -1, qfalse);
 				}
 			}
 			else

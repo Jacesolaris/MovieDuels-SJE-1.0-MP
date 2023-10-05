@@ -1435,6 +1435,7 @@ static void CG_RegisterGraphics(void)
 	cgs.effects.mSaberBlock = trap->FX_RegisterEffect("saber/saber_block.efx");
 	cgs.effects.mSaberprfectBlock = trap->FX_RegisterEffect("saber/saber_goodparry.efx");
 	cgs.effects.mSaberBodyHit = trap->FX_RegisterEffect("saber/saber_bodyhit.efx");
+	cgs.effects.mSaberlimb_Bolton = trap->FX_RegisterEffect("saber/limb_bolton.efx");
 	cgs.effects.mSaberBloodSparks = trap->FX_RegisterEffect("saber/blood_sparks_mp.efx");
 	cgs.effects.mSaberBloodSparksSmall = trap->FX_RegisterEffect("saber/blood_sparks_25_mp.efx");
 	cgs.effects.mSaberBloodSparksMid = trap->FX_RegisterEffect("saber/blood_sparks_50_mp.efx");

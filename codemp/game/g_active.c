@@ -78,6 +78,8 @@ extern qboolean BG_SaberSprintAnim(int anim);
 extern qboolean BG_WeaponSprintAnim(int anim);
 extern qboolean PM_SaberLockBreakAnim(int anim); //bg_panimate.c
 extern qboolean PM_SuperBreakWinAnim(int anim);
+extern qboolean PM_LungeAnim(int anim);
+extern qboolean PM_RollingAnim(int anim);
 
 void P_SetTwitchInfo(gclient_t* client)
 {
@@ -2853,12 +2855,25 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 						}
 						ent->client->ps.saberHolstered = 2;
-						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+
+						if (ent->client->pers.botclass == BCLASS_LORDVADER || (saber1 && saber1->type == SABER_VADER))
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+
 						break;
 					case SS_MEDIUM:
 						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
@@ -2867,7 +2882,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
+						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2888,14 +2903,25 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
 						ent->client->ps.saberHolstered = 0;
-						if (ent->client->saber[0].type == SABER_GRIE || ent->client->saber[0].type == SABER_GRIE4)
+
+						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_DUAL_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							if (ent->client->saber[0].type == SABER_GRIE || ent->client->saber[0].type == SABER_GRIE4)
+							{
+								NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							}
+							else
+							{
+								NPC_SetAnim(ent, SETANIM_TORSO, BOTH_DUAL_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							}
 						}
 						break;
 					case SS_STAFF:
@@ -2905,7 +2931,19 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
 						ent->client->ps.saberHolstered = 0;
-						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+
+						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
 						break;
 					default:;
 					}
@@ -2933,13 +2971,15 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					case SS_MEDIUM:
 						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -2950,8 +2990,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_DUAL:
@@ -2968,8 +3007,11 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						ent->client->ps.saberHolstered = 0;
 						if (ent->client->saber[0].type == SABER_GRIE || ent->client->saber[0].type == SABER_GRIE4)
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
@@ -2983,7 +3025,19 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
 						ent->client->ps.saberHolstered = 0;
-						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+
+						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
+						else
+						{
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						}
 						break;
 					default:;
 					}
@@ -4202,6 +4256,84 @@ qboolean Is_Undersized_Jedi(gentity_t* ent)
 	return qfalse;
 }
 
+void CG_BreathPuffsVader(gentity_t* ent)
+{
+	gclient_t* client = ent->client;
+
+	if (ent->health < 1 || client->VaderBreathTime > level.time)
+	{
+		return;
+	}
+
+	if (ent->s.eFlags & EF_NODRAW)
+	{
+		return;
+	}
+
+	if (in_camera)
+	{
+		return;
+	}
+
+	if (PM_CrouchAnim(client->ps.legsAnim) ||
+		PM_CrouchAnim(client->ps.torsoAnim) ||
+		PM_LungeAnim(client->ps.torsoAnim) ||
+		PM_RollingAnim(client->ps.legsAnim))
+	{
+		return;
+	}
+
+	if (client->pers.botclass == BCLASS_LORDVADER || client->NPC_class == CLASS_VADER)
+	{
+		if (ent->health < 50)
+		{
+			if (ent->health < 20)
+			{
+				G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/chars/darthvader/breath3.mp3"));
+			}
+			else
+			{
+				G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/chars/darthvader/breath4.mp3"));
+			}
+		}
+		else
+		{
+			if (client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING ||
+				client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+			{
+				G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/chars/darthvader/vader_fast_breath.mp3"));
+			}
+			else
+			{
+				if (!Q_irand(0, 4))
+				{
+					G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/chars/darthvader/breath2.mp3"));
+				}
+				else
+				{
+					G_Sound(ent, CHAN_VOICE, G_SoundIndex("sound/chars/darthvader/breath2.mp3"));
+				}
+			}
+		}
+	}
+
+	if (PM_SaberInAttack(client->ps.saber_move))
+	{
+		client->VaderBreathTime = level.time + 4000; // every 4 seconds.
+	}
+	else
+	{
+		if (PM_RunningAnim(ent->client->ps.legsAnim))
+		{
+			client->VaderBreathTime = level.time + 3000; // every 2 seconds.
+		}
+		else
+		{
+			client->VaderBreathTime = level.time + 6000; // every 6 seconds.
+		}
+	}
+}
+
 /*
 ==============
 ClientThink
@@ -4450,6 +4582,12 @@ void ClientThink_real(gentity_t* ent)
 			ucmd->upmove = 0;
 		}
 	}
+
+	if (g_VaderBreath.integer == 1)
+	{
+		CG_BreathPuffsVader(ent);
+	}
+
 	// sanity check the command time to prevent speedup cheating
 	if (ucmd->serverTime > level.time + 200)
 	{
@@ -4553,12 +4691,6 @@ void ClientThink_real(gentity_t* ent)
 			return;
 		}
 	}
-
-	// clear the rewards if time
-	/*if (level.time > client->rewardTime)
-	{
-		client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP);
-	}*/
 
 	//Check if we should have a fullbody push effect around the player
 	if (client->pushEffectTime > level.time)
@@ -4735,35 +4867,32 @@ void ClientThink_real(gentity_t* ent)
 
 				if (ucmd->forwardmove || ucmd->rightmove || Flying)
 				{
-					//if ( ent->NPC->behaviorState != BS_FORMATION )
+					//In - Formation NPCs set thier desiredSpeed themselves
+					if (ucmd->buttons & BUTTON_WALKING)
 					{
-						//In - Formation NPCs set thier desiredSpeed themselves
-						if (ucmd->buttons & BUTTON_WALKING)
-						{
-							ent->NPC->desiredSpeed = NPC_GetWalkSpeed(ent);
-						}
-						else //running
-						{
-							ent->NPC->desiredSpeed = NPC_GetRunSpeed(ent);
-						}
+						ent->NPC->desiredSpeed = NPC_GetWalkSpeed(ent);
+					}
+					else //running
+					{
+						ent->NPC->desiredSpeed = NPC_GetRunSpeed(ent);
+					}
 
-						if (ent->NPC->currentSpeed >= 80 && !controlledByPlayer)
+					if (ent->NPC->currentSpeed >= 80 && !controlledByPlayer)
+					{
+						//At higher speeds, need to slow down close to stuff
+						//Slow down as you approach your goal
+						if (ent->NPC->distToGoal < SLOWDOWN_DIST && !(ent->NPC->aiFlags & NPCAI_NO_SLOWDOWN)) //128
 						{
-							//At higher speeds, need to slow down close to stuff
-							//Slow down as you approach your goal
-							if (ent->NPC->distToGoal < SLOWDOWN_DIST && !(ent->NPC->aiFlags & NPCAI_NO_SLOWDOWN)) //128
+							if (ent->NPC->desiredSpeed > MIN_NPC_SPEED)
 							{
-								if (ent->NPC->desiredSpeed > MIN_NPC_SPEED)
-								{
-									float slowdownSpeed = (float)ent->NPC->desiredSpeed * ent->NPC->distToGoal /
-										SLOWDOWN_DIST;
+								float slowdownSpeed = (float)ent->NPC->desiredSpeed * ent->NPC->distToGoal /
+									SLOWDOWN_DIST;
 
-									ent->NPC->desiredSpeed = ceil(slowdownSpeed);
-									if (ent->NPC->desiredSpeed < MIN_NPC_SPEED)
-									{
-										//don't slow down too much
-										ent->NPC->desiredSpeed = MIN_NPC_SPEED;
-									}
+								ent->NPC->desiredSpeed = ceil(slowdownSpeed);
+								if (ent->NPC->desiredSpeed < MIN_NPC_SPEED)
+								{
+									//don't slow down too much
+									ent->NPC->desiredSpeed = MIN_NPC_SPEED;
 								}
 							}
 						}
@@ -5747,14 +5876,14 @@ void ClientThink_real(gentity_t* ent)
 			if (client->ps.forceHandExtend != HANDEXTEND_POSTTHROWN)
 			{
 				client->ps.forceHandExtend = HANDEXTEND_NONE;
-			}
+		}
 
 			if (thrower->inuse && thrower->client)
 			{
 				thrower->client->doingThrow = 0;
 				thrower->client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
-		}
+	}
 		else if (thrower->inuse && thrower->client && thrower->ghoul2 &&
 			trap->G2API_HaveWeGhoul2Models(thrower->ghoul2))
 		{
@@ -5918,7 +6047,7 @@ void ClientThink_real(gentity_t* ent)
 				}
 			}
 		}
-	}
+}
 	else if (client->ps.heldByClient)
 	{
 		client->ps.heldByClient = 0;
@@ -6039,7 +6168,7 @@ void ClientThink_real(gentity_t* ent)
 				pmove.g2Bolts_LFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*l_leg_foot");
 				pmove.g2Bolts_RFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*r_leg_foot");
 			}
-		}
+	}
 
 	//point the saber data to the right place
 #if 0
@@ -7117,7 +7246,7 @@ void ClientEndFrame(gentity_t* ent)
 	{
 		SpectatorClientEndFrame(ent);
 		return;
-	}
+}
 
 	// turn off any expired powerups
 	for (int i = 0; i < MAX_POWERUPS; i++)

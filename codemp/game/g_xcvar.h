@@ -239,5 +239,6 @@ XCVAR_DEF(g_SaberPerfectBlockingTimerEasy, "250", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_SaberPerfectBlockingTimerNormal, "150", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_SaberPerfectBlockingTimerHard, "50", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(cg_outcastpusheffect, "1", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_VaderBreath, "1", NULL, CVAR_ARCHIVE, qtrue)
 
 #undef XCVAR_DEF
