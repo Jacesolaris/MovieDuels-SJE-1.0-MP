@@ -1345,26 +1345,30 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
 			&& bs->jumpTime <= level.time // Don't walk during jumping...
-			&& (VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) <
-				300 || walktime[bs->cur_ps.client_num] > level.time))
+			&& (VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < 300
+				|| walktime[bs->cur_ps.client_num] > level.time))
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || walktime[bs->cur_ps.client_num] > level
-				.
-				time)
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || walktime[bs->cur_ps.client_num] > level.time)
 			{
 				bi.actionflags |= ACTION_WALK;
 				walktime[bs->cur_ps.client_num] = level.time + 2000;
+				if (bs->cur_ps.saberHolstered)
+				{
+					bs->cur_ps.saberHolstered = 0;
+				}
 			}
 			else
 			{
 				// Reset.
 				walktime[bs->cur_ps.client_num] = 0;
+				bi.actionflags &= ~ACTION_WALK;
 			}
 		}
 		else
 		{
 			// Reset.
 			walktime[bs->cur_ps.client_num] = 0;
+			bi.actionflags &= ~ACTION_WALK;
 		}
 	}
 
@@ -1373,11 +1377,8 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
-			&& bs->jumpTime <= level.time // Don't gesture during jumping...
-			&& !bs->doAttack
-			&& !bs->doAltAttack
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < saber_range
+			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < SABER_KICK_RANGE
 			|| next_kick[bs->cur_ps.client_num] > level.time)
 		{
 			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_kick[bs->cur_ps.client_num] > level.time)
@@ -3852,8 +3853,8 @@ void check_for_shorter_routes(bot_state_t* bs, const int newwpindex)
 			bs->forceJumping = bs->jumpTime;
 #endif
 		}
+		}
 	}
-}
 
 //Find the origin location of a given entity
 void find_origins(const gentity_t* ent, vec3_t origin)
@@ -8627,6 +8628,7 @@ void bot_behave_attack_basic(bot_state_t* bs, const gentity_t* target)
 	{
 		//not switching weapons so attack
 		trap->EA_Attack(bs->client);
+
 		if (bs->virtualWeapon == WP_SABER)
 		{
 			//only walk while attacking with the saber.
@@ -12189,7 +12191,7 @@ void standard_bot_ai(bot_state_t* bs)
 				if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_MISSILE
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2)
 				{
-					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG 
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG
 						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DESANN && bs->saberPower)
 					{ //if we are up against someone with a lot of blockpoints and we have a strong attack available, then h4q them
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
@@ -12205,7 +12207,7 @@ void standard_bot_ai(bot_state_t* bs)
 				}
 				else
 				{
-					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST 
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST
 						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_TAVION)
 					{ //they've gone below 40 blockpoints, go at them with quick attacks
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);

@@ -4374,11 +4374,11 @@ void G_RunFrame(const int levelTime)
 		}
 		if (g_entities[i].r.svFlags & SVF_BOT)
 		{
-			g_ffaRespawnTimerCheck = level.time + Q_irand(9000, 15000);
+			g_ffaRespawnTimerCheck = level.time + Q_irand(10000, 15000);
 		}
 		else
 		{
-			g_ffaRespawnTimerCheck = level.time + 7000;
+			g_ffaRespawnTimerCheck = level.time + 5000;
 		}
 	}
 
@@ -4762,7 +4762,7 @@ void G_RunFrame(const int levelTime)
 				}
 			}
 
-			if (ent->client->jetPackOn || ent->client->flamethrowerOn)
+			if (!(ent->r.svFlags & SVF_BOT) && (ent->client->jetPackOn || ent->client->flamethrowerOn))
 			{
 				//using jetpack, drain fuel
 				if (ent->client->jetPackDebReduce < level.time)
