@@ -3016,8 +3016,7 @@ qboolean saber_block_lightning(const gentity_t* attacker, const gentity_t* defen
 	return qtrue;
 }
 
-void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, const float dist, const float dot,
-	vec3_t impact_point)
+void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, const float dist, const float dot, vec3_t impact_point)
 {
 	self->client->dangerTime = level.time;
 	self->client->ps.eFlags &= ~EF_INVULNERABLE;
@@ -4953,7 +4952,10 @@ qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* th
 		return 0;
 	}
 
-	self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoTimer + 3000;
+	if (self->client->ps.weapon == WP_SABER && WP_ForcePowerUsable(self, FP_ABSORB))
+	{
+		self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoTimer + 3000;
+	}
 	return 1;
 }
 
@@ -5113,7 +5115,11 @@ void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, const qboolean
 	{
 		G_SetAnim(self, &self->client->pers.cmd, parts, BOTH_RESISTPUSH2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 	}
-	self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoTimer + 1000;
+
+	if (self->client->ps.weapon == WP_SABER && WP_ForcePowerUsable(self, FP_ABSORB))
+	{
+		self->client->ps.powerups[PW_MEDITATE] = level.time + self->client->ps.torsoTimer + 3000;
+	}
 
 	if (!no_penalty)
 	{
@@ -8700,7 +8706,11 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 				G_Sound(self, CHAN_WEAPON, G_SoundIndex("sound/effects/fireburst"));
 				Flamethrower_Fire(self);
 				FlamethrowerDebounceTime = level.time;
-				self->client->ps.jetpackFuel -= FLAMETHROWER_FUELCOST;
+
+				if (!(self->r.svFlags & SVF_BOT))
+				{
+					self->client->ps.jetpackFuel -= FLAMETHROWER_FUELCOST;
+				}
 			}
 		}
 	}
@@ -9031,7 +9041,7 @@ powersetcheck:
 
 		self->client->ps.fd.forcePower = prepower - dif;
 	}
-}
+	}
 
 void WP_BlockPointsUpdate(const gentity_t* self)
 {

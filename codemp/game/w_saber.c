@@ -12379,10 +12379,7 @@ nextStep:
 
 				saberent->s.saberInFlight = qtrue;
 
-				if (saber1 && saber1
-					->
-					type == SABER_VADER
-					)
+				if (saber1 && saber1->type == SABER_VADER)
 				{
 					saberent->s.apos.trType = TR_LINEAR;
 					saberent->s.apos.trDelta[0] = 0;

@@ -4357,6 +4357,7 @@ void G_RunFrame(const int levelTime)
 	if ((level.gametype == GT_MOVIEDUELS_FFA
 		|| level.gametype == GT_MOVIEDUELS_TEAM
 		|| level.gametype == GT_MOVIEDUELS_CTF) &&
+		g_ffaRespawnTimer.integer &&
 		g_ffaRespawnTimerCheck < level.time)
 	{
 		while (i < MAX_CLIENTS)
@@ -4368,18 +4369,12 @@ void G_RunFrame(const int levelTime)
 				clEnt->client->sess.sessionTeam != TEAM_SPECTATOR)
 			{
 				ClientRespawn(clEnt);
+
 				clEnt->client->tempSpectate = 0;
 			}
 			i++;
 		}
-		if (g_entities[i].r.svFlags & SVF_BOT)
-		{
-			g_ffaRespawnTimerCheck = level.time + Q_irand(10000, 15000);
-		}
-		else
-		{
-			g_ffaRespawnTimerCheck = level.time + 5000;
-		}
+		g_ffaRespawnTimerCheck = level.time + Q_irand(5000, 15000);
 	}
 
 	if (gDoSlowMoDuel)
@@ -4762,7 +4757,7 @@ void G_RunFrame(const int levelTime)
 				}
 			}
 
-			if (!(ent->r.svFlags & SVF_BOT) && (ent->client->jetPackOn || ent->client->flamethrowerOn))
+			if ((ent->client->jetPackOn || ent->client->flamethrowerOn))
 			{
 				//using jetpack, drain fuel
 				if (ent->client->jetPackDebReduce < level.time)
@@ -4770,21 +4765,27 @@ void G_RunFrame(const int levelTime)
 					if (ent->client->pers.cmd.forwardmove || ent->client->pers.cmd.upmove || ent->client->pers.cmd.
 						rightmove)
 					{
-						//take more if they're thrusting
-						ent->client->ps.jetpackFuel -= 4;
+						if (!(ent->r.svFlags & SVF_BOT))
+						{
+							//take more if they're thrusting
+							ent->client->ps.jetpackFuel -= 4;
+						}
 					}
 					else
 					{
-						if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
+						if (!(ent->r.svFlags & SVF_BOT))
 						{
-							//in midair
-							ent->client->ps.jetpackFuel--;
-						}
-						else
-						{
-							if (ent->client->flamethrowerOn)
+							if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
+								//in midair
 								ent->client->ps.jetpackFuel--;
+							}
+							else
+							{
+								if (ent->client->flamethrowerOn)
+								{
+									ent->client->ps.jetpackFuel--;
+								}
 							}
 						}
 					}

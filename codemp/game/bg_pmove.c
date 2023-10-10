@@ -10695,7 +10695,7 @@ static void PM_Footsteps(void)
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 							{
-								PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_HEAVY, SETANIM_FLAG_NORMAL);
+								desiredAnim = BOTH_SPRINT_HEAVY;
 
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 								{
@@ -10715,7 +10715,7 @@ static void PM_Footsteps(void)
 							}
 							else
 							{
-								PM_SetAnim(SETANIM_BOTH, BOTH_JOG_HEAVY, SETANIM_FLAG_NORMAL);
+								desiredAnim = BOTH_JOG_HEAVY;
 
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 									pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -10727,7 +10727,6 @@ static void PM_Footsteps(void)
 #endif
 								}
 							}
-							desiredAnim = BOTH_RUN7;
 						}
 					}
 					else if (pm->ps && pm_entSelf
@@ -11984,7 +11983,7 @@ void PM_FinishWeaponChange(void)
 	{
 		pm->ps->weaponTime += 250;
 	}
-	}
+}
 
 #ifdef _GAME
 extern void WP_GetVehicleCamPos(gentity_t* ent, gentity_t* pilot, vec3_t camPos);
@@ -12303,7 +12302,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 #endif
 				assert(pm->ps->weapon > WP_NONE);
 				BG_AddPredictableEventToPlayerstate(EV_WEAPON_CHARGE_ALT, pm->ps->weapon, pm->ps);
-		}
+			}
 
 			if (vehicleRocketLock)
 			{
@@ -12330,7 +12329,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 					pm->ps->weaponChargeSubtractTime = pm->cmd.serverTime + weaponData[pm->ps->weapon].altChargeSubTime;
 				}
 			}
-	}
+		}
 		else
 		{
 			if (pm->ps->weaponstate != WEAPON_CHARGING)
@@ -12344,7 +12343,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 				//	Com_Printf("Starting charge\n");
 #endif
 				BG_AddPredictableEventToPlayerstate(EV_WEAPON_CHARGE, pm->ps->weapon, pm->ps);
-		}
+			}
 
 			if (vehicleRocketLock)
 			{
@@ -12371,10 +12370,10 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 					pm->ps->weaponChargeSubtractTime = pm->cmd.serverTime + weaponData[pm->ps->weapon].chargeSubTime;
 				}
 			}
-}
+		}
 
 		return qtrue; // short-circuit rest of weapon code
-}
+	}
 rest:
 	// Only charging weapons should be able to set these states...so....
 	//	let's see which fire mode we need to set up now that the buttons are up
@@ -12405,7 +12404,7 @@ rest:
 	}
 
 	return qfalse; // continue with the rest of the weapon code
-	}
+}
 
 int PM_ItemUsable(const playerState_t* ps, int forced_use)
 {
@@ -12540,10 +12539,6 @@ int PM_ItemUsable(const playerState_t* ps, int forced_use)
 			//not enough fuel to fire the weapon.
 			return 0;
 		}
-		/*if (!(pm->cmd.buttons & BUTTON_FORCEPOWER))
-		{
-			return 0;
-		}*/
 		if (PM_InGrappleMove(pm->ps->torsoAnim))
 		{
 			//In grapple
@@ -13078,8 +13073,8 @@ void PM_Weapon(void)
 			pm->ps->torsoAnim = pm->ps->legsAnim;
 			pm->ps->torsoTimer = pm->ps->legsTimer;
 			return;
-}
-}
+		}
+	}
 #endif
 #endif //0
 
@@ -13129,13 +13124,13 @@ void PM_Weapon(void)
 				//our vehicle uses a rocket launcher, so do the normal checks
 				vehicleRocketLock = qtrue;
 				pm->cmd.buttons &= ~BUTTON_ATTACK;
-	}
+			}
 			else
 			{
 				pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
 			}
 #endif
-	}
+		}
 	}
 
 	if (pm->ps->weapon != WP_DISRUPTOR //not using disruptor
@@ -14258,11 +14253,11 @@ void PM_Weapon(void)
 						if (pm->ps->legsAnim == pm->ps->torsoAnim)
 						{
 							pm->ps->legsTimer = pm->ps->torsoTimer;
-	}
+						}
 						pm->ps->weaponTime = pm->ps->torsoTimer;
 						return;
-}
-			}
+					}
+				}
 #else
 #ifdef _GAME
 				if (pm_entSelf)
@@ -14271,12 +14266,12 @@ void PM_Weapon(void)
 					{
 						return;
 					}
-		}
+				}
 #else
 				return;
 #endif
 #endif
-	}
+			}
 			if (pm->cmd.buttons & BUTTON_ALT_ATTACK && pm->ps->weapon == WP_MELEE)
 			{
 				//kicks
@@ -15115,8 +15110,8 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 					ps->delta_angles[i] = -yawClamp - cmd->angles[i];
 					temp = -yawClamp;
 				}
-	}
-}
+			}
+		}
 #else //VEH_CONTROL_SCHEME_4
 		if (pm_entVeh && BG_UnrestrainedPitchRoll(ps, pm_entVeh->m_pVehicle))
 		{
@@ -15147,7 +15142,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 			}
 		}
 		ps->viewangles[i] = SHORT2ANGLE(temp);
-}
+	}
 
 	//manual dodge
 	if (ps->ManualBlockingFlags & 1 << MBF_MELEEDODGE)
@@ -16193,7 +16188,7 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 		{
 			ps->speed *= 0.6f;
 		}
-		}
+	}
 
 #ifdef _GAME
 	if (!(dmflags.integer & DF_JK2ROLL))
@@ -16309,7 +16304,7 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 	{
 		ps->speed *= saber->moveSpeedScale;
 	}
-	}
+}
 
 qboolean BG_InRollAnim(const entityState_t* cent)
 {
@@ -16965,10 +16960,10 @@ static void BG_G2ClientSpineAngles(void* ghoul2, const int motionBolt, vec3_t ce
 			&& !PM_FlippingAnim(ciLegs)
 			&& !PM_SpinningSaberAnim(ciLegs)
 			&& !PM_SpinningSaberAnim(ciTorso))
-	{
-		doCorr = qtrue;
+		{
+			doCorr = qtrue;
+		}
 	}
-}
 #endif
 
 	if (doCorr)
@@ -17551,7 +17546,7 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t* cent, 
 		{
 			llAngles[YAW] -= bLAngles[ROLL];
 		}
-}
+	}
 #endif
 
 	if (BG_ClassHasBadBones(cent->NPC_class))
@@ -18131,8 +18126,8 @@ void PM_VehFaceHyperspacePoint(bgEntity_t* veh)
 			else if (!(veh->playerState->eFlags2 & EF2_HYPERSPACE))
 			{//flag us as ready to hyperspace!
 				veh->playerState->eFlags2 |= EF2_HYPERSPACE;
-}
-}
+			}
+		}
 	}
 }
 
@@ -19440,7 +19435,7 @@ void PmoveSingle(pmove_t* pmove)
 
 		VectorMA(pm->ps->origin, 1.0f, pm->ps->velocity, blah);
 		CG_TestLine(pm->ps->origin, blah, 1, 0xff0000, 1);
-		}
+	}
 #endif
 #endif
 
@@ -19614,11 +19609,11 @@ void PmoveSingle(pmove_t* pmove)
 					PM_SetPMViewAngle(self->playerState, veh->m_pVehicle->m_vOrientation, &pm->cmd);
 					PM_SetPMViewAngle(veh->playerState, veh->m_pVehicle->m_vOrientation, &pm->cmd);
 				}
-					}
-#endif
-				}
-		noAnimate = qtrue;
 			}
+#endif
+		}
+		noAnimate = qtrue;
+	}
 
 	if (pm_entSelf->s.NPC_class != CLASS_VEHICLE
 		&& pm->ps->m_iVehicleNum)
@@ -19789,7 +19784,7 @@ void PmoveSingle(pmove_t* pmove)
 		//riding a vehicle, see if we should do some anim overrides
 		PM_VehicleWeaponAnimate();
 	}
-		}
+}
 
 /*
 ================

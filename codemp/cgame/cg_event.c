@@ -41,6 +41,7 @@ extern float ShortestLineSegBewteen2LineSegs(vec3_t start1, vec3_t end1, vec3_t 
 	vec3_t close_pnt2);
 
 extern int cg_siegeDeathTime;
+extern int cg_ffarespawntime;
 extern int cg_siegeDeathDelay;
 extern int cg_vehicleAmmoWarning;
 extern int cg_vehicleAmmoWarningTime;
@@ -4957,6 +4958,14 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_BLOCKLINE:
 		DEBUGNAME("EV_BLOCKLINE");
 		CG_BlockLine(es->origin, es->origin2, es->time2, es->weapon, 1);
+		break;
+
+	case EV_FFASPAWN:
+		DEBUGNAME("EV_FFASPAWN");
+		if (es->owner == cg.predicted_player_state.client_num)
+		{
+			cg_ffarespawntime = es->time;
+		}
 		break;
 
 	default:

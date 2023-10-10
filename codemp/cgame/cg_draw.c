@@ -46,7 +46,6 @@ extern float CG_RadiusForCent(const centity_t* cent);
 qboolean CG_WorldCoordToScreenCoordFloat(vec3_t world_coord, float* x, float* y);
 qboolean CG_Calcmuzzle_point(int entity_num, vec3_t muzzle);
 static void CG_DrawSiegeTimer(int timeRemaining, qboolean isMyTeam);
-static void CG_DrawSiegeDeathTimer(int timeRemaining);
 void CG_DrawDuelistHealth(float x, float y, float w, float h, int duelist);
 extern qboolean PM_DeathCinAnim(int anim);
 
@@ -76,6 +75,7 @@ char teamChat2[256];
 
 // The time at which you died and the time it will take for you to rejoin game.
 int cg_siegeDeathTime = 0;
+int cg_ffarespawntime = 0;
 
 #define MAX_HUD_TICS 4
 #define MAX_SJEHUD_TICS 15
@@ -13253,6 +13253,62 @@ static void CG_DrawSiegeDeathTimer(const int timeRemaining)
 	}
 }
 
+static void CG_DrawffaRespawntimer(const int timeRemaining)
+{
+	int minutes = 0;
+	char time_str[1024];
+
+	const menuDef_t* menu_hud = Menus_FindByName("mp_timer");
+	if (!menu_hud)
+	{
+		return;
+	}
+
+	itemDef_t* item = Menu_FindItemByName(menu_hud, "frame");
+
+	if (item)
+	{
+		trap->R_SetColor(item->window.foreColor);
+		CG_DrawPic(
+			item->window.rect.x,
+			item->window.rect.y,
+			item->window.rect.w,
+			item->window.rect.h,
+			item->window.background);
+	}
+
+	int seconds = timeRemaining;
+
+	while (seconds >= 60)
+	{
+		minutes++;
+		seconds -= 60;
+	}
+
+	if (seconds < 10)
+	{
+		strcpy(time_str, va("%i:0%i", minutes, seconds));
+
+		//CG_CenterPrint(CG_GetStringEdString("MP_INGAME", "FFA_RESPAWN_MESSAGE"), SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH);
+	}
+	else
+	{
+		strcpy(time_str, va("%i:%i", minutes, seconds));
+	}
+
+	item = Menu_FindItemByName(menu_hud, "deathtimer");
+
+	if (item)
+	{
+		CG_DrawProportionalString(
+			item->window.rect.x,
+			item->window.rect.y,
+			time_str,
+			UI_SMALLFONT | UI_DROPSHADOW,
+			item->window.foreColor);
+	}
+}
+
 int cgSiegeEntityRender = 0;
 
 static void CG_DrawSiegeHUDItem(void)
@@ -14217,8 +14273,7 @@ static void CG_Draw2D(void)
 		switch (cgSiegeRoundState)
 		{
 		case 1:
-			CG_CenterPrint(CG_GetStringEdString("MP_INGAME", "WAITING_FOR_PLAYERS"), SCREEN_HEIGHT * 0.30,
-				BIGCHAR_WIDTH);
+			CG_CenterPrint(CG_GetStringEdString("MP_INGAME", "WAITING_FOR_PLAYERS"), SCREEN_HEIGHT * 0.30,BIGCHAR_WIDTH);
 			break;
 		case 2:
 			r_time = SIEGE_ROUND_BEGIN_TIME - (cg.time - cgSiegeRoundTime);
@@ -14380,6 +14435,24 @@ static void CG_Draw2D(void)
 		}
 
 		CG_DrawSiegeDeathTimer(time_remaining);
+	}
+
+	if (cg_ffarespawntime)
+	{
+		int time_remaining = cg_ffarespawntime - cg.time;
+
+		if (time_remaining < 0)
+		{
+			time_remaining = 0;
+			cg_ffarespawntime = 0;
+		}
+
+		if (time_remaining)
+		{
+			time_remaining /= 1000;
+		}
+
+		CG_DrawffaRespawntimer(time_remaining);
 	}
 
 	// don't draw center string if scoreboard is up

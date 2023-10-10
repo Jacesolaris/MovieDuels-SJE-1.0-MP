@@ -4661,6 +4661,10 @@ void ClientThink_real(gentity_t* ent)
 		if (ent->client->invulnerableTimer <= level.time)
 		{
 			ent->client->ps.eFlags &= ~EF_INVULNERABLE;
+			if (ent->flags & FL_GODMODE)
+			{
+				ent->flags &= ~FL_GODMODE;
+			}
 		}
 	}
 
@@ -5246,6 +5250,12 @@ void ClientThink_real(gentity_t* ent)
 
 				if (g_spawnInvulnerability.integer)
 				{
+					if (!(ent->r.svFlags & SVF_BOT))
+					{
+						client->ps.powerups[PW_INVINCIBLE] = level.time + g_spawnInvulnerability.integer;
+						ent->flags |= FL_GODMODE;
+					}
+
 					client->ps.eFlags |= EF_INVULNERABLE;
 					client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 				}
@@ -5876,14 +5886,14 @@ void ClientThink_real(gentity_t* ent)
 			if (client->ps.forceHandExtend != HANDEXTEND_POSTTHROWN)
 			{
 				client->ps.forceHandExtend = HANDEXTEND_NONE;
-		}
+			}
 
 			if (thrower->inuse && thrower->client)
 			{
 				thrower->client->doingThrow = 0;
 				thrower->client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
-	}
+		}
 		else if (thrower->inuse && thrower->client && thrower->ghoul2 &&
 			trap->G2API_HaveWeGhoul2Models(thrower->ghoul2))
 		{
@@ -6047,7 +6057,7 @@ void ClientThink_real(gentity_t* ent)
 				}
 			}
 		}
-}
+	}
 	else if (client->ps.heldByClient)
 	{
 		client->ps.heldByClient = 0;
@@ -6168,7 +6178,7 @@ void ClientThink_real(gentity_t* ent)
 				pmove.g2Bolts_LFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*l_leg_foot");
 				pmove.g2Bolts_RFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*r_leg_foot");
 			}
-	}
+		}
 
 	//point the saber data to the right place
 #if 0
@@ -7003,6 +7013,14 @@ void ClientThink_real(gentity_t* ent)
 				//wave respawning on
 				forceRes = 1;
 			}
+			if ((level.gametype == GT_MOVIEDUELS_FFA ||
+				level.gametype == GT_MOVIEDUELS_TEAM ||
+				level.gametype == GT_MOVIEDUELS_CTF) &&
+				g_ffaRespawnTimer.integer)
+			{
+				//wave respawning on
+				forceRes = 1;
+			}
 
 			if (forceRes > 0 &&
 				level.time - client->respawnTime > forceRes * 1000)
@@ -7246,7 +7264,7 @@ void ClientEndFrame(gentity_t* ent)
 	{
 		SpectatorClientEndFrame(ent);
 		return;
-}
+	}
 
 	// turn off any expired powerups
 	for (int i = 0; i < MAX_POWERUPS; i++)

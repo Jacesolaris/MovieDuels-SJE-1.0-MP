@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-08,BuildNum-05" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-10,BuildNum-06" // build date
 
 #define	STEPSIZE		18
 
@@ -778,10 +778,7 @@ typedef enum {
 // NOTE: may not have more than 16
 typedef enum {
 	PW_NONE,
-
-#ifdef BASE_COMPAT
 	PW_MEDITATE,
-#endif // BASE_COMPAT
 	PW_BATTLESUIT,
 	PW_PULL,
 	PW_REDFLAG,
@@ -1009,9 +1006,7 @@ typedef enum {
 	EV_DEATH3,
 	EV_OBITUARY,
 
-#ifdef BASE_COMPAT
 	EV_POWERUP_QUAD,
-#endif // BASE_COMPAT
 
 	EV_POWERUP_BATTLESUIT,
 
@@ -1149,6 +1144,7 @@ typedef enum {
 	EV_BATTERIES_CHARGED,
 	EV_STASIS,
 	EV_BLOCKLINE,
+	EV_FFASPAWN,
 } entity_event_t;			// There is a maximum of 256 events (8 bits transmission, 2 high bits for uniqueness)
 
 typedef enum {

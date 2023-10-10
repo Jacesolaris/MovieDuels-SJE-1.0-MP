@@ -2892,13 +2892,13 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 					//hmm, just try on the player model, then?
 					anim_event->eventData[AED_BOLTINDEX] = trap->G2API_AddBolt(cent->ghoul2, 0, anim_event->stringData);
 				}
-	}
+			}
 			else
 			{
 				anim_event->eventData[AED_BOLTINDEX] = trap->G2API_AddBolt(cent->ghoul2, 0, anim_event->stringData);
 			}
 			anim_event->stringData[0] = 0;
-}
+		}
 		if (anim_event->eventData[AED_BOLTINDEX] != -1)
 		{
 			vec3_t l_angles;
@@ -3384,7 +3384,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		{
 			first_frame = anim->firstFrame;
 			last_frame = anim->firstFrame + anim->numFrames;
-	}
+		}
 
 		if (cg_animBlend.integer)
 		{
@@ -4234,8 +4234,8 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 #if 0
 			VectorClear(cent->lerpOriginOffset);
 #endif
-				}
-			}
+		}
+	}
 
 	if (cent->isRagging)
 	{
@@ -4251,7 +4251,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 			//ik must be reset before ragdoll is started, or you'll get some interesting results.
 			trap->G2API_SetBoneIKState(cent->ghoul2, cg.time, NULL, IKS_NONE, NULL);
 			cent->ikStatus = qfalse;
-	}
+		}
 
 		//these will be used as "base" frames for the ragoll settling.
 		t_parms.start_frame = bgAllAnims[cent->localAnimIndex].anims[rag_anim].firstFrame;
@@ -4309,7 +4309,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 					cg.time, current_frame, blend_time);
 				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", current_frame, current_frame + 1, flags, anim_speed,
 					cg.time, current_frame, blend_time);
-		}
+			}
 		}
 #endif
 		CG_G2SetBoneAngles(cent->ghoul2, 0, "upper_lumbar", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
@@ -4529,13 +4529,13 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 			{
 				trap->G2API_RagForceSolve(cent->ghoul2, qtrue);
 			}
-						}
+		}
 
 		return qtrue;
-					}
+	}
 
 	return qfalse;
-				}
+}
 
 //set the bone angles of this client entity based on data from the server -rww
 void CG_G2ServerBoneAngles(const centity_t* cent)
@@ -5119,8 +5119,6 @@ static void CG_PlayerPowerups(centity_t* cent)
 	{
 		return;
 	}
-
-#ifdef BASE_COMPAT
 	// quad gives a dlight
 	/*if (powerups & 1 << PW_MEDITATE)
 	{
@@ -5129,7 +5127,6 @@ static void CG_PlayerPowerups(centity_t* cent)
 			trap->R_AddLightToScene(cent->lerpOrigin, 200 + (rand() & 31), 0.2f, 0.2f, 1);
 		}
 	}*/
-#endif // BASE_COMPAT
 
 	if (cent->currentState.eType == ET_NPC)
 		assert(cent->npcClient);
@@ -13225,7 +13222,7 @@ CheckTrail:
 						default:
 							VectorSet(rgb1, 0.0f, 64.0f, 255.0f);
 							break;
-					}
+						}
 
 						//Here we will use the happy process of filling a struct in with arguments and passing it to a trap function
 						//so that we can take the struct and fill in an actual CTrail type using the data within it once we get it
@@ -13384,16 +13381,16 @@ CheckTrail:
 
 							trap->FX_AddPrimitive(&fx);
 						}
+					}
 				}
 			}
-		}
 
 			// we must always do this, even if we aren't active..otherwise we won't know where to pick up from
 			VectorCopy(org, saber_trail->base);
 			VectorMA(end, 3.0f, axis[0], saber_trail->tip);
 			saber_trail->lastTime = cg.time;
+		}
 	}
-}
 	else
 	{
 		// Use the supremely hacky SFX Sabers.
@@ -14192,7 +14189,7 @@ JustDoIt:
 			}
 		}
 	}
-			}
+}
 
 int CG_IsMindTricked(const int trick_index1, const int trick_index2, const int trick_index3, const int trick_index4,
 	const int client)
@@ -14604,10 +14601,10 @@ int CG_HandleAppendedSkin(const char* model_name)
 				skin_id = trap->R_RegisterSkin(use_skin_name);
 			}
 		}
-}
+	}
 
 	return skin_id;
-		}
+}
 
 //Create a temporary ghoul2 instance and get the gla name so we can try loading animation data and sounds.
 void BG_GetVehicleModelName(char* modelName, const char* vehicleName, size_t len);
@@ -20289,7 +20286,7 @@ stillDoSaber:
 				}
 
 				k++;
-					}
+			}
 			if (ci->saber[l].numBlades > 2)
 			{
 				//add a single glow for the saber based on all the blade colors combined
@@ -20297,8 +20294,8 @@ stillDoSaber:
 			}
 
 			l++;
-				}
-			}
+		}
+	}
 
 	if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 	{
@@ -21132,7 +21129,7 @@ stillDoSaber:
 		cgBoneAnglePostSet.refreshSet = qfalse;
 	}
 #endif
-		}
+}
 
 //=====================================================================
 
@@ -21295,4 +21292,4 @@ void CG_ResetPlayerEntity(centity_t* cent)
 	{
 		trap->Print("%i ResetPlayerEntity yaw=%i\n", cent->currentState.number, cent->pe.torso.yawAngle);
 	}
-	}
+}

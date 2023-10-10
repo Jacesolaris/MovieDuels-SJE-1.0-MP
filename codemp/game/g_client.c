@@ -501,6 +501,10 @@ void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 
 	if (g_spawnInvulnerability.integer)
 	{
+		if (!(other->r.svFlags & SVF_BOT))
+		{
+			other->client->ps.powerups[PW_INVINCIBLE] = level.time + g_spawnInvulnerability.integer;
+		}
 		other->client->ps.eFlags |= EF_INVULNERABLE;
 		other->client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 	}
@@ -1306,7 +1310,7 @@ void ClientRespawn(gentity_t* ent)
 		{
 			if (ent->client->tempSpectate <= level.time)
 			{
-				int minDel = g_siegeRespawn.integer * 2000;
+				int minDel = g_ffaRespawn.integer * 2000;
 
 				if (minDel < 20000)
 				{
@@ -1316,10 +1320,14 @@ void ClientRespawn(gentity_t* ent)
 				ent->client->tempSpectate = level.time + minDel;
 
 				// Respawn time.
+				if (ent->s.number < MAX_CLIENTS)
+				{
+					gentity_t* te = G_TempEntity(ent->client->ps.origin, EV_FFASPAWN);
+					te->s.time = g_ffaRespawnTimerCheck;
+					te->s.owner = ent->s.number;
 
-				gentity_t* te = G_TempEntity(ent->client->ps.origin, EV_SIEGESPEC);
-				te->s.time = g_ffaRespawnTimerCheck;
-				te->s.owner = ent->s.number;
+					ent->client->ps.powerups[PW_INVINCIBLE] = level.time + minDel;
+				}
 				return;
 			}
 		}
@@ -1367,7 +1375,12 @@ void ClientRespawn(gentity_t* ent)
 	}
 	else
 	{
+		gentity_t* tent;
+
 		ClientSpawn(ent);
+		// add a teleportation effect
+		tent = G_TempEntity(ent->client->ps.origin, EV_PLAYER_TELEPORT_IN);
+		tent->s.client_num = ent->s.client_num;
 	}
 }
 
@@ -8800,8 +8813,13 @@ void ClientSpawn(gentity_t* ent)
 
 			if (g_spawnInvulnerability.integer)
 			{
-				ent->client->ps.eFlags |= EF_INVULNERABLE;
-				ent->client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
+				if (!(ent->r.svFlags & SVF_BOT))
+				{
+					client->ps.powerups[PW_INVINCIBLE] = level.time + g_spawnInvulnerability.integer;
+					ent->flags |= FL_GODMODE;
+				}
+				client->ps.eFlags |= EF_INVULNERABLE;
+				client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 			}
 
 			// fire the targets of the spawn point

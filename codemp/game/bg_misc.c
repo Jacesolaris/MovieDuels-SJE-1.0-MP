@@ -2942,9 +2942,7 @@ const char* eventnames[] = {
 	"EV_DEATH3",
 	"EV_OBITUARY",
 
-#ifdef BASE_COMPAT
 	"EV_POWERUP_QUAD",
-#endif // BASE_COMPAT
 
 	"EV_POWERUP_BATTLESUIT",
 
@@ -2985,6 +2983,7 @@ const char* eventnames[] = {
 	"EV_STUNNED",
 	"EV_SABERLOCK", // Player is in saberlock (render sound/effects)
 	"EV_BLOCKLINE",
+	"EV_FFASPAWN",
 
 	//fixme, added a bunch that aren't here!
 };
@@ -3025,7 +3024,7 @@ void BG_AddPredictableEventToPlayerstate(const int new_event, const int event_pa
 	ps->events[ps->eventSequence & MAX_PS_EVENTS - 1] = new_event;
 	ps->eventParms[ps->eventSequence & MAX_PS_EVENTS - 1] = event_parm;
 	ps->eventSequence++;
-}
+	}
 
 /*
 ========================
@@ -3692,7 +3691,7 @@ int BG_ModelCache(const char* model_name, const char* skin_name)
 	return trap->R_RegisterModel(model_name);
 #endif // _CGAME
 #endif // _GAME
-}
+	}
 
 #if defined(_GAME)
 #define MAX_POOL_SIZE	3000000 //1024000
