@@ -71,6 +71,8 @@ cvar_t* com_busyWait;
 
 cvar_t* com_affinity;
 cvar_t* r_weather;
+cvar_t* g_update6firststartup;
+cvar_t* g_totgfirststartup;
 
 // com_speeds times
 int time_game;
@@ -1121,6 +1123,16 @@ void Com_ExecuteCfg(void)
 		Cbuf_Execute();
 		Cbuf_ExecuteText(EXEC_NOW, "exec autoexec_mp.cfg\n");
 		Cbuf_Execute();
+
+		if (g_update6firststartup->integer > 0) //playing academy
+		{
+			//
+		}
+
+		if (g_totgfirststartup->integer > 0) //playing academy
+		{
+			//
+		}
 	}
 }
 
@@ -1283,6 +1295,10 @@ void Com_Init(char* commandLine)
 		Com_ExecuteCfg();
 
 		r_weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
+
+		g_update6firststartup = Cvar_Get("g_update6firststartup", "1", 0);
+
+		g_totgfirststartup = Cvar_Get("g_totgfirststartup", "1", 0);
 
 		// override anything from the config files with command line args
 		Com_StartupVariable(nullptr);

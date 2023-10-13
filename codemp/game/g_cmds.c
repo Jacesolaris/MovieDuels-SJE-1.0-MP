@@ -337,6 +337,7 @@ void SanitizeString2(char* in, char* out)
 	}
 	out[r] = 0;
 }
+
 int G_ClientNumberFromStrippedSubstring(const char* name)
 {
 	char		s2[MAX_STRING_CHARS];
@@ -2698,6 +2699,8 @@ void Cmd_AdminLogin(gentity_t* ent)
 {
 	char   password[MAX_STRING_CHARS];
 
+	trap->Cvar_Set("cl_noprint", "0");
+
 	if (trap->Argc() != 2)
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"Usage: /adminlogin <password>\n\""));
@@ -2728,6 +2731,19 @@ void Cmd_AdminLogin(gentity_t* ent)
 			trap->SendServerCommand(-1, va("print \"%s ^7%s\n\"", ent->client->pers.netname, ent->client->pers.login));
 
 			Com_Printf("-----Now type Adminmenu to see admin commands ----------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminlogout---To log out as admin------------------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminchangemap <Map name>--To change the map-------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminpunish <Player name>--To punish the player----\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminkick <Player name>----To kick the player------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminnpc spawn <NPC name>--To spawn an npc---------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Type seta g_cheatoverride 1 to override cheats-----\n");
+			Com_Printf("--------------------------------------------------------\n");
 		}
 		else
 		{
@@ -2736,7 +2752,7 @@ void Cmd_AdminLogin(gentity_t* ent)
 	}
 	else
 	{
-		trap->SendServerCommand(ent - g_entities, va("cp \"^1Your build is out of date.\n\""));
+		trap->SendServerCommand(ent - g_entities, va("cp \"^1You are not qualified to be admin.\n\""));
 	}
 }
 

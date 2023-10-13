@@ -801,6 +801,8 @@ extern	cvar_t* com_ansiColor;
 
 extern cvar_t* com_optvehtrace;
 extern cvar_t* r_weather;
+extern cvar_t* g_update6firststartup;
+extern cvar_t* g_totgfirststartup;
 
 #ifdef G2_PERFORMANCE_ANALYSIS
 extern	cvar_t* com_G2Report;

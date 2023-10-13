@@ -264,5 +264,7 @@ XCVAR_DEF(cg_undersizedview, "70", NULL, CVAR_ARCHIVE)
 XCVAR_DEF(g_SerenityJediEngineHudMode, "2", NULL, CVAR_ARCHIVE)
 XCVAR_DEF(cg_outcastpusheffect, "1", NULL, CVAR_ARCHIVE)
 XCVAR_DEF(cg_drawSelectionScrollBar, "0", NULL, CVAR_ARCHIVE)
+XCVAR_DEF(g_update6firststartup, "1", NULL, CVAR_ARCHIVE)
+XCVAR_DEF(g_totgfirststartup, "1", NULL, CVAR_ARCHIVE)
 
 #undef XCVAR_DEF

@@ -170,4 +170,8 @@ XCVAR_DEF(cg_SFXSabersCoreSizeTFA, "0.6", NULL, CVAR_ARCHIVE)
 
 XCVAR_DEF(g_cursor, "4", NULL, CVAR_ARCHIVE | CVAR_NORESTART)
 
+XCVAR_DEF(g_update6firststartup, "1", NULL, CVAR_ARCHIVE)
+
+XCVAR_DEF(g_totgfirststartup, "1", NULL, CVAR_ARCHIVE)
+
 #undef XCVAR_DEF

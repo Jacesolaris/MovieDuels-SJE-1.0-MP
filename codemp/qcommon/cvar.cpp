@@ -1660,6 +1660,10 @@ void Cvar_Init(void)
 
 	r_weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
 
+	g_update6firststartup = Cvar_Get("g_update6firststartup", "1", 0, "");
+
+	g_totgfirststartup = Cvar_Get("g_totgfirststartup", "1", 0, "");
+
 	Cmd_AddCommand("print", Cvar_Print_f, "Print cvar help");
 	Cmd_SetCommandCompletionFunc("print", Cvar_CompleteCvarName);
 	Cmd_AddCommand("toggle", Cvar_Toggle_f, "Toggle a cvar between values");
