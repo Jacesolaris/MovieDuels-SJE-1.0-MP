@@ -9256,8 +9256,8 @@ void saberBackToOwner(gentity_t* saberent)
 		return;
 	}
 
-	if (saber_owner->client->ps.torsoAnim == BOTH_LOSE_SABER || PM_SaberInMassiveBounce(
-		saber_owner->client->ps.torsoAnim))
+	if (saber_owner->client->ps.torsoAnim == BOTH_LOSE_SABER ||
+		PM_SaberInMassiveBounce(saber_owner->client->ps.torsoAnim))
 	{
 		//can't catch it while it's being yanked from your hand!
 		return;
@@ -9358,7 +9358,7 @@ void saberBackToOwner(gentity_t* saberent)
 		saberent->s.loopSound = saber_owner->client->saber[0].soundLoop;
 		saberent->s.loopIsSoundset = qfalse;
 
-		if (saber_owner->client->ps.forceHandExtend != HANDEXTEND_SABERPULL && owner_len <= 180)
+		if (saber_owner->client->ps.forceHandExtend != HANDEXTEND_SABERPULL && saber_owner->client->ps.torsoAnim != BOTH_LOSE_SABER && owner_len <= 180)
 		{
 			saber_owner->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;
 		}
@@ -12379,7 +12379,7 @@ nextStep:
 
 				saberent->s.saberInFlight = qtrue;
 
-				if (saber1 && saber1->type == SABER_VADER)
+				if (saber1 && saber1->type == SABER_VADER || self->client->pers.botclass == BCLASS_VADER)
 				{
 					saberent->s.apos.trType = TR_LINEAR;
 					saberent->s.apos.trDelta[0] = 0;
@@ -12398,8 +12398,8 @@ nextStep:
 					else
 					{
 						saberent->s.apos.trType = TR_LINEAR;
-						saberent->s.apos.trDelta[0] = 600;
-						saberent->s.apos.trDelta[1] = 0;
+						saberent->s.apos.trDelta[0] = 0;
+						saberent->s.apos.trDelta[1] = 800;
 						saberent->s.apos.trDelta[2] = 0;
 					}
 				}

@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-13,BuildNum-07" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-17,BuildNum-08" // build date
 
 #define	STEPSIZE		18
 
@@ -271,6 +271,19 @@ typedef enum
 
 typedef enum {
 	GT_FFA,				      // free for all
+	GT_HOLOCRON,		// holocron ffa
+	GT_JEDIMASTER,		// jedi master
+	GT_DUEL,		// one on one tournament
+	GT_POWERDUEL,
+	GT_SINGLE_PLAYER,	// single player ffa
+
+	//-- team games go after this --
+
+	GT_TEAM,			// team deathmatch
+	GT_SIEGE,			// siege
+	GT_CTF,				// capture the flag
+	GT_CTY,
+
 	GT_MOVIEDUELS_FFA,				// free for all
 	GT_MOVIEDUELS_HOLOCRON,		// holocron ffa
 	GT_MOVIEDUELS_JEDIMASTER,		// jedi master

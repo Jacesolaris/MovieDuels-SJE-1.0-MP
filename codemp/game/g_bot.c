@@ -151,6 +151,45 @@ int G_GetMapTypeBits(const char* type)
 		{
 			typeBits |= 1 << GT_FFA;
 		}
+		if (strstr(type, "holocron"))
+		{
+			typeBits |= 1 << GT_HOLOCRON;
+		}
+		if (strstr(type, "jedimaster"))
+		{
+			typeBits |= 1 << GT_JEDIMASTER;
+		}
+		if (strstr(type, "duel"))
+		{
+			typeBits |= 1 << GT_DUEL;
+			typeBits |= 1 << GT_POWERDUEL;
+		}
+		if (strstr(type, "powerduel"))
+		{
+			typeBits |= 1 << GT_DUEL;
+			typeBits |= 1 << GT_POWERDUEL;
+		}
+		if (strstr(type, "missions"))
+		{
+			typeBits |= 1 << GT_SINGLE_PLAYER;
+		}
+		if (strstr(type, "team"))
+		{
+			typeBits |= 1 << GT_TEAM;
+		}
+		if (strstr(type, "siege"))
+		{
+			typeBits |= 1 << GT_SIEGE;
+		}
+		if (strstr(type, "ctf"))
+		{
+			typeBits |= 1 << GT_CTF;
+			typeBits |= 1 << GT_CTY;
+		}
+		if (strstr(type, "cty"))
+		{
+			typeBits |= 1 << GT_CTY;
+		}
 		if (strstr(type, "movieduels_mp_ffa"))
 		{
 			typeBits |= 1 << GT_MOVIEDUELS_FFA;

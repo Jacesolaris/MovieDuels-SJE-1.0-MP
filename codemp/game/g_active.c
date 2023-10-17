@@ -2798,7 +2798,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			G_TauntSound(ent, TAUNT_TAUNT);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
-				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 				{
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -2816,7 +2816,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			else if (ent->client->ps.weapon == WP_MELEE) //MP
 			{
-				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 				{
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -2856,7 +2856,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						ent->client->ps.saberHolstered = 2;
 
-						if (ent->client->pers.botclass == BCLASS_LORDVADER || (saber1 && saber1->type == SABER_VADER))
+						if (ent->client->pers.botclass == BCLASS_VADER || (saber1 && saber1->type == SABER_VADER))
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2871,7 +2871,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
-						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2882,7 +2882,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2908,7 +2908,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
-						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2936,7 +2936,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
-						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2973,7 +2973,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
-						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2984,7 +2984,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
+						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -3009,7 +3009,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
-						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -3030,7 +3030,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
-						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER)
+						else if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -3050,7 +3050,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3061,7 +3061,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3073,7 +3073,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			else if (ent->client->ps.weapon == WP_MELEE) //MP
 			{
-				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 				{
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -3139,7 +3139,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3159,7 +3159,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3171,7 +3171,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			else if (ent->client->ps.weapon == WP_MELEE) //MP
 			{
-				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 				{
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -3221,7 +3221,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3239,7 +3239,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3260,7 +3260,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			else if (ent->client->ps.weapon == WP_MELEE) //MP
 			{
-				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 				{
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -3375,7 +3375,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3395,7 +3395,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3416,7 +3416,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			else if (ent->client->ps.weapon == WP_MELEE) //MP
 			{
-				if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+				if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 				{
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -3568,7 +3568,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3588,7 +3588,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3619,7 +3619,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3630,7 +3630,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					if (ent->client->pers.botclass == BCLASS_LORDVADER || ent->client->pers.botclass == BCLASS_DESANN)
+					if (ent->client->pers.botclass == BCLASS_VADER || ent->client->pers.botclass == BCLASS_DESANN)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3701,7 +3701,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					break;
 				case SS_STRONG:
 				case SS_DESANN:
-					if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
+					if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER) //saber kylo
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3779,7 +3779,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					break;
 				case SS_STRONG:
 				case SS_DESANN:
-					if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
+					if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_VADER) //saber kylo
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -4189,7 +4189,7 @@ qboolean Bot_Is_Saber_Class(gentity_t* ent)
 	case BCLASS_YODA:
 	case BCLASS_PADAWAN:
 	case BCLASS_SITHLORD:
-	case BCLASS_LORDVADER:
+	case BCLASS_VADER:
 	case BCLASS_SITH:
 	case BCLASS_APPRENTICE:
 	case BCLASS_JEDIKNIGHT1:
@@ -4283,7 +4283,7 @@ void CG_BreathPuffsVader(gentity_t* ent)
 		return;
 	}
 
-	if (client->pers.botclass == BCLASS_LORDVADER || client->NPC_class == CLASS_VADER)
+	if (client->pers.botclass == BCLASS_VADER || client->NPC_class == CLASS_VADER)
 	{
 		if (ent->health < 50)
 		{
@@ -5037,7 +5037,7 @@ void ClientThink_real(gentity_t* ent)
 			{
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
-					if (client->pers.botclass == BCLASS_LORDVADER)
+					if (client->pers.botclass == BCLASS_VADER)
 					{
 						client->ps.speed *= 1.15f;
 					}
@@ -5058,7 +5058,7 @@ void ClientThink_real(gentity_t* ent)
 			{
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
-					if (client->pers.botclass == BCLASS_LORDVADER)
+					if (client->pers.botclass == BCLASS_VADER)
 					{
 						client->ps.speed *= 1.15f;
 					}
@@ -5079,7 +5079,7 @@ void ClientThink_real(gentity_t* ent)
 			{
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
-					if (client->pers.botclass == BCLASS_LORDVADER)
+					if (client->pers.botclass == BCLASS_VADER)
 					{
 						client->ps.speed *= 1.10f;
 					}

@@ -3024,7 +3024,7 @@ void BG_AddPredictableEventToPlayerstate(const int new_event, const int event_pa
 	ps->events[ps->eventSequence & MAX_PS_EVENTS - 1] = new_event;
 	ps->eventParms[ps->eventSequence & MAX_PS_EVENTS - 1] = event_parm;
 	ps->eventSequence++;
-	}
+}
 
 /*
 ========================
@@ -3691,7 +3691,7 @@ int BG_ModelCache(const char* model_name, const char* skin_name)
 	return trap->R_RegisterModel(model_name);
 #endif // _CGAME
 #endif // _GAME
-	}
+}
 
 #if defined(_GAME)
 #define MAX_POOL_SIZE	3000000 //1024000
@@ -3794,6 +3794,25 @@ const char* BG_GetGametypeString(const int gametype)
 	{
 	case GT_FFA:
 		return "Free For All";
+	case GT_HOLOCRON:
+		return "Holocron";
+	case GT_JEDIMASTER:
+		return "Jedi Master";
+	case GT_DUEL:
+		return "Duel";
+	case GT_POWERDUEL:
+		return "Power Duel";
+	case GT_SINGLE_PLAYER:
+		return "Cooperative";
+	case GT_TEAM:
+		return "Team Deathmatch";
+	case GT_SIEGE:
+		return "Siege";
+	case GT_CTF:
+		return "Capture The Flag";
+	case GT_CTY:
+		return "Capture The Ysalimiri";
+
 	case GT_MOVIEDUELS_FFA:
 		return "MovieDuels Free For All";
 	case GT_MOVIEDUELS_HOLOCRON:
@@ -3826,6 +3845,43 @@ int BG_GetGametypeForString(const char* gametype)
 	{
 		return GT_FFA;
 	}
+	if (!Q_stricmp(gametype, "holocron"))
+	{
+		return GT_HOLOCRON;
+	}
+	if (!Q_stricmp(gametype, "jm"))
+	{
+		return GT_JEDIMASTER;
+	}
+	if (!Q_stricmp(gametype, "duel"))
+	{
+		return GT_DUEL;
+	}
+	if (!Q_stricmp(gametype, "powerduel"))
+	{
+		return GT_POWERDUEL;
+	}
+	if (!Q_stricmp(gametype, "missions"))
+	{
+		return GT_SINGLE_PLAYER;
+	}
+	if (!Q_stricmp(gametype, "tffa"))
+	{
+		return GT_TEAM;
+	}
+	if (!Q_stricmp(gametype, "siege"))
+	{
+		return GT_SIEGE;
+	}
+	if (!Q_stricmp(gametype, "ctf"))
+	{
+		return GT_CTF;
+	}
+	if (!Q_stricmp(gametype, "cty"))
+	{
+		return GT_CTY;
+	}
+
 	if (!Q_stricmp(gametype, "movieduels_mp_ffa"))
 	{
 		return GT_MOVIEDUELS_FFA;

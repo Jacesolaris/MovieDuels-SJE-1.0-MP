@@ -183,6 +183,45 @@ void UI_LoadArenas(void)
 			{
 				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
 			}
+			if (strstr(type, "holocron"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_HOLOCRON;
+			}
+			if (strstr(type, "jedimaster"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
+			}
+			if (strstr(type, "duel"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+			}
+			if (strstr(type, "powerduel"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+			}
+			if (strstr(type, "missions"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SINGLE_PLAYER;
+			}
+			if (strstr(type, "team"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_TEAM;
+			}
+			if (strstr(type, "siege"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SIEGE;
+			}
+			if (strstr(type, "ctf"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTF;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
+			}
+			if (strstr(type, "cty"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
+			}
 			if (strstr(type, "movieduels_mp_ffa"))
 			{
 				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_MOVIEDUELS_FFA;
@@ -279,6 +318,45 @@ void UI_LoadSPArenas(void)
 			if (strstr(type, "ffa"))
 			{
 				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_FFA;
+			}
+			if (strstr(type, "holocron"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_HOLOCRON;
+			}
+			if (strstr(type, "jedimaster"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_JEDIMASTER;
+			}
+			if (strstr(type, "duel"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+			}
+			if (strstr(type, "powerduel"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_DUEL;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_POWERDUEL;
+			}
+			if (strstr(type, "missions"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SINGLE_PLAYER;
+			}
+			if (strstr(type, "team"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_TEAM;
+			}
+			if (strstr(type, "siege"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_SIEGE;
+			}
+			if (strstr(type, "ctf"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTF;
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
+			}
+			if (strstr(type, "cty"))
+			{
+				uiInfo.mapList[uiInfo.mapCount].typeBits |= 1 << GT_CTY;
 			}
 			if (strstr(type, "movieduels_mp_ffa"))
 			{

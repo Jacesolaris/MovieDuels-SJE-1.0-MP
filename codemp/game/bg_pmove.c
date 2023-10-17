@@ -13316,8 +13316,10 @@ void PM_Weapon(void)
 			case SS_MEDIUM:
 			case SS_STRONG:
 			case SS_DESANN:
-			case SS_DUAL:
 				desiredAnim = BOTH_SABERPULL;
+				break;
+			case SS_DUAL:
+				desiredAnim = BOTH_LOSE_SABER;
 				break;
 			case SS_STAFF:
 				desiredAnim = BOTH_SABERPULL_ALT;
@@ -14650,7 +14652,7 @@ static void PM_BotGesture(void)
 
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14668,7 +14670,7 @@ static void PM_BotGesture(void)
 			}
 			else if (pm->ps->weapon == WP_MELEE) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14708,7 +14710,7 @@ static void PM_BotGesture(void)
 
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14726,7 +14728,7 @@ static void PM_BotGesture(void)
 			}
 			else if (pm->ps->weapon == WP_MELEE) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14738,7 +14740,7 @@ static void PM_BotGesture(void)
 			else
 			{
 				pm->ps->saberHolstered = 2;
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14756,7 +14758,7 @@ static void PM_BotGesture(void)
 
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14774,7 +14776,7 @@ static void PM_BotGesture(void)
 			}
 			else if (pm->ps->weapon == WP_MELEE) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14819,7 +14821,7 @@ static void PM_BotGesture(void)
 
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
@@ -14837,7 +14839,7 @@ static void PM_BotGesture(void)
 			}
 			else if (pm->ps->weapon == WP_MELEE) //MP
 			{
-				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}

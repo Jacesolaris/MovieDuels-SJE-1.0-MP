@@ -96,6 +96,19 @@ using campspot_t = struct campspot_s
 //FIXME: these are game specific
 enum {
 	GT_FFA,				// free for all
+	GT_HOLOCRON,		// holocron ffa
+	GT_JEDIMASTER,		// jedi master
+	GT_DUEL,		// one on one tournament
+	GT_POWERDUEL,
+	GT_SINGLE_PLAYER,	// single player ffa
+
+	//-- team games go after this --
+
+	GT_TEAM,			// team deathmatch
+	GT_SIEGE,			// siege
+	GT_CTF,				// capture the flag
+	GT_CTY,
+
 	GT_MOVIEDUELS_FFA,				// free for all
 	GT_MOVIEDUELS_HOLOCRON,		// holocron match
 	GT_MOVIEDUELS_JEDIMASTER,		// jedi master

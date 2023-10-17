@@ -1013,6 +1013,15 @@ void G_SpawnGEntityFromSpawnVars(qboolean inSubBSP)
 	static char* gametypeNames[] =
 	{
 		"ffa",
+		"holocron",
+		"jedimaster",
+		"duel",
+		"powerduel",
+		"missions",
+		"team",
+		"siege",
+		"ctf",
+		"cty",
 		"movieduels_mp_ffa",
 		"movieduels_mp_holocron",
 		"movieduels_mp_jm",
@@ -1225,6 +1234,15 @@ void sje_main_spawn_entity(gentity_t* ent)
 	static char* gametypeNames[] =
 	{
 		"ffa",
+		"holocron",
+		"jedimaster",
+		"duel",
+		"powerduel",
+		"missions",
+		"team",
+		"siege",
+		"ctf",
+		"cty",
 		"movieduels_mp_ffa",
 		"movieduels_mp_holocron",
 		"movieduels_mp_jm",

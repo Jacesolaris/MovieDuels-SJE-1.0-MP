@@ -5808,14 +5808,14 @@ weapChecks:
 	// Check for WEAPON ATTACK
 	// *********************************************************
 
-	if (pm->ps->saberInFlight && pm->ps->forceHandExtend != HANDEXTEND_SABERPULL
+	if (pm->ps->saberInFlight && pm->ps->forceHandExtend != HANDEXTEND_SABERPULL && pm->ps->torsoAnim != BOTH_LOSE_SABER
 		&& pm->cmd.buttons & BUTTON_ALT_ATTACK && pm->ps->communicatingflags & 1 << KICKING)
 	{
 		//don't have our saber so we can punch instead.
 		PM_DoKick();
 		return;
 	}
-	if (pm->ps->saberInFlight && pm->ps->forceHandExtend != HANDEXTEND_SABERPULL
+	if (pm->ps->saberInFlight && pm->ps->forceHandExtend != HANDEXTEND_SABERPULL && pm->ps->torsoAnim != BOTH_LOSE_SABER
 		&& pm->cmd.buttons & BUTTON_KICK && pm->ps->communicatingflags & 1 << KICKING)
 	{
 		//don't have our saber so we can punch instead.
@@ -7112,7 +7112,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			{
 				parts = SETANIM_BOTH;
 			}
-			else if ((new_move == LS_SPINATTACK_DUAL || new_move == LS_SPINATTACK || new_move == LS_SPINATTACK_GRIEV ||	new_move == LS_GRIEVOUS_SPECIAL))
+			else if ((new_move == LS_SPINATTACK_DUAL || new_move == LS_SPINATTACK || new_move == LS_SPINATTACK_GRIEV || new_move == LS_GRIEVOUS_SPECIAL))
 			{
 				if (pm->ps->pm_flags & PMF_DUCKED)
 				{

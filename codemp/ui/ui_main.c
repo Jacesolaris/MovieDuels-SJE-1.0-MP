@@ -515,16 +515,25 @@ static const size_t numSkillLevels = ARRAY_LEN(skillLevels);
 static const char* gameTypes[] =
 {
 		"ffa",                      //0
-		"movieduels_mp_ffa",        //1
-		"movieduels_mp_holocron",   //2
-		"movieduels_mp_jm",         //3
-		"movieduels_mp_duel",       //4
-		"movieduels_mp_powerduel",  //5
-		"movieduels_mp_missions",   //6
-		"movieduels_mp_team",       //7
-		"movieduels_mp_siege",      //8
-		"movieduels_mp_ctf",        //9
-		"movieduels_mp_cty"         //10
+		"Holocron",                 //1
+		"JediMaster",               //2
+		"Duel",                     //3
+		"PowerDuel",                //4
+		"missions",                 //5
+		"Team FFA",                 //6
+		"Siege",                    //7
+		"CTF",                      //8
+		"CTY",                      //9
+		"movieduels_mp_ffa",        //10
+		"movieduels_mp_holocron",   //11
+		"movieduels_mp_jm",         //12
+		"movieduels_mp_duel",       //13
+		"movieduels_mp_powerduel",  //14
+		"movieduels_mp_missions",   //15
+		"movieduels_mp_team",       //16
+		"movieduels_mp_siege",      //17
+		"movieduels_mp_ctf",        //18
+		"movieduels_mp_cty"         //19
 };
 static const int numGameTypes = ARRAY_LEN(gameTypes);
 
@@ -1829,6 +1838,24 @@ static const char* UI_GetGameTypeName(int gtEnum)
 	{
 	case GT_FFA:
 		return UI_GetStringEdString("MENUS", "OLD_FREE_FOR_ALL"); //"Free For All";
+	case GT_HOLOCRON:
+		return UI_GetStringEdString("MENUS", "HOLOCRON_FFA"); //"Holocron FFA";
+	case GT_JEDIMASTER:
+		return UI_GetStringEdString("OJP_MENUS", "JEDIMASTER"); //"Jedi Master";??
+	case GT_SINGLE_PLAYER:
+		return UI_GetStringEdString("OJP_MENUS", "COOP"); //"Team FFA";
+	case GT_DUEL:
+		return UI_GetStringEdString("MENUS", "DUEL"); //"Team FFA";
+	case GT_POWERDUEL:
+		return UI_GetStringEdString("MENUS", "POWERDUEL"); //"Team FFA";
+	case GT_TEAM:
+		return UI_GetStringEdString("MENUS", "TEAM_FFA"); //"Team FFA";
+	case GT_SIEGE:
+		return UI_GetStringEdString("MENUS", "SIEGE"); //"Siege";
+	case GT_CTF:
+		return UI_GetStringEdString("MENUS", "CAPTURE_THE_FLAG"); //"Capture the Flag";
+	case GT_CTY:
+		return UI_GetStringEdString("MENUS", "CAPTURE_THE_YSALIMARI"); //"Capture the Ysalamiri";
 	case GT_MOVIEDUELS_FFA:
 		return UI_GetStringEdString("MENUS", "FREE_FOR_ALL"); //"Free For All";
 	case GT_MOVIEDUELS_HOLOCRON:
@@ -3747,6 +3774,8 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		if (flags & UI_SHOW_FFA)
 		{
 			if (trap->Cvar_VariableValue("g_gametype") != GT_FFA &&
+				trap->Cvar_VariableValue("g_gametype") != GT_HOLOCRON &&
+				trap->Cvar_VariableValue("g_gametype") != GT_JEDIMASTER &&
 				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_FFA &&
 				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_HOLOCRON &&
 				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_JEDIMASTER)
@@ -3758,7 +3787,9 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		if (flags & UI_SHOW_NOTFFA)
 		{
 			if (trap->Cvar_VariableValue("g_gametype") == GT_FFA ||
-				trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_HOLOCRON ||
+				trap->Cvar_VariableValue("g_gametype") == GT_HOLOCRON ||
+				trap->Cvar_VariableValue("g_gametype") != GT_JEDIMASTER ||
+				trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_FFA ||
 				trap->Cvar_VariableValue("g_gametype") == GT_MOVIEDUELS_HOLOCRON ||
 				trap->Cvar_VariableValue("g_gametype") != GT_MOVIEDUELS_JEDIMASTER)
 			{

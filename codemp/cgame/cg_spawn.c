@@ -333,6 +333,15 @@ void CG_ParseEntityFromSpawnVars(void)
 	static char* gametypeNames[] =
 	{
 		"ffa",
+		"holocron",
+		"jedimaster",
+		"duel",
+		"powerduel",
+		"missions",
+		"team",
+		"siege",
+		"ctf",
+		"cty",
 		"movieduels_mp_ffa",
 		"movieduels_mp_holocron",
 		"movieduels_mp_jm",
