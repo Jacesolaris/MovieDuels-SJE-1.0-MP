@@ -8569,11 +8569,9 @@ void DownedSaberThink(gentity_t* saberent)
 		return;
 	}
 
-	if ((saber_own->client->pers.cmd.buttons & BUTTON_ATTACK
-		&& !PM_SaberInMassiveBounce(saber_own->client->ps.torsoAnim)
-		&& !saber_own->client->ps.torsoAnim == BOTH_LOSE_SABER
-		&& level.time - saber_own->client->saberKnockedTime > MAX_PLAYER_LEAVE_TIME
-		|| saberent->s.pos.trType == TR_STATIONARY && (saber_own->client->pers.cmd.buttons & BUTTON_ALT_ATTACK || saber_own->client->pers.cmd.buttons & BUTTON_ATTACK))
+	if ((level.time - saber_own->client->saberKnockedTime > MAX_PLAYER_LEAVE_TIME && saber_own->client->pers.cmd.buttons & BUTTON_ATTACK) ||
+		(saberent->s.pos.trType == TR_STATIONARY &&
+			(saber_own->client->pers.cmd.buttons & BUTTON_ATTACK || saber_own->client->ps.forceHandExtend == HANDEXTEND_SABERPULL))
 		&& !(saber_own->r.svFlags & SVF_BOT))
 	{
 		//we want to pull the saber back.
@@ -9358,7 +9356,7 @@ void saberBackToOwner(gentity_t* saberent)
 		saberent->s.loopSound = saber_owner->client->saber[0].soundLoop;
 		saberent->s.loopIsSoundset = qfalse;
 
-		if (saber_owner->client->ps.forceHandExtend != HANDEXTEND_SABERPULL && saber_owner->client->ps.torsoAnim != BOTH_LOSE_SABER && owner_len <= 180)
+		if (saber_owner->client->ps.forceHandExtend != HANDEXTEND_SABERPULL && owner_len <= 180)
 		{
 			saber_owner->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;
 		}
@@ -12379,29 +12377,19 @@ nextStep:
 
 				saberent->s.saberInFlight = qtrue;
 
-				if (saber1 && saber1->type == SABER_VADER || self->client->pers.botclass == BCLASS_VADER)
+				if (self->client->ps.fd.saber_anim_level == SS_STAFF)
 				{
 					saberent->s.apos.trType = TR_LINEAR;
 					saberent->s.apos.trDelta[0] = 0;
-					saberent->s.apos.trDelta[1] = 600;
+					saberent->s.apos.trDelta[1] = 800;
 					saberent->s.apos.trDelta[2] = 0;
 				}
 				else
 				{
-					if (self->client->ps.fd.saber_anim_level == SS_STAFF)
-					{
-						saberent->s.apos.trType = TR_LINEAR;
-						saberent->s.apos.trDelta[0] = 0;
-						saberent->s.apos.trDelta[1] = 800;
-						saberent->s.apos.trDelta[2] = 0;
-					}
-					else
-					{
-						saberent->s.apos.trType = TR_LINEAR;
-						saberent->s.apos.trDelta[0] = 0;
-						saberent->s.apos.trDelta[1] = 800;
-						saberent->s.apos.trDelta[2] = 0;
-					}
+					saberent->s.apos.trType = TR_LINEAR;;
+					saberent->s.apos.trDelta[0] = 600;
+					saberent->s.apos.trDelta[1] = 0;
+					saberent->s.apos.trDelta[2] = 0;
 				}
 
 				saberent->s.pos.trType = TR_LINEAR;

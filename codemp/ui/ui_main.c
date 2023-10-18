@@ -5436,7 +5436,7 @@ static void UI_Update(const char* name)
 			trap->Cvar_SetValue("ui_r_texturebits", 32);
 			trap->Cvar_SetValue("ui_r_fastSky", 0);
 			trap->Cvar_SetValue("ui_r_inGameVideo", 1);
-			trap->Cvar_SetValue("ui_cg_shadows", 2);
+			trap->Cvar_SetValue("ui_cg_shadows", 3);
 			trap->Cvar_Set("ui_r_texturemode", "GL_LINEAR_MIPMAP_LINEAR");
 			break;
 

@@ -13319,7 +13319,7 @@ void PM_Weapon(void)
 				desiredAnim = BOTH_SABERPULL;
 				break;
 			case SS_DUAL:
-				desiredAnim = BOTH_LOSE_SABER;
+				desiredAnim = BOTH_SABERPULL;
 				break;
 			case SS_STAFF:
 				desiredAnim = BOTH_SABERPULL_ALT;
