@@ -708,7 +708,6 @@ typedef struct clientPersistant_s
 	char		logout[1024];
 	qboolean	plugindetect;
 	qboolean	isbeingpunished;
-
 } clientPersistant_t;
 
 typedef struct renderInfo_s

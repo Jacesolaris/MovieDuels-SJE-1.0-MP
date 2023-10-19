@@ -2843,18 +2843,18 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
-						if (ent->client->ps.saberHolstered == 1
+						if (ent->client->ps.saber_holstered == 1
 							&& ent->client->saber[1].model[0])
 						{
 							//turn off second saber
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 						}
-						else if (ent->client->ps.saberHolstered == 0)
+						else if (ent->client->ps.saber_holstered == 0)
 						{
 							//turn off first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 						}
-						ent->client->ps.saberHolstered = 2;
+						ent->client->ps.saber_holstered = 2;
 
 						if (ent->client->pers.botclass == BCLASS_VADER || (saber1 && saber1->type == SABER_VADER))
 						{
@@ -2892,17 +2892,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						break;
 					case SS_DUAL:
-						if (ent->client->ps.saberHolstered == 1 && ent->client->saber[1].model[0])
+						if (ent->client->ps.saber_holstered == 1 && ent->client->saber[1].model[0])
 						{
 							//turn on second saber
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
 						}
-						else if (ent->client->ps.saberHolstered == 2)
+						else if (ent->client->ps.saber_holstered == 2)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 
 						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
 						{
@@ -2925,12 +2925,12 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						break;
 					case SS_STAFF:
-						if (ent->client->ps.saberHolstered > 0)
+						if (ent->client->ps.saber_holstered > 0)
 						{
 							//turn on all blades
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 
 						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
 						{
@@ -2954,18 +2954,18 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
-						if (ent->client->ps.saberHolstered == 1
+						if (ent->client->ps.saber_holstered == 1
 							&& ent->client->saber[1].model[0])
 						{
 							//turn off second saber
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 						}
-						else if (ent->client->ps.saberHolstered == 0)
+						else if (ent->client->ps.saber_holstered == 0)
 						{
 							//turn off first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 						}
-						ent->client->ps.saberHolstered = 2;
+						ent->client->ps.saber_holstered = 2;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
@@ -2994,17 +2994,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						break;
 					case SS_DUAL:
-						if (ent->client->ps.saberHolstered == 1 && ent->client->saber[1].model[0])
+						if (ent->client->ps.saber_holstered == 1 && ent->client->saber[1].model[0])
 						{
 							//turn on second saber
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
 						}
-						else if (ent->client->ps.saberHolstered == 2)
+						else if (ent->client->ps.saber_holstered == 2)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						if (ent->client->saber[0].type == SABER_GRIE || ent->client->saber[0].type == SABER_GRIE4)
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -3019,12 +3019,12 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						}
 						break;
 					case SS_STAFF:
-						if (ent->client->ps.saberHolstered > 0)
+						if (ent->client->ps.saber_holstered > 0)
 						{
 							//turn on all blades
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 
 						if ((saber1 && saber1->type == SABER_OBIWAN) || (ent->client->pers.botclass == BCLASS_OBIWAN)) //saber kylo
 						{
@@ -3096,38 +3096,38 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
 				{
 					//TORSO ONLY
-					if (ent->client->ps.saberHolstered == 1
+					if (ent->client->ps.saber_holstered == 1
 						&& ent->client->saber[1].model[0])
 					{
 						//turn off second saber
 						if (ent->client->ps.weapon == WP_SABER)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 					}
-					else if (ent->client->ps.saberHolstered == 0)
+					else if (ent->client->ps.saber_holstered == 0)
 					{
 						//turn off first
 						if (ent->client->ps.weapon == WP_SABER)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 					}
-					ent->client->ps.saberHolstered = 2;
+					ent->client->ps.saber_holstered = 2;
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 				else
 				{
-					if (ent->client->ps.saberHolstered == 1
+					if (ent->client->ps.saber_holstered == 1
 						&& ent->client->saber[1].model[0])
 					{
 						//turn off second saber
 						if (ent->client->ps.weapon == WP_SABER)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 					}
-					else if (ent->client->ps.saberHolstered == 0)
+					else if (ent->client->ps.saber_holstered == 0)
 					{
 						//turn off first
 						if (ent->client->ps.weapon == WP_SABER)
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 					}
-					ent->client->ps.saberHolstered = 2;
+					ent->client->ps.saber_holstered = 2;
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
@@ -3198,18 +3198,18 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					if (ent->client->ps.saberHolstered == 1
+					if (ent->client->ps.saber_holstered == 1
 						&& ent->client->saber[1].model[0])
 					{
 						//turn off second saber
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 					}
-					else if (ent->client->ps.saberHolstered == 0)
+					else if (ent->client->ps.saber_holstered == 0)
 					{
 						//turn off first
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 					}
-					ent->client->ps.saberHolstered = 2;
+					ent->client->ps.saber_holstered = 2;
 					anim = BOTH_MEDITATE_SABER;
 				}
 			}
@@ -3354,18 +3354,18 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						break;
 					}
 				}
-				if (ent->client->ps.saberHolstered == 1
+				if (ent->client->ps.saber_holstered == 1
 					&& ent->client->saber[1].model[0])
 				{
 					//turn on second saber
 					G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
 				}
-				else if (ent->client->ps.saberHolstered == 2)
+				else if (ent->client->ps.saber_holstered == 2)
 				{
 					//turn on first
 					G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 				}
-				ent->client->ps.saberHolstered = 0;
+				ent->client->ps.saber_holstered = 0;
 			}
 			break;
 		case TAUNT_GLOAT:
@@ -3443,55 +3443,55 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_STRONG, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_DUAL:
-						if (ent->client->ps.saberHolstered == 1
+						if (ent->client->ps.saber_holstered == 1
 							&& ent->client->saber[1].model[0])
 						{
 							//turn on second saber
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
 						}
-						else if (ent->client->ps.saberHolstered == 2)
+						else if (ent->client->ps.saber_holstered == 2)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_DUAL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_STAFF:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_STAFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					default:;
@@ -3504,55 +3504,55 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_STRONG, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_DUAL:
-						if (ent->client->ps.saberHolstered == 1
+						if (ent->client->ps.saber_holstered == 1
 							&& ent->client->saber[1].model[0])
 						{
 							//turn on second saber
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
 						}
-						else if (ent->client->ps.saberHolstered == 2)
+						else if (ent->client->ps.saber_holstered == 2)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_DUAL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_STAFF:
-						if (ent->client->ps.saberHolstered)
+						if (ent->client->ps.saber_holstered)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 						}
-						ent->client->ps.saberHolstered = 0;
+						ent->client->ps.saber_holstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_STAFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					default:;
@@ -3636,18 +3636,18 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 					else
 					{
-						if (ent->client->ps.saberHolstered == 1
+						if (ent->client->ps.saber_holstered == 1
 							&& ent->client->saber[1].model[0])
 						{
 							//turn off second saber
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 						}
-						else if (ent->client->ps.saberHolstered == 0)
+						else if (ent->client->ps.saber_holstered == 0)
 						{
 							//turn off first
 							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 						}
-						ent->client->ps.saberHolstered = 2;
+						ent->client->ps.saber_holstered = 2;
 						anim = PLAYER_SURRENDER_START;
 					}
 				}
@@ -3673,18 +3673,18 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				{
 				case SS_FAST:
 				case SS_TAVION:
-					if (ent->client->ps.saberHolstered == 1
+					if (ent->client->ps.saber_holstered == 1
 						&& ent->client->saber[1].model[0])
 					{
 						//turn off second saber
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 					}
-					else if (ent->client->ps.saberHolstered == 0)
+					else if (ent->client->ps.saber_holstered == 0)
 					{
 						//turn off first
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 					}
-					ent->client->ps.saberHolstered = 2;
+					ent->client->ps.saber_holstered = 2;
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_MEDIUM:
@@ -3712,17 +3712,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 					break;
 				case SS_DUAL:
-					if (ent->client->ps.saberHolstered == 1 && ent->client->saber[1].model[0])
+					if (ent->client->ps.saber_holstered == 1 && ent->client->saber[1].model[0])
 					{
 						//turn on second saber
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
 					}
-					else if (ent->client->ps.saberHolstered == 2)
+					else if (ent->client->ps.saber_holstered == 2)
 					{
 						//turn on first
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 					}
-					ent->client->ps.saberHolstered = 0;
+					ent->client->ps.saber_holstered = 0;
 					if (ent->client->saber[0].type == SABER_GRIE || ent->client->saber[0].type == SABER_GRIE4)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT,
@@ -3734,12 +3734,12 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 					break;
 				case SS_STAFF:
-					if (ent->client->ps.saberHolstered > 0)
+					if (ent->client->ps.saber_holstered > 0)
 					{
 						//turn on all blades
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 					}
-					ent->client->ps.saberHolstered = 0;
+					ent->client->ps.saber_holstered = 0;
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				default:;
@@ -3751,18 +3751,18 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				{
 				case SS_FAST:
 				case SS_TAVION:
-					if (ent->client->ps.saberHolstered == 1
+					if (ent->client->ps.saber_holstered == 1
 						&& ent->client->saber[1].model[0])
 					{
 						//turn off second saber
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOff);
 					}
-					else if (ent->client->ps.saberHolstered == 0)
+					else if (ent->client->ps.saber_holstered == 0)
 					{
 						//turn off first
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOff);
 					}
-					ent->client->ps.saberHolstered = 2;
+					ent->client->ps.saber_holstered = 2;
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_GESTURE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_MEDIUM:
@@ -3790,17 +3790,17 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 					break;
 				case SS_DUAL:
-					if (ent->client->ps.saberHolstered == 1 && ent->client->saber[1].model[0])
+					if (ent->client->ps.saber_holstered == 1 && ent->client->saber[1].model[0])
 					{
 						//turn on second saber
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
 					}
-					else if (ent->client->ps.saberHolstered == 2)
+					else if (ent->client->ps.saber_holstered == 2)
 					{
 						//turn on first
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 					}
-					ent->client->ps.saberHolstered = 0;
+					ent->client->ps.saber_holstered = 0;
 					if (ent->client->saber[0].type == SABER_GRIE || ent->client->saber[0].type == SABER_GRIE4)
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT,
@@ -3812,12 +3812,12 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 					break;
 				case SS_STAFF:
-					if (ent->client->ps.saberHolstered > 0)
+					if (ent->client->ps.saber_holstered > 0)
 					{
 						//turn on all blades
 						G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
 					}
-					ent->client->ps.saberHolstered = 0;
+					ent->client->ps.saber_holstered = 0;
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				default:;
@@ -3861,9 +3861,9 @@ void G_SetsaberdownorAnim(gentity_t* ent)
 	{
 		if (ent->client && ent->client->ps.weaponTime < 1 && ent->watertype != CONTENTS_WATER)
 		{
-			if (ent->client->ps.saberHolstered == 2)
+			if (ent->client->ps.saber_holstered == 2)
 			{
-				ent->client->ps.saberHolstered = 0;
+				ent->client->ps.saber_holstered = 0;
 
 				if (ent->client->saber[0].soundOn)
 				{
@@ -3876,7 +3876,7 @@ void G_SetsaberdownorAnim(gentity_t* ent)
 			}
 			else
 			{
-				ent->client->ps.saberHolstered = 2;
+				ent->client->ps.saber_holstered = 2;
 				if (ent->client->saber[0].soundOff)
 				{
 					G_Sound(ent, CHAN_AUTO, ent->client->saber[0].soundOff);
@@ -4438,33 +4438,29 @@ void ClientThink_real(gentity_t* ent)
 
 	if (!isFollowing)
 	{
-		if (level.gametype == GT_MOVIEDUELS_SIEGE &&
+		if (level.gametype == GT_SIEGE &&
 			client->siegeClass != -1 &&
 			bgSiegeClasses[client->siegeClass].saberStance)
-		{
-			//the class says we have to use this stance set.
-			if (!(bgSiegeClasses[client->siegeClass].saberStance & 1 << client->ps.fd.saber_anim_level))
-			{
-				//the current stance is not in the bitmask, so find the first one that is.
+		{ //the class says we have to use this stance set.
+			if (!(bgSiegeClasses[client->siegeClass].saberStance & (1 << client->ps.fd.saber_anim_level)))
+			{ //the current stance is not in the bitmask, so find the first one that is.
 				int i = SS_FAST;
 
 				while (i < SS_NUM_SABER_STYLES)
 				{
-					if (bgSiegeClasses[client->siegeClass].saberStance & 1 << i)
+					if (bgSiegeClasses[client->siegeClass].saberStance & (1 << i))
 					{
 						if (i == SS_DUAL
-							&& client->ps.saberHolstered == 1)
-						{
-							//one saber should be off, adjust saber_anim_level accordinly
+							&& client->ps.saber_holstered == 1)
+						{//one saber should be off, adjust saber_anim_level accordinly
 							client->ps.fd.saber_anim_levelBase = i;
 							client->ps.fd.saber_anim_level = SS_FAST;
 							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 						}
 						else if (i == SS_STAFF
-							&& client->ps.saberHolstered == 1
+							&& client->ps.saber_holstered == 1
 							&& client->saber[0].singleBladeStyle != SS_NONE)
-						{
-							//one saber or blade should be off, adjust saber_anim_level accordinly
+						{//one saber or blade should be off, adjust saber_anim_level accordinly
 							client->ps.fd.saber_anim_levelBase = i;
 							client->ps.fd.saber_anim_level = client->saber[0].singleBladeStyle;
 							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
@@ -4481,52 +4477,41 @@ void ClientThink_real(gentity_t* ent)
 				}
 			}
 		}
+		else if (client->saber[0].model[0] && client->saber[1].model[0])
+		{ //with two sabs always use akimbo style
+			if (client->ps.saber_holstered == 1)
+			{//one saber should be off, adjust saber_anim_level accordinly
+				client->ps.fd.saber_anim_levelBase = SS_DUAL;
+				client->ps.fd.saber_anim_level = SS_FAST;
+				client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
+			}
+			else
+			{
+				if (!WP_SaberStyleValidForSaber(&client->saber[0], &client->saber[1], client->ps.saber_holstered, client->ps.fd.saber_anim_level))
+				{//only use dual style if the style we're trying to use isn't valid
+					client->ps.fd.saber_anim_levelBase = client->ps.fd.saber_anim_level = SS_DUAL;
+				}
+				client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
+			}
+		}
 		else
 		{
-			if (!G_ValidSaberStyle(ent, ent->client->ps.fd.saber_anim_level))
-			{
-				//had an illegal style, revert to default
-				if (ent->client->saber[0].type == SABER_BACKHAND)
-				{
-					ent->client->ps.fd.saber_anim_level = SS_STAFF;
-				}
-				else if (ent->client->saber[0].type == SABER_ASBACKHAND)
-				{
-					ent->client->ps.fd.saber_anim_level = SS_STAFF;
-				}
-				else if (ent->client->saber[0].type == SABER_STAFF_MAUL)
-				{
-					ent->client->ps.fd.saber_anim_level = SS_STAFF;
-				}
-				else if (ent->client->saber[0].type == SABER_ELECTROSTAFF)
-				{
-					ent->client->ps.fd.saber_anim_level = SS_STAFF;
+			if (client->saber[0].stylesLearned == (1 << SS_STAFF))
+			{ //then *always* use the staff style
+				client->ps.fd.saber_anim_levelBase = SS_STAFF;
+			}
+			if (client->ps.fd.saber_anim_levelBase == SS_STAFF)
+			{//using staff style
+				if (client->ps.saber_holstered == 1
+					&& client->saber[0].singleBladeStyle != SS_NONE)
+				{//one blade should be off, adjust saber_anim_level accordinly
+					client->ps.fd.saber_anim_level = client->saber[0].singleBladeStyle;
+					client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 				}
 				else
 				{
-					ent->client->ps.fd.saber_anim_level = SS_MEDIUM;
-				}
-				ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
-			}
-
-			if (!ent->client->ps.saberInFlight)
-			{
-				//can't switch saber holster settings if saber is out.
-				if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0]
-					&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[1])
-					&& ent->client->ps.fd.saber_anim_level != SS_DUAL
-					&& ent->client->ps.saberHolstered == 0)
-				{
-					//using dual sabers, but not the dual style, turn off blade
-					ent->client->ps.saberHolstered = 1;
-				}
-				else if (ent->client->saber[0].numBlades > 1
-					&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0])
-					&& ent->client->ps.fd.saber_anim_level != SS_STAFF
-					&& ent->client->ps.saberHolstered == 0)
-				{
-					//using staff saber, but not the staff style, turn off blade
-					ent->client->ps.saberHolstered = 1;
+					client->ps.fd.saber_anim_level = SS_STAFF;
+					client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 				}
 			}
 		}
@@ -5154,10 +5139,10 @@ void ClientThink_real(gentity_t* ent)
 		{
 			//Bring out the sabers
 			if (client->ps.weapon == WP_SABER
-				&& client->ps.saberHolstered
+				&& client->ps.saber_holstered
 				&& client->ps.duelTime)
 			{
-				client->ps.saberHolstered = 0;
+				client->ps.saber_holstered = 0;
 
 				if (client->saber[0].soundOn)
 				{
@@ -5177,10 +5162,10 @@ void ClientThink_real(gentity_t* ent)
 				&& duelAgainst->client
 				&& duelAgainst->inuse
 				&& duelAgainst->client->ps.weapon == WP_SABER
-				&& duelAgainst->client->ps.saberHolstered
+				&& duelAgainst->client->ps.saber_holstered
 				&& duelAgainst->client->ps.duelTime)
 			{
-				duelAgainst->client->ps.saberHolstered = 0;
+				duelAgainst->client->ps.saber_holstered = 0;
 
 				if (duelAgainst->client->saber[0].soundOn)
 				{
@@ -5314,7 +5299,7 @@ void ClientThink_real(gentity_t* ent)
 				client->ps.ManualBlockingTime = level.time; //Blocking time 1 on
 				ucmd->buttons &= ~(BUTTON_DASH);
 
-				if (client->ps.weapon == WP_SABER && client->ps.saberHolstered && client->NPC_class != CLASS_YODA && !manual_running_and_saberblocking(ent)) // not yoda he can block lightning with a saber off in his hand
+				if (client->ps.weapon == WP_SABER && client->ps.saber_holstered && client->NPC_class != CLASS_YODA && !manual_running_and_saberblocking(ent)) // not yoda he can block lightning with a saber off in his hand
 				{
 					switch (client->ps.fd.saber_anim_level)
 					{
@@ -5323,7 +5308,7 @@ void ClientThink_real(gentity_t* ent)
 					case SS_MEDIUM:
 					case SS_STRONG:
 					case SS_DESANN:
-						if (client->ps.saberHolstered == 1 && client->saber[1].model[0])
+						if (client->ps.saber_holstered == 1 && client->saber[1].model[0])
 						{
 						}
 						else if (client->saber[0].type == SABER_STAFF
@@ -5334,26 +5319,26 @@ void ClientThink_real(gentity_t* ent)
 							|| client->saber[0].type == SABER_STAFF_MAUL
 							|| client->saber[0].type == SABER_ELECTROSTAFF)
 						{
-							if (client->ps.saberHolstered == 2)
+							if (client->ps.saber_holstered == 2)
 							{
 								//turn on all blades
 								G_Sound(ent, CHAN_WEAPON, client->saber[0].soundOn);
-								client->ps.saberHolstered = 0;
+								client->ps.saber_holstered = 0;
 							}
 						}
-						else if (client->ps.saberHolstered > 0)
+						else if (client->ps.saber_holstered > 0)
 						{
 							//turn on all blades
 							G_Sound(ent, CHAN_WEAPON, client->saber[0].soundOn);
-							client->ps.saberHolstered = 0;
+							client->ps.saber_holstered = 0;
 						}
 						break;
 					case SS_DUAL:
-						if (client->ps.saberHolstered == 1 && client->saber[1].model[0])
+						if (client->ps.saber_holstered == 1 && client->saber[1].model[0])
 						{
 							//turn on second saber
 							G_Sound(ent, CHAN_WEAPON, client->saber[1].soundOn);
-							client->ps.saberHolstered = 0;
+							client->ps.saber_holstered = 0;
 						}
 						else if (client->saber[0].type == SABER_STAFF
 							|| client->saber[0].type == SABER_BACKHAND
@@ -5363,29 +5348,29 @@ void ClientThink_real(gentity_t* ent)
 							|| client->saber[0].type == SABER_STAFF_MAUL
 							|| client->saber[0].type == SABER_ELECTROSTAFF)
 						{
-							if (client->ps.saberHolstered == 2)
+							if (client->ps.saber_holstered == 2)
 							{
 								//turn on all blades
 								G_Sound(ent, CHAN_WEAPON, client->saber[0].soundOn);
-								client->ps.saberHolstered = 0;
+								client->ps.saber_holstered = 0;
 							}
 						}
-						else if (client->ps.saberHolstered == 2)
+						else if (client->ps.saber_holstered == 2)
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, client->saber[0].soundOn);
-							client->ps.saberHolstered = 0;
+							client->ps.saber_holstered = 0;
 						}
 						break;
 					case SS_STAFF:
-						if (client->ps.saberHolstered == 1 && client->saber[1].model[0]) // right saber staff blade
+						if (client->ps.saber_holstered == 1 && client->saber[1].model[0]) // right saber staff blade
 						{
 						}
-						else if (client->ps.saberHolstered == 2 && client->saber[0].model[0])
+						else if (client->ps.saber_holstered == 2 && client->saber[0].model[0])
 						{
 							//turn on first
 							G_Sound(ent, CHAN_WEAPON, client->saber[0].soundOn);
-							client->ps.saberHolstered = 0;
+							client->ps.saber_holstered = 0;
 						}
 						break;
 					default:;
@@ -5966,7 +5951,7 @@ void ClientThink_real(gentity_t* ent)
 						//holding it
 						G_PreDefSound(ent->client->ps.origin, PDSOUND_FORCEJUMP);
 					}
-				}
+			}
 				else if (client->beingThrown - level.time < 4000)
 				{
 					//step into the next part of the throw, and go flying back
@@ -6055,9 +6040,9 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
-			}
 		}
 	}
+}
 	else if (client->ps.heldByClient)
 	{
 		client->ps.heldByClient = 0;
@@ -7073,7 +7058,7 @@ void ClientThink_real(gentity_t* ent)
 			ent->client->ps.m_iVehicleNum = 0;
 		}
 	}
-}
+			}
 
 /*
 ==================
@@ -7329,7 +7314,7 @@ void ClientEndFrame(gentity_t* ent)
 	}
 
 	SendPendingPredictableEvents(&ent->client->ps);
-}
+		}
 
 /*
 ====================

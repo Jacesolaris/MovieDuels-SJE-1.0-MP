@@ -469,14 +469,14 @@ qboolean PM_CanSetWeaponReadyAnim(void)
 
 qboolean BG_SabersOff(const playerState_t* ps)
 {
-	if (!ps->saberHolstered)
+	if (!ps->saber_holstered)
 	{
 		return qfalse;
 	}
 	if (ps->fd.saber_anim_levelBase == SS_DUAL
 		|| ps->fd.saber_anim_levelBase == SS_STAFF)
 	{
-		if (ps->saberHolstered < 2)
+		if (ps->saber_holstered < 2)
 		{
 			return qfalse;
 		}
@@ -572,7 +572,7 @@ int PM_ReadyPoseForsaber_anim_level(void)
 
 		if (saber1
 			&& saber2
-			&& !pm->ps->saberHolstered)
+			&& !pm->ps->saber_holstered)
 		{
 			//dual sabers, both on
 			return BOTH_SABERDUAL_STANCE;
@@ -1122,7 +1122,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 
 	if (saber1
 		&& saber2
-		&& !pm->ps->saberHolstered)
+		&& !pm->ps->saber_holstered)
 	{
 		//dual sabers, both on
 		if (saber1 && saber1->type == SABER_GRIE)
@@ -1446,7 +1446,7 @@ int PM_ReadyPoseForsaber_anim_levelDucked(void)
 
 	if (saber1
 		&& saber2
-		&& !pm->ps->saberHolstered)
+		&& !pm->ps->saber_holstered)
 	{
 		//dual sabers, both on
 		if (saber1 && saber1->type == SABER_GRIE)
@@ -3155,7 +3155,7 @@ static void PM_JumpForDir(void)
 	int anim;
 	if (pm->cmd.forwardmove > 0)
 	{
-		if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered) //saber out
+		if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered) //saber out
 		{
 			anim = BOTH_JUMP2;
 			pm->ps->pm_flags &= ~PMF_BACKWARDS_JUMP;
@@ -3183,7 +3183,7 @@ static void PM_JumpForDir(void)
 	}
 	else
 	{
-		if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered) //saber out
+		if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered) //saber out
 		{
 			anim = BOTH_JUMP2;
 			pm->ps->pm_flags &= ~PMF_BACKWARDS_JUMP;
@@ -3519,7 +3519,7 @@ qboolean PM_AdjustAngleForWallJump(playerState_t* ps, usercmd_t* ucmd, const qbo
 					//if got to hold part of anim, play hold anim
 					if (ps->legsTimer <= 300)
 					{
-						ps->saberHolstered = 2;
+						ps->saber_holstered = 2;
 						PM_SetAnim(
 							SETANIM_BOTH, BOTH_FORCEWALLRELEASE_FORWARD + (ps->legsAnim - BOTH_FORCEWALLHOLD_FORWARD),
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -4488,18 +4488,18 @@ static qboolean pm_check_jump(void)
 				if (pm->cmd.buttons & BUTTON_ATTACK)
 				{
 					//only 1 attack you can do from this anim
-					if (pm->ps->saberHolstered == 2)
+					if (pm->ps->saber_holstered == 2)
 					{
-						pm->ps->saberHolstered = 0;
+						pm->ps->saber_holstered = 0;
 						PM_AddEvent(EV_SABER_UNHOLSTER);
 					}
 					PM_SetAnim(SETANIM_BOTH, BOTH_FORCELONGLEAP_ATTACK2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 				else
 				{
-					if (pm->ps->saberHolstered == 2)
+					if (pm->ps->saber_holstered == 2)
 					{
-						pm->ps->saberHolstered = 0;
+						pm->ps->saber_holstered = 0;
 						PM_AddEvent(EV_SABER_UNHOLSTER);
 					}
 					PM_SetAnim(SETANIM_BOTH, BOTH_FORCELONGLEAP_ATTACK, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -5693,9 +5693,9 @@ void PM_CheckGrab(void)
 	pm->ps->saber_move = 0;
 	pm->cmd.upmove = 0;
 	//We are clear to latch to the wall
-	if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered)
+	if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered)
 	{
-		pm->ps->saberHolstered = 2;
+		pm->ps->saber_holstered = 2;
 #ifdef _GAME
 		gentity_t* self = &g_entities[pm->ps->client_num];
 		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberoff.mp3"));
@@ -5899,9 +5899,9 @@ static void PM_WaterMove(void)
 
 	PM_SlideMove(qfalse);
 
-	if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered)
+	if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered)
 	{
-		pm->ps->saberHolstered = 2;
+		pm->ps->saber_holstered = 2;
 #ifdef _GAME
 		gentity_t* self = &g_entities[pm->ps->client_num];
 		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberoff.mp3"));
@@ -6008,9 +6008,9 @@ static void PM_LadderMove(void)
 
 	PM_SlideMove(qfalse);
 
-	if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered)
+	if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered)
 	{
-		pm->ps->saberHolstered = 2;
+		pm->ps->saber_holstered = 2;
 #ifdef _GAME
 		gentity_t* self = &g_entities[pm->ps->client_num];
 		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberoff.mp3"));
@@ -9635,9 +9635,9 @@ void PM_SwimFloatAnim(void)
 	const int legsAnim = pm->ps->legsAnim;
 	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0] + pm->ps->velocity[1] * pm->ps->velocity[1]);
 
-	if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered)
+	if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered)
 	{
-		pm->ps->saberHolstered = 2;
+		pm->ps->saber_holstered = 2;
 #ifdef _GAME
 		gentity_t* self = &g_entities[pm->ps->client_num];
 		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberoff.mp3"));
@@ -9769,9 +9769,9 @@ static void PM_Footsteps(void)
 		// airborne leaves position in cycle intact, but doesn't advance
 		if (pm->waterlevel > 1)
 		{
-			if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered)
+			if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered)
 			{
-				pm->ps->saberHolstered = 2;
+				pm->ps->saber_holstered = 2;
 #ifdef _GAME
 				gentity_t* self = &g_entities[pm->ps->client_num];
 				G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberoff.mp3"));
@@ -10114,7 +10114,7 @@ static void PM_Footsteps(void)
 					switch (pm->ps->fd.saber_anim_level)
 					{
 					case SS_STAFF:
-						if (pm->ps->saberHolstered > 1)
+						if (pm->ps->saber_holstered > 1)
 						{
 							//saber off
 							desiredAnim = BOTH_RUNBACK1;
@@ -10125,7 +10125,7 @@ static void PM_Footsteps(void)
 						}
 						break;
 					case SS_DUAL:
-						if (pm->ps->saberHolstered > 1)
+						if (pm->ps->saber_holstered > 1)
 						{
 							//sabers off
 							desiredAnim = BOTH_RUNBACK1;
@@ -10140,7 +10140,7 @@ static void PM_Footsteps(void)
 					case SS_STRONG:
 					case SS_DESANN:
 					case SS_TAVION:
-						if (pm->ps->saberHolstered)
+						if (pm->ps->saber_holstered)
 						{
 							//saber off
 							desiredAnim = BOTH_RUNBACK1;
@@ -10151,7 +10151,7 @@ static void PM_Footsteps(void)
 						}
 						break;
 					default:
-						if (pm->ps->saberHolstered)
+						if (pm->ps->saber_holstered)
 						{
 							//saber off
 							desiredAnim = BOTH_RUNBACK1;
@@ -11210,11 +11210,11 @@ static void PM_Footsteps(void)
 					switch (pm->ps->fd.saber_anim_level)
 					{
 					case SS_STAFF:
-						if (pm->ps->saberHolstered > 1)
+						if (pm->ps->saber_holstered > 1)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
-						else if (pm->ps->saberHolstered)
+						else if (pm->ps->saber_holstered)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
@@ -11224,11 +11224,11 @@ static void PM_Footsteps(void)
 						}
 						break;
 					case SS_DUAL:
-						if (pm->ps->saberHolstered > 1)
+						if (pm->ps->saber_holstered > 1)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
-						else if (pm->ps->saberHolstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
@@ -11242,11 +11242,11 @@ static void PM_Footsteps(void)
 					case SS_STRONG:
 					case SS_DESANN:
 					case SS_TAVION:
-						if (pm->ps->saberHolstered > 1)
+						if (pm->ps->saber_holstered > 1)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
-						else if (pm->ps->saberHolstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
@@ -11256,7 +11256,7 @@ static void PM_Footsteps(void)
 						}
 						break;
 					default:
-						if (pm->ps->saberHolstered)
+						if (pm->ps->saber_holstered)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
@@ -11392,7 +11392,7 @@ static void PM_Footsteps(void)
 					switch (pm->ps->fd.saber_anim_level)
 					{
 					case SS_STAFF:
-						if (pm->ps->saberHolstered > 1)
+						if (pm->ps->saber_holstered > 1)
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK)
 							{
@@ -11413,7 +11413,7 @@ static void PM_Footsteps(void)
 #endif
 							}
 						}
-						else if (pm->ps->saberHolstered)
+						else if (pm->ps->saber_holstered)
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK)
 							{
@@ -11440,7 +11440,7 @@ static void PM_Footsteps(void)
 						}
 						break;
 					case SS_DUAL:
-						if (pm->ps->saberHolstered > 1)
+						if (pm->ps->saber_holstered > 1)
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK)
 							{
@@ -11461,7 +11461,7 @@ static void PM_Footsteps(void)
 #endif
 							}
 						}
-						else if (pm->ps->saberHolstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
 						{
 							desiredAnim = BOTH_WALK1;
 						}
@@ -11475,7 +11475,7 @@ static void PM_Footsteps(void)
 					case SS_STRONG:
 					case SS_DESANN:
 					case SS_TAVION:
-						if (pm->ps->saberHolstered)
+						if (pm->ps->saber_holstered)
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK)
 							{
@@ -11519,7 +11519,7 @@ static void PM_Footsteps(void)
 						}
 						break;
 					default:
-						if (pm->ps->saberHolstered)
+						if (pm->ps->saber_holstered)
 						{
 							desiredAnim = BOTH_WALK1;
 						}
@@ -11748,9 +11748,9 @@ static void PM_WaterEvents(void)
 			PM_AddEvent(EV_WATER_UNDER);
 		}
 
-		if (pm->ps->weapon == WP_SABER && !pm->ps->saberHolstered) //saber out
+		if (pm->ps->weapon == WP_SABER && !pm->ps->saber_holstered) //saber out
 		{
-			pm->ps->saberHolstered = 2;
+			pm->ps->saber_holstered = 2;
 		}
 		//sight/sound event for head just going under water.
 #ifdef _GAME
@@ -11897,13 +11897,13 @@ void PM_FinishWeaponChange(void)
 			if (pm->ps->fd.saber_anim_level == SS_DUAL)
 			{
 				//holding second saber, activate it.
-				pm->ps->saberHolstered = 1;
+				pm->ps->saber_holstered = 1;
 				PM_Setsaber_move(LS_DRAW);
 			}
 			else
 			{
 				//not holding any sabers, make sure all our blades are all off.
-				pm->ps->saberHolstered = 2;
+				pm->ps->saber_holstered = 2;
 			}
 		}
 		else if (!pm->ps->saberInFlight && !BG_FullBodyEmoteAnim(pm->ps->torsoAnim))
@@ -13114,7 +13114,7 @@ void PM_Weapon(void)
 		{
 			//riding a walker/fighter
 			//keep saber off, do no weapon stuff at all!
-			pm->ps->saberHolstered = 2;
+			pm->ps->saber_holstered = 2;
 #ifdef _GAME
 			pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
 #else
@@ -13229,7 +13229,7 @@ void PM_Weapon(void)
 		case HANDEXTEND_FORCEPUSH:
 			if (pm->ps->weapon == WP_MELEE ||
 				pm->ps->weapon == WP_NONE ||
-				pm->ps->weapon == WP_SABER && pm->ps->saberHolstered)
+				pm->ps->weapon == WP_SABER && pm->ps->saber_holstered)
 			{
 				//2-handed PUSH
 				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
@@ -13261,7 +13261,7 @@ void PM_Weapon(void)
 				//gripping
 				if (pm->ps->weapon == WP_MELEE ||
 					pm->ps->weapon == WP_NONE ||
-					pm->ps->weapon == WP_SABER && pm->ps->saberHolstered)
+					pm->ps->weapon == WP_SABER && pm->ps->saber_holstered)
 				{
 					//2-handed
 					desiredAnim = BOTH_FORCEGRIP_HOLD;
@@ -13276,7 +13276,7 @@ void PM_Weapon(void)
 				//lightning
 				if (pm->ps->weapon == WP_MELEE ||
 					pm->ps->weapon == WP_NONE ||
-					pm->ps->weapon == WP_SABER && pm->ps->saberHolstered)
+					pm->ps->weapon == WP_SABER && pm->ps->saber_holstered)
 				{
 					//2-handed lightning
 					desiredAnim = BOTH_FORCE_2HANDEDLIGHTNING_HOLD;
@@ -13291,7 +13291,7 @@ void PM_Weapon(void)
 				//draining
 				if (pm->ps->weapon == WP_MELEE ||
 					pm->ps->weapon == WP_NONE ||
-					pm->ps->weapon == WP_SABER && pm->ps->saberHolstered)
+					pm->ps->weapon == WP_SABER && pm->ps->saber_holstered)
 				{
 					//2-handed draining
 					desiredAnim = BOTH_FORCE_2HANDEDLIGHTNING_NEW;
@@ -13452,7 +13452,7 @@ void PM_Weapon(void)
 		default:
 			if (pm->ps->weapon == WP_MELEE ||
 				pm->ps->weapon == WP_NONE ||
-				pm->ps->weapon == WP_SABER && pm->ps->saberHolstered)
+				pm->ps->weapon == WP_SABER && pm->ps->saber_holstered)
 			{
 				//2-handed PUSH
 				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
@@ -13553,7 +13553,7 @@ void PM_Weapon(void)
 	}
 	else if (pm->ps->weapon != WP_EMPLACED_GUN)
 	{
-		pm->ps->saberHolstered = 0;
+		pm->ps->saber_holstered = 0;
 	}
 
 	if (PM_CanSetWeaponAnims())
@@ -13782,13 +13782,13 @@ void PM_Weapon(void)
 	if (pm->ps->isJediMaster && pm->ps->emplacedIndex)
 	{
 		pm->ps->emplacedIndex = 0;
-		pm->ps->saberHolstered = 0;
+		pm->ps->saber_holstered = 0;
 	}
 
 	if (pm->ps->duelInProgress && pm->ps->emplacedIndex)
 	{
 		pm->ps->emplacedIndex = 0;
-		pm->ps->saberHolstered = 0;
+		pm->ps->saber_holstered = 0;
 	}
 
 	if (pm->ps->weapon == WP_EMPLACED_GUN && pm->ps->emplacedIndex)
@@ -14691,11 +14691,11 @@ static void PM_BotGesture(void)
 					PM_SetAnim(SETANIM_TORSO, BOTH_ENGAGETAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_DUAL:
-					pm->ps->saberHolstered = 0;
+					pm->ps->saber_holstered = 0;
 					PM_SetAnim(SETANIM_TORSO, BOTH_DUAL_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_STAFF:
-					pm->ps->saberHolstered = 0;
+					pm->ps->saber_holstered = 0;
 					PM_SetAnim(SETANIM_TORSO, BOTH_STAFF_TAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				default:;
@@ -14739,7 +14739,7 @@ static void PM_BotGesture(void)
 			}
 			else
 			{
-				pm->ps->saberHolstered = 2;
+				pm->ps->saber_holstered = 2;
 				if (pm_entSelf->s.botclass == BCLASS_VADER || pm_entSelf->s.botclass == BCLASS_DESANN)
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -14798,15 +14798,15 @@ static void PM_BotGesture(void)
 					break;
 				case SS_STRONG:
 				case SS_DESANN:
-					pm->ps->saberHolstered = 0;
+					pm->ps->saber_holstered = 0;
 					PM_SetAnim(SETANIM_TORSO, BOTH_VICTORY_STRONG, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_DUAL:
-					pm->ps->saberHolstered = 0;
+					pm->ps->saber_holstered = 0;
 					PM_SetAnim(SETANIM_TORSO, BOTH_VICTORY_DUAL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				case SS_STAFF:
-					pm->ps->saberHolstered = 0;
+					pm->ps->saber_holstered = 0;
 					PM_SetAnim(SETANIM_TORSO, BOTH_VICTORY_STAFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					break;
 				default:;
@@ -18903,7 +18903,7 @@ void PmoveSingle(pmove_t* pmove)
 		if (pm->cmd.forwardmove < 0 || PM_GroundDistance() > 32.0f)
 		{
 			pm->ps->emplacedIndex = 0;
-			pm->ps->saberHolstered = 0;
+			pm->ps->saber_holstered = 0;
 		}
 		else
 		{

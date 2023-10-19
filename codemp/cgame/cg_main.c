@@ -1799,7 +1799,7 @@ static void CG_RegisterGraphics(void)
 	cgs.media.defendShader = trap->R_RegisterShaderNoMip("ui/assets/statusbar/defend.tga");
 	cgs.media.retrieveShader = trap->R_RegisterShaderNoMip("ui/assets/statusbar/retrieve.tga");
 	cgs.media.escortShader = trap->R_RegisterShaderNoMip("ui/assets/statusbar/escort.tga");
-	
+
 	cgs.media.cursor = trap->R_RegisterShaderNoMip("menu/art/3_cursor2");
 
 	cgs.media.cursor_anakin = trap->R_RegisterShaderNoMip("gfx/menus/cursor_anakin.tga");
@@ -3502,7 +3502,7 @@ static qboolean CG_IncomingConsoleCommand(void)
 	{ //any command containing the string "blah" is redirected to "quit"
 		strcpy(icc->conCommand, "quit");
 		return qfalse;
-}
+	}
 #endif
 	return qtrue;
 }

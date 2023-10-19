@@ -5086,10 +5086,10 @@ void PM_WeaponLightsaber(void)
 					if (PM_CanDoRollStab())
 					{
 						//make sure the saber is on for this move!
-						if (pm->ps->saberHolstered == 2)
+						if (pm->ps->saber_holstered == 2)
 						{
 							//all the way off
-							pm->ps->saberHolstered = 0;
+							pm->ps->saber_holstered = 0;
 							PM_AddEvent(EV_SABER_UNHOLSTER);
 						}
 						PM_Setsaber_move(LS_ROLL_STAB);
@@ -5222,7 +5222,7 @@ void PM_WeaponLightsaber(void)
 				if (!pm->ps->m_iVehicleNum)
 				{
 					//don't let em unholster the saber by attacking while on vehicle
-					pm->ps->saberHolstered = 0;
+					pm->ps->saber_holstered = 0;
 					PM_AddEvent(EV_SABER_UNHOLSTER);
 				}
 				else
@@ -5247,9 +5247,9 @@ void PM_WeaponLightsaber(void)
 		//this means our saber has been knocked away
 		if (pm->ps->fd.saber_anim_level == SS_DUAL)
 		{
-			if (pm->ps->saberHolstered > 1 || !pm->ps->saberHolstered)
+			if (pm->ps->saber_holstered > 1 || !pm->ps->saber_holstered)
 			{
-				pm->ps->saberHolstered = 1;
+				pm->ps->saber_holstered = 1;
 			}
 		}
 		else
@@ -6107,9 +6107,9 @@ weapChecks:
 		if (pm->cmd.buttons & BUTTON_ATTACK && pm->ps->torsoAnim == BOTH_FORCELONGLEAP_START)
 		{
 			//only 1 attack you can do from this anim
-			if (pm->ps->saberHolstered == 2)
+			if (pm->ps->saber_holstered == 2)
 			{
-				pm->ps->saberHolstered = 0;
+				pm->ps->saber_holstered = 0;
 				PM_AddEvent(EV_SABER_UNHOLSTER);
 			}
 			PM_Setsaber_move(LS_LEAP_ATTACK2);
@@ -6393,10 +6393,10 @@ weapChecks:
 			newmove = LS_READY;
 		}
 
-		if (pm->ps->saberHolstered == 2 && pm->watertype != CONTENTS_WATER)
+		if (pm->ps->saber_holstered == 2 && pm->watertype != CONTENTS_WATER)
 		{
 			//turn on the saber if it's not on
-			pm->ps->saberHolstered = 0;
+			pm->ps->saber_holstered = 0;
 			PM_AddEvent(EV_SABER_UNHOLSTER);
 		}
 

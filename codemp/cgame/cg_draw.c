@@ -3543,7 +3543,7 @@ void CG_DrawMDWeaponfatigueIconHoz(const centity_t* cent, const menuDef_t* menu_
 		trap->R_SetColor(colorTable[CT_WHITE]);
 
 		CG_DrawRotatePic2(
-			focus_item->window.rect.x ,
+			focus_item->window.rect.x,
 			focus_item->window.rect.y,
 			focus_item->window.rect.w,
 			focus_item->window.rect.h,
@@ -6173,7 +6173,7 @@ void CG_DrawHUD(const centity_t* cent)
 					CG_DrawJK2blockingMode(cent, menu_hud);
 					CG_DrawJK2SaberFatigue(cent, 560, 400);
 				}
-				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saberHolstered)
+				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saber_holstered)
 				{
 					CG_DrawCusgunfatigue(menu_hud);
 					CG_DrawCusAmmo(cent, menu_hud);
@@ -6205,7 +6205,7 @@ void CG_DrawHUD(const centity_t* cent)
 					CG_DrawJK2blockingMode(cent, menu_hud);
 					CG_DrawJK2SaberFatigue(cent, x, y);
 				}
-				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saberHolstered)
+				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saber_holstered)
 				{
 					CG_DrawJK2ForcePower(cent, SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80, menu_hud);
 					CG_DrawJK2Ammo(cent, SCREEN_WIDTH - 80, SCREEN_HEIGHT - 80);
@@ -6255,7 +6255,6 @@ void CG_DrawHUD(const centity_t* cent)
 
 				if (cent->currentState.weapon != WP_SABER && cent->currentState.weapon != WP_MELEE)
 				{
-
 					CG_DrawMDWeaponfatigueIconVert(cent, menu_hud);
 					CG_DrawMDWeaponFatigueVert(cent, menu_hud);
 				}
@@ -6378,7 +6377,7 @@ void CG_DrawHUD(const centity_t* cent)
 					CG_DrawJK2blockingMode(cent, menu_hud);
 					CG_DrawJK2SaberFatigue(cent, 560, 400);
 				}
-				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saberHolstered)
+				else if (cent->currentState.weapon == WP_SABER && cent->currentState.saber_holstered)
 				{
 					CG_DrawCusgunfatigue(menu_hud);
 					CG_DrawCusAmmo(cent, menu_hud);
@@ -8421,7 +8420,7 @@ float cg_draw_radar(float y)
 	color[3] = 0.6f;
 	trap->R_SetColor(color);
 
-	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11,cgs.media.radarScanShader);
+	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11, cgs.media.radarScanShader);
 	CG_DrawPic(RADAR_X + x_offset, y, RADAR_RADIUS * 2, RADAR_RADIUS * 2, cgs.media.radarShader);
 
 	if (cgs.gametype == GT_FFA)
@@ -14273,7 +14272,7 @@ static void CG_Draw2D(void)
 		switch (cgSiegeRoundState)
 		{
 		case 1:
-			CG_CenterPrint(CG_GetStringEdString("MP_INGAME", "WAITING_FOR_PLAYERS"), SCREEN_HEIGHT * 0.30,BIGCHAR_WIDTH);
+			CG_CenterPrint(CG_GetStringEdString("MP_INGAME", "WAITING_FOR_PLAYERS"), SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH);
 			break;
 		case 2:
 			r_time = SIEGE_ROUND_BEGIN_TIME - (cg.time - cgSiegeRoundTime);

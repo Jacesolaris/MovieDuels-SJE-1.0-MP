@@ -1510,11 +1510,11 @@ static void CG_KillGhoul2_f(void)
 				Com_Printf("WARNING: Tried to kill a client ghoul2 instance with a kg2 command!\n");
 #endif
 				return;
-		}
+			}
 
 			CG_KillCEntityG2(indexNum);
+		}
 	}
-}
 }
 
 static void CG_KillLoopSounds_f(void)

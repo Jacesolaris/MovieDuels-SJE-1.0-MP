@@ -119,7 +119,6 @@ typedef struct playerInfo_s {
 	qboolean		barrelSpinning;
 	float			barrelAngle;
 	int				barrelTime;
-
 } playerInfo_t;
 
 // new ui stuff
