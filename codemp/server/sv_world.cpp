@@ -708,7 +708,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				// set our trace record size
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
+					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
 					{
 						oldTraceRecSize++;
 					}
@@ -721,7 +721,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
+					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
 					{
 						newTraceRecSize++;
 					}
@@ -765,7 +765,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 			memset(&G2Trace, 0, sizeof G2Trace);
 			while (t_n < MAX_G2_COLLISIONS)
 			{
-				G2Trace[t_n].mEntityNum = -1;
+				G2Trace[t_n].mentity_num = -1;
 				t_n++;
 			}
 
@@ -809,13 +809,13 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 			t_n = 0;
 			while (t_n < MAX_G2_COLLISIONS)
 			{
-				if (G2Trace[t_n].mEntityNum == touch->s.number)
+				if (G2Trace[t_n].mentity_num == touch->s.number)
 				{
 					//ok, valid
 					best_tr = t_n;
 					break;
 				}
-				if (G2Trace[t_n].mEntityNum == -1)
+				if (G2Trace[t_n].mentity_num == -1)
 				{
 					//there should not be any after the first -1
 					break;
@@ -837,7 +837,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				if (clip->traceFlags & G2TRFLAG_GETSURFINDEX)
 				{
 					//we have requested that surfaceFlags be stomped over with the g2 hit surface index.
-					if (clip->trace.entity_num == G2Trace[best_tr].mEntityNum)
+					if (clip->trace.entity_num == G2Trace[best_tr].mentity_num)
 					{
 						clip->trace.surfaceFlags = G2Trace[best_tr].mSurfaceIndex;
 					}

@@ -512,7 +512,7 @@ typedef struct sharedRagDollUpdateParams_s {
 
 //rww - update parms for ik bone stuff
 typedef struct sharedIKMoveParams_s {
-	char boneName[512]; //name of bone
+	char bone_name[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -835,8 +835,8 @@ Ghoul2 Insert Start
 typedef struct CollisionRecord_s
 {
 	float		mDistance;
-	int			mEntityNum;
-	int			mModelIndex;
+	int			mentity_num;
+	int			mmodel_index;
 	int			mPolyIndex;
 	int			mSurfaceIndex;
 	vec3_t		mCollisionPosition;

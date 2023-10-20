@@ -16417,8 +16417,8 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		VectorCopy(scale, ikP.scale);
 
 		//base pose frames for the limb
-		ikP.start_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
-		ikP.end_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
+		ikP.start_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
+		ikP.end_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
 
 		ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -16495,7 +16495,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		}
 		VectorCopy(origin, ikM.origin); //our position in the world.
 
-		ikM.boneName[0] = 0;
+		ikM.bone_name[0] = 0;
 		if (trap->G2API_IKMove(ghoul2, time, &ikM))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -16560,7 +16560,7 @@ qboolean BG_ClassHasBadBones(const int NPC_class)
 }
 
 //used to set the proper orientations for the funky NPC class bone structures.
-void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int* oUp, int* oRt, int* oFwd)
+void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int* oUp, int* oRt, int* oFwd)
 {
 	//defaults
 	*oUp = POSITIVE_X;
@@ -16570,9 +16570,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 	switch (NPC_class)
 	{
 	case CLASS_RANCOR:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("lower_lumbar", boneName) == 0
-			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;
@@ -16582,7 +16582,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		break;
 	case CLASS_ROCKETTROOPER:
 	case CLASS_HAZARD_TROOPER:
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			//child of root
 			//actual, when differences with root are accounted for:
@@ -16599,8 +16599,8 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		}
 		break;
 	case CLASS_SABER_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("thoracic", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("thoracic", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = NEGATIVE_Z;
@@ -16614,7 +16614,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		}
 		break;
 	case CLASS_WAMPA:
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = POSITIVE_Y;
@@ -16629,9 +16629,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("lower_lumbar", boneName) == 0
-			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;

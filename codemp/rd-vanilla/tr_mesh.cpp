@@ -281,14 +281,14 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	const auto personal_model = static_cast<qboolean>(ent->e.renderfx & RF_THIRD_PERSON && !tr.viewParms.isPortal);
 
 	if (ent->e.renderfx & RF_CAP_FRAMES) {
-		if (ent->e.frame > tr.current_model->md3[0]->numFrames - 1)
-			ent->e.frame = tr.current_model->md3[0]->numFrames - 1;
-		if (ent->e.oldframe > tr.current_model->md3[0]->numFrames - 1)
-			ent->e.oldframe = tr.current_model->md3[0]->numFrames - 1;
+		if (ent->e.frame > tr.current_model->md3[0]->num_frames - 1)
+			ent->e.frame = tr.current_model->md3[0]->num_frames - 1;
+		if (ent->e.oldframe > tr.current_model->md3[0]->num_frames - 1)
+			ent->e.oldframe = tr.current_model->md3[0]->num_frames - 1;
 	}
 	else if (ent->e.renderfx & RF_WRAP_FRAMES) {
-		ent->e.frame %= tr.current_model->md3[0]->numFrames;
-		ent->e.oldframe %= tr.current_model->md3[0]->numFrames;
+		ent->e.frame %= tr.current_model->md3[0]->num_frames;
+		ent->e.oldframe %= tr.current_model->md3[0]->num_frames;
 	}
 
 	//
@@ -297,9 +297,9 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	// when the surfaces are rendered, they don't need to be
 	// range checked again.
 	//
-	if (ent->e.frame >= tr.current_model->md3[0]->numFrames
+	if (ent->e.frame >= tr.current_model->md3[0]->num_frames
 		|| ent->e.frame < 0
-		|| ent->e.oldframe >= tr.current_model->md3[0]->numFrames
+		|| ent->e.oldframe >= tr.current_model->md3[0]->num_frames
 		|| ent->e.oldframe < 0) {
 		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "R_AddMD3Surfaces: no such frame %d to %d for '%s'\n",
 			ent->e.oldframe, ent->e.frame,
@@ -341,11 +341,11 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	//
 	auto surface = (md3Surface_t*)((byte*)header + header->ofsSurfaces);
 	for (int i = 0; i < header->numSurfaces; i++) {
-		if (ent->e.customShader) {
-			shader = R_GetShaderByHandle(ent->e.customShader);
+		if (ent->e.custom_shader) {
+			shader = R_GetShaderByHandle(ent->e.custom_shader);
 		}
-		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins) {
-			skin_t* skin = R_GetSkinByHandle(ent->e.customSkin);
+		else if (ent->e.custom_skin > 0 && ent->e.custom_skin < tr.numSkins) {
+			skin_t* skin = R_GetSkinByHandle(ent->e.custom_skin);
 
 			// match the surface name to something in the skin file
 			shader = tr.defaultShader;

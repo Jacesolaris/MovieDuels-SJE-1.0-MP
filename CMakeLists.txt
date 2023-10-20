@@ -42,6 +42,8 @@ option(BuildMPGame "Whether to create projects for the MP server-side gamecode (
 option(BuildMPCGame "Whether to create projects for the MP clientside gamecode (MovieDuels-cgamex86.dll)" ON)
 option(BuildMPUI "Whether to create projects for the MP UI code (MovieDuels-uix86.dll)" ON)
 
+option(BuildMPRend2 "Whether to create projects for the EXPERIMENTAL MP rend2 renderer (MovieDuels-rdmp-rend2_x86.dll)" ON)
+
 option(BuildSPEngine "Whether to create projects for the SP engine (MovieDuels-SP.exe)" OFF)
 option(BuildSPGame "Whether to create projects for the SP gamecode (MovieDuels-gamex86.dll)" OFF)
 option(BuildSPRdVanilla "Whether to create projects for the SP default renderer (MovieDuels-rdsp_x86.dll)" OFF)
@@ -161,6 +163,7 @@ set(MPDed "MovieDuels-DED.${Architecture}")
 set(MPGame "MovieDuels-mpgame${Architecture}")
 set(MPCGame "MovieDuels-cgame${Architecture}")
 set(MPUI "MovieDuels-ui${Architecture}")
+set(MPRend2 "MovieDuels-rdmp-rend2_${Architecture}")
 
 set(JK2SPEngine "SerenityJediEngineJO2023-SP.${Architecture}")
 set(JK2SPGame "SerenityJediEngineJO2023-game${Architecture}")

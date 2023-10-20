@@ -122,7 +122,6 @@ cvar_t* r_DynamicGlowIntensity;
 cvar_t* r_DynamicGlowSoft;
 cvar_t* r_DynamicGlowWidth;
 cvar_t* r_DynamicGlowHeight;
-cvar_t* r_Dynamic_AMD_Fix;
 
 cvar_t* r_ignoreGLErrors;
 cvar_t* r_logFile;
@@ -218,6 +217,8 @@ cvar_t* broadsword_effcorr = nullptr;
 cvar_t* broadsword_ragtobase = nullptr;
 cvar_t* broadsword_dircap = nullptr;
 
+cvar_t* r_com_rend2;
+
 /*
 Ghoul2 Insert End
 */
@@ -281,7 +282,7 @@ PFNGLUNLOCKARRAYSEXTPROC qglUnlockArraysEXT;
 bool g_bTextureRectangleHack = false;
 
 void RE_SetLightStyle(int style, int color);
-void RE_GetBModelVerts(int bmodelIndex, vec3_t* verts, vec3_t normal);
+void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
 
 void R_Splash()
 {
@@ -336,6 +337,11 @@ void R_Splash()
 	qglTexCoord2f(1, 1);
 	qglVertex2f(x2, y2);
 	qglEnd();
+
+	if (r_com_rend2->integer != 0)
+	{
+		ri->Cvar_Set("com_rend2", "0");
+	}
 
 	ri->WIN_Present(&window);
 }
@@ -1538,7 +1544,7 @@ static consoleCommand_t	commands[] = {
 	{ "r_atihack",			R_AtiHackToggle_f },
 	{ "r_we",				R_WorldEffect_f },
 	{ "imagecacheinfo",		RE_RegisterImages_Info_f },
-	{ "modellist",			R_Modellist_f },
+	{ "model_list",			R_model_list_f },
 	{ "modelcacheinfo",		RE_RegisterModels_Info_f },
 	{ "weather",			R_SetWeatherEffect_f },
 	{ "r_weather",			R_WeatherEffect_f },
@@ -1575,7 +1581,6 @@ void R_Register()
 	r_ext_texture_filter_anisotropic = ri->Cvar_Get("r_ext_texture_filter_anisotropic", "16", CVAR_ARCHIVE_ND, "");
 	r_gammaShaders = ri->Cvar_Get("r_gammaShaders", "0", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
 	r_environmentMapping = ri->Cvar_Get("r_environmentMapping", "1", CVAR_ARCHIVE_ND, "");
-
 	r_DynamicGlow = ri->Cvar_Get("r_DynamicGlow", "1", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowPasses = ri->Cvar_Get("r_DynamicGlowPasses", "5", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowDelta = ri->Cvar_Get("r_DynamicGlowDelta", "0.8f", CVAR_ARCHIVE_ND, "");
@@ -1583,8 +1588,6 @@ void R_Register()
 	r_DynamicGlowSoft = ri->Cvar_Get("r_DynamicGlowSoft", "1", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowWidth = ri->Cvar_Get("r_DynamicGlowWidth", "320", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
 	r_DynamicGlowHeight = ri->Cvar_Get("r_DynamicGlowHeight", "240", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
-	r_Dynamic_AMD_Fix = ri->Cvar_Get("r_Dynamic_AMD_Fix", "0", CVAR_ARCHIVE_ND, "");
-
 	r_picmip = ri->Cvar_Get("r_picmip", "0", CVAR_ARCHIVE | CVAR_LATCH, "");
 	ri->Cvar_CheckRange(r_picmip, 0, 16, qtrue);
 	r_colorMipLevels = ri->Cvar_Get("r_colorMipLevels", "0", CVAR_LATCH, "");
@@ -1637,7 +1640,7 @@ void R_Register()
 	r_debugStyle = ri->Cvar_Get("r_debugStyle", "-1", CVAR_CHEAT, "");
 	r_dlightStyle = ri->Cvar_Get("r_dlightStyle", "1", CVAR_TEMP, "");
 	r_surfaceSprites = ri->Cvar_Get("r_surfaceSprites", "1", CVAR_ARCHIVE_ND, "");
-	r_AdvancedsurfaceSprites = ri->Cvar_Get("r_advancedlod", "1", CVAR_TEMP, "");
+	r_AdvancedsurfaceSprites = ri->Cvar_Get("r_advancedlod", "1", CVAR_ARCHIVE_ND, "");
 	r_surfaceWeather = ri->Cvar_Get("r_surfaceWeather", "0", CVAR_TEMP, "");
 	r_windSpeed = ri->Cvar_Get("r_windSpeed", "0", CVAR_NONE, "");
 	r_windAngle = ri->Cvar_Get("r_windAngle", "0", CVAR_NONE, "");
@@ -1702,6 +1705,8 @@ void R_Register()
 	broadsword_dircap = ri->Cvar_Get("broadsword_dircap", "64", CVAR_NONE, "");
 
 	r_weather = ri->Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
+
+	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_NORESTART, "");
 	/*
 	Ghoul2 Insert End
 	*/
@@ -2140,7 +2145,7 @@ extern "C" {
 		re.G2API_SetBoneAnim = G2API_SetBoneAnim;
 		re.G2API_SetBoneAnimIndex = G2API_SetBoneAnimIndex;
 		re.G2API_SetBoneIKState = G2API_SetBoneIKState;
-		re.G2API_SetGhoul2ModelIndexes = G2API_SetGhoul2ModelIndexes;
+		re.G2API_SetGhoul2model_indexes = G2API_SetGhoul2model_indexes;
 		re.G2API_SetGhoul2ModelFlags = G2API_SetGhoul2ModelFlags;
 		re.G2API_SetLodBias = G2API_SetLodBias;
 		re.G2API_SetNewOrigin = G2API_SetNewOrigin;
