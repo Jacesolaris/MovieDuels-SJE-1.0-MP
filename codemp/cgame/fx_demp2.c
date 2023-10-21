@@ -31,7 +31,7 @@ FX_DEMP2_ProjectileThink
 ---------------------------
 */
 
-void FX_DEMP2_ProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_DEMP2_ProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 

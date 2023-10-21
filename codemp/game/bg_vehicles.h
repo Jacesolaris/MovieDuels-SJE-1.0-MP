@@ -57,7 +57,7 @@ extern stringID_table_t VehicleTable[VH_NUM_VEHICLES + 1];
 //===========================================================================================================
 //START VEHICLE WEAPONS
 //===========================================================================================================
-typedef struct vehWeaponInfo_s
+typedef struct vehweapon_info_s
 {
 	//*** IMPORTANT!!! *** vWeapFields table correponds to this structure!
 	char* name;
@@ -86,15 +86,15 @@ typedef struct vehWeaponInfo_s
 	float fHeight; //height of traceline or bounding box of projecile (non-rotating!)
 	int iLifeTime; //removes itself after this amount of time
 	qboolean bExplodeOnExpire; //when iLifeTime is up, explodes rather than simply removing itself
-} vehWeaponInfo_t;
+} vehweapon_info_t;
 
-#define	VWFOFS(x) offsetof(vehWeaponInfo_t, x)
+#define	VWFOFS(x) offsetof(vehweapon_info_t, x)
 
 #define MAX_VEH_WEAPONS	128	//sigh... no more than 16 different vehicle weapons
 #define VEH_WEAPON_BASE	0
 #define VEH_WEAPON_NONE	-1
 
-extern vehWeaponInfo_t g_vehWeaponInfo[MAX_VEH_WEAPONS];
+extern vehweapon_info_t g_vehweapon_info[MAX_VEH_WEAPONS];
 extern int numVehicleWeapons;
 
 //===========================================================================================================
@@ -109,7 +109,7 @@ extern int numVehicleWeapons;
 
 typedef struct turretStats_s
 {
-	int iWeapon; //what vehWeaponInfo index to use
+	int iWeapon; //what vehweapon_info index to use
 	int iDelay; //delay between turret muzzle shots
 	int iAmmoMax; //how much ammo it has
 	int iAmmoRechargeMS; //how many MS between every point of recharged ammo

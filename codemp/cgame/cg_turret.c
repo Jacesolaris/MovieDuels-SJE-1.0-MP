@@ -169,9 +169,9 @@ void TurretClientRun(centity_t* ent)
 		ent->turAngles[PITCH] = 90;
 		ent->turAngles[YAW] = 0;
 
-		const weaponInfo_t* weapon_info = &cg_weapons[WP_TURRET];
+		const weapon_info_t* weaponInfo = &cg_weapons[WP_TURRET];
 
-		if (!weapon_info->registered)
+		if (!weaponInfo->registered)
 		{
 			CG_RegisterWeapon(WP_TURRET);
 		}

@@ -1336,9 +1336,9 @@ int trap_BotChooseBestFightWeapon(const int weaponstate, int* inventory)
 	return Q_syscall(BOTLIB_AI_CHOOSE_BEST_FIGHT_WEAPON, weaponstate, inventory);
 }
 
-void trap_BotGetWeaponInfo(const int weaponstate, const int weapon, void* weaponinfo)
+void trap_BotGetweapon_info(const int weaponstate, const int weapon, void* weaponInfo)
 {
-	Q_syscall(BOTLIB_AI_GET_WEAPON_INFO, weaponstate, weapon, weaponinfo);
+	Q_syscall(BOTLIB_AI_GET_WEAPON_INFO, weaponstate, weapon, weaponInfo);
 }
 
 int trap_BotLoadWeaponWeights(const int weaponstate, char* filename)
@@ -1927,7 +1927,7 @@ static void TranslateSyscalls(void)
 	trap->BotFreeMoveState = trap_BotFreeMoveState;
 	trap->BotInitMoveState = trap_BotInitMoveState;
 	trap->BotChooseBestFightWeapon = trap_BotChooseBestFightWeapon;
-	trap->BotGetWeaponInfo = trap_BotGetWeaponInfo;
+	trap->BotGetweapon_info = trap_BotGetweapon_info;
 	trap->BotLoadWeaponWeights = trap_BotLoadWeaponWeights;
 	trap->BotAllocWeaponState = trap_BotAllocWeaponState;
 	trap->BotFreeWeaponState = trap_BotFreeWeaponState;

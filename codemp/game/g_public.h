@@ -980,7 +980,7 @@ typedef struct gameImport_s {
 	void		(*BotFreeMoveState)						(int handle);
 	void		(*BotInitMoveState)						(int handle, void* initmove);
 	int			(*BotChooseBestFightWeapon)				(int weaponstate, int* inventory);
-	void		(*BotGetWeaponInfo)						(int weaponstate, int weapon, void* weaponinfo);
+	void		(*BotGetweapon_info)						(int weaponstate, int weapon, void* weaponInfo);
 	int			(*BotLoadWeaponWeights)					(int weaponstate, char* filename);
 	int			(*BotAllocWeaponState)					(void);
 	void		(*BotFreeWeaponState)					(int weaponstate);

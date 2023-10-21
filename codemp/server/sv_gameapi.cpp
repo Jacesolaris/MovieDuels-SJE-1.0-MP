@@ -1340,9 +1340,9 @@ static int SV_BotChooseBestFightWeapon(const int weaponstate, int* inventory)
 	return botlib_export->ai.BotChooseBestFightWeapon(weaponstate, inventory);
 }
 
-static void SV_BotGetWeaponInfo(const int weaponstate, const int weapon, void* weaponinfo)
+static void SV_BotGetweapon_info(const int weaponstate, const int weapon, void* weaponInfo)
 {
-	botlib_export->ai.BotGetWeaponInfo(weaponstate, weapon, static_cast<weaponinfo_s*>(weaponinfo));
+	botlib_export->ai.BotGetweapon_info(weaponstate, weapon, static_cast<weapon_info_s*>(weaponInfo));
 }
 
 static int SV_BotLoadWeaponWeights(const int weaponstate, char* filename)
@@ -3008,7 +3008,7 @@ intptr_t SV_GameSystemCalls(intptr_t* args)
 	case BOTLIB_AI_CHOOSE_BEST_FIGHT_WEAPON:
 		return botlib_export->ai.BotChooseBestFightWeapon(args[1], static_cast<int*>(VMA(2)));
 	case BOTLIB_AI_GET_WEAPON_INFO:
-		botlib_export->ai.BotGetWeaponInfo(args[1], args[2], static_cast<weaponinfo_s*>(VMA(3)));
+		botlib_export->ai.BotGetweapon_info(args[1], args[2], static_cast<weapon_info_s*>(VMA(3)));
 		return 0;
 	case BOTLIB_AI_LOAD_WEAPON_WEIGHTS:
 		return botlib_export->ai.BotLoadWeaponWeights(args[1], static_cast<char*>(VMA(2)));
@@ -3566,7 +3566,7 @@ void SV_BindGame(void)
 		gi.BotFreeMoveState = SV_BotFreeMoveState;
 		gi.BotInitMoveState = SV_BotInitMoveState;
 		gi.BotChooseBestFightWeapon = SV_BotChooseBestFightWeapon;
-		gi.BotGetWeaponInfo = SV_BotGetWeaponInfo;
+		gi.BotGetweapon_info = SV_BotGetweapon_info;
 		gi.BotLoadWeaponWeights = SV_BotLoadWeaponWeights;
 		gi.BotAllocWeaponState = SV_BotAllocWeaponState;
 		gi.BotFreeWeaponState = SV_BotFreeWeaponState;

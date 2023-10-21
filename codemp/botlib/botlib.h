@@ -48,7 +48,7 @@ struct bot_match_s;
 struct bot_goal_s;
 struct bot_moveresult_s;
 struct bot_initmove_s;
-struct weaponinfo_s;
+struct weapon_info_s;
 
 #define BOTFILESBASEFOLDER		"botfiles"
 //debug line colors
@@ -393,7 +393,7 @@ typedef struct ai_export_s
 	// be_ai_weap.h
 	//-----------------------------------
 	int		(*BotChooseBestFightWeapon)(int weaponstate, int* inventory);
-	void	(*BotGetWeaponInfo)(int weaponstate, int weapon, struct weaponinfo_s* weaponinfo);
+	void	(*BotGetweapon_info)(int weaponstate, int weapon, struct weapon_info_s* weaponInfo);
 	int		(*BotLoadWeaponWeights)(int weaponstate, char* filename);
 	int		(*BotAllocWeaponState)();
 	void	(*BotFreeWeaponState)(int weaponstate);
@@ -519,7 +519,7 @@ name:						default:			module(s):			description:
 "matchfile"					"match.c"			be_ai_chat.c		file with match strings
 "nochat"					"0"					be_ai_chat.c		disable chats
 "max_messages"				"1024"				be_ai_chat.c		console message heap size
-"max_weaponinfo"			"32"				be_ai_weap.c		maximum number of weapon info
+"max_weapon_info"			"32"				be_ai_weap.c		maximum number of weapon info
 "max_projectileinfo"		"32"				be_ai_weap.c		maximum number of projectile info
 "max_iteminfo"				"256"				be_ai_goal.c		maximum number of item info
 "max_levelitems"			"256"				be_ai_goal.c		maximum number of level items

@@ -30,7 +30,7 @@ FX_BlasterProjectileThink
 -------------------------
 */
 
-void FX_BlasterProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_BlasterProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -47,7 +47,7 @@ void FX_BlasterProjectileThink(centity_t* cent, const struct weaponInfo_s* weapo
 FX_BlasterAltFireThink
 -------------------------
 */
-void FX_BlasterAltFireThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_BlasterAltFireThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -94,7 +94,7 @@ FX_ewebProjectileThink
 -------------------------
 */
 
-void FX_EwebProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_EwebProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -111,7 +111,7 @@ void FX_EwebProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
 FX_ewebAltFireThink
 -------------------------
 */
-void FX_EwebAltFireThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_EwebAltFireThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 

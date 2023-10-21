@@ -391,7 +391,7 @@ centity_t cg_entities[MAX_GENTITIES];
 centity_t* cg_permanents[MAX_GENTITIES]; //rwwRMG - added
 int cg_numpermanents = 0;
 
-weaponInfo_t cg_weapons[MAX_WEAPONS];
+weapon_info_t cg_weapons[MAX_WEAPONS];
 itemInfo_t cg_items[MAX_ITEMS];
 
 int CG_CrosshairPlayer(void)

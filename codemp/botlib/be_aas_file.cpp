@@ -71,7 +71,7 @@ void AAS_SwapAASData()
 		} //end for
 	} //end for
 	//vertexes
-	for (i = 0; i < aasworld.numvertexes; i++)
+	for (i = 0; i < aasworld.num_vertexes; i++)
 	{
 		for (j = 0; j < 3; j++)
 			aasworld.vertexes[i][j] = LittleFloat aasworld.vertexes[i][j];
@@ -190,7 +190,7 @@ void AAS_DumpAASData()
 	aasworld.numbboxes = 0;
 	if (aasworld.bboxes) FreeMemory(aasworld.bboxes);
 	aasworld.bboxes = nullptr;
-	aasworld.numvertexes = 0;
+	aasworld.num_vertexes = 0;
 	if (aasworld.vertexes) FreeMemory(aasworld.vertexes);
 	aasworld.vertexes = nullptr;
 	aasworld.numplanes = 0;
@@ -247,7 +247,7 @@ void AAS_FileInfo(void)
 	int i, n, optimized;
 
 	botimport.Print(PRT_MESSAGE, "version = %d\n", AASVERSION);
-	botimport.Print(PRT_MESSAGE, "numvertexes = %d\n", aasworld.numvertexes);
+	botimport.Print(PRT_MESSAGE, "num_vertexes = %d\n", aasworld.num_vertexes);
 	botimport.Print(PRT_MESSAGE, "numplanes = %d\n", aasworld.numplanes);
 	botimport.Print(PRT_MESSAGE, "numedges = %d\n", aasworld.numedges);
 	botimport.Print(PRT_MESSAGE, "edgeindexsize = %d\n", aasworld.edgeindexsize);
@@ -402,8 +402,8 @@ int AAS_LoadAASFile(char* filename)
 	offset = LittleLong header.lumps[AASLUMP_VERTEXES].fileofs;
 	length = LittleLong header.lumps[AASLUMP_VERTEXES].filelen;
 	aasworld.vertexes = reinterpret_cast<aas_vertex_t*>(AAS_LoadAASLump(fp, offset, length, &lastoffset, sizeof(aas_vertex_t)));
-	aasworld.numvertexes = length / sizeof(aas_vertex_t);
-	if (aasworld.numvertexes && !aasworld.vertexes) return BLERR_CANNOTREADAASLUMP;
+	aasworld.num_vertexes = length / sizeof(aas_vertex_t);
+	if (aasworld.num_vertexes && !aasworld.vertexes) return BLERR_CANNOTREADAASLUMP;
 	//planes
 	offset = LittleLong header.lumps[AASLUMP_PLANES].fileofs;
 	length = LittleLong header.lumps[AASLUMP_PLANES].filelen;
@@ -547,7 +547,7 @@ qboolean AAS_WriteAASFile(char* filename)
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_BBOXES, aasworld.bboxes,
 		aasworld.numbboxes * sizeof(aas_bbox_t))) return qfalse;
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_VERTEXES, aasworld.vertexes,
-		aasworld.numvertexes * sizeof(aas_vertex_t))) return qfalse;
+		aasworld.num_vertexes * sizeof(aas_vertex_t))) return qfalse;
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_PLANES, aasworld.planes,
 		aasworld.numplanes * sizeof(aas_plane_t))) return qfalse;
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_EDGES, aasworld.edges,

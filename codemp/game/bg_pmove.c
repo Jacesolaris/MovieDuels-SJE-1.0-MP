@@ -12153,13 +12153,13 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 			{
 				//just make sure we have this veh info
 				if (pm->cmd.buttons & BUTTON_ATTACK
-					&& g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-					&& pm->ps->ammo[0] >= g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
+					&& g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+					&& pm->ps->ammo[0] >= g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
 					iAmmoPerShot
 					||
 					pm->cmd.buttons & BUTTON_ALT_ATTACK
-					&& g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming
-					&& pm->ps->ammo[1] >= g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
+					&& g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming
+					&& pm->ps->ammo[1] >= g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
 					iAmmoPerShot)
 				{
 					//pressing the appropriate fire button for the lock-on/charging weapon
@@ -12307,7 +12307,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 			if (vehicleRocketLock)
 			{
 				//check vehicle ammo
-				if (veh && pm->ps->ammo[1] < g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
+				if (veh && pm->ps->ammo[1] < g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
 					iAmmoPerShot)
 				{
 					pm->ps->weaponstate = WEAPON_CHARGING_ALT;
@@ -12347,7 +12347,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 
 			if (vehicleRocketLock)
 			{
-				if (veh && pm->ps->ammo[0] < g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
+				if (veh && pm->ps->ammo[0] < g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
 					iAmmoPerShot)
 				{
 					//check vehicle ammo
@@ -13118,8 +13118,8 @@ void PM_Weapon(void)
 #ifdef _GAME
 			pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
 #else
-			if (g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-				|| g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
+			if (g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+				|| g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
 			{
 				//our vehicle uses a rocket launcher, so do the normal checks
 				vehicleRocketLock = qtrue;
@@ -14096,8 +14096,8 @@ void PM_Weapon(void)
 	if (veh
 		&& veh->m_pVehicle)
 	{
-		if (g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-			|| g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
+		if (g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+			|| g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
 		{
 			//don't clear the rocket locking ever?
 			vehicleRocketLock = qtrue;

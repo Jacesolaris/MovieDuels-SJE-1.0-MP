@@ -2778,7 +2778,7 @@ void G_BroadcastObit(gentity_t* self, const gentity_t* inflictor, const gentity_
 		{
 			//a vehicle missile
 			ent->s.eventParm = MOD_VEHICLE;
-			//store index into g_vehWeaponInfo
+			//store index into g_vehweapon_info
 			ent->s.weapon = inflictor->s.otherEntityNum2 + 1;
 			//store generic rocket or blaster type of missile
 			ent->s.generic1 = inflictor->s.weapon;

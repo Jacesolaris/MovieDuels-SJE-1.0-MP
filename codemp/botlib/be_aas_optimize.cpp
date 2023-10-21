@@ -51,7 +51,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 typedef struct optimized_s
 {
 	//vertexes
-	int numvertexes;
+	int num_vertexes;
 	aas_vertex_t* vertexes;
 	//edges
 	int numedges;
@@ -113,10 +113,10 @@ int AAS_OptimizeEdge(optimized_t* optimized, const int edgenum)
 		} //end if
 		else
 		{
-			VectorCopy(aasworld.vertexes[edge->v[i]], optimized->vertexes[optimized->numvertexes]);
-			optedge->v[i] = optimized->numvertexes;
-			optimized->vertexoptimizeindex[edge->v[i]] = optimized->numvertexes;
-			optimized->numvertexes++;
+			VectorCopy(aasworld.vertexes[edge->v[i]], optimized->vertexes[optimized->num_vertexes]);
+			optedge->v[i] = optimized->num_vertexes;
+			optimized->vertexoptimizeindex[edge->v[i]] = optimized->num_vertexes;
+			optimized->num_vertexes++;
 		} //end else
 	} //end for
 	optimized->edgeoptimizeindex[abs(edgenum)] = optimized->numedges;
@@ -213,8 +213,8 @@ void AAS_OptimizeArea(optimized_t* optimized, const int areanum)
 //===========================================================================
 void AAS_OptimizeAlloc(optimized_t* optimized)
 {
-	optimized->vertexes = static_cast<aas_vertex_t*>(GetClearedMemory(aasworld.numvertexes * sizeof(aas_vertex_t)));
-	optimized->numvertexes = 0;
+	optimized->vertexes = static_cast<aas_vertex_t*>(GetClearedMemory(aasworld.num_vertexes * sizeof(aas_vertex_t)));
+	optimized->num_vertexes = 0;
 	optimized->edges = static_cast<aas_edge_t*>(GetClearedMemory(aasworld.numedges * sizeof(aas_edge_t)));
 	optimized->numedges = 1; //edge zero is a dummy
 	optimized->edgeindex = static_cast<aas_edgeindex_t*>(GetClearedMemory(aasworld.edgeindexsize * sizeof(aas_edgeindex_t)));
@@ -226,7 +226,7 @@ void AAS_OptimizeAlloc(optimized_t* optimized)
 	optimized->areas = static_cast<aas_area_t*>(GetClearedMemory(aasworld.numareas * sizeof(aas_area_t)));
 	optimized->numareas = aasworld.numareas;
 	//
-	optimized->vertexoptimizeindex = static_cast<int*>(GetClearedMemory(aasworld.numvertexes * sizeof(int)));
+	optimized->vertexoptimizeindex = static_cast<int*>(GetClearedMemory(aasworld.num_vertexes * sizeof(int)));
 	optimized->edgeoptimizeindex = static_cast<int*>(GetClearedMemory(aasworld.numedges * sizeof(int)));
 	optimized->faceoptimizeindex = static_cast<int*>(GetClearedMemory(aasworld.numfaces * sizeof(int)));
 } //end of the function AAS_OptimizeAlloc
@@ -241,7 +241,7 @@ void AAS_OptimizeStore(optimized_t* optimized)
 	//store the optimized vertexes
 	if (aasworld.vertexes) FreeMemory(aasworld.vertexes);
 	aasworld.vertexes = optimized->vertexes;
-	aasworld.numvertexes = optimized->numvertexes;
+	aasworld.num_vertexes = optimized->num_vertexes;
 	//store the optimized edges
 	if (aasworld.edges) FreeMemory(aasworld.edges);
 	aasworld.edges = optimized->edges;

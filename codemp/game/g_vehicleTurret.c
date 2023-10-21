@@ -26,7 +26,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern void G_SetEnemy(gentity_t* self, gentity_t* enemy);
 extern void WP_CalcVehMuzzle(gentity_t* ent, int muzzle_num);
-extern gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWeaponInfo_t* veh_weapon,
+extern gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehweapon_info_t* veh_weapon,
 	qboolean alt_fire, qboolean is_turret_weap);
 
 extern void G_VehMuzzleFireFX(const gentity_t* ent, gentity_t* broadcaster, int muzzles_fired);
@@ -35,7 +35,7 @@ void VEH_TurretCheckFire(Vehicle_t* p_veh,
 	gentity_t* parent,
 	//gentity_t *turretEnemy,
 	const turretStats_t* turretStats,
-	const vehWeaponInfo_t* vehWeapon,
+	const vehweapon_info_t* vehWeapon,
 	const int turretNum, const int curMuzzle)
 {
 	// if it's time to fire and we have an enemy, then gun 'em down!  pushDebounce time controls next fire time
@@ -121,7 +121,7 @@ qboolean VEH_TurretAim(Vehicle_t* p_veh,
 	gentity_t* parent,
 	const  gentity_t* turret_enemy,
 	const turretStats_t* turret_stats,
-	const vehWeaponInfo_t* veh_weapon,
+	const vehweapon_info_t* veh_weapon,
 	const int turret_num, const int cur_muzzle, vec3_t desired_angles)
 	//-----------------------------------------------------
 {
@@ -359,7 +359,7 @@ void VEH_TurretObeyPassengerControl(Vehicle_t* p_veh, gentity_t* parent, const i
 	if (passenger && passenger->client && passenger->health > 0)
 	{
 		//a valid, living passenger client
-		const vehWeaponInfo_t* vehWeapon = &g_vehWeaponInfo[turretStats->iWeapon];
+		const vehweapon_info_t* vehWeapon = &g_vehweapon_info[turretStats->iWeapon];
 		const int curMuzzle = p_veh->turretStatus[turretNum].nextMuzzle;
 		vec3_t aimAngles;
 		VectorCopy(passenger->client->ps.viewangles, aimAngles);
@@ -405,7 +405,7 @@ void VEH_TurretThink(Vehicle_t* p_veh, gentity_t* parent, const int turretNum)
 		return;
 	}
 
-	const vehWeaponInfo_t* vehWeapon = &g_vehWeaponInfo[turretStats->iWeapon];
+	const vehweapon_info_t* vehWeapon = &g_vehweapon_info[turretStats->iWeapon];
 	const float rangeSq = turretStats->fAIRange * turretStats->fAIRange;
 	const int curMuzzle = p_veh->turretStatus[turretNum].nextMuzzle;
 

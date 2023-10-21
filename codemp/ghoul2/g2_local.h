@@ -209,8 +209,8 @@ extern mdxaBone_t worldMatrixInv;
 qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghl_info, surfaceInfo_v& slist, const char* surface_name, const int off_flags);
 int G2_IsSurfaceOff(const CGhoul2Info* ghl_info, const surfaceInfo_v& slist, const char* surface_name);
 qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, int model_index, const char* surface_name);
-int G2_AddSurface(CGhoul2Info* ghoul2, int surface_number, int poly_number, float barycentric_i, float barycentric_j,
-	int lod);
+
+int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, int lod);
 qboolean G2_RemoveSurface(surfaceInfo_v& slist, int index);
 surfaceInfo_t* G2_FindOverrideSurface(int surface_num, surfaceInfo_v& surface_list);
 int G2_IsSurfaceLegal(void* mod, const char* surface_name, int* flags);
@@ -295,7 +295,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, cons
 
 qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias);
 qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t custom_skin, qhandle_t renderSkin);
-qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t custom_shader);
+qboolean G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom_shader);
 qboolean G2API_HasGhoul2ModelOnIndex(CGhoul2Info_v** ghlRemove, int model_index);
 qboolean G2API_RemoveGhoul2Model(CGhoul2Info_v** ghlRemove, int model_index);
 qboolean G2API_RemoveGhoul2Models(CGhoul2Info_v** ghlRemove);

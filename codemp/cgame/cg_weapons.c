@@ -437,7 +437,7 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 	refEntity_t gun;
 	refEntity_t barrel;
 	weapon_t weapon_num;
-	weaponInfo_t* weapon;
+	weapon_info_t* weapon;
 	centity_t* non_predicted_cent;
 	refEntity_t flash;
 
@@ -871,7 +871,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 	refEntity_t gun;
 	refEntity_t barrel;
 	weapon_t weapon_num;
-	weaponInfo_t* weapon;
+	weapon_info_t* weapon;
 	centity_t* non_predicted_cent;
 	refEntity_t flash;
 
@@ -1302,7 +1302,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	clientInfo_t* ci;
 	float fov_offset;
 	vec3_t angles;
-	weaponInfo_t* weapon;
+	weapon_info_t* weapon;
 	float cgFov;
 
 	if (!cg.renderingThirdPerson && (cg_trueguns.integer || cg.predicted_player_state.weapon == WP_SABER
@@ -1874,7 +1874,7 @@ void CG_DrawWeaponSelect(void)
 
 		if (cgs.media.weaponIcons[i])
 		{
-			//	weaponInfo_t	*weaponInfo;
+			//	weapon_info_t	*weaponInfo;
 			CG_RegisterWeapon(i);
 			//	weaponInfo = &cg_weapons[i];
 
@@ -1903,7 +1903,7 @@ void CG_DrawWeaponSelect(void)
 	//	height = bigIconSize * cg.iconHUDPercent;
 	if (cgs.media.weaponIcons[cg.weaponSelect])
 	{
-		//	weaponInfo_t	*weaponInfo;
+		//	weapon_info_t	*weaponInfo;
 		CG_RegisterWeapon(cg.weaponSelect);
 		//	weaponInfo = &cg_weapons[cg.weaponSelect];
 
@@ -2600,7 +2600,7 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		return;
 	}
 
-	const weaponInfo_t* weap = &cg_weapons[ent->weapon];
+	const weapon_info_t* weap = &cg_weapons[ent->weapon];
 
 	// mark the entity as muzzle flashing, so when it is added it will
 	// append the flash to the weapon model
@@ -2778,13 +2778,13 @@ qboolean CG_VehicleWeaponImpact(centity_t* cent)
 	//see if this is a missile entity that's owned by a vehicle and should do a special, overridden impact effect
 	if (cent->currentState.eFlags & EF_JETPACK_ACTIVE //hack so we know we're a vehicle Weapon shot
 		&& cent->currentState.otherEntityNum2
-		&& g_vehWeaponInfo[cent->currentState.otherEntityNum2].iImpactFX)
+		&& g_vehweapon_info[cent->currentState.otherEntityNum2].iImpactFX)
 	{
 		//missile is from a special vehWeapon
 		vec3_t normal;
 		ByteToDir(cent->currentState.eventParm, normal);
 
-		trap->FX_PlayEffectID(g_vehWeaponInfo[cent->currentState.otherEntityNum2].iImpactFX, cent->lerpOrigin, normal,
+		trap->FX_PlayEffectID(g_vehweapon_info[cent->currentState.otherEntityNum2].iImpactFX, cent->lerpOrigin, normal,
 			-1, -1, qfalse);
 		return qtrue;
 	}

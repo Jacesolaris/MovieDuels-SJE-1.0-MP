@@ -2288,7 +2288,7 @@ static void CG_Item(centity_t* cent)
 	entityState_t* es;
 	gitem_t* item;
 	int msec;
-	weaponInfo_t* wi;
+	weapon_info_t* wi;
 
 	es = &cent->currentState;
 	if (es->modelindex >= bg_numItems)
@@ -2831,7 +2831,7 @@ static void CG_Missile(centity_t* cent)
 {
 	refEntity_t ent;
 	entityState_t* s1;
-	const weaponInfo_t* weapon;
+	const weapon_info_t* weapon;
 
 	if (cg.snap->ps.duelInProgress &&
 		cent->currentState.eType == ET_MISSILE &&
@@ -3027,21 +3027,21 @@ static void CG_Missile(centity_t* cent)
 			forward[2] = 1.0f;
 		}
 		if (s1->eFlags & EF_JETPACK_ACTIVE //hack so we know we're a vehicle Weapon shot
-			&& (g_vehWeaponInfo[s1->otherEntityNum2].iShotFX
-				|| g_vehWeaponInfo[s1->otherEntityNum2].iModel != NULL_HANDLE))
+			&& (g_vehweapon_info[s1->otherEntityNum2].iShotFX
+				|| g_vehweapon_info[s1->otherEntityNum2].iModel != NULL_HANDLE))
 		{
 			//a vehicle with an override for the weapon trail fx or model
-			trap->FX_PlayEffectID(g_vehWeaponInfo[s1->otherEntityNum2].iShotFX, cent->lerpOrigin, forward, -1, -1,
+			trap->FX_PlayEffectID(g_vehweapon_info[s1->otherEntityNum2].iShotFX, cent->lerpOrigin, forward, -1, -1,
 				qfalse);
-			if (g_vehWeaponInfo[s1->otherEntityNum2].iLoopSound)
+			if (g_vehweapon_info[s1->otherEntityNum2].iLoopSound)
 			{
 				vec3_t velocity;
 				BG_EvaluateTrajectoryDelta(&cent->currentState.pos, cg.time, velocity);
 				trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, velocity,
-					g_vehWeaponInfo[s1->otherEntityNum2].iLoopSound);
+					g_vehweapon_info[s1->otherEntityNum2].iLoopSound);
 			}
 			//add custom model
-			if (g_vehWeaponInfo[s1->otherEntityNum2].iModel == NULL_HANDLE)
+			if (g_vehweapon_info[s1->otherEntityNum2].iModel == NULL_HANDLE)
 			{
 				return;
 			}
@@ -3173,9 +3173,9 @@ static void CG_Missile(centity_t* cent)
 	//add custom model
 	else
 	{
-		if (g_vehWeaponInfo[s1->otherEntityNum2].iModel != NULL_HANDLE)
+		if (g_vehweapon_info[s1->otherEntityNum2].iModel != NULL_HANDLE)
 		{
-			ent.hModel = g_vehWeaponInfo[s1->otherEntityNum2].iModel;
+			ent.hModel = g_vehweapon_info[s1->otherEntityNum2].iModel;
 		}
 		else
 		{
@@ -3596,14 +3596,14 @@ CG_Grapple
 This is called when the grapple is sitting up against the wall
 ===============
 */
-extern void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi);
+extern void CG_GrappleTrail(centity_t* ent, const weapon_info_t* wi);
 
 static void CG_Grapple(centity_t* cent)
 {
 	refEntity_t ent;
 
 	const entityState_t* s1 = &cent->currentState;
-	const weaponInfo_t* weapon = &cg_weapons[WP_MELEE];
+	const weapon_info_t* weapon = &cg_weapons[WP_MELEE];
 
 	// calculate the axis
 	VectorCopy(s1->angles, cent->lerpAngles);

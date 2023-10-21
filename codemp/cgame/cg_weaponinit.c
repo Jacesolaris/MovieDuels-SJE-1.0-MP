@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 CG_GrappleTrail
 ==========================
 */
-void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi)
+void CG_GrappleTrail(centity_t* ent, const weapon_info_t* wi)
 {
 	vec3_t origin;
 	vec3_t forward, up;
@@ -63,7 +63,7 @@ void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi)
 	trap->R_AddRefEntityToScene(&beam);
 }
 
-void CG_StunTrail(centity_t* ent, const weaponInfo_t* wi)
+void CG_StunTrail(centity_t* ent, const weapon_info_t* wi)
 {
 	vec3_t origin;
 	vec3_t forward, up;
@@ -109,7 +109,7 @@ void CG_RegisterWeapon(const int weapon_num)
 	char path[MAX_QPATH];
 	vec3_t mins, maxs;
 
-	weaponInfo_t* weaponInfo = &cg_weapons[weapon_num];
+	weapon_info_t* weaponInfo = &cg_weapons[weapon_num];
 
 	if (weapon_num == 0)
 	{
@@ -217,7 +217,10 @@ void CG_RegisterWeapon(const int weapon_num)
 		weaponInfo->altMissileModel = trap->R_RegisterModel("models/weapons2/golan_arms/projectileMain.md3");
 		weaponInfo->muzzleEffect = trap->FX_RegisterEffect("stunbaton/muzzle_flash");
 		weaponInfo->altMuzzleEffect = trap->FX_RegisterEffect("stunbaton/muzzle_flash");
-		weaponInfo->missileTrailFunc = CG_StunTrail;
+		if (com_rend2.integer == 0) //rend2 is off
+		{
+			weaponInfo->missileTrailFunc = CG_StunTrail;
+		}
 		break;
 	case WP_MELEE:
 		trap->FX_RegisterEffect("melee/punch_impact");
