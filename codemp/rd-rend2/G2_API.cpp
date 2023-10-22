@@ -845,7 +845,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, cons
 	return ghoul2[model].mmodel_index;
 }
 
-qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias)
+qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 {
 	if (ghl_info)
 	{
@@ -855,17 +855,18 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias)
 	return qfalse;
 }
 
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin);
-qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t custom_skin, qhandle_t renderSkin)
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t render_skin);
+qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhandle_t custom_skin, const qhandle_t render_skin)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
 	if (ghl_info)
 	{
 		ghl_info->mCustomSkin = custom_skin;
-		if (renderSkin)
-		{//this is going to set the surfs on/off matching the skin file
-			G2_SetSurfaceOnOffFromSkin(ghl_info, renderSkin);
+		if (render_skin)
+		{
+			//this is going to set the surfs on/off matching the skin file
+			G2_SetSurfaceOnOffFromSkin(ghl_info, render_skin);
 		}
 
 		return qtrue;
@@ -920,7 +921,7 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, cons
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod)
+int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, const int lod)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{

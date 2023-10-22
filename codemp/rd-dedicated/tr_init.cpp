@@ -488,7 +488,8 @@ R_Init
 extern void R_InitWorldEffects(); //tr_WorldEffects.cpp
 void R_Init()
 {
-	//	Com_Printf ("----- R_Init -----\n" );
+	ri->Printf(PRINT_ALL, "----- R_Init -----\n");
+
 	// clear all our internal state
 	memset(&tr, 0, sizeof tr);
 	memset(&backEnd, 0, sizeof backEnd);
@@ -534,7 +535,7 @@ void R_Init()
 
 	R_ModelInit();
 
-	//	Com_Printf ("----- finished R_Init -----\n" );
+	ri->Printf(PRINT_ALL, "----- finished R_Init -----\n");
 }
 
 /*

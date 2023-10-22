@@ -12386,10 +12386,20 @@ nextStep:
 				}
 				else
 				{
-					saberent->s.apos.trType = TR_LINEAR;;
-					saberent->s.apos.trDelta[0] = 600;
-					saberent->s.apos.trDelta[1] = 0;
-					saberent->s.apos.trDelta[2] = 0;
+					if (g_overpoweredsaberthrow.integer == 1)
+					{
+						saberent->s.apos.trType = TR_LINEAR;
+						saberent->s.apos.trDelta[0] = 0;
+						saberent->s.apos.trDelta[1] = 800;
+						saberent->s.apos.trDelta[2] = 0;
+					}
+					else
+					{
+						saberent->s.apos.trType = TR_LINEAR;;
+						saberent->s.apos.trDelta[0] = 600;
+						saberent->s.apos.trDelta[1] = 0;
+						saberent->s.apos.trDelta[2] = 0;
+					}
 				}
 
 				saberent->s.pos.trType = TR_LINEAR;

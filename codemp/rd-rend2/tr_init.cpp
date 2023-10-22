@@ -318,7 +318,7 @@ void R_Splash()
 	GLSL_BindProgram(&tr.splashScreenShader);
 	RB_InstantTriangle();
 
-	if (r_com_rend2->integer != 1)
+	if (r_com_rend2->integer == 0)
 	{
 		ri->Cvar_Set("com_rend2", "1");
 	}
@@ -1937,11 +1937,12 @@ static void R_ShutdownBackEndFrameData()
 R_Init
 ===============
 */
-void R_Init(void) {
+void R_Init()
+{
 	byte* ptr;
 	int i;
 
-	ri->Printf(PRINT_ALL, "----- R_Init -----\n");
+	ri->Printf(PRINT_ALL, "----- Loading Rend2 renderer -----\n");
 
 	// clear all our internal state
 	Com_Memset(&tr, 0, sizeof(tr));
@@ -2050,9 +2051,11 @@ void R_Init(void) {
 
 	RestoreGhoul2InfoArray();
 
+	ri->Cvar_Set("com_rend2", "1");
+
 	// print info
 	GfxInfo_f();
-	ri->Printf(PRINT_ALL, "----- finished R_Init -----\n");
+	ri->Printf(PRINT_ALL, "----- Rend2 renderer loaded -----\n");
 }
 
 /*
