@@ -35,14 +35,14 @@ extern void G2_ConstructUsedBoneList(CConstructBoneList& CBL);
 // Surface List handling routines - so entities can determine what surfaces attached to a model are operational or not.
 
 // find a particular surface in the surface override list
-surfaceInfo_t* G2_FindOverrideSurface(int surface_num, surfaceInfo_v& surfaceList)
+surfaceInfo_t* G2_FindOverrideSurface(const int surface_num, surfaceInfo_v& surface_list)
 {
 	// look through entire list
-	for (size_t i = 0; i < surfaceList.size(); i++)
+	for (size_t i = 0; i < surface_list.size(); i++)
 	{
-		if (surfaceList[i].surface == surface_num)
+		if (surface_list[i].surface == surface_num)
 		{
-			return &surfaceList[i];
+			return &surface_list[i];
 		}
 	}
 	// didn't find it.
@@ -186,24 +186,24 @@ qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghl_info, surfaceInfo_v& slist, c
 
 void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t render_skin)
 {
-	int j;
 	const skin_t* skin = R_GetSkinByHandle(render_skin);
 
-	ghl_info->mSlist.clear();	//remove any overrides we had before.
+	ghl_info->mSlist.clear(); //remove any overrides we had before.
 	ghl_info->mMeshFrameNum = 0;
 
-	for (j = 0; j < skin->numSurfaces; j++)
+	for (int j = 0; j < skin->numSurfaces; j++)
 	{
 		// the names have both been lowercased
-		//Raz: why is this using the shader name and not the surface name?
-		if (!strcmp(((shader_t*)skin->surfaces[j]->shader)->name, "*off")) {
+		//FIXME: why is this using the shader name and not the surface name?
+		if (strcmp(static_cast<shader_t*>(skin->surfaces[j]->shader)->name, "*off") == 0)
+		{
 			G2_SetSurfaceOnOff(ghl_info, ghl_info->mSlist, skin->surfaces[j]->name, G2SURFACEFLAG_OFF);
 		}
 		else
 		{
-			int	flags;
-			int surface_num = G2_IsSurfaceLegal((void*)ghl_info->current_model, skin->surfaces[j]->name, &flags);
-			if ((surface_num != -1) && (!(flags & G2SURFACEFLAG_OFF)))	//only turn on if it's not an "_off" surface
+			int flags;
+			const int surface_num = G2_IsSurfaceLegal((void*)ghl_info->current_model, skin->surfaces[j]->name, &flags);
+			if (surface_num != -1 && !(flags & G2SURFACEFLAG_OFF)) //only turn on if it's not an "_off" surface
 			{
 				G2_SetSurfaceOnOff(ghl_info, ghl_info->mSlist, skin->surfaces[j]->name, 0);
 			}

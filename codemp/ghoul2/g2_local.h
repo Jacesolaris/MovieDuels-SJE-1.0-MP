@@ -212,7 +212,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, int model_index, const char* s
 
 int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, int lod);
 qboolean G2_RemoveSurface(surfaceInfo_v& slist, int index);
-surfaceInfo_t* G2_FindOverrideSurface(int surface_num, surfaceInfo_v& surface_list);
+surfaceInfo_t* G2_FindOverrideSurface(const int surface_num, surfaceInfo_v& surface_list);
 int G2_IsSurfaceLegal(void* mod, const char* surface_name, int* flags);
 int G2_GetParentSurface(const CGhoul2Info* ghl_info, int index);
 int G2_GetSurfaceIndex(const CGhoul2Info* ghl_info, const char* surface_name);
