@@ -1804,7 +1804,6 @@ void R_Init()
 	R_InitFonts();
 
 	R_ModelInit();
-	//	re.G2VertSpaceServer = &IHeapAllocator_singleton;
 	R_InitDecals();
 
 	R_InitWorldEffects();

@@ -1587,8 +1587,8 @@ argCheck:
 	}
 }
 
-extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,int saber_anim_level);
-extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,int* saber_anim_level);
+extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
+extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int* saber_anim_level);
 
 qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 qboolean G_SetSaber(const gentity_t* ent, const int saber_num, const char* saber_name, const qboolean siege_override)
