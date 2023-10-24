@@ -5145,7 +5145,8 @@ static void CreateExternalShaders(void) {
 R_InitShaders
 ==================
 */
-void R_InitShaders(qboolean server) {
+void R_InitShaders(const qboolean server)
+{
 	ri->Printf(PRINT_ALL, "Initializing Shaders\n");
 
 	Com_Memset(hashTable, 0, sizeof(hashTable));

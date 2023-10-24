@@ -2946,9 +2946,9 @@ extern const byte stylesDefault[MAXLIGHTMAPS];
 shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
 shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
-void		R_InitShaders(qboolean server);
-void		R_ShaderList_f(void);
-void    R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset);
+void R_InitShaders(const qboolean server);
+void R_ShaderList_f(void);
+void R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset);
 shader_t* R_CreateShaderFromTextureBundle(
 	const char* name,
 	const textureBundle_t* bundle,
