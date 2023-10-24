@@ -3313,7 +3313,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
 {
 	char		stripped_name[MAX_QPATH];
 	char		file_name[MAX_QPATH];
@@ -3623,10 +3623,8 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShader(const char* name)
-{
-	if (strlen(name) >= MAX_QPATH)
-	{
+qhandle_t RE_RegisterShader(const char* name) {
+	if (strlen(name) >= MAX_QPATH) {
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
 		return 0;
 	}
@@ -3638,8 +3636,7 @@ qhandle_t RE_RegisterShader(const char* name)
 	// still keep a name allocated for it, so if
 	// something calls RE_RegisterShader again with
 	// the same name, we don't try looking for it again
-	if (sh->defaultShader)
-	{
+	if (sh->defaultShader) {
 		return 0;
 	}
 
@@ -3653,10 +3650,8 @@ RE_RegisterShaderNoMip
 For menu graphics that should never be picmiped
 ====================
 */
-qhandle_t RE_RegisterShaderNoMip(const char* name)
-{
-	if (strlen(name) >= MAX_QPATH)
-	{
+qhandle_t RE_RegisterShaderNoMip(const char* name) {
+	if (strlen(name) >= MAX_QPATH) {
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
 		return 0;
 	}
@@ -3668,8 +3663,7 @@ qhandle_t RE_RegisterShaderNoMip(const char* name)
 	// still keep a name allocated for it, so if
 	// something calls RE_RegisterShader again with
 	// the same name, we don't try looking for it again
-	if (sh->defaultShader)
-	{
+	if (sh->defaultShader) {
 		return 0;
 	}
 
@@ -3691,8 +3685,7 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(const qhandle_t h_shader)
-{
+shader_t* R_GetShaderByHandle(const qhandle_t h_shader) {
 	if (h_shader < 0) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
 		return tr.defaultShader;
@@ -3771,6 +3764,106 @@ void	R_ShaderList_f()
 	}
 	ri->Printf(PRINT_ALL, "%i total shaders\n", count);
 	ri->Printf(PRINT_ALL, "------------------\n");
+}
+
+int COM_CompressShader(char* data_p)
+{
+	char* out;
+	qboolean newline = qfalse, whitespace = qfalse;
+
+	char* in = out = data_p;
+	if (in)
+	{
+		int c;
+		while ((c = *in) != 0)
+		{
+			// skip double slash comments
+			if (c == '/' && in[1] == '/')
+			{
+				while (*in && *in != '\n')
+				{
+					in++;
+				}
+			}
+			// skip number sign comments
+			else if (c == '#')
+			{
+				while (*in && *in != '\n')
+				{
+					in++;
+				}
+			}
+			// skip /* */ comments
+			else if (c == '/' && in[1] == '*')
+			{
+				while (*in && (*in != '*' || in[1] != '/'))
+					in++;
+				if (*in)
+					in += 2;
+			}
+			// record when we hit a newline
+			else if (c == '\n' || c == '\r')
+			{
+				newline = qtrue;
+				in++;
+			}
+			// record when we hit whitespace
+			else if (c == ' ' || c == '\t')
+			{
+				whitespace = qtrue;
+				in++;
+				// an actual token
+			}
+			else
+			{
+				// if we have a pending newline, emit it (and it counts as whitespace)
+				if (newline)
+				{
+					*out++ = '\n';
+					newline = qfalse;
+					whitespace = qfalse;
+				} if (whitespace)
+				{
+					*out++ = ' ';
+					whitespace = qfalse;
+				}
+
+				// copy quoted strings unmolested
+				if (c == '"')
+				{
+					*out++ = c;
+					in++;
+					while (true)
+					{
+						c = *in;
+						if (c && c != '"')
+						{
+							*out++ = c;
+							in++;
+						}
+						else
+						{
+							break;
+						}
+					}
+					if (c == '"')
+					{
+						*out++ = c;
+						in++;
+					}
+				}
+				else
+				{
+					*out = c;
+					out++;
+					in++;
+				}
+			}
+		}
+
+		*out = 0;
+	}
+	return out - data_p;
 }
 
 /*
@@ -4001,11 +4094,16 @@ R_InitShaders
 */
 void R_InitShaders(const qboolean server)
 {
+	//ri->Printf( PRINT_ALL, "Initializing Shaders\n" );
+
 	memset(hashTable, 0, sizeof hashTable);
 
-	CreateInternalShaders();
+	if (!server)
+	{
+		CreateInternalShaders();
 
-	Scan_And_Load_Shader_Files();
+		Scan_And_Load_Shader_Files();
 
-	CreateExternalShaders();
+		CreateExternalShaders();
+	}
 }

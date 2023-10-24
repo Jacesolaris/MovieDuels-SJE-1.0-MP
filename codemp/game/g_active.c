@@ -5951,7 +5951,7 @@ void ClientThink_real(gentity_t* ent)
 						//holding it
 						G_PreDefSound(ent->client->ps.origin, PDSOUND_FORCEJUMP);
 					}
-				}
+			}
 				else if (client->beingThrown - level.time < 4000)
 				{
 					//step into the next part of the throw, and go flying back
@@ -6040,9 +6040,9 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
-			}
 		}
 	}
+}
 	else if (client->ps.heldByClient)
 	{
 		client->ps.heldByClient = 0;
@@ -7058,7 +7058,7 @@ void ClientThink_real(gentity_t* ent)
 			ent->client->ps.m_iVehicleNum = 0;
 		}
 	}
-}
+			}
 
 /*
 ==================
@@ -7314,7 +7314,7 @@ void ClientEndFrame(gentity_t* ent)
 	}
 
 	SendPendingPredictableEvents(&ent->client->ps);
-}
+		}
 
 /*
 ====================

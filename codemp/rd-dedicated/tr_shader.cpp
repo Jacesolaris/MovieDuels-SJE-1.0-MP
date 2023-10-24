@@ -3156,7 +3156,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
 {
 	char stripped_name[MAX_QPATH];
 	char file_name[MAX_QPATH];
@@ -3507,7 +3507,9 @@ shader_t* R_GetShaderByHandle(const qhandle_t h_shader)
 R_InitShaders
 ==================
 */
-void R_InitShaders(const qboolean server)
+void R_InitShaders(qboolean server)
 {
+	//Com_Printf ("Initializing Shaders\n" );
+
 	memset(hashTable, 0, sizeof hashTable);
 }
