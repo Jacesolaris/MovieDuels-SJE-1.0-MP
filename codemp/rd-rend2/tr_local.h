@@ -991,7 +991,7 @@ typedef struct shader_s {
 	qboolean	useDistortion;
 
 	float clampTime;                                  // time this shader is clamped to
-	float timeOffset;                                 // current time offset for this shader
+	float time_offset;                                 // current time offset for this shader
 
 	struct shader_s* remappedShader;                  // current shader this one is remapped too
 
@@ -2148,10 +2148,10 @@ void		R_model_list_f(void);
 
 //====================================================
 
-#define	MAX_DRAWIMAGES			2048
-#define	MAX_SKINS				1024
+#define	MAX_DRAWIMAGES			4096
+#define	MAX_SKINS				2048
 
-#define	MAX_DRAWSURFS			0x10000
+#define	MAX_DRAWSURFS			0x20000
 #define	DRAWSURF_MASK			(MAX_DRAWSURFS-1)
 
 extern	int gl_filter_min, gl_filter_max;
@@ -2943,12 +2943,12 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
 void R_ShaderList_f(void);
-void R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset);
+void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 shader_t* R_CreateShaderFromTextureBundle(
 	const char* name,
 	const textureBundle_t* bundle,
@@ -3097,7 +3097,7 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(bmodel_t* bmodel, trRefEntity_t* ent);
+void R_DlightBmodel(const bmodel_t* bmodel, trRefEntity_t* ent);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
 void R_TransformDlights(int count, dlight_t* dl, orientationr_t* ori);
 int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);

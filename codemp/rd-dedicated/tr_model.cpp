@@ -1128,9 +1128,9 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH)
+	if (strlen(name) >= MAX_SKINNAME_PATH)
 	{
-		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_QPATH\n");
+		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
 	}
 
@@ -1159,10 +1159,10 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 
 	if (name[0] == '#')
 	{
-		char temp[MAX_QPATH];
+		char temp[MAX_SKINNAME_PATH];
 
 		tr.numBSPModels++;
-		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
+		Com_sprintf(temp, MAX_SKINNAME_PATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
 		for (mh = mhHashTable[hash]; mh; mh = mh->next)
 		{

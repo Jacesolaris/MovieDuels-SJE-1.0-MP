@@ -474,7 +474,7 @@ using shader_t = struct shader_s {
 	shaderStage_t* stages;
 
 	float clampTime;                                  // time this shader is clamped to
-	float timeOffset;                                 // current time offset for this shader
+	float time_offset;                                 // current time offset for this shader
 
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
@@ -1370,13 +1370,13 @@ extern	const int	lightmapsVertex[MAXLIGHTMAPS];
 extern	const int	lightmapsFullBright[MAXLIGHTMAPS];
 extern	const byte	stylesDefault[MAXLIGHTMAPS];
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
@@ -1504,7 +1504,7 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(const bmodel_t* bmodel, bool no_light);
+void R_DlightBmodel(const bmodel_t* bmodel, const bool no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
 void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
 int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
