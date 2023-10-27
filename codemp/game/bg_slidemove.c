@@ -643,7 +643,7 @@ Returns qtrue if the velocity was clipped in some way
 qboolean PM_SlideMove(const qboolean gravity)
 {
 	int bumpcount;
-	int numplanes;
+	int num_planes;
 	vec3_t normal, planes[MAX_CLIP_PLANES];
 	vec3_t primal_velocity;
 	int i;
@@ -678,7 +678,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 	// never turn against the ground plane
 	if (pml.groundPlane)
 	{
-		numplanes = 1;
+		num_planes = 1;
 		VectorCopy(pml.groundTrace.plane.normal, planes[0]);
 		if (!PM_GroundSlideOkay(planes[0][2]))
 		{
@@ -688,12 +688,12 @@ qboolean PM_SlideMove(const qboolean gravity)
 	}
 	else
 	{
-		numplanes = 0;
+		num_planes = 0;
 	}
 
 	// never turn against original velocity
-	VectorNormalize2(pm->ps->velocity, planes[numplanes]);
-	numplanes++;
+	VectorNormalize2(pm->ps->velocity, planes[num_planes]);
+	num_planes++;
 
 	for (bumpcount = 0; bumpcount < numbumps; bumpcount++)
 	{
@@ -748,7 +748,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 
 		time_left -= time_left * trace.fraction;
 
-		if (numplanes >= MAX_CLIP_PLANES)
+		if (num_planes >= MAX_CLIP_PLANES)
 		{
 			// this shouldn't really happen
 			VectorClear(pm->ps->velocity);
@@ -772,7 +772,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 		if (!(pm->ps->pm_flags & PMF_STUCK_TO_WALL))
 		{
 			//no sliding if stuck to wall!
-			for (i = 0; i < numplanes; i++)
+			for (i = 0; i < num_planes; i++)
 			{
 				if (VectorCompare(normal, planes[i]))
 				{
@@ -781,20 +781,20 @@ qboolean PM_SlideMove(const qboolean gravity)
 					break;
 				}
 			}
-			if (i < numplanes)
+			if (i < num_planes)
 			{
 				continue;
 			}
 		}
-		VectorCopy(normal, planes[numplanes]);
-		numplanes++;
+		VectorCopy(normal, planes[num_planes]);
+		num_planes++;
 
 		//
 		// modify velocity so it parallels all of the clip planes
 		//
 
 		// find a plane that it enters
-		for (i = 0; i < numplanes; i++)
+		for (i = 0; i < num_planes; i++)
 		{
 			vec3_t end_clip_velocity;
 			vec3_t clip_velocity;
@@ -817,7 +817,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 			PM_ClipVelocity(end_velocity, planes[i], end_clip_velocity, OVERCLIP);
 
 			// see if there is a second plane that the new move enters
-			for (int j = 0; j < numplanes; j++)
+			for (int j = 0; j < num_planes; j++)
 			{
 				vec3_t dir;
 				if (j == i)
@@ -851,7 +851,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 				VectorScale(dir, d, end_clip_velocity);
 
 				// see if there is a third plane the the new move enters
-				for (int k = 0; k < numplanes; k++)
+				for (int k = 0; k < num_planes; k++)
 				{
 					if (k == i || k == j)
 					{

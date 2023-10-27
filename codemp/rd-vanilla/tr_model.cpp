@@ -1145,21 +1145,11 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH) {
-		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_QPATH\n");
+	if (strlen(name) >= MAX_SKINNAME_PATH) {
+		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
 	}
-
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	if (!tr.registered) {
-	//		ri->Printf( PRINT_ALL, S_COLOR_YELLOW  "RE_RegisterModel (%s) called before ready!\n",name );
-	//		return 0;
-	//	}
-		//
-		// search the currently loaded models
-		//
+	// search the currently loaded models
 	int hash = generateHashValue(name, FILE_HASH_SIZE);
 
 	//
@@ -1173,11 +1163,11 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 
 	if (name[0] == '#')
 	{
-		char		temp[MAX_QPATH];
+		char		temp[MAX_SKINNAME_PATH];
 
 		tr.numBSPModels++;
 		RE_LoadWorldMap_Actual(va("maps/%s.bsp", name + 1), tr.bspModels[tr.numBSPModels - 1], tr.numBSPModels);
-		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
+		Com_sprintf(temp, MAX_SKINNAME_PATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
 		for (mh = mhHashTable[hash]; mh; mh = mh->next)
 		{

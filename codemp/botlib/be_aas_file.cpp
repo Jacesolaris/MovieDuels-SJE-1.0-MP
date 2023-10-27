@@ -77,7 +77,7 @@ void AAS_SwapAASData()
 			aasworld.vertexes[i][j] = LittleFloat aasworld.vertexes[i][j];
 	} //end for
 	//planes
-	for (i = 0; i < aasworld.numplanes; i++)
+	for (i = 0; i < aasworld.num_planes; i++)
 	{
 		for (j = 0; j < 3; j++)
 			aasworld.planes[i].normal[j] = LittleFloat aasworld.planes[i].normal[j];
@@ -193,7 +193,7 @@ void AAS_DumpAASData()
 	aasworld.num_vertexes = 0;
 	if (aasworld.vertexes) FreeMemory(aasworld.vertexes);
 	aasworld.vertexes = nullptr;
-	aasworld.numplanes = 0;
+	aasworld.num_planes = 0;
 	if (aasworld.planes) FreeMemory(aasworld.planes);
 	aasworld.planes = nullptr;
 	aasworld.numedges = 0;
@@ -248,7 +248,7 @@ void AAS_FileInfo(void)
 
 	botimport.Print(PRT_MESSAGE, "version = %d\n", AASVERSION);
 	botimport.Print(PRT_MESSAGE, "num_vertexes = %d\n", aasworld.num_vertexes);
-	botimport.Print(PRT_MESSAGE, "numplanes = %d\n", aasworld.numplanes);
+	botimport.Print(PRT_MESSAGE, "num_planes = %d\n", aasworld.num_planes);
 	botimport.Print(PRT_MESSAGE, "numedges = %d\n", aasworld.numedges);
 	botimport.Print(PRT_MESSAGE, "edgeindexsize = %d\n", aasworld.edgeindexsize);
 	botimport.Print(PRT_MESSAGE, "numfaces = %d\n", aasworld.numfaces);
@@ -267,7 +267,7 @@ void AAS_FileInfo(void)
 	} //end for
 	botimport.Print(PRT_MESSAGE, "num grounded areas = %d\n", n);
 	//
-	botimport.Print(PRT_MESSAGE, "planes size %d bytes\n", aasworld.numplanes * sizeof(aas_plane_t));
+	botimport.Print(PRT_MESSAGE, "planes size %d bytes\n", aasworld.num_planes * sizeof(aas_plane_t));
 	botimport.Print(PRT_MESSAGE, "areas size %d bytes\n", aasworld.numareas * sizeof(aas_area_t));
 	botimport.Print(PRT_MESSAGE, "areasettings size %d bytes\n", aasworld.numareasettings * sizeof(aas_areasettings_t));
 	botimport.Print(PRT_MESSAGE, "nodes size %d bytes\n", aasworld.numnodes * sizeof(aas_node_t));
@@ -275,7 +275,7 @@ void AAS_FileInfo(void)
 	botimport.Print(PRT_MESSAGE, "portals size %d bytes\n", aasworld.numportals * sizeof(aas_portal_t));
 	botimport.Print(PRT_MESSAGE, "clusters size %d bytes\n", aasworld.numclusters * sizeof(aas_cluster_t));
 
-	optimized = aasworld.numplanes * sizeof(aas_plane_t) +
+	optimized = aasworld.num_planes * sizeof(aas_plane_t) +
 		aasworld.numareas * sizeof(aas_area_t) +
 		aasworld.numareasettings * sizeof(aas_areasettings_t) +
 		aasworld.numnodes * sizeof(aas_node_t) +
@@ -408,8 +408,8 @@ int AAS_LoadAASFile(char* filename)
 	offset = LittleLong header.lumps[AASLUMP_PLANES].fileofs;
 	length = LittleLong header.lumps[AASLUMP_PLANES].filelen;
 	aasworld.planes = reinterpret_cast<aas_plane_t*>(AAS_LoadAASLump(fp, offset, length, &lastoffset, sizeof(aas_plane_t)));
-	aasworld.numplanes = length / sizeof(aas_plane_t);
-	if (aasworld.numplanes && !aasworld.planes) return BLERR_CANNOTREADAASLUMP;
+	aasworld.num_planes = length / sizeof(aas_plane_t);
+	if (aasworld.num_planes && !aasworld.planes) return BLERR_CANNOTREADAASLUMP;
 	//edges
 	offset = LittleLong header.lumps[AASLUMP_EDGES].fileofs;
 	length = LittleLong header.lumps[AASLUMP_EDGES].filelen;
@@ -549,7 +549,7 @@ qboolean AAS_WriteAASFile(char* filename)
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_VERTEXES, aasworld.vertexes,
 		aasworld.num_vertexes * sizeof(aas_vertex_t))) return qfalse;
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_PLANES, aasworld.planes,
-		aasworld.numplanes * sizeof(aas_plane_t))) return qfalse;
+		aasworld.num_planes * sizeof(aas_plane_t))) return qfalse;
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_EDGES, aasworld.edges,
 		aasworld.numedges * sizeof(aas_edge_t))) return qfalse;
 	if (!AAS_WriteAASLump(fp, &header, AASLUMP_EDGEINDEX, aasworld.edgeindex,

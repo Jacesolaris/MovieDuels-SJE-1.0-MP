@@ -272,6 +272,7 @@ cvar_t* r_debugWeather;
 cvar_t* r_com_rend2;
 
 cvar_t* r_aspectCorrectFonts;
+cvar_t* r_weather;
 
 extern void	RB_SetGL2D(void);
 void R_Splash()
@@ -318,14 +319,14 @@ void R_Splash()
 	GLSL_BindProgram(&tr.splashScreenShader);
 	RB_InstantTriangle();
 
-	if (r_com_rend2->integer == 0)
+	if (r_com_rend2->integer != 1)
 	{
 		ri->Cvar_Set("com_rend2", "1");
 	}
 
-	if (r_shadows->integer == 2)
+	if (r_shadows->integer != 1)
 	{
-		ri->Cvar_Set("cg_shadows", "3");
+		ri->Cvar_Set("cg_shadows", "1");
 	}
 
 	ri->WIN_Present(&window);
@@ -1439,11 +1440,11 @@ static consoleCommand_t	commands[] = {
 	{ "gfxinfo",			GfxInfo_f },
 	{ "gfxmeminfo",			GfxMemInfo_f },
 	{ "r_we",				R_WorldEffect_f },
-	//{ "imagecacheinfo",		RE_RegisterImages_Info_f },
 	{ "model_list",			R_model_list_f },
-	//{ "modelcacheinfo",		RE_RegisterModels_Info_f },
 	{ "vbolist",			R_VBOList_f },
 	{ "capframes",			R_CaptureFrameData_f },
+	{ "r_weather",			R_WeatherEffect_f },
+	{ "weather",			R_SetWeatherEffect_f },
 };
 
 static const size_t numCommands = ARRAY_LEN(commands);
@@ -1678,6 +1679,8 @@ void R_Register(void)
 	r_debugWeather = ri->Cvar_Get("r_debugWeather", "0", CVAR_ARCHIVE, "");
 
 	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_NORESTART, "");
+
+	r_weather = ri->Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
 	/*
 	Ghoul2 Insert End
 	*/
