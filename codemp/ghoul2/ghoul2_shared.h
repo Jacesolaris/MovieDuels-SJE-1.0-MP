@@ -47,20 +47,21 @@ struct model_s;
 // we save the whole surfaceInfo_t struct
 struct surfaceInfo_t
 {
-	int			off_flags;		// what the flags are for this model
-	int			surface;		// index into array held inside the model definition of pointers to the actual surface data loaded in - used by both client and game
-	float		genBarycentricJ;	// point 0 barycentric coors
-	float		genBarycentricI;	// point 1 barycentric coors - point 2 is 1 - point0 - point1
-	int			genPolySurfaceIndex; // used to point back to the original surface and poly if this is a generated surface
-	int			genLod;			// used to determine original lod of original surface and poly hit location
+	int offFlags; // what the flags are for this model
+	int surface;
+	// index into array held inside the model definition of pointers to the actual surface data loaded in - used by both client and game
+	float genBarycentricJ; // point 0 barycentric coors
+	float genBarycentricI; // point 1 barycentric coors - point 2 is 1 - point0 - point1
+	int genPolySurfaceIndex; // used to point back to the original surface and poly if this is a generated surface
+	int genLod; // used to determine original lod of original surface and poly hit location
 
-	surfaceInfo_t()
-		: off_flags(0)
-		, surface(0)
-		, genBarycentricJ(0)
-		, genBarycentricI(0)
-		, genPolySurfaceIndex(0)
-		, genLod(0)
+	surfaceInfo_t() :
+		offFlags(0),
+		surface(0),
+		genBarycentricJ(0),
+		genBarycentricI(0),
+		genPolySurfaceIndex(0),
+		genLod(0)
 	{
 	}
 };
@@ -77,7 +78,7 @@ struct boneInfo_t
 	int end_frame; // end frame for animation NOTE anim actually ends on end_frame+1
 	int startTime; // time we started this animation
 	int pauseTime; // time we paused this animation - 0 if not paused
-	float anim_speed;
+	float animSpeed;
 	// speed at which this anim runs. 1.0f means full speed of animation incoming - ie if anim is 20hrtz, we run at 20hrts. If 5hrts, we run at 5 hrts
 	float blendFrame; // frame PLUS LERP value to blend from
 	int blendLerpFrame; // frame to lerp the blend frame with.
@@ -157,14 +158,13 @@ struct boneInfo_t
 	//rww - RAGDOLL_END
 
 	boneInfo_t() :
-		boneNumber(-1),
-		matrix(),
+		boneNumber(-1), matrix(),
 		flags(0),
 		start_frame(0),
 		end_frame(0),
 		startTime(0),
 		pauseTime(0),
-		anim_speed(0),
+		animSpeed(0),
 		blendFrame(0),
 		blendLerpFrame(0),
 		blend_time(0),
@@ -209,7 +209,9 @@ struct boneInfo_t
 		hasAnimFrameMatrix(0),
 		airTime(0)
 	{
-		Com_Memset(&matrix, 0, sizeof(matrix));
+		matrix.matrix[0][0] = matrix.matrix[0][1] = matrix.matrix[0][2] = matrix.matrix[0][3] =
+			matrix.matrix[1][0] = matrix.matrix[1][1] = matrix.matrix[1][2] = matrix.matrix[1][3] =
+			matrix.matrix[2][0] = matrix.matrix[2][1] = matrix.matrix[2][2] = matrix.matrix[2][3] = 0.0f;
 	}
 };
 
@@ -217,14 +219,14 @@ struct boneInfo_t
 struct boltInfo_t
 {
 	int boneNumber; // bone number bolt attaches to
-	int surface_number; // surface number bolt attaches to
+	int surfaceNumber; // surface number bolt attaches to
 	int surfaceType;
 	// if we attach to a surface, this tells us if it is an original surface or a generated one - doesn't go across the network
 	int boltUsed; // nor does this
 	mdxaBone_t position; // this does not go across the network
 	boltInfo_t() :
 		boneNumber(-1),
-		surface_number(-1),
+		surfaceNumber(-1),
 		surfaceType(0),
 		boltUsed(0), position()
 	{
@@ -246,7 +248,7 @@ typedef enum
 struct goreEnumShader_t
 {
 	goreEnum_t		shaderEnum;
-	char			shader_name[MAX_QPATH];
+	char			shaderName[MAX_QPATH];
 };
 
 struct SSkinGoreData
@@ -286,7 +288,7 @@ using mdxaBone_v = std::vector<std::pair<int, mdxaBone_t>>;
 
 class CBoneCache;
 
-// NOTE order in here matters. We save out from mmodel_index to mFlags, but not the STL vectors that are at the top or the bottom.
+// NOTE order in here matters. We save out from mModelindex to mFlags, but not the STL vectors that are at the top or the bottom.
 class CGhoul2Info
 {
 public:
@@ -294,7 +296,7 @@ public:
 	boltInfo_v mBltlist;
 	boneInfo_v mBlist;
 	// save from here
-	int mmodel_index;
+	int mModelindex;
 	qhandle_t mCustomShader;
 	qhandle_t mCustomSkin;
 	int mModelBoltLink;
@@ -320,7 +322,7 @@ public:
 	// call the questionably efficient G2_SetupModelPointers(this) to insure validity
 	bool mValid; // all the below are proper and valid
 	const model_s* current_model;
-	int current_modelSize;
+	int currentModelSize;
 	const model_s* animModel;
 	int currentAnimModelSize;
 	const mdxaHeader_t* aHeader;
@@ -330,7 +332,7 @@ public:
 #endif
 
 	CGhoul2Info() :
-		mmodel_index(-1),
+		mModelindex(-1),
 		mCustomShader(0),
 		mCustomSkin(0),
 		mModelBoltLink(0),
@@ -350,7 +352,7 @@ public:
 		mSkin(0),
 		mValid(false),
 		current_model(nullptr),
-		current_modelSize(0),
+		currentModelSize(0),
 		animModel(nullptr),
 		currentAnimModelSize(0),
 		aHeader(nullptr)

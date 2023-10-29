@@ -60,7 +60,7 @@ extern void G_SetWalkerVehicleFunctions(vehicleInfo_t* pVehInfo);
 extern void G_SetFighterVehicleFunctions(vehicleInfo_t* pVehInfo);
 #endif
 
-vehweapon_info_t g_vehweapon_info[MAX_VEH_WEAPONS];
+vehWeaponInfo_t g_vehWeaponInfo[MAX_VEH_WEAPONS];
 int numVehicleWeapons = 1; //first one is null/default
 
 vehicleInfo_t g_vehicleInfo[MAX_VEHICLES];
@@ -148,7 +148,7 @@ int vfieldcmp(const void* a, const void* b)
 	return Q_stricmp(a, ((vehField_t*)b)->name);
 }
 
-static qboolean BG_ParseVehWeaponParm(vehweapon_info_t* vehWeapon, const char* parmName, const char* pValue)
+static qboolean BG_ParseVehWeaponParm(vehWeaponInfo_t* vehWeapon, const char* parmName, const char* pValue)
 {
 	vec3_t vec;
 	byte* b = (byte*)vehWeapon;
@@ -276,18 +276,18 @@ static qboolean BG_ParseVehWeaponParm(vehweapon_info_t* vehWeapon, const char* p
 
 int VEH_LoadVehWeapon(const char* vehWeaponName)
 {
-	//load up specified vehWeapon and save in array: g_vehweapon_info
+	//load up specified vehWeapon and save in array: g_vehWeaponInfo
 	const char* token;
 	const char* p;
 
-	//BG_VehWeaponSetDefaults( &g_vehweapon_info[0] );//set the first vehicle to default data
+	//BG_VehWeaponSetDefaults( &g_vehWeaponInfo[0] );//set the first vehicle to default data
 
 	//try to parse data out
 	p = VehWeaponParms;
 
 	COM_BeginParseSession("vehWeapons");
 
-	vehweapon_info_t* vehWeapon = &g_vehweapon_info[numVehicleWeapons];
+	vehWeaponInfo_t* vehWeapon = &g_vehWeaponInfo[numVehicleWeapons];
 	// look for the right vehicle weapon
 	while (p)
 	{
@@ -379,8 +379,8 @@ int VEH_Vehweapon_indexForName(const char* vehWeaponName)
 	}
 	for (vw = VEH_WEAPON_BASE; vw < numVehicleWeapons; vw++)
 	{
-		if (g_vehweapon_info[vw].name
-			&& Q_stricmp(g_vehweapon_info[vw].name, vehWeaponName) == 0)
+		if (g_vehWeaponInfo[vw].name
+			&& Q_stricmp(g_vehWeaponInfo[vw].name, vehWeaponName) == 0)
 		{
 			//already loaded this one
 			return vw;

@@ -30,7 +30,7 @@ FX_RepeaterProjectileThink
 ---------------------------
 */
 
-void FX_RepeaterProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
+void FX_RepeaterProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
 {
 	vec3_t forward;
 
@@ -123,7 +123,7 @@ static void CG_DistortionOrb(centity_t* cent)
 	VectorScale(ent.axis[2], -scale, ent.axis[2]);
 
 	ent.hModel = cgs.media.halfShieldModel;
-	ent.custom_shader = 0;
+	ent.customShader = 0;
 
 #if 1
 	ent.renderfx = RF_DISTORTION | RF_RGB_TINT;
@@ -145,7 +145,7 @@ FX_RepeaterAltProjectileThink
 -----------------------------
 */
 
-void FX_RepeaterAltProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
+void FX_RepeaterAltProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
 {
 	vec3_t forward;
 

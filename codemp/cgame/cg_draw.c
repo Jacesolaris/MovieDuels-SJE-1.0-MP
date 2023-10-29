@@ -818,7 +818,7 @@ void CG_Draw3DModel(const float x, const float y, const float w, const float h, 
 	ent.hModel = model;
 	ent.ghoul2 = ghoul2;
 	ent.radius = g2_radius;
-	ent.custom_skin = skin;
+	ent.customSkin = skin;
 	ent.renderfx = RF_NOSHADOW; // no stencil shadows
 
 	refdef.rdflags = RDF_NOWORLDMODEL;
@@ -11085,7 +11085,7 @@ void CG_BracketEntity(centity_t* cent, const float radius)
 							&& veh->m_pVehicle->m_pVehicleInfo //vehicle stats
 							&& veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID > VEH_WEAPON_BASE) //valid vehicle weapon
 						{
-							const vehweapon_info_t* veh_weapon = &g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon
+							const vehWeaponInfo_t* veh_weapon = &g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon
 								[
 									0].ID];
 							if (veh_weapon
@@ -11318,13 +11318,13 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 		const centity_t* veh = &cg_entities[cg.snap->ps.m_iVehicleNum];
 		if (veh->m_pVehicle)
 		{
-			const vehweapon_info_t* vehWeapon = NULL;
+			const vehWeaponInfo_t* vehWeapon = NULL;
 			if (cg.predictedVehicleState.weaponstate == WEAPON_CHARGING_ALT)
 			{
 				if (veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID > VEH_WEAPON_BASE
 					&& veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID < MAX_VEH_WEAPONS)
 				{
-					vehWeapon = &g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID];
+					vehWeapon = &g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID];
 				}
 			}
 			else
@@ -11332,7 +11332,7 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 				if (veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID > VEH_WEAPON_BASE
 					&& veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID < MAX_VEH_WEAPONS)
 				{
-					vehWeapon = &g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID];
+					vehWeapon = &g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID];
 				}
 			}
 			if (vehWeapon != NULL)

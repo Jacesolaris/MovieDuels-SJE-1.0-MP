@@ -32,7 +32,7 @@ typedef struct shaderRemap_s
 {
 	char oldShader[MAX_QPATH];
 	char newShader[MAX_QPATH];
-	float time_offset;
+	float timeOffset;
 } shaderRemap_t;
 
 #define MAX_SHADER_REMAPS 128
@@ -40,7 +40,7 @@ typedef struct shaderRemap_s
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
 
-void AddRemap(const char* oldShader, const char* newShader, const float time_offset)
+void AddRemap(const char* oldShader, const char* newShader, const float timeOffset)
 {
 	for (int i = 0; i < remapCount; i++)
 	{
@@ -48,7 +48,7 @@ void AddRemap(const char* oldShader, const char* newShader, const float time_off
 		{
 			// found it, just update this one
 			strcpy(remappedShaders[i].newShader, newShader);
-			remappedShaders[i].time_offset = time_offset;
+			remappedShaders[i].timeOffset = timeOffset;
 			return;
 		}
 	}
@@ -56,7 +56,7 @@ void AddRemap(const char* oldShader, const char* newShader, const float time_off
 	{
 		strcpy(remappedShaders[remapCount].newShader, newShader);
 		strcpy(remappedShaders[remapCount].oldShader, oldShader);
-		remappedShaders[remapCount].time_offset = time_offset;
+		remappedShaders[remapCount].timeOffset = timeOffset;
 		remapCount++;
 	}
 }
@@ -70,7 +70,7 @@ const char* BuildShaderStateConfig(void)
 	{
 		char out[MAX_QPATH * 2 + 5];
 		Com_sprintf(out, MAX_QPATH * 2 + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader,
-			remappedShaders[i].time_offset);
+			remappedShaders[i].timeOffset);
 		Q_strcat(buff, sizeof buff, out);
 	}
 	return buff;

@@ -1999,7 +1999,7 @@ void PM_SaberLocked(void)
 					{
 						cur_frame = ceil(current_frame) + strength;
 						//advance my frame one
-						if (cur_frame >= anim->firstFrame + anim->num_frames)
+						if (cur_frame >= anim->firstFrame + anim->numFrames)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2008,7 +2008,7 @@ void PM_SaberLocked(void)
 							return;
 						}
 						PM_SetAnimFrame(pm->ps, cur_frame);
-						remaining = anim->firstFrame + anim->num_frames - cur_frame;
+						remaining = anim->firstFrame + anim->numFrames - cur_frame;
 					}
 				}
 				else
@@ -2018,7 +2018,7 @@ void PM_SaberLocked(void)
 					{
 						cur_frame = ceil(current_frame) + strength;
 						//advance my frame one
-						if (cur_frame >= anim->firstFrame + anim->num_frames)
+						if (cur_frame >= anim->firstFrame + anim->numFrames)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2027,7 +2027,7 @@ void PM_SaberLocked(void)
 							return;
 						}
 						PM_SetAnimFrame(pm->ps, cur_frame);
-						remaining = anim->firstFrame + anim->num_frames - cur_frame;
+						remaining = anim->firstFrame + anim->numFrames - cur_frame;
 					}
 					else
 					{
@@ -2061,7 +2061,7 @@ void PM_SaberLocked(void)
 					}
 					else
 					{
-						PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 					}
 				}
 				else
@@ -2073,7 +2073,7 @@ void PM_SaberLocked(void)
 						{
 							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 						}
-						PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 					}
 					else
 					{
@@ -2126,7 +2126,7 @@ void PM_SaberLocked(void)
 						{
 							cur_frame = ceil(current_frame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->num_frames)
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2137,7 +2137,7 @@ void PM_SaberLocked(void)
 								return;
 							}
 							PM_SetAnimFrame(pm->ps, cur_frame);
-							remaining = anim->firstFrame + anim->num_frames - cur_frame;
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
 						}
 					}
 					else
@@ -2147,7 +2147,7 @@ void PM_SaberLocked(void)
 						{
 							cur_frame = ceil(current_frame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->num_frames)
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2158,7 +2158,7 @@ void PM_SaberLocked(void)
 								return;
 							}
 							PM_SetAnimFrame(pm->ps, cur_frame);
-							remaining = anim->firstFrame + anim->num_frames - cur_frame;
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
 						}
 						else
 						{
@@ -2194,7 +2194,7 @@ void PM_SaberLocked(void)
 						}
 						else
 						{
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 						}
 					}
 					else
@@ -2206,7 +2206,7 @@ void PM_SaberLocked(void)
 							{
 								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 							}
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 						}
 						else
 						{

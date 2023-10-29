@@ -674,7 +674,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 	if (!bAlreadyFound)
 	{
 		// horrible new hackery, if !bAlreadyFound then we've just done a tag-morph, so we need to set the
-		//	bool reference passed into this function to true, to tell the caller NOT to do an ri->FS_Freefile since
+		//	bool reference passed into this function to true, to tell the caller NOT to do an ri.FS_Freefile since
 		//	we've hijacked that memory block...
 		//
 		// Aaaargh. Kill me now...
@@ -685,13 +685,13 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 
 		LL(mdxa->ident);
 		LL(mdxa->version);
-		LL(mdxa->num_frames);
+		LL(mdxa->numFrames);
 		LL(mdxa->numBones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
 	}
 
-	if (mdxa->num_frames < 1)
+	if (mdxa->numFrames < 1)
 	{
 		return qfalse;
 	}
@@ -724,7 +724,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 
 	// swap all the frames
 	frameSize = (int)(&((mdxaFrame_t*)0)->bones[mdxa->numBones]);
-	for (i = 0; i < mdxa->num_frames; i++)
+	for (i = 0; i < mdxa->numFrames; i++)
 	{
 		cframe = (mdxaFrame_t*)((byte*)mdxa + mdxa->ofsFrames + i * frameSize);
 		cframe->radius = LittleFloat(cframe->radius);
@@ -1128,12 +1128,20 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH)
+	if (strlen(name) >= MAX_QPATH)
 	{
-		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_SKINNAME_PATH\n");
+		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
+	/*
+	Ghoul2 Insert Start
+	*/
+	//	if (!tr.registered) {
+	//		Com_Printf (S_COLOR_YELLOW  "RE_RegisterModel (%s) called before ready!\n",name );
+	//		return 0;
+	//	}
+	//
 	// search the currently loaded models
 	//
 	int hash = generateHashValue(name, FILE_HASH_SIZE);
@@ -1151,10 +1159,10 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 
 	if (name[0] == '#')
 	{
-		char temp[MAX_SKINNAME_PATH];
+		char temp[MAX_QPATH];
 
 		tr.numBSPModels++;
-		Com_sprintf(temp, MAX_SKINNAME_PATH, "*%d-0", tr.numBSPModels);
+		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
 		for (mh = mhHashTable[hash]; mh; mh = mh->next)
 		{
@@ -1395,7 +1403,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		LL(mod->md3[lod]->ident);
 		LL(mod->md3[lod]->version);
-		LL(mod->md3[lod]->num_frames);
+		LL(mod->md3[lod]->numFrames);
 		LL(mod->md3[lod]->numTags);
 		LL(mod->md3[lod]->numSurfaces);
 		LL(mod->md3[lod]->ofsFrames);
@@ -1404,7 +1412,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 		LL(mod->md3[lod]->ofsEnd);
 	}
 
-	if (mod->md3[lod]->num_frames < 1)
+	if (mod->md3[lod]->numFrames < 1)
 	{
 		Com_Printf(S_COLOR_YELLOW "R_LoadMD3: %s has no frames\n", name);
 		return qfalse;
@@ -1422,7 +1430,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 	// swap all the frames
 	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
-	for (i = 0; i < mod->md3[lod]->num_frames; i++, frame++) {
+	for (i = 0; i < mod->md3[lod]->numFrames; i++, frame++) {
 		frame->radius = LittleFloat(frame->radius);
 		for (j = 0; j < 3; j++) {
 			frame->bounds[0][j] = LittleFloat(frame->bounds[0][j]);
@@ -1433,7 +1441,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 	// swap all the tags
 	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
-	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->num_frames; i++, tag++) {
+	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++) {
 		for (j = 0; j < 3; j++) {
 			tag->origin[j] = LittleFloat(tag->origin[j]);
 			tag->axis[0][j] = LittleFloat(tag->axis[0][j]);
@@ -1448,7 +1456,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 	for (int i = 0; i < mod->md3[lod]->numSurfaces; i++)
 	{
 		LL(surf->flags);
-		LL(surf->num_frames);
+		LL(surf->numFrames);
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
@@ -1504,7 +1512,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->num_frames; j++, xyz++)
+		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
 		{
 			xyz->xyz[0] = LittleShort(xyz->xyz[0]);
 			xyz->xyz[1] = LittleShort(xyz->xyz[1]);
@@ -1572,10 +1580,10 @@ void R_ModelFree(void)
 
 /*
 ================
-R_model_list_f
+R_Modellist_f
 ================
 */
-void R_model_list_f(void)
+void R_Modellist_f(void)
 {
 	int total = 0;
 	for (int i = 1; i < tr.numModels; i++)
@@ -1610,10 +1618,10 @@ R_GetTag
 */
 static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName)
 {
-	if (frame >= mod->num_frames)
+	if (frame >= mod->numFrames)
 	{
 		// it is possible to have a bad frame while changing models, so don't error
-		frame = mod->num_frames - 1;
+		frame = mod->numFrames - 1;
 	}
 
 	md3Tag_t* tag = reinterpret_cast<md3Tag_t*>(reinterpret_cast<byte*>(mod) + mod->ofsTags) + frame * mod->numTags;

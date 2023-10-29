@@ -30,7 +30,7 @@ FX_FlechetteProjectileThink
 -------------------------
 */
 
-void FX_FlechetteProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
+void FX_FlechetteProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
 {
 	vec3_t forward;
 
@@ -80,7 +80,7 @@ FX_FlechetteProjectileThink
 -------------------------
 */
 
-void FX_FlechetteAltProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
+void FX_FlechetteAltProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
 {
 	vec3_t forward;
 

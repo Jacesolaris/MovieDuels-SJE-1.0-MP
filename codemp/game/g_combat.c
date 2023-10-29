@@ -962,7 +962,7 @@ static int G_CheckSpecialDeathAnim(gentity_t* self)
 	else if (G_InKnockDown(&self->client->ps))
 	{
 		//since these happen a lot, let's handle them case by case
-		int anim_length = bgAllAnims[self->localAnimIndex].anims[self->client->ps.legsAnim].num_frames * fabs(
+		int anim_length = bgAllAnims[self->localAnimIndex].anims[self->client->ps.legsAnim].numFrames * fabs(
 			bgHumanoidAnimations[self->client->ps.legsAnim].frameLerp);
 		switch (self->client->ps.legsAnim)
 		{
@@ -2778,7 +2778,7 @@ void G_BroadcastObit(gentity_t* self, const gentity_t* inflictor, const gentity_
 		{
 			//a vehicle missile
 			ent->s.eventParm = MOD_VEHICLE;
-			//store index into g_vehweapon_info
+			//store index into g_vehWeaponInfo
 			ent->s.weapon = inflictor->s.otherEntityNum2 + 1;
 			//store generic rocket or blaster type of missile
 			ent->s.generic1 = inflictor->s.weapon;
@@ -3676,7 +3676,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			}
 
 			self->client->respawnTime = level.time + 1000;
-			//((self->client->animations[anim].num_frames*40)/(50.0f / self->client->animations[anim].frameLerp))+300;
+			//((self->client->animations[anim].numFrames*40)/(50.0f / self->client->animations[anim].frameLerp))+300;
 
 			const int s_pm_type = self->client->ps.pm_type;
 			self->client->ps.pm_type = PM_NORMAL; //don't want pm type interfering with our setanim calls.
@@ -7454,7 +7454,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 			if (!testTrace.startsolid &&
 				!testTrace.allsolid &&
 				testTrace.entity_num == targ->s.number &&
-				testTrace.G2CollisionMap[0].mentity_num != -1)
+				testTrace.G2CollisionMap[0].mEntityNum != -1)
 			{
 				if (chance_of_fizz > 0)
 				{

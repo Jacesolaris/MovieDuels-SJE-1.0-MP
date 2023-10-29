@@ -5856,7 +5856,7 @@ void Item_Model_Paint(itemDef_t* item)
 	{
 		ent.ghoul2 = item->ghoul2;
 		ent.radius = 1000;
-		ent.custom_skin = modelPtr->g2skin;
+		ent.customSkin = modelPtr->g2skin;
 
 		VectorCopy(modelPtr->g2scale, ent.modelScale);
 		UI_ScaleModelAxis(&ent);
@@ -7637,7 +7637,7 @@ qboolean ItemParse_asset_model_go(itemDef_t* item, const char* name, int* runTim
 							const animation_t* anim = &bgAllAnims[animIndex].anims[modelPtr->g2anim];
 
 							const int sFrame = anim->firstFrame;
-							const int eFrame = anim->firstFrame + anim->num_frames;
+							const int eFrame = anim->firstFrame + anim->numFrames;
 							int flags = BONE_ANIM_OVERRIDE_FREEZE;
 							const int time = DC->realTime;
 							const float animSpeed = 50.0f / anim->frameLerp;
@@ -7649,7 +7649,7 @@ qboolean ItemParse_asset_model_go(itemDef_t* item, const char* name, int* runTim
 							}
 
 							trap->G2API_SetBoneAnim(item->ghoul2, 0, "model_root", sFrame, eFrame, flags, animSpeed, time, -1, blend_time);
-							*runTimeLength = anim->frameLerp * (anim->num_frames - 2);
+							*runTimeLength = anim->frameLerp * (anim->numFrames - 2);
 						}
 					}
 				}

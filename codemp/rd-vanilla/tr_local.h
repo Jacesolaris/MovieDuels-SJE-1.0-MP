@@ -49,40 +49,6 @@ using eDLightTypes = enum
 	DLIGHT_PROJECTED
 };
 
-typedef enum {
-	MOD_BAD,
-	MOD_BRUSH,
-	MOD_MESH,
-	/*
-	Ghoul2 Insert Start
-	*/
-	MOD_MDXM,
-	MOD_MDXA
-	/*
-	Ghoul2 Insert End
-	*/
-} modtype_t;
-
-typedef struct model_s {
-	char		name[MAX_QPATH];
-	modtype_t	type;
-	int			index;				// model = tr.models[model->index]
-
-	int			dataSize;			// just for listing purposes
-	struct bmodel_s* bmodel;			// only if type == MOD_BRUSH
-	md3Header_t* md3[MD3_MAX_LODS];	// only if type == MOD_MESH
-	/*
-	Ghoul2 Insert Start
-	*/
-	mdxmHeader_t* mdxm;				// only if type == MOD_GL2M which is a GHOUL II Mesh file NOT a GHOUL II animation file
-	mdxaHeader_t* mdxa;				// only if type == MOD_GL2A which is a GHOUL II Animation file
-	/*
-	Ghoul2 Insert End
-	*/
-	int			 numLods;
-	qboolean	bspInstance;
-} model_t;
-
 using dlight_t = struct dlight_s {
 	eDLightTypes	mType;
 
@@ -474,7 +440,7 @@ using shader_t = struct shader_s {
 	shaderStage_t* stages;
 
 	float clampTime;                                  // time this shader is clamped to
-	float time_offset;                                 // current time offset for this shader
+	float timeOffset;                                 // current time offset for this shader
 
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
@@ -782,7 +748,7 @@ using world_t = struct world_s {
 
 	bmodel_t* bmodels;
 
-	int			num_planes;
+	int			numplanes;
 	cplane_t* planes;
 
 	int			numnodes;		// includes leafs
@@ -833,7 +799,7 @@ int			R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_f
 	float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
-void		R_model_list_f(void);
+void		R_Modellist_f(void);
 
 //====================================================
 
@@ -997,8 +963,8 @@ using trGlobals_t = struct trGlobals_s {
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	int						currententity_num;
-	int						shiftedentity_num;	// currententity_num << QSORT_REFENTITYNUM_SHIFT
+	int						currentEntityNum;
+	int						shiftedEntityNum;	// currentEntityNum << QSORT_REFENTITYNUM_SHIFT
 	model_t* current_model;
 
 	viewParms_t				viewParms;
@@ -1170,6 +1136,7 @@ extern cvar_t* r_DynamicGlowIntensity;
 extern cvar_t* r_DynamicGlowSoft;
 extern cvar_t* r_DynamicGlowWidth;
 extern cvar_t* r_DynamicGlowHeight;
+extern cvar_t* r_Dynamic_AMD_Fix;
 
 extern	cvar_t* r_nobind;						// turns off binding to appropriate textures
 extern	cvar_t* r_singleShader;				// make most world faces use default shader
@@ -1370,18 +1337,19 @@ extern	const int	lightmapsVertex[MAXLIGHTMAPS];
 extern	const int	lightmapsFullBright[MAXLIGHTMAPS];
 extern	const byte	stylesDefault[MAXLIGHTMAPS];
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image);
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
+shader_t* R_GetShaderByState(int index, long* cycleTime);
 shader_t* R_FindShaderByName(const char* name);
-void R_InitShaders(const qboolean server);
-void R_ShaderList_f();
-void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
+void		R_InitShaders(qboolean server);
+void		R_ShaderList_f();
+void    R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 
 //
 // tr_arb.c
@@ -1504,7 +1472,7 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(const bmodel_t* bmodel, const bool no_light);
+void R_DlightBmodel(const bmodel_t* bmodel, bool no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
 void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
 int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);

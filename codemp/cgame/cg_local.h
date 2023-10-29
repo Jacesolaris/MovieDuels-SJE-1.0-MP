@@ -710,10 +710,10 @@ typedef struct score_s {
 	int				team;
 } score_t;
 
-// each WP_* weapon enum has an associated weapon_info_t
+// each WP_* weapon enum has an associated weaponInfo_t
 // that contains media references necessary to present the
 // weapon and its effects
-typedef struct weapon_info_s {
+typedef struct weaponInfo_s {
 	qboolean		registered;
 	gitem_t* item;
 
@@ -739,7 +739,7 @@ typedef struct weapon_info_s {
 	fxHandle_t		muzzleEffect;
 	qhandle_t		missileModel;
 	sfxHandle_t		missileSound;
-	void			(*missileTrailFunc)(centity_t*, const struct weapon_info_s* wi);
+	void			(*missileTrailFunc)(centity_t*, const struct weaponInfo_s* wi);
 	float			missileDlight;
 	vec3_t			missileDlightColor;
 	int				missileRenderfx;
@@ -751,7 +751,7 @@ typedef struct weapon_info_s {
 	fxHandle_t		altMuzzleEffect;
 	qhandle_t		altMissileModel;
 	sfxHandle_t		altMissileSound;
-	void			(*altMissileTrailFunc)(centity_t*, const struct weapon_info_s* wi);
+	void			(*altMissileTrailFunc)(centity_t*, const struct weaponInfo_s* wi);
 	float			altMissileDlight;
 	vec3_t			altMissileDlightColor;
 	int				altMissileRenderfx;
@@ -766,7 +766,7 @@ typedef struct weapon_info_s {
 	fxHandle_t		mOverloadMuzzleEffect;
 	fxHandle_t		mOverloadMuzzleEffect2;
 	fxHandle_t		mOverloadMuzzleEffect3;
-} weapon_info_t;
+} weaponInfo_t;
 
 // each IT_* item has an associated itemInfo_t
 // that constains media references necessary to present the
@@ -1159,7 +1159,7 @@ enum
 // all of the model, shader, and sound references that are
 // loaded at gamestate time are stored in cgMedia_t
 // Other media that can be tied to clients, weapons, or items are
-// stored in the clientInfo_t, itemInfo_t, weapon_info_t, and powerupInfo_t
+// stored in the clientInfo_t, itemInfo_t, weaponInfo_t, and powerupInfo_t
 typedef struct cgMedia_s {
 	qhandle_t	charsetShader;
 	qhandle_t	whiteShader;
@@ -1432,6 +1432,8 @@ typedef struct cgMedia_s {
 	sfxHandle_t	loserSound;
 
 	sfxHandle_t crackleSound;
+
+	sfxHandle_t bodyfadeSound;
 
 	sfxHandle_t	grenadeBounce1;
 	sfxHandle_t	grenadeBounce2;
@@ -1966,7 +1968,7 @@ extern	centity_t		cg_entities[MAX_GENTITIES];
 extern	centity_t* cg_permanents[MAX_GENTITIES];
 extern	int				cg_numpermanents;
 
-extern	weapon_info_t	cg_weapons[MAX_WEAPONS];
+extern	weaponInfo_t	cg_weapons[MAX_WEAPONS];
 extern	itemInfo_t		cg_items[MAX_ITEMS];
 extern	markPoly_t		cg_markPolys[MAX_MARK_POLYS];
 
@@ -2323,13 +2325,13 @@ void		bg_cycle_force(playerState_t* ps, int direction);
 
 const char* CG_GetStringEdString(char* refSection, char* refName);
 
-void FX_TurretProjectileThink(centity_t* cent, const struct weapon_info_s* weapon);
+void FX_TurretProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon);
 void FX_TurretHitWall(vec3_t origin, vec3_t normal);
 void FX_TurretHitPlayer(vec3_t origin, vec3_t normal, qboolean humanoid);
 
 void FX_ConcussionHitWall(vec3_t origin, vec3_t normal);
 void FX_ConcussionHitPlayer(vec3_t origin, vec3_t normal, qboolean humanoid);
-void FX_ConcussionProjectileThink(centity_t* cent, const struct weapon_info_s* weapon);
+void FX_ConcussionProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon);
 void FX_ConcAltShot(vec3_t start, vec3_t end);
 
 void FX_ForceDrained(vec3_t origin, vec3_t dir);
@@ -2353,13 +2355,13 @@ void FX_BryarAltHitPlayer(vec3_t origin, vec3_t normal, qboolean humanoid);
 void FX_BryarsbdHitWall(vec3_t origin, vec3_t normal);
 void FX_BryarsbdAltHitWall(vec3_t origin, vec3_t normal, int power);
 
-void FX_BlasterProjectileThink(centity_t* cent, const struct weapon_info_s* weapon);
-void FX_BlasterAltFireThink(centity_t* cent, const struct weapon_info_s* weapon);
+void FX_BlasterProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon);
+void FX_BlasterAltFireThink(centity_t* cent, const struct weaponInfo_s* weapon);
 void FX_BlasterWeaponHitWall(vec3_t origin, vec3_t normal);
 void FX_BlasterWeaponHitPlayer(vec3_t origin, vec3_t normal, qboolean humanoid);
 
-void FX_EwebProjectileThink(centity_t* cent, const struct weapon_info_s* weapon);
-void FX_EwebAltFireThink(centity_t* cent, const struct weapon_info_s* weapon);
+void FX_EwebProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon);
+void FX_EwebAltFireThink(centity_t* cent, const struct weaponInfo_s* weapon);
 void FX_EwebWeaponHitWall(vec3_t origin, vec3_t normal);
 void FX_EwebWeaponHitPlayer(vec3_t origin, vec3_t normal, qboolean humanoid);
 

@@ -316,7 +316,7 @@ void CG_ShaderStateChanged(void)
 {
 	char originalShader[MAX_QPATH];
 	char newShader[MAX_QPATH];
-	char time_offset[16];
+	char timeOffset[16];
 
 	const char* o = CG_ConfigString(CS_SHADERSTATE);
 	while (o && *o)
@@ -341,10 +341,10 @@ void CG_ShaderStateChanged(void)
 			o = strstr(t, "@");
 			if (o)
 			{
-				strncpy(time_offset, t, o - t);
-				time_offset[o - t] = 0;
+				strncpy(timeOffset, t, o - t);
+				timeOffset[o - t] = 0;
 				o++;
-				trap->R_RemapShader(originalShader, newShader, time_offset);
+				trap->R_RemapShader(originalShader, newShader, timeOffset);
 			}
 		}
 		else
@@ -1369,7 +1369,7 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 			//this will just set us to the last frame of the animation, in theory
 			aNum = cgs.clientinfo[source->currentState.number].frame + 1;
 
-			while (aNum >= anim->firstFrame + anim->num_frames)
+			while (aNum >= anim->firstFrame + anim->numFrames)
 			{
 				aNum--;
 			}
@@ -1377,7 +1377,7 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 			if (aNum < anim->firstFrame - 1)
 			{
 				//wrong animation...?
-				aNum = anim->firstFrame + anim->num_frames - 1;
+				aNum = anim->firstFrame + anim->numFrames - 1;
 			}
 		}
 		else
@@ -1385,7 +1385,7 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 			aNum = anim->firstFrame;
 		}
 
-		const int eFrame = anim->firstFrame + anim->num_frames;
+		const int eFrame = anim->firstFrame + anim->numFrames;
 
 		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
 		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);

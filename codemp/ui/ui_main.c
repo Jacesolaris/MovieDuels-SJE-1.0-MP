@@ -355,13 +355,13 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	// parse the text
 	text_p = UIPAFtext;
 
-	//FIXME: have some way of playing anims backwards... negative num_frames?
+	//FIXME: have some way of playing anims backwards... negative numFrames?
 
 	//initialize anim array so that from 0 to MAX_ANIMATIONS, set default values of 0 1 0 100
 	for (i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		animset[i].firstFrame = 0;
-		animset[i].num_frames = 0;
+		animset[i].numFrames = 0;
 		animset[i].loopFrames = -1;
 		animset[i].frameLerp = 100;
 	}
@@ -400,7 +400,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		{
 			break;
 		}
-		animset[animNum].num_frames = atoi(token);
+		animset[animNum].numFrames = atoi(token);
 
 		token = COM_Parse(&text_p);
 		if (!token)
@@ -437,7 +437,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	{
 		if (animTable[i].name != NULL)		// This animation reference exists.
 		{
-			if (animset[i].firstFrame <= 0 && animset[i].num_frames <=0)
+			if (animset[i].firstFrame <= 0 && animset[i].numFrames <=0)
 			{	// This is an empty animation reference.
 				Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, animTable[i].name);
 			}
@@ -6063,7 +6063,7 @@ static void UI_UpdateSaberHilt(qboolean second_saber)
 		char skinPath[MAX_QPATH];
 		//successfully found a model
 		ItemParse_asset_model_go(item, modelPath, &animRunLength); //set the model
-		//get the custom_skin, if any
+		//get the customSkin, if any
 		//COM_StripExtension( modelPath, skinPath );
 		//COM_DefaultExtension( skinPath, sizeof( skinPath ), ".skin" );
 		if (UI_SaberSkinForSaber(model, skinPath))

@@ -100,7 +100,7 @@ static int C_PointContents(void)
 static void C_GetLerpOrigin(void)
 {
 	TCGVectorData* data = &cg.sharedBuffer.vectorData;
-	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mPoint);
+	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mPoint);
 }
 
 // only used by FX system to pass to getboltmat
@@ -108,19 +108,19 @@ static void C_GetLerpData(void)
 {
 	TCGGetBoltData* data = &cg.sharedBuffer.getBoltData;
 
-	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mOrigin);
-	VectorCopy(cg_entities[data->mentity_num].modelScale, data->mScale);
-	VectorCopy(cg_entities[data->mentity_num].lerpAngles, data->mAngles);
-	if (cg_entities[data->mentity_num].currentState.eType == ET_PLAYER)
+	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mOrigin);
+	VectorCopy(cg_entities[data->mEntityNum].modelScale, data->mScale);
+	VectorCopy(cg_entities[data->mEntityNum].lerpAngles, data->mAngles);
+	if (cg_entities[data->mEntityNum].currentState.eType == ET_PLAYER)
 	{
 		// normal player
 		data->mAngles[PITCH] = 0.0f;
 		data->mAngles[ROLL] = 0.0f;
 	}
-	else if (cg_entities[data->mentity_num].currentState.eType == ET_NPC)
+	else if (cg_entities[data->mEntityNum].currentState.eType == ET_NPC)
 	{
 		// an NPC
-		const Vehicle_t* p_veh = cg_entities[data->mentity_num].m_pVehicle;
+		const Vehicle_t* p_veh = cg_entities[data->mEntityNum].m_pVehicle;
 		if (!p_veh)
 		{
 			// for vehicles, we may or may not want to 0 out pitch and roll
@@ -391,7 +391,7 @@ centity_t cg_entities[MAX_GENTITIES];
 centity_t* cg_permanents[MAX_GENTITIES]; //rwwRMG - added
 int cg_numpermanents = 0;
 
-weapon_info_t cg_weapons[MAX_WEAPONS];
+weaponInfo_t cg_weapons[MAX_WEAPONS];
 itemInfo_t cg_items[MAX_ITEMS];
 
 int CG_CrosshairPlayer(void)
@@ -991,6 +991,8 @@ static void CG_RegisterSounds(void)
 	cgs.media.fallSound = trap->S_RegisterSound("sound/player/fallsplat.wav");
 
 	cgs.media.crackleSound = trap->S_RegisterSound("sound/effects/energy_crackle.wav");
+
+	cgs.media.bodyfadeSound = trap->S_RegisterSound("sound/effects/bodyfadeSound.mp3");
 	//#ifdef JK2AWARDS
 	cgs.media.impressiveSound = trap->S_RegisterSound("sound/player/impressiveSound.mp3");
 	cgs.media.excellentSound = trap->S_RegisterSound("sound/player/excellentSound.mp3");

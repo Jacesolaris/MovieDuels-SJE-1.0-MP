@@ -42,7 +42,7 @@ RE_RegisterSkin
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const byte* styles);
+shader_t* R_FindServerShader(const char* name, const int* lightmap_index, const byte* styles);
 static char* CommaParse(char** data_p);
 /*
 ===============
@@ -186,7 +186,7 @@ qhandle_t RE_RegisterSkin(const char* name)
 
 	if (strlen(name) >= MAX_SKINNAME_PATH)
 	{
-		ri->Printf(PRINT_ALL, "Skin name exceeds MAX_SKINNAME_PATH\n");
+		ri->Printf(PRINT_ALL, "Skin name exceeds MAX_QPATH\n");
 		return 0;
 	}
 

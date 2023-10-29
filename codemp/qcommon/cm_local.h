@@ -64,12 +64,12 @@ using cmodel_t = struct cmodel_s
 using cbrushside_t = struct cbrushside_s
 {
 	cplane_t* plane;
-	int shader_num;
+	int shaderNum;
 };
 
 using cbrush_t = struct cbrush_s
 {
-	int shader_num; // the shader that determined the contents
+	int shaderNum; // the shader that determined the contents
 	int contents;
 	vec3_t bounds[2];
 	cbrushside_t* sides;

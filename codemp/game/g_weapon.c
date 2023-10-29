@@ -4523,7 +4523,7 @@ void WP_VehWeapSetSolidToOwner(gentity_t* self)
 
 #define VEH_HOMING_MISSILE_THINK_TIME		100
 
-gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehweapon_info_t* veh_weapon,
+gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWeaponInfo_t* veh_weapon,
 	const qboolean alt_fire,
 	const qboolean is_turret_weap)
 {
@@ -4648,7 +4648,7 @@ gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const 
 			}
 			missile->nextthink = level.time + veh_weapon->iLifeTime;
 		}
-		missile->s.otherEntityNum2 = veh_weapon - &g_vehweapon_info[0];
+		missile->s.otherEntityNum2 = veh_weapon - &g_vehWeaponInfo[0];
 		missile->s.eFlags |= EF_JETPACK_ACTIVE;
 		//homing
 		if (veh_weapon->fHoming)
@@ -5036,7 +5036,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 	Vehicle_t* p_veh = ent->m_pVehicle;
 	int muzzles_fired = 0;
 	gentity_t* missile = NULL;
-	const vehweapon_info_t* veh_weapon = NULL;
+	const vehWeaponInfo_t* veh_weapon = NULL;
 	qboolean clear_rocket_lock_entity = qfalse;
 
 	if (!p_veh)
@@ -5121,7 +5121,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 		int i, numMuzzles = 0, numMuzzlesReady = 0, cumulativeDelay = 0, cumulativeAmmo = 0;
 		qboolean sentAmmoWarning = qfalse;
 
-		veh_weapon = &g_vehweapon_info[vehweapon_index];
+		veh_weapon = &g_vehWeaponInfo[vehweapon_index];
 
 		if (p_veh->m_pVehicleInfo->weapon[weapon_num].linkable == 2)
 		{

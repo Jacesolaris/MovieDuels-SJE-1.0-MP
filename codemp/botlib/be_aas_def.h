@@ -199,10 +199,10 @@ using aas_t = struct aas_s
 	int numbboxes;
 	aas_bbox_t* bboxes;
 	//vertexes
-	int num_vertexes;
+	int numvertexes;
 	aas_vertex_t* vertexes;
 	//planes
-	int num_planes;
+	int numplanes;
 	aas_plane_t* planes;
 	//edges
 	int numedges;

@@ -44,7 +44,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define CLIENT_CONSOLE_TITLE "MovieDuels-MP Console (MP)"
 #define HOMEPATH_NAME_UNIX "MovieDuels-MP"
 #define HOMEPATH_NAME_WIN "MovieDuels"
-#define HOMEPATH_NAME_MACOSX HOMEPATH_NAME_WIN
 
 #define	BASEGAME "base"
 #define OPENJKGAME "MovieDuels-MP"
@@ -512,7 +511,7 @@ typedef struct sharedRagDollUpdateParams_s {
 
 //rww - update parms for ik bone stuff
 typedef struct sharedIKMoveParams_s {
-	char bone_name[512]; //name of bone
+	char boneName[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -835,8 +834,8 @@ Ghoul2 Insert Start
 typedef struct CollisionRecord_s
 {
 	float		mDistance;
-	int			mentity_num;
-	int			mmodel_index;
+	int			mEntityNum;
+	int			mModelIndex;
 	int			mPolyIndex;
 	int			mSurfaceIndex;
 	vec3_t		mCollisionPosition;

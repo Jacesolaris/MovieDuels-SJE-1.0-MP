@@ -12153,13 +12153,13 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 			{
 				//just make sure we have this veh info
 				if (pm->cmd.buttons & BUTTON_ATTACK
-					&& g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-					&& pm->ps->ammo[0] >= g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
+					&& g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+					&& pm->ps->ammo[0] >= g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
 					iAmmoPerShot
 					||
 					pm->cmd.buttons & BUTTON_ALT_ATTACK
-					&& g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming
-					&& pm->ps->ammo[1] >= g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
+					&& g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming
+					&& pm->ps->ammo[1] >= g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
 					iAmmoPerShot)
 				{
 					//pressing the appropriate fire button for the lock-on/charging weapon
@@ -12307,7 +12307,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 			if (vehicleRocketLock)
 			{
 				//check vehicle ammo
-				if (veh && pm->ps->ammo[1] < g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
+				if (veh && pm->ps->ammo[1] < g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
 					iAmmoPerShot)
 				{
 					pm->ps->weaponstate = WEAPON_CHARGING_ALT;
@@ -12347,7 +12347,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 
 			if (vehicleRocketLock)
 			{
-				if (veh && pm->ps->ammo[0] < g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
+				if (veh && pm->ps->ammo[0] < g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
 					iAmmoPerShot)
 				{
 					//check vehicle ammo
@@ -13118,8 +13118,8 @@ void PM_Weapon(void)
 #ifdef _GAME
 			pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
 #else
-			if (g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-				|| g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
+			if (g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+				|| g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
 			{
 				//our vehicle uses a rocket launcher, so do the normal checks
 				vehicleRocketLock = qtrue;
@@ -14096,8 +14096,8 @@ void PM_Weapon(void)
 	if (veh
 		&& veh->m_pVehicle)
 	{
-		if (g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-			|| g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
+		if (g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+			|| g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
 		{
 			//don't clear the rocket locking ever?
 			vehicleRocketLock = qtrue;
@@ -16417,8 +16417,8 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		VectorCopy(scale, ikP.scale);
 
 		//base pose frames for the limb
-		ikP.start_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
-		ikP.end_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
+		ikP.start_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
+		ikP.end_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
 
 		ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -16495,7 +16495,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		}
 		VectorCopy(origin, ikM.origin); //our position in the world.
 
-		ikM.bone_name[0] = 0;
+		ikM.boneName[0] = 0;
 		if (trap->G2API_IKMove(ghoul2, time, &ikM))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -16560,7 +16560,7 @@ qboolean BG_ClassHasBadBones(const int NPC_class)
 }
 
 //used to set the proper orientations for the funky NPC class bone structures.
-void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int* oUp, int* oRt, int* oFwd)
+void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int* oUp, int* oRt, int* oFwd)
 {
 	//defaults
 	*oUp = POSITIVE_X;
@@ -16570,9 +16570,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 	switch (NPC_class)
 	{
 	case CLASS_RANCOR:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("lower_lumbar", bone_name) == 0
-			|| Q_stricmp("upper_lumbar", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("lower_lumbar", boneName) == 0
+			|| Q_stricmp("upper_lumbar", boneName) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;
@@ -16582,7 +16582,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		break;
 	case CLASS_ROCKETTROOPER:
 	case CLASS_HAZARD_TROOPER:
-		if (Q_stricmp("pelvis", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0)
 		{
 			//child of root
 			//actual, when differences with root are accounted for:
@@ -16599,8 +16599,8 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		}
 		break;
 	case CLASS_SABER_DROID:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("thoracic", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("thoracic", boneName) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = NEGATIVE_Z;
@@ -16614,7 +16614,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		}
 		break;
 	case CLASS_WAMPA:
-		if (Q_stricmp("pelvis", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = POSITIVE_Y;
@@ -16629,9 +16629,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("lower_lumbar", bone_name) == 0
-			|| Q_stricmp("upper_lumbar", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("lower_lumbar", boneName) == 0
+			|| Q_stricmp("upper_lumbar", boneName) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;

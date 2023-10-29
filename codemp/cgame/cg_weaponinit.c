@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 CG_GrappleTrail
 ==========================
 */
-void CG_GrappleTrail(centity_t* ent, const weapon_info_t* wi)
+void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi)
 {
 	vec3_t origin;
 	vec3_t forward, up;
@@ -53,7 +53,7 @@ void CG_GrappleTrail(centity_t* ent, const weapon_info_t* wi)
 		return; // Don't draw if close
 
 	beam.reType = RT_ELECTRICITY;
-	beam.custom_shader = cgs.media.electricBodyShader;
+	beam.customShader = cgs.media.electricBodyShader;
 
 	AxisClear(beam.axis);
 	beam.shaderRGBA[0] = 0xff;
@@ -63,7 +63,7 @@ void CG_GrappleTrail(centity_t* ent, const weapon_info_t* wi)
 	trap->R_AddRefEntityToScene(&beam);
 }
 
-void CG_StunTrail(centity_t* ent, const weapon_info_t* wi)
+void CG_StunTrail(centity_t* ent, const weaponInfo_t* wi)
 {
 	vec3_t origin;
 	vec3_t forward, up;
@@ -86,7 +86,7 @@ void CG_StunTrail(centity_t* ent, const weapon_info_t* wi)
 		return; // Don't draw if close
 
 	beam.reType = RT_LIGHTNING;
-	beam.custom_shader = cgs.media.electricBodyShader;
+	beam.customShader = cgs.media.electricBodyShader;
 
 	AxisClear(beam.axis);
 	beam.shaderRGBA[0] = 0xff;
@@ -109,7 +109,7 @@ void CG_RegisterWeapon(const int weapon_num)
 	char path[MAX_QPATH];
 	vec3_t mins, maxs;
 
-	weapon_info_t* weaponInfo = &cg_weapons[weapon_num];
+	weaponInfo_t* weaponInfo = &cg_weapons[weapon_num];
 
 	if (weapon_num == 0)
 	{
@@ -217,10 +217,7 @@ void CG_RegisterWeapon(const int weapon_num)
 		weaponInfo->altMissileModel = trap->R_RegisterModel("models/weapons2/golan_arms/projectileMain.md3");
 		weaponInfo->muzzleEffect = trap->FX_RegisterEffect("stunbaton/muzzle_flash");
 		weaponInfo->altMuzzleEffect = trap->FX_RegisterEffect("stunbaton/muzzle_flash");
-		if (com_rend2.integer == 0) //rend2 is off
-		{
-			weaponInfo->missileTrailFunc = CG_StunTrail;
-		}
+		weaponInfo->missileTrailFunc = CG_StunTrail;
 		break;
 	case WP_MELEE:
 		trap->FX_RegisterEffect("melee/punch_impact");

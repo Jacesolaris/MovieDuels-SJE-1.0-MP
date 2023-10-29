@@ -2325,11 +2325,11 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 
 	G_SetAnim(attacker, NULL, SETANIM_BOTH, att_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
-	attacker->client->ps.saberLockFrame = bgAllAnims[attacker->localAnimIndex].anims[att_anim].firstFrame + bgAllAnims[attacker->localAnimIndex].anims[att_anim].num_frames * att_start;
+	attacker->client->ps.saberLockFrame = bgAllAnims[attacker->localAnimIndex].anims[att_anim].firstFrame + bgAllAnims[attacker->localAnimIndex].anims[att_anim].numFrames * att_start;
 
 	G_SetAnim(defender, NULL, SETANIM_BOTH, def_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
-	defender->client->ps.saberLockFrame = bgAllAnims[defender->localAnimIndex].anims[def_anim].firstFrame + bgAllAnims[defender->localAnimIndex].anims[def_anim].num_frames * def_start;
+	defender->client->ps.saberLockFrame = bgAllAnims[defender->localAnimIndex].anims[def_anim].firstFrame + bgAllAnims[defender->localAnimIndex].anims[def_anim].numFrames * def_start;
 
 	attacker->client->ps.saberLockHits = 0;
 	defender->client->ps.saberLockHits = 0;
@@ -2712,7 +2712,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 
 	while (t_n < MAX_G2_COLLISIONS)
 	{
-		g2_trace[t_n].mentity_num = -1;
+		g2_trace[t_n].mEntityNum = -1;
 		t_n++;
 	}
 	gentity_t* g2_hit = &g_entities[tr->entity_num];
@@ -2753,7 +2753,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 				f_radius);
 		}
 
-		if (g2_trace[0].mentity_num != g2_hit->s.number)
+		if (g2_trace[0].mEntityNum != g2_hit->s.number)
 		{
 			tr->fraction = 1.0f;
 			tr->entity_num = ENTITYNUM_NONE;
@@ -2770,7 +2770,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 		{
 			g2_hit->client->g2LastSurfaceHit = g2_trace[0].mSurfaceIndex;
 			g2_hit->client->g2LastSurfaceTime = level.time;
-			g2_hit->client->g2LastSurfaceModel = g2_trace[0].mmodel_index;
+			g2_hit->client->g2LastSurfaceModel = g2_trace[0].mModelIndex;
 		}
 		return qtrue;
 	}
@@ -8848,7 +8848,7 @@ void WP_SaberAddG2Model(gentity_t* saberent, const char* saber_model, const qhan
 	{
 		saberent->s.modelindex = G_ModelIndex(DEFAULT_SABER_MODEL);
 	}
-	//FIXME: use custom_skin?
+	//FIXME: use customSkin?
 	trap->G2API_InitGhoul2Model(&saberent->ghoul2, saber_model, saberent->s.modelindex, saber_skin, 0, 0, 0);
 }
 
@@ -12386,20 +12386,10 @@ nextStep:
 				}
 				else
 				{
-					if (g_overpoweredsaberthrow.integer == 1)
-					{
-						saberent->s.apos.trType = TR_LINEAR;
-						saberent->s.apos.trDelta[0] = 0;
-						saberent->s.apos.trDelta[1] = 800;
-						saberent->s.apos.trDelta[2] = 0;
-					}
-					else
-					{
-						saberent->s.apos.trType = TR_LINEAR;;
-						saberent->s.apos.trDelta[0] = 600;
-						saberent->s.apos.trDelta[1] = 0;
-						saberent->s.apos.trDelta[2] = 0;
-					}
+					saberent->s.apos.trType = TR_LINEAR;;
+					saberent->s.apos.trDelta[0] = 600;
+					saberent->s.apos.trDelta[1] = 0;
+					saberent->s.apos.trDelta[2] = 0;
 				}
 
 				saberent->s.pos.trType = TR_LINEAR;
