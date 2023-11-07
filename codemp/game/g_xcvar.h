@@ -243,5 +243,7 @@ XCVAR_DEF(g_VaderBreath, "1", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_ffaRespawn, "20", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_update6firststartup, "1", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_totgfirststartup, "1", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_AllowWeather, "1", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(r_weather, "0", NULL, CVAR_ARCHIVE, qtrue)
 
 #undef XCVAR_DEF

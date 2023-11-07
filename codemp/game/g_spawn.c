@@ -469,7 +469,6 @@ void SP_CreateWind(gentity_t* ent);
 void SP_CreateSpaceDust(gentity_t* ent);
 void SP_CreateSnow(gentity_t* ent);
 void SP_CreateRain(gentity_t* ent);
-void SP_CreateWeather(gentity_t* ent);
 void SP_CreateLava(gentity_t* ent);
 
 void SP_point_combat(gentity_t* self);
@@ -784,7 +783,6 @@ spawn_t spawns[] = {
 	{"waypoint_navgoal_8", SP_waypoint_navgoal_8},
 	{"waypoint_small", SP_waypoint_small},
 	{"emplaced_eweb", SP_emplaced_eweb},
-	{"weather", SP_CreateWeather},
 };
 
 /*

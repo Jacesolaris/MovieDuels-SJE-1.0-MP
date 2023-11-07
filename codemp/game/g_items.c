@@ -4095,6 +4095,11 @@ void IT_LoadWeatherParms(void)
 {
 	vmCvar_t mapname;
 
+	if (g_AllowWeather.integer != 1)
+	{
+		return;
+	}
+
 	trap->Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
 
 	trap->SendConsoleCommand(EXEC_INSERT, va("exec Weather/%s", mapname.string, mapname.string, mapname.string));
