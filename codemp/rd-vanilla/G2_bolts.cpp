@@ -49,7 +49,7 @@ int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int bone_num)
 }
 
 // Given a bone number, see if that surface is already in our surfacelist list
-int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, const int flags)
+int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surfaceNum, const int flags)
 {
 	// look through entire list
 	for (size_t i = 0; i < bltlist.size(); i++)
@@ -60,7 +60,7 @@ int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, c
 			continue;
 		}
 
-		if (bltlist[i].surfaceNumber == surface_num && (bltlist[i].surfaceType & flags) == flags)
+		if (bltlist[i].surfaceNumber == surfaceNum && (bltlist[i].surfaceType & flags) == flags)
 		{
 			return i;
 		}
@@ -122,7 +122,7 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const
 int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const char* bone_name)
 {
 	assert(ghl_info && ghl_info->mValid);
-	const auto mod_m = const_cast<model_t*>(ghl_info->current_model);
+	const auto mod_m = const_cast<model_t*>(ghl_info->currentModel);
 	const model_t* mod_a = const_cast<model_t*>(ghl_info->animModel);
 	int					x;
 	boltInfo_t			tempBolt;

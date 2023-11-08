@@ -1252,13 +1252,13 @@ int G2_Find_Bone_Rag(const CGhoul2Info* ghl_info, const boneInfo_v& blist, const
 	const mdxaSkelOffsets_t* offsets = reinterpret_cast<mdxaSkelOffsets_t*>((byte*)ghl_info->aHeader + sizeof(mdxaHeader_t));
 
 	/*
-	model_t			*current_model;
+	model_t			*currentModel;
 	model_t			*animModel;
 	mdxaHeader_t	*aHeader;
 
-	current_model = R_GetModelByHandle(RE_RegisterModel(ghl_info->mFileName));
-	assert(current_model);
-	animModel =  R_GetModelByHandle(current_model->mdxm->animIndex);
+	currentModel = R_GetModelByHandle(RE_RegisterModel(ghl_info->mFileName));
+	assert(currentModel);
+	animModel =  R_GetModelByHandle(currentModel->mdxm->animIndex);
 	assert(animModel);
 	aHeader = animModel->mdxa;
 	assert(aHeader);

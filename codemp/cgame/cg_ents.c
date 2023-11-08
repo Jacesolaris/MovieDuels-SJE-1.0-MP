@@ -4470,7 +4470,7 @@ void CG_Cube(vec3_t mins, vec3_t maxs, vec3_t color, const float alpha)
 		//- face
 		apArgs.p[0][vec[0]] = apArgs.p[1][vec[0]] = apArgs.p[2][vec[0]] = apArgs.p[3][vec[0]] = mins[vec[0]];
 
-		apArgs.num_verts = 4;
+		apArgs.numVerts = 4;
 		apArgs.alpha1 = apArgs.alpha2 = alpha;
 		VectorCopy(color, apArgs.rgb1);
 		VectorCopy(color, apArgs.rgb2);

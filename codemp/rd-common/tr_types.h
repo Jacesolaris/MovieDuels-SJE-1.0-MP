@@ -106,7 +106,7 @@ typedef struct polyVert_s
 typedef struct poly_s
 {
 	qhandle_t h_shader;
-	int num_verts;
+	int numVerts;
 	polyVert_t* verts;
 } poly_t;
 

@@ -212,7 +212,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, int model_index, const char* s
 int G2_AddSurface(CGhoul2Info* ghoul2, int surface_number, int poly_number, float barycentric_i, float barycentric_j,
 	int lod);
 qboolean G2_RemoveSurface(surfaceInfo_v& slist, int index);
-surfaceInfo_t* G2_FindOverrideSurface(int surface_num, surfaceInfo_v& surface_list);
+surfaceInfo_t* G2_FindOverrideSurface(int surfaceNum, surfaceInfo_v& surface_list);
 int G2_IsSurfaceLegal(void* mod, const char* surface_name, int* flags);
 int G2_GetParentSurface(const CGhoul2Info* ghl_info, int index);
 int G2_GetSurfaceIndex(const CGhoul2Info* ghl_info, const char* surface_name);
@@ -284,7 +284,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const char* bo
 qboolean G2_Remove_Bolt(boltInfo_v& bltlist, int index);
 void G2_Init_Bolt_List(boltInfo_v& bltlist);
 int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, int bone_num);
-int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, int surface_num, int flags);
+int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, int surfaceNum, int flags);
 int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceInfo_v& slist, int surf_num);
 void G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, const int* activeSurfaces,
 	const int* activeBones);
@@ -424,6 +424,6 @@ void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2);
 #endif // _SOF2
 
 int G2API_Ghoul2Size(const CGhoul2Info_v& ghoul2);
-void RemoveBoneCache(const CBoneCache* bone_cache);
+void RemoveBoneCache(const CBoneCache* boneCache);
 
 const char* G2API_GetModelName(CGhoul2Info_v& ghoul2, int model_index);

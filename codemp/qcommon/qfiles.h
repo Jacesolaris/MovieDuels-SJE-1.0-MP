@@ -104,8 +104,8 @@ typedef struct md3Tag_s {
 ** header			sizeof( md3Surface_t )
 ** shaders			sizeof( md3Shader_t ) * numShaders
 ** triangles[0]		sizeof( md3Triangle_t ) * numTriangles
-** st				sizeof( md3St_t ) * num_verts
-** XyzNormals		sizeof( md3XyzNormal_t ) * num_verts * numFrames
+** st				sizeof( md3St_t ) * numVerts
+** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * numFrames
 */
 typedef struct md3Surface_s {
 	int		ident;				//
@@ -116,14 +116,14 @@ typedef struct md3Surface_s {
 	int		numFrames;			// all surfaces in a model should have the same
 
 	int		numShaders;			// all surfaces in a model should have the same
-	int		num_verts;
+	int		numVerts;
 
 	int		numTriangles;
 	int		ofsTriangles;
 
 	int		ofsShaders;			// offset from start of md3Surface_t
 	int		ofsSt;				// texture coords are common for all frames
-	int		ofsXyzNormals;		// num_verts * numFrames
+	int		ofsXyzNormals;		// numVerts * numFrames
 
 	int		ofsEnd;				// next surface follows
 } md3Surface_t;
@@ -352,7 +352,7 @@ typedef struct dsurface_s {
 	int			surfaceType;
 
 	int			firstVert;
-	int			num_verts;
+	int			numVerts;
 
 	int			firstIndex;
 	int			num_indexes;

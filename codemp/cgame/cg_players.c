@@ -6233,7 +6233,7 @@ void CG_PlayerHitFX(centity_t* cent)
 CG_LightVerts
 =================
 */
-int CG_LightVerts(vec3_t normal, const int num_verts, polyVert_t* verts)
+int CG_LightVerts(vec3_t normal, const int numVerts, polyVert_t* verts)
 {
 	vec3_t ambient_light;
 	vec3_t light_dir;
@@ -6241,7 +6241,7 @@ int CG_LightVerts(vec3_t normal, const int num_verts, polyVert_t* verts)
 
 	trap->R_LightForPoint(verts[0].xyz, ambient_light, directed_light, light_dir);
 
-	for (int i = 0; i < num_verts; i++)
+	for (int i = 0; i < numVerts; i++)
 	{
 		const float incoming = DotProduct(normal, light_dir);
 		if (incoming <= 0)
@@ -12298,7 +12298,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 				return;
 			}
 
-			apArgs.num_verts = mf->num_points;
+			apArgs.numVerts = mf->num_points;
 			VectorCopy(vec3_origin, apArgs.vel);
 			VectorCopy(vec3_origin, apArgs.accel);
 
@@ -12340,7 +12340,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			mark->time = cg.time;
 			mark->alphaFade = qtrue;
 			mark->markShader = cgs.media.rivetMarkShader;
-			mark->poly.num_verts = mf->num_points;
+			mark->poly.numVerts = mf->num_points;
 			mark->color[0] = mark->color[1] = mark->color[2] = mark->color[3] = 255;
 			memcpy(mark->verts, verts, mf->num_points * sizeof verts[0]);
 
@@ -12350,7 +12350,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			mark->time = cg.time - 8500;
 			mark->alphaFade = qfalse;
 			mark->markShader = cgs.media.mSaberDamageGlow;
-			mark->poly.num_verts = mf->num_points;
+			mark->poly.numVerts = mf->num_points;
 			mark->color[0] = 215 + Q_flrand(0.0f, 1.0f) * 40.0f;
 			mark->color[1] = 96 + Q_flrand(0.0f, 1.0f) * 32.0f;
 			mark->color[2] = mark->color[3] = Q_flrand(0.0f, 1.0f) * 15.0f;

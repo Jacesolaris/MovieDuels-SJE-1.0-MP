@@ -321,7 +321,7 @@ public:
 	// these occasionally are not valid (like after a vid_restart)
 	// call the questionably efficient G2_SetupModelPointers(this) to insure validity
 	bool mValid; // all the below are proper and valid
-	const model_s* current_model;
+	const model_s* currentModel;
 	int currentModelSize;
 	const model_s* animModel;
 	int currentAnimModelSize;
@@ -351,7 +351,7 @@ public:
 		mBoneCache(nullptr),
 		mSkin(0),
 		mValid(false),
-		current_model(nullptr),
+		currentModel(nullptr),
 		currentModelSize(0),
 		animModel(nullptr),
 		currentAnimModelSize(0),

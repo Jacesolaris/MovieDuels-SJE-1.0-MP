@@ -232,11 +232,11 @@ RB_SurfacePolychain
 void RB_SurfacePolychain(const srfPoly_t* p) {
 	int		i;
 
-	RB_CHECKOVERFLOW(p->num_verts, 3 * (p->num_verts - 2));
+	RB_CHECKOVERFLOW(p->numVerts, 3 * (p->numVerts - 2));
 
 	// fan triangles into the tess array
 	int numv = tess.num_vertexes;
-	for (i = 0; i < p->num_verts; i++) {
+	for (i = 0; i < p->numVerts; i++) {
 		VectorCopy(p->verts[i].xyz, tess.xyz[numv]);
 		tess.texCoords[numv][0][0] = p->verts[i].st[0];
 		tess.texCoords[numv][0][1] = p->verts[i].st[1];
@@ -246,7 +246,7 @@ void RB_SurfacePolychain(const srfPoly_t* p) {
 	}
 
 	// generate fan indexes into the tess array
-	for (i = 0; i < p->num_verts - 2; i++) {
+	for (i = 0; i < p->numVerts - 2; i++) {
 		tess.indexes[tess.num_indexes + 0] = tess.num_vertexes;
 		tess.indexes[tess.num_indexes + 1] = tess.num_vertexes + i + 1;
 		tess.indexes[tess.num_indexes + 2] = tess.num_vertexes + i + 2;
@@ -305,7 +305,7 @@ void RB_SurfaceTriangles(const srfTriangles_t* srf) {
 	const int dlight_bits = srf->dlight_bits;
 	tess.dlight_bits |= dlight_bits;
 
-	RB_CHECKOVERFLOW(srf->num_verts, srf->num_indexes);
+	RB_CHECKOVERFLOW(srf->numVerts, srf->num_indexes);
 
 	for (i = 0; i < srf->num_indexes; i += 3) {
 		tess.indexes[tess.num_indexes + i + 0] = tess.num_vertexes + srf->indexes[i + 0];
@@ -320,7 +320,7 @@ void RB_SurfaceTriangles(const srfTriangles_t* srf) {
 	float* texCoords = tess.texCoords[tess.num_vertexes][0];
 	byte* color = tess.vertexColors[tess.num_vertexes];
 
-	for (i = 0; i < srf->num_verts; i++, dv++)
+	for (i = 0; i < srf->numVerts; i++, dv++)
 	{
 		xyz[0] = dv->xyz[0];
 		xyz[1] = dv->xyz[1];
@@ -353,11 +353,11 @@ void RB_SurfaceTriangles(const srfTriangles_t* srf) {
 		color += 4;
 	}
 
-	for (i = 0; i < srf->num_verts; i++) {
+	for (i = 0; i < srf->numVerts; i++) {
 		tess.vertexdlight_bits[tess.num_vertexes + i] = dlight_bits;
 	}
 
-	tess.num_vertexes += srf->num_verts;
+	tess.num_vertexes += srf->numVerts;
 }
 
 /*
@@ -1339,19 +1339,19 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 	float* out_normal = tess.normal[tess.num_vertexes];
 
 	short* new_xyz = reinterpret_cast<short*>(reinterpret_cast<byte*>(surf) + surf->ofsXyzNormals)
-		+ backEnd.currentEntity->e.frame * surf->num_verts * 4;
+		+ backEnd.currentEntity->e.frame * surf->numVerts * 4;
 	short* new_normals = new_xyz + 3;
 
 	const float new_xyz_scale = MD3_XYZ_SCALE * (1.0 - backlerp);
 	const float new_normal_scale = 1.0 - backlerp;
 
-	const int num_verts = surf->num_verts;
+	const int numVerts = surf->numVerts;
 
 	if (backlerp == 0) {
 		//
 		// just copy the vertexes
 		//
-		for (vert_num = 0; vert_num < num_verts; vert_num++,
+		for (vert_num = 0; vert_num < numVerts; vert_num++,
 			new_xyz += 4, new_normals += 4,
 			out_xyz += 4, out_normal += 4)
 		{
@@ -1377,13 +1377,13 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 		// interpolate and copy the vertex and normal
 		//
 		short* old_xyz = reinterpret_cast<short*>(reinterpret_cast<byte*>(surf) + surf->ofsXyzNormals)
-			+ backEnd.currentEntity->e.oldframe * surf->num_verts * 4;
+			+ backEnd.currentEntity->e.oldframe * surf->numVerts * 4;
 		short* old_normals = old_xyz + 3;
 
 		const float old_xyz_scale = MD3_XYZ_SCALE * backlerp;
 		const float old_normal_scale = backlerp;
 
-		for (vert_num = 0; vert_num < num_verts; vert_num++,
+		for (vert_num = 0; vert_num < numVerts; vert_num++,
 			old_xyz += 4, new_xyz += 4, old_normals += 4, new_normals += 4,
 			out_xyz += 4, out_normal += 4)
 		{
@@ -1418,7 +1418,7 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 
 			//			VectorNormalize (outNormal);
 		}
-		VectorArrayNormalize((vec4_t*)tess.normal[tess.num_vertexes], num_verts);
+		VectorArrayNormalize((vec4_t*)tess.normal[tess.num_vertexes], numVerts);
 	}
 }
 
@@ -1438,7 +1438,7 @@ void RB_SurfaceMesh(md3Surface_t* surface) {
 		backlerp = backEnd.currentEntity->e.backlerp;
 	}
 
-	RB_CHECKOVERFLOW(surface->num_verts, surface->numTriangles * 3);
+	RB_CHECKOVERFLOW(surface->numVerts, surface->numTriangles * 3);
 
 	LerpMeshVertexes(surface, backlerp);
 
@@ -1453,14 +1453,14 @@ void RB_SurfaceMesh(md3Surface_t* surface) {
 
 	const float* tex_coords = reinterpret_cast<float*>(reinterpret_cast<byte*>(surface) + surface->ofsSt);
 
-	const int num_verts = surface->num_verts;
-	for (j = 0; j < num_verts; j++) {
+	const int numVerts = surface->numVerts;
+	for (j = 0; j < numVerts; j++) {
 		tess.texCoords[doug + j][0][0] = tex_coords[j * 2 + 0];
 		tess.texCoords[doug + j][0][1] = tex_coords[j * 2 + 1];
 		// FIXME: fill in lightmapST for completeness?
 	}
 
-	tess.num_vertexes += surface->num_verts;
+	tess.num_vertexes += surface->numVerts;
 }
 
 /*

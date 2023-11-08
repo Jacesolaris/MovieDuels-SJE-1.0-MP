@@ -347,7 +347,7 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 		surf->shader = tr.defaultShader;
 	}
 
-	int num_points = ds->num_verts;
+	int num_points = ds->numVerts;
 	if (num_points > MAX_FACE_POINTS) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: MAX_FACE_POINTS exceeded: %i\n", num_points);
 		num_points = MAX_FACE_POINTS;
@@ -500,30 +500,30 @@ static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* sur
 		surf->shader = tr.defaultShader;
 	}
 
-	const int num_verts = ds->num_verts;
+	const int numVerts = ds->numVerts;
 	const int num_indexes = ds->num_indexes;
 
-	if (num_verts >= SHADER_MAX_VERTEXES) {
-		Com_Error(ERR_DROP, "ParseTriSurf: verts > MAX (%d > %d) on misc_model %s", num_verts, SHADER_MAX_VERTEXES, surf->shader->name);
+	if (numVerts >= SHADER_MAX_VERTEXES) {
+		Com_Error(ERR_DROP, "ParseTriSurf: verts > MAX (%d > %d) on misc_model %s", numVerts, SHADER_MAX_VERTEXES, surf->shader->name);
 	}
 	if (num_indexes >= SHADER_MAX_INDEXES) {
 		Com_Error(ERR_DROP, "ParseTriSurf: indices > MAX (%d > %d) on misc_model %s", num_indexes, SHADER_MAX_INDEXES, surf->shader->name);
 	}
 
-	srfTriangles_t* tri = static_cast<srfTriangles_t*>(Hunk_Alloc(sizeof * tri + num_verts * sizeof tri->verts[0]
+	srfTriangles_t* tri = static_cast<srfTriangles_t*>(Hunk_Alloc(sizeof * tri + numVerts * sizeof tri->verts[0]
 		+ num_indexes * sizeof tri->indexes[0], h_low));
 	tri->surfaceType = SF_TRIANGLES;
-	tri->num_verts = num_verts;
+	tri->numVerts = numVerts;
 	tri->num_indexes = num_indexes;
 	tri->verts = reinterpret_cast<drawVert_t*>(tri + 1);
-	tri->indexes = reinterpret_cast<int*>(tri->verts + tri->num_verts);
+	tri->indexes = reinterpret_cast<int*>(tri->verts + tri->numVerts);
 
 	surf->data = reinterpret_cast<surfaceType_t*>(tri);
 
 	// copy vertexes
 	ClearBounds(tri->bounds[0], tri->bounds[1]);
 	verts += LittleLong ds->firstVert;
-	for (i = 0; i < num_verts; i++) {
+	for (i = 0; i < numVerts; i++) {
 		for (j = 0; j < 3; j++) {
 			tri->verts[i].xyz[j] = LittleFloat verts[i].xyz[j];
 			tri->verts[i].normal[j] = LittleFloat verts[i].normal[j];
@@ -547,7 +547,7 @@ static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* sur
 	indexes += LittleLong ds->firstIndex;
 	for (i = 0; i < num_indexes; i++) {
 		tri->indexes[i] = LittleLong indexes[i];
-		if (tri->indexes[i] < 0 || tri->indexes[i] >= num_verts) {
+		if (tri->indexes[i] < 0 || tri->indexes[i] >= numVerts) {
 			Com_Error(ERR_DROP, "Bad index in triangle surface");
 		}
 	}

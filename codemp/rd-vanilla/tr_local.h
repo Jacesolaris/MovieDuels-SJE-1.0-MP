@@ -591,7 +591,7 @@ using srfPoly_t = struct srfPoly_s {
 	surfaceType_t	surfaceType;
 	qhandle_t		h_shader;
 	int				fogIndex;
-	int				num_verts;
+	int				numVerts;
 	polyVert_t* verts;
 };
 
@@ -670,7 +670,7 @@ using srfTriangles_t = struct srfTriangles_s {
 	int				num_indexes;
 	int* indexes;
 
-	int				num_verts;
+	int				numVerts;
 	drawVert_t* verts;
 	//	vec3_t			*tangents;
 };
@@ -965,7 +965,7 @@ using trGlobals_t = struct trGlobals_s {
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
 	int						currentEntityNum;
 	int						shiftedEntityNum;	// currentEntityNum << QSORT_REFENTITYNUM_SHIFT
-	model_t* current_model;
+	model_t* currentModel;
 
 	viewParms_t				viewParms;
 
@@ -1548,7 +1548,7 @@ void R_InitNextFrame(void);
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* ent);
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int num_polys);
+void RE_AddPolyToScene(qhandle_t h_shader, int numVerts, const polyVert_t* verts, int num_polys);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
@@ -1572,7 +1572,7 @@ public:
 #else
 	const int		ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
 #endif
-	CBoneCache* bone_cache;
+	CBoneCache* boneCache;
 	mdxmSurface_t* surfaceData;	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 #ifdef _G2_GORE
 	float* alternateTex;		// alternate texture coordinates.
@@ -1587,7 +1587,7 @@ public:
 	CRenderableSurface& operator= (const CRenderableSurface& src)
 	{
 		ident = src.ident;
-		bone_cache = src.bone_cache;
+		boneCache = src.boneCache;
 		surfaceData = src.surfaceData;
 		alternateTex = src.alternateTex;
 		goreChain = src.goreChain;
@@ -1598,7 +1598,7 @@ public:
 
 	CRenderableSurface() :
 		ident(SF_MDX),
-		bone_cache(nullptr),
+		boneCache(nullptr),
 #ifdef _G2_GORE
 		surfaceData(nullptr),
 		alternateTex(nullptr),
@@ -1612,7 +1612,7 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		bone_cache = nullptr;
+		boneCache = nullptr;
 		surfaceData = nullptr;
 		alternateTex = nullptr;
 		goreChain = nullptr;

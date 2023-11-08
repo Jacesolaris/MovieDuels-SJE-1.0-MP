@@ -858,7 +858,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 		{
 			LL(surf->numTriangles);
 			LL(surf->ofsTriangles);
-			LL(surf->num_verts);
+			LL(surf->numVerts);
 			LL(surf->ofsVerts);
 			LL(surf->ofsEnd);
 			LL(surf->ofsHeader);
@@ -867,7 +867,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			triCount += surf->numTriangles;
 
-			if (surf->num_verts > SHADER_MAX_VERTEXES)
+			if (surf->numVerts > SHADER_MAX_VERTEXES)
 			{
 				return qfalse;
 			}
@@ -903,7 +903,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			// swap all the vertexes
 			v = (mdxmVertex_t*)((byte*)surf + surf->ofsVerts);
-			for (j = 0; j < surf->num_verts; j++)
+			for (j = 0; j < surf->numVerts; j++)
 			{
 				v->normal[0] = LittleFloat(v->normal[0]);
 				v->normal[1] = LittleFloat(v->normal[1]);
@@ -1460,16 +1460,16 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
-		LL(surf->num_verts);
+		LL(surf->numVerts);
 		LL(surf->ofsShaders);
 		LL(surf->ofsSt);
 		LL(surf->ofsXyzNormals);
 		LL(surf->ofsEnd);
 
-		if (surf->num_verts > SHADER_MAX_VERTEXES)
+		if (surf->numVerts > SHADER_MAX_VERTEXES)
 		{
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i verts on a surface (%i)",
-				name, SHADER_MAX_VERTEXES, surf->num_verts);
+				name, SHADER_MAX_VERTEXES, surf->numVerts);
 		}
 		if (surf->numTriangles * 3 > SHADER_MAX_INDEXES)
 		{
@@ -1505,14 +1505,14 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		// swap all the ST
 		st = (md3St_t*)((byte*)surf + surf->ofsSt);
-		for (j = 0; j < surf->num_verts; j++, st++) {
+		for (j = 0; j < surf->numVerts; j++, st++) {
 			st->st[0] = LittleFloat(st->st[0]);
 			st->st[1] = LittleFloat(st->st[1]);
 		}
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
+		for (j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++)
 		{
 			xyz->xyz[0] = LittleShort(xyz->xyz[0]);
 			xyz->xyz[1] = LittleShort(xyz->xyz[1]);

@@ -449,7 +449,7 @@ static void CGFX_AddLine(vec3_t start, vec3_t end, const float size1, const floa
 
 static void CGFX_AddPoly(addpolyArgStruct_t* p)
 {
-	FX_AddPoly(p->p, p->ev, p->num_verts, p->vel, p->accel, p->alpha1, p->alpha2, p->alphaParm, p->rgb1, p->rgb2,
+	FX_AddPoly(p->p, p->ev, p->numVerts, p->vel, p->accel, p->alpha1, p->alpha2, p->alphaParm, p->rgb1, p->rgb2,
 		p->rgbParm, p->rotationDelta, p->bounce, p->motionDelay, p->killTime, p->shader, p->flags);
 }
 

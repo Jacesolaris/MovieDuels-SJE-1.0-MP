@@ -217,7 +217,7 @@ void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_
 		mark->time = cg.time;
 		mark->alphaFade = alpha_fade;
 		mark->markShader = mark_shader;
-		mark->poly.num_verts = mf->num_points;
+		mark->poly.numVerts = mf->num_points;
 		mark->color[0] = red;
 		mark->color[1] = green;
 		mark->color[2] = blue;
@@ -267,7 +267,7 @@ void CG_AddMarks(void)
 			const int fade = 255 * t / MARK_FADE_TIME;
 			if (mp->alphaFade)
 			{
-				for (j = 0; j < mp->poly.num_verts; j++)
+				for (j = 0; j < mp->poly.numVerts; j++)
 				{
 					mp->verts[j].modulate[3] = fade;
 				}
@@ -275,7 +275,7 @@ void CG_AddMarks(void)
 			else
 			{
 				const float f = (float)t / MARK_FADE_TIME;
-				for (j = 0; j < mp->poly.num_verts; j++)
+				for (j = 0; j < mp->poly.numVerts; j++)
 				{
 					mp->verts[j].modulate[0] = mp->color[0] * f;
 					mp->verts[j].modulate[1] = mp->color[1] * f;
@@ -285,7 +285,7 @@ void CG_AddMarks(void)
 		}
 		else
 		{
-			for (j = 0; j < mp->poly.num_verts; j++)
+			for (j = 0; j < mp->poly.numVerts; j++)
 			{
 				mp->verts[j].modulate[0] = mp->color[0];
 				mp->verts[j].modulate[1] = mp->color[1];
@@ -293,6 +293,6 @@ void CG_AddMarks(void)
 			}
 		}
 
-		trap->R_AddPolysToScene(mp->markShader, mp->poly.num_verts, mp->verts, 1);
+		trap->R_AddPolysToScene(mp->markShader, mp->poly.numVerts, mp->verts, 1);
 	}
 }

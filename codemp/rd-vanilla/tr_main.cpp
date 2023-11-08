@@ -1276,14 +1276,14 @@ void R_AddEntitySurfaces(void)
 			// we must set up parts of tr.ori for model culling
 			R_RotateForEntity(ent, &tr.viewParms, &tr.ori);
 
-			tr.current_model = R_GetModelByHandle(ent->e.hModel);
-			if (!tr.current_model)
+			tr.currentModel = R_GetModelByHandle(ent->e.hModel);
+			if (!tr.currentModel)
 			{
 				R_AddDrawSurf(&entitySurface, tr.defaultShader, 0, 0);
 			}
 			else
 			{
-				switch (tr.current_model->type)
+				switch (tr.currentModel->type)
 				{
 				case MOD_MESH:
 					R_AddMD3Surfaces(ent);

@@ -895,7 +895,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 		{
 			LL(surf->thisSurfaceIndex);
 			LL(surf->ofsHeader);
-			LL(surf->num_verts);
+			LL(surf->numVerts);
 			LL(surf->ofsVerts);
 			LL(surf->numTriangles);
 			LL(surf->ofsTriangles);
@@ -905,7 +905,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			triCount += surf->numTriangles;
 
-			if (surf->num_verts > SHADER_MAX_VERTEXES) {
+			if (surf->numVerts > SHADER_MAX_VERTEXES) {
 				return qfalse;
 			}
 			if (surf->numTriangles * 3 > SHADER_MAX_INDEXES) {
@@ -939,9 +939,9 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			// swap all the vertexes
 			v = (mdxmVertex_t*)((byte*)surf + surf->ofsVerts);
-			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->num_verts];
+			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->numVerts];
 
-			for (j = 0; j < surf->num_verts; j++)
+			for (j = 0; j < surf->numVerts; j++)
 			{
 				LF(v->normal[0]);
 				LF(v->normal[1]);
@@ -1455,15 +1455,15 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
-		LL(surf->num_verts);
+		LL(surf->numVerts);
 		LL(surf->ofsShaders);
 		LL(surf->ofsSt);
 		LL(surf->ofsXyzNormals);
 		LL(surf->ofsEnd);
 
-		if (surf->num_verts >= SHADER_MAX_VERTEXES) {
+		if (surf->numVerts >= SHADER_MAX_VERTEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i verts on %s (%i)",
-				name, SHADER_MAX_VERTEXES - 1, surf->name[0] ? surf->name : "a surface", surf->num_verts);
+				name, SHADER_MAX_VERTEXES - 1, surf->name[0] ? surf->name : "a surface", surf->numVerts);
 		}
 		if (surf->numTriangles * 3 >= SHADER_MAX_INDEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i triangles on %s (%i)",
@@ -1505,14 +1505,14 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		// swap all the ST
 		st = (md3St_t*)((byte*)surf + surf->ofsSt);
-		for (j = 0; j < surf->num_verts; j++, st++) {
+		for (j = 0; j < surf->numVerts; j++, st++) {
 			LF(st->st[0]);
 			LF(st->st[1]);
 		}
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
+		for (j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);
