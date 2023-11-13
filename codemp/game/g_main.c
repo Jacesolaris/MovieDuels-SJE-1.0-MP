@@ -4221,14 +4221,14 @@ static void G_Animate(gentity_t* self)
 	{
 		return;
 	}
-	if (self->s.frame == self->end_frame)
+	if (self->s.frame == self->endFrame)
 	{
 		if (self->r.svFlags & SVF_ANIMATING)
 		{
 			{
 				if (self->loopAnim)
 				{
-					self->s.frame = self->start_frame;
+					self->s.frame = self->startFrame;
 				}
 				else
 				{
@@ -4243,22 +4243,22 @@ static void G_Animate(gentity_t* self)
 
 	self->r.svFlags |= SVF_ANIMATING;
 
-	if (self->start_frame < self->end_frame)
+	if (self->startFrame < self->endFrame)
 	{
-		if (self->s.frame < self->start_frame || self->s.frame > self->end_frame)
+		if (self->s.frame < self->startFrame || self->s.frame > self->endFrame)
 		{
-			self->s.frame = self->start_frame;
+			self->s.frame = self->startFrame;
 		}
 		else
 		{
 			self->s.frame++;
 		}
 	}
-	else if (self->start_frame > self->end_frame)
+	else if (self->startFrame > self->endFrame)
 	{
-		if (self->s.frame > self->start_frame || self->s.frame < self->end_frame)
+		if (self->s.frame > self->startFrame || self->s.frame < self->endFrame)
 		{
-			self->s.frame = self->start_frame;
+			self->s.frame = self->startFrame;
 		}
 		else
 		{
@@ -4267,7 +4267,7 @@ static void G_Animate(gentity_t* self)
 	}
 	else
 	{
-		self->s.frame = self->end_frame;
+		self->s.frame = self->endFrame;
 	}
 }
 

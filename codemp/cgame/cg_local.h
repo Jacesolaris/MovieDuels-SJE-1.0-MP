@@ -451,7 +451,7 @@ typedef struct centity_s {
 	void* ghoul2weapon2;//[DualPistols]
 
 	float			radius;
-	int				bolt_info;
+	int				boltInfo;
 
 	//sometimes used as a bolt index, but these values are also used as generic values for clientside entities
 	//at times
@@ -1578,7 +1578,7 @@ typedef struct cgMedia_s {
 
 	sfxHandle_t	holocronPickup;
 
-	qhandle_t	load_SerenitySaberSystems;
+	//qhandle_t	load_SerenitySaberSystems;
 
 	// Zoom
 	sfxHandle_t	zoomStart;

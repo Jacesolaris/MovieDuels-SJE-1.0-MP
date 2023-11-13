@@ -103,7 +103,7 @@ void G2Time_ReportTimers(void)
 
 bool HackadelicOnClient = false; // means this is a render traversal
 
-qboolean G2_SetupModelPointers(CGhoul2Info* ghl_info);
+qboolean G2_SetupModelPointers(CGhoul2Info* ghlInfo);
 qboolean G2_SetupModelPointers(CGhoul2Info_v& ghoul2);
 
 extern cvar_t* r_Ghoul2AnimSmooth;
@@ -1107,10 +1107,10 @@ void UnCompressBone(float mat[3][4], const int iBoneIndex, const mdxaHeader_t* p
 void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_frames_in_file, int& current_frame, int& new_frame,
 	float& lerp)
 {
-	assert(bone.start_frame >= 0);
-	assert(bone.start_frame <= num_frames_in_file);
-	assert(bone.end_frame >= 0);
-	assert(bone.end_frame <= num_frames_in_file);
+	assert(bone.startFrame >= 0);
+	assert(bone.startFrame <= num_frames_in_file);
+	assert(bone.endFrame >= 0);
+	assert(bone.endFrame <= num_frames_in_file);
 
 	// yes - add in animation speed to current frame
 	const float animSpeed = bone.animSpeed;
@@ -1127,16 +1127,16 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 	{
 		time = 0.0f;
 	}
-	float newFrame_g = bone.start_frame + time * animSpeed;
+	float newFrame_g = bone.startFrame + time * animSpeed;
 
-	const int animSize = bone.end_frame - bone.start_frame;
-	const float end_frame = static_cast<float>(bone.end_frame);
+	const int animSize = bone.endFrame - bone.startFrame;
+	const float endFrame = static_cast<float>(bone.endFrame);
 	// we are supposed to be animating right?
 	if (animSize)
 	{
 		// did we run off the end?
-		if (animSpeed > 0.0f && newFrame_g > end_frame - 1 ||
-			animSpeed < 0.0f && newFrame_g < end_frame + 1)
+		if (animSpeed > 0.0f && newFrame_g > endFrame - 1 ||
+			animSpeed < 0.0f && newFrame_g < endFrame + 1)
 		{
 			// yep - decide what to do
 			if (bone.flags & BONE_ANIM_OVERRIDE_LOOP)
@@ -1148,22 +1148,22 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 					// if we do, let me know, I need to insure the mod works
 
 					// should we be creating a virtual frame?
-					if (newFrame_g < end_frame + 1 && newFrame_g >= end_frame)
+					if (newFrame_g < endFrame + 1 && newFrame_g >= endFrame)
 					{
 						// now figure out what we are lerping between
 						// delta is the fraction between this frame and the next, since the new anim is always at a .0f;
-						lerp = end_frame + 1 - newFrame_g;
+						lerp = endFrame + 1 - newFrame_g;
 						// frames are easy to calculate
-						current_frame = end_frame;
+						current_frame = endFrame;
 						assert(current_frame >= 0 && current_frame < num_frames_in_file);
-						new_frame = bone.start_frame;
+						new_frame = bone.startFrame;
 						assert(new_frame >= 0 && new_frame < num_frames_in_file);
 					}
 					else
 					{
-						if (newFrame_g <= end_frame + 1)
+						if (newFrame_g <= endFrame + 1)
 						{
-							newFrame_g = end_frame + fmod(newFrame_g - end_frame, animSize) - animSize;
+							newFrame_g = endFrame + fmod(newFrame_g - endFrame, animSize) - animSize;
 						}
 						// now figure out what we are lerping between
 						// delta is the fraction between this frame and the next, since the new anim is always at a .0f;
@@ -1172,9 +1172,9 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 						current_frame = ceil(newFrame_g);
 						assert(current_frame >= 0 && current_frame < num_frames_in_file);
 						// should we be creating a virtual frame?
-						if (current_frame <= end_frame + 1)
+						if (current_frame <= endFrame + 1)
 						{
-							new_frame = bone.start_frame;
+							new_frame = bone.startFrame;
 							assert(new_frame >= 0 && new_frame < num_frames_in_file);
 						}
 						else
@@ -1187,7 +1187,7 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 				else
 				{
 					// should we be creating a virtual frame?
-					if (newFrame_g > end_frame - 1 && newFrame_g < end_frame)
+					if (newFrame_g > endFrame - 1 && newFrame_g < endFrame)
 					{
 						// now figure out what we are lerping between
 						// delta is the fraction between this frame and the next, since the new anim is always at a .0f;
@@ -1195,14 +1195,14 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 						// frames are easy to calculate
 						current_frame = static_cast<int>(newFrame_g);
 						assert(current_frame >= 0 && current_frame < num_frames_in_file);
-						new_frame = bone.start_frame;
+						new_frame = bone.startFrame;
 						assert(new_frame >= 0 && new_frame < num_frames_in_file);
 					}
 					else
 					{
-						if (newFrame_g >= end_frame)
+						if (newFrame_g >= endFrame)
 						{
-							newFrame_g = end_frame + fmod(newFrame_g - end_frame, animSize) - animSize;
+							newFrame_g = endFrame + fmod(newFrame_g - endFrame, animSize) - animSize;
 						}
 						// now figure out what we are lerping between
 						// delta is the fraction between this frame and the next, since the new anim is always at a .0f;
@@ -1211,9 +1211,9 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 						current_frame = static_cast<int>(newFrame_g);
 						assert(current_frame >= 0 && current_frame < num_frames_in_file);
 						// should we be creating a virtual frame?
-						if (newFrame_g >= end_frame - 1)
+						if (newFrame_g >= endFrame - 1)
 						{
-							new_frame = bone.start_frame;
+							new_frame = bone.startFrame;
 							assert(new_frame >= 0 && new_frame < num_frames_in_file);
 						}
 						else
@@ -1224,7 +1224,7 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 					}
 				}
 				// sanity check
-				assert(new_frame < end_frame && new_frame >= bone.start_frame || animSize < 10);
+				assert(new_frame < endFrame && new_frame >= bone.startFrame || animSize < 10);
 			}
 			else
 			{
@@ -1233,12 +1233,12 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 					// if we are supposed to reset the default anim, then do so
 					if (animSpeed > 0.0f)
 					{
-						current_frame = bone.end_frame - 1;
+						current_frame = bone.endFrame - 1;
 						assert(current_frame >= 0 && current_frame < num_frames_in_file);
 					}
 					else
 					{
-						current_frame = bone.end_frame + 1;
+						current_frame = bone.endFrame + 1;
 						assert(current_frame >= 0 && current_frame < num_frames_in_file);
 					}
 
@@ -1267,19 +1267,19 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 
 				new_frame = current_frame + 1;
 				// are we now on the end frame?
-				assert(static_cast<int>(end_frame) <= num_frames_in_file);
-				if (new_frame >= static_cast<int>(end_frame))
+				assert(static_cast<int>(endFrame) <= num_frames_in_file);
+				if (new_frame >= static_cast<int>(endFrame))
 				{
 					// we only want to lerp with the first frame of the anim if we are looping
 					if (bone.flags & BONE_ANIM_OVERRIDE_LOOP)
 					{
-						new_frame = bone.start_frame;
+						new_frame = bone.startFrame;
 						assert(new_frame >= 0 && new_frame < num_frames_in_file);
 					}
 					// if we intend to end this anim or freeze after this, then just keep on the last frame
 					else
 					{
-						new_frame = bone.end_frame - 1;
+						new_frame = bone.endFrame - 1;
 						assert(new_frame >= 0 && new_frame < num_frames_in_file);
 					}
 				}
@@ -1290,9 +1290,9 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 				lerp = ceil(newFrame_g) - newFrame_g;
 				// frames are easy to calculate
 				current_frame = ceil(newFrame_g);
-				if (current_frame > bone.start_frame)
+				if (current_frame > bone.startFrame)
 				{
-					current_frame = bone.start_frame;
+					current_frame = bone.startFrame;
 					new_frame = current_frame;
 					lerp = 0.0f;
 				}
@@ -1300,18 +1300,18 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 				{
 					new_frame = current_frame - 1;
 					// are we now on the end frame?
-					if (new_frame < end_frame + 1)
+					if (new_frame < endFrame + 1)
 					{
 						// we only want to lerp with the first frame of the anim if we are looping
 						if (bone.flags & BONE_ANIM_OVERRIDE_LOOP)
 						{
-							new_frame = bone.start_frame;
+							new_frame = bone.startFrame;
 							assert(new_frame >= 0 && new_frame < num_frames_in_file);
 						}
 						// if we intend to end this anim or freeze after this, then just keep on the last frame
 						else
 						{
-							new_frame = bone.end_frame + 1;
+							new_frame = bone.endFrame + 1;
 							assert(new_frame >= 0 && new_frame < num_frames_in_file);
 						}
 					}
@@ -1325,11 +1325,11 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 	{
 		if (animSpeed < 0.0)
 		{
-			current_frame = bone.end_frame + 1;
+			current_frame = bone.endFrame + 1;
 		}
 		else
 		{
-			current_frame = bone.end_frame - 1;
+			current_frame = bone.endFrame - 1;
 		}
 		if (current_frame < 0)
 		{
@@ -1596,8 +1596,8 @@ void G2_TransformBone(const int index, CBoneCache& cb)
 				boneListIndex,
 				BC.incomingTime,
 				bone.startTime,
-				bone.start_frame,
-				bone.end_frame,
+				bone.startFrame,
+				bone.endFrame,
 				bone.animSpeed,
 				bone.flags,
 				bone.blendStart,
@@ -1612,8 +1612,8 @@ void G2_TransformBone(const int index, CBoneCache& cb)
 				boneListIndex,
 				BC.incomingTime,
 				bone.startTime,
-				bone.start_frame,
-				bone.end_frame,
+				bone.startFrame,
+				bone.endFrame,
 				bone.animSpeed,
 				bone.flags
 			);
@@ -3401,22 +3401,22 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 qboolean G2API_OverrideServerWithClientData(CGhoul2Info_v& ghoul2, int model_index);
 #endif
 
-bool G2_NeedsRecalc(CGhoul2Info* ghl_info, const int frame_num)
+bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, const int frame_num)
 {
-	G2_SetupModelPointers(ghl_info);
+	G2_SetupModelPointers(ghlInfo);
 	// not sure if I still need this test, probably
-	if (ghl_info->mSkelFrameNum != frame_num ||
-		!ghl_info->mBoneCache ||
-		ghl_info->mBoneCache->mod != ghl_info->currentModel)
+	if (ghlInfo->mSkelFrameNum != frame_num ||
+		!ghlInfo->mBoneCache ||
+		ghlInfo->mBoneCache->mod != ghlInfo->currentModel)
 	{
 #ifdef _G2_LISTEN_SERVER_OPT
-		if (ghl_info->entity_num != ENTITYNUM_NONE &&
-			G2API_OverrideServerWithClientData(ghl_info))
+		if (ghlInfo->entity_num != ENTITYNUM_NONE &&
+			G2API_OverrideServerWithClientData(ghlInfo))
 		{ //if we can manage this, then we don't have to reconstruct
 			return false;
 		}
 #endif
-		ghl_info->mSkelFrameNum = frame_num;
+		ghlInfo->mSkelFrameNum = frame_num;
 		return true;
 	}
 	return false;

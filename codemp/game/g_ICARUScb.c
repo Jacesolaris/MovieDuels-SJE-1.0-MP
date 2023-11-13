@@ -2362,10 +2362,10 @@ int Q3_GetFloat(const int ent_id, int type, const char* name, float* value)
 		*value = ent->client->forced_rightmove;
 		break;
 	case SET_STARTFRAME: //## %d="0" # frame to start animation sequence on
-		*value = ent->start_frame;
+		*value = ent->startFrame;
 		break;
 	case SET_ENDFRAME: //## %d="0" # frame to end animation sequence on
-		*value = ent->end_frame;
+		*value = ent->endFrame;
 		break;
 	case SET_ANIMFRAME: //## %d="0" # of current frame
 		*value = ent->s.frame;
@@ -7257,10 +7257,10 @@ Q3_SetStartFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int start_frame
+  Argument		: int startFrame
 ============
 */
-static void Q3_SetStartFrame(const int ent_id, const int start_frame)
+static void Q3_SetStartFrame(const int ent_id, const int startFrame)
 {
 	gentity_t* ent = &g_entities[ent_id];
 
@@ -7276,10 +7276,10 @@ static void Q3_SetStartFrame(const int ent_id, const int start_frame)
 		return;
 	}
 
-	if (start_frame >= 0)
+	if (startFrame >= 0)
 	{
-		ent->s.frame = start_frame;
-		ent->start_frame = start_frame;
+		ent->s.frame = startFrame;
+		ent->startFrame = startFrame;
 	}
 }
 
@@ -7289,10 +7289,10 @@ Q3_SetEndFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int end_frame
+  Argument		: int endFrame
 ============
 */
-static void Q3_SetEndFrame(const int ent_id, const int end_frame)
+static void Q3_SetEndFrame(const int ent_id, const int endFrame)
 {
 	gentity_t* ent = &g_entities[ent_id];
 
@@ -7308,9 +7308,9 @@ static void Q3_SetEndFrame(const int ent_id, const int end_frame)
 		return;
 	}
 
-	if (end_frame >= 0)
+	if (endFrame >= 0)
 	{
-		ent->end_frame = end_frame;
+		ent->endFrame = endFrame;
 	}
 }
 
@@ -7320,7 +7320,7 @@ Q3_SetAnimFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int start_frame
+  Argument		: int startFrame
 ============
 */
 static void Q3_SetAnimFrame(const int ent_id, const int animFrame)
@@ -7339,11 +7339,11 @@ static void Q3_SetAnimFrame(const int ent_id, const int animFrame)
 		return;
 	}
 
-	if (animFrame >= ent->end_frame)
+	if (animFrame >= ent->endFrame)
 	{
-		ent->s.frame = ent->end_frame;
+		ent->s.frame = ent->endFrame;
 	}
-	else if (animFrame >= ent->start_frame)
+	else if (animFrame >= ent->startFrame)
 	{
 		ent->s.frame = animFrame;
 	}

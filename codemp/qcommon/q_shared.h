@@ -485,8 +485,8 @@ typedef struct sharedRagDollParams_s {
 	int me; //index of entity giving this update
 
 	//rww - we have convenient animation/frame access in the game, so just send this info over from there.
-	int start_frame;
-	int end_frame;
+	int startFrame;
+	int endFrame;
 
 	int collisionType; // 1 = from a fall, 0 from effectors, this will be going away soon, hence no enum
 
@@ -526,8 +526,8 @@ typedef struct sharedSetBoneIKStateParams_s {
 	float radius; //bone rad
 	int blend_time; //bone blend time
 	int pcjOverrides; //override ik bone flags
-	int start_frame; //base pose start
-	int end_frame; //base pose end
+	int startFrame; //base pose start
+	int endFrame; //base pose end
 	qboolean forceAnimOnBone; //normally if the bone has specified start/end frames already it will leave it alone.. if this is true, then the animation will be restarted on the bone with the specified frames anyway.
 } sharedSetBoneIKStateParams_t;
 

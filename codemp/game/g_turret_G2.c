@@ -342,25 +342,25 @@ void turretG2_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, in
 #define START_DIS 15
 
 //start an animation on model_root both server side and client side
-void TurboLaser_SetBoneAnim(gentity_t* eweb, const int start_frame, const int end_frame)
+void TurboLaser_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
 {
 	//set info on the entity so it knows to start the anim on the client next snapshot.
 	eweb->s.eFlags |= EF_G2ANIMATING;
 
-	if (eweb->s.torsoAnim == start_frame && eweb->s.legsAnim == end_frame)
+	if (eweb->s.torsoAnim == startFrame && eweb->s.legsAnim == endFrame)
 	{
 		//already playing this anim, let's flag it to restart
 		eweb->s.torsoFlip = !eweb->s.torsoFlip;
 	}
 	else
 	{
-		eweb->s.torsoAnim = start_frame;
-		eweb->s.legsAnim = end_frame;
+		eweb->s.torsoAnim = startFrame;
+		eweb->s.legsAnim = endFrame;
 	}
 
 	//now set the animation on the server ghoul2 instance.
 	assert(eweb->ghoul2);
-	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", start_frame, end_frame,
+	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", startFrame, endFrame,
 		BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
 }
 

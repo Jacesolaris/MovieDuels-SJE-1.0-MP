@@ -540,10 +540,10 @@ static qboolean CGFX_PlayBoltedEffectID(const int id, vec3_t org, void* ghoul2, 
 	if (!ghoul2) return qfalse;
 
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	int bolt_info = 0;
-	if (re->G2API_AttachEnt(&bolt_info, g2, modelNum, boltNum, ent_num, modelNum))
+	int boltInfo = 0;
+	if (re->G2API_AttachEnt(&boltInfo, g2, modelNum, boltNum, ent_num, modelNum))
 	{
-		FX_PlayBoltedEffectID(id, org, bolt_info, &g2, iLooptime, isRelative);
+		FX_PlayBoltedEffectID(id, org, boltInfo, &g2, iLooptime, isRelative);
 		return qtrue;
 	}
 	return qfalse;
@@ -565,14 +565,14 @@ static qboolean CL_SE_GetStringTextString(const char* text, char* buffer, const 
 	return qfalse;
 }
 
-static void CL_G2API_ListModelSurfaces(void* ghl_info)
+static void CL_G2API_ListModelSurfaces(void* ghlInfo)
 {
-	re->G2API_ListSurfaces(static_cast<CGhoul2Info*>(ghl_info));
+	re->G2API_ListSurfaces(static_cast<CGhoul2Info*>(ghlInfo));
 }
 
-static void CL_G2API_ListModelBones(void* ghl_info, const int frame)
+static void CL_G2API_ListModelBones(void* ghlInfo, const int frame)
 {
-	re->G2API_ListBones(static_cast<CGhoul2Info*>(ghl_info), frame);
+	re->G2API_ListBones(static_cast<CGhoul2Info*>(ghlInfo), frame);
 }
 
 static void CL_G2API_SetGhoul2ModelIndexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list)
@@ -673,22 +673,22 @@ static qboolean CL_G2API_SetBoneAngles(void* ghoul2, const int model_index, cons
 		static_cast<const Eorientations>(forward), model_list, blend_time, current_time);
 }
 
-static qboolean CL_G2API_SetBoneAnim(void* ghoul2, const int model_index, const char* boneName, const int start_frame,
-	const int end_frame, const int flags, const float animSpeed, const int current_time,
+static qboolean CL_G2API_SetBoneAnim(void* ghoul2, const int model_index, const char* boneName, const int startFrame,
+	const int endFrame, const int flags, const float animSpeed, const int current_time,
 	const float setFrame, const int blend_time)
 {
 	if (!ghoul2) return qfalse;
-	return re->G2API_SetBoneAnim(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, boneName, start_frame, end_frame,
+	return re->G2API_SetBoneAnim(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, boneName, startFrame, endFrame,
 		flags, animSpeed, current_time, setFrame, blend_time);
 }
 
 static qboolean CL_G2API_GetBoneAnim(void* ghoul2, const char* boneName, const int current_time, float* current_frame,
-	int* start_frame, int* end_frame, int* flags, float* animSpeed, int* model_list,
+	int* startFrame, int* endFrame, int* flags, float* animSpeed, int* model_list,
 	const int model_index)
 {
 	if (!ghoul2) return qfalse;
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	return re->G2API_GetBoneAnim(g2, model_index, boneName, current_time, current_frame, start_frame, end_frame, flags,
+	return re->G2API_GetBoneAnim(g2, model_index, boneName, current_time, current_frame, startFrame, endFrame, flags,
 		animSpeed, model_list);
 }
 
@@ -727,10 +727,10 @@ static int CL_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int mod
 		model_index);
 }
 
-static void CL_G2API_CopySpecificGhoul2Model(void* g2_from, const int model_from, void* g2_to, const int model_to)
+static void CL_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int model_to)
 {
 	if (!g2_from || !g2_to) return;
-	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), model_from, *static_cast<CGhoul2Info_v*>(g2_to),
+	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), modelFrom, *static_cast<CGhoul2Info_v*>(g2_to),
 		model_to);
 }
 
@@ -743,58 +743,58 @@ static void CL_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
 	re->G2API_DuplicateGhoul2Instance(*static_cast<CGhoul2Info_v*>(g2_from), reinterpret_cast<CGhoul2Info_v**>(g2_to));
 }
 
-static qboolean CL_G2API_HasGhoul2ModelOnIndex(void* ghl_info, const int model_index)
+static qboolean CL_G2API_HasGhoul2ModelOnIndex(void* ghlInfo, const int model_index)
 {
-	return re->G2API_HasGhoul2ModelOnIndex(static_cast<CGhoul2Info_v**>(ghl_info), model_index);
+	return re->G2API_HasGhoul2ModelOnIndex(static_cast<CGhoul2Info_v**>(ghlInfo), model_index);
 }
 
-static qboolean CL_G2API_RemoveGhoul2Model(void* ghl_info, const int model_index)
+static qboolean CL_G2API_RemoveGhoul2Model(void* ghlInfo, const int model_index)
 {
 #ifdef _FULL_G2_LEAK_CHECKING
 	g_G2AllocServer = 0;
 #endif
-	return re->G2API_RemoveGhoul2Model(static_cast<CGhoul2Info_v**>(ghl_info), model_index);
+	return re->G2API_RemoveGhoul2Model(static_cast<CGhoul2Info_v**>(ghlInfo), model_index);
 }
 
-static qboolean CL_G2API_SkinlessModel(void* ghl_info, const int model_index)
+static qboolean CL_G2API_SkinlessModel(void* ghlInfo, const int model_index)
 {
-	if (!ghl_info) return qfalse;
+	if (!ghlInfo) return qfalse;
 
-	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghl_info);
+	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghlInfo);
 	return re->G2API_SkinlessModel(g2, model_index);
 }
 
-static int CL_G2API_GetNumGoreMarks(void* ghl_info, const int model_index)
+static int CL_G2API_GetNumGoreMarks(void* ghlInfo, const int model_index)
 {
 #ifdef _G2_GORE
-	if (!ghl_info) return 0;
-	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghl_info);
+	if (!ghlInfo) return 0;
+	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghlInfo);
 	return re->G2API_GetNumGoreMarks(g2, model_index);
 #else
 	return 0;
 #endif
 }
 
-static void CL_G2API_AddSkinGore(void* ghl_info, SSkinGoreData* gore)
+static void CL_G2API_AddSkinGore(void* ghlInfo, SSkinGoreData* gore)
 {
 #ifdef _G2_GORE
-	if (!ghl_info) return;
-	re->G2API_AddSkinGore(*static_cast<CGhoul2Info_v*>(ghl_info), *gore);
+	if (!ghlInfo) return;
+	re->G2API_AddSkinGore(*static_cast<CGhoul2Info_v*>(ghlInfo), *gore);
 #endif
 }
 
-static void CL_G2API_ClearSkinGore(void* ghl_info)
+static void CL_G2API_ClearSkinGore(void* ghlInfo)
 {
 #ifdef _G2_GORE
-	if (!ghl_info) return;
-	re->G2API_ClearSkinGore(*static_cast<CGhoul2Info_v*>(ghl_info));
+	if (!ghlInfo) return;
+	re->G2API_ClearSkinGore(*static_cast<CGhoul2Info_v*>(ghlInfo));
 #endif
 }
 
-static int CL_G2API_Ghoul2Size(void* ghl_info)
+static int CL_G2API_Ghoul2Size(void* ghlInfo)
 {
-	if (!ghl_info) return 0;
-	return re->G2API_Ghoul2Size(*static_cast<CGhoul2Info_v*>(ghl_info));
+	if (!ghlInfo) return 0;
+	return re->G2API_Ghoul2Size(*static_cast<CGhoul2Info_v*>(ghlInfo));
 }
 
 static int CL_G2API_AddBolt(void* ghoul2, const int model_index, const char* boneName)
@@ -803,18 +803,18 @@ static int CL_G2API_AddBolt(void* ghoul2, const int model_index, const char* bon
 	return re->G2API_AddBolt(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, boneName);
 }
 
-static qboolean CL_G2API_AttachEnt(int* bolt_info, void* ghlInfoTo, const int toBoltIndex, const int ent_num,
+static qboolean CL_G2API_AttachEnt(int* boltInfo, void* ghlInfoTo, const int toBoltIndex, const int ent_num,
 	const int toModelNum)
 {
 	if (!ghlInfoTo) return qfalse;
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghlInfoTo);
-	return re->G2API_AttachEnt(bolt_info, g2, 0, toBoltIndex, ent_num, toModelNum);
+	return re->G2API_AttachEnt(boltInfo, g2, 0, toBoltIndex, ent_num, toModelNum);
 }
 
-static void CL_G2API_SetBoltInfo(void* ghoul2, const int model_index, const int bolt_info)
+static void CL_G2API_SetBoltInfo(void* ghoul2, const int model_index, const int boltInfo)
 {
 	if (!ghoul2) return;
-	re->G2API_SetBoltInfo(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bolt_info);
+	re->G2API_SetBoltInfo(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, boltInfo);
 }
 
 static qboolean CL_G2API_SetRootSurface(void* ghoul2, const int model_index, const char* surface_name)
@@ -887,8 +887,8 @@ static void CL_G2API_SetRagDoll(void* ghoul2, sharedRagDollParams_t* params)
 	rdParams.fShotStrength = params->fShotStrength;
 	rdParams.me = params->me;
 
-	rdParams.start_frame = params->start_frame;
-	rdParams.end_frame = params->end_frame;
+	rdParams.startFrame = params->startFrame;
+	rdParams.endFrame = params->endFrame;
 
 	rdParams.collisionType = params->collisionType;
 	rdParams.CallRagDollBegin = params->CallRagDollBegin;

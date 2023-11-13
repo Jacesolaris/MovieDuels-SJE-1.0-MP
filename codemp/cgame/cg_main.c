@@ -3047,7 +3047,7 @@ void CG_Init(const int serverMessageNum, const int serverCommandSequence, const 
 	cgs.media.forceIconBackground = trap->R_RegisterShaderNoMip("gfx/hud/background_f");
 	cgs.media.inventoryIconBackground = trap->R_RegisterShaderNoMip("gfx/hud/background_i");
 	cgs.media.inventoryProngsOn = trap->R_RegisterShaderNoMip("gfx/hud/prong_on_i");
-	cgs.media.load_SerenitySaberSystems = trap->R_RegisterShaderNoMip("gfx/hud/load_SerenitySaberSystems");
+	//cgs.media.load_SerenitySaberSystems = trap->R_RegisterShaderNoMip("gfx/hud/load_SerenitySaberSystems");
 
 	//rww - precache holdable item icons here
 	while (i < bg_numItems)
