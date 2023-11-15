@@ -550,6 +550,11 @@ void G_InitGame(int levelTime, int randomSeed, int restart)
 		level.is_duel_mp_map = qtrue;
 	}
 
+	if (Q_stricmp(sje_mapname, "duel_hangar") == 0)
+	{
+		level.is_no_Dlight_map = qtrue;
+	}
+
 	if (level.is_outcast_mp_map == qtrue || level.is_outcast_map == qtrue)
 	{
 		if (com_outcast.integer != 1)
@@ -567,6 +572,18 @@ void G_InitGame(int levelTime, int randomSeed, int restart)
 	else
 	{
 		trap->Cvar_Set("com_outcast", "0");
+	}
+
+	if (level.is_no_Dlight_map == qtrue)
+	{
+		if (r_Turn_Off_dynamiclight.integer != 1)
+		{
+			trap->Cvar_Set("r_turn_off_dynamiclight", "1");
+		}
+	}
+	else
+	{
+		trap->Cvar_Set("r_turn_off_dynamiclight", "0");
 	}
 
 	// parse the key/value pairs and spawn gentities
@@ -1580,6 +1597,7 @@ void G_InitGame(int levelTime, int randomSeed, int restart)
 	level.is_outcast_map = qfalse;
 	level.is_outcast_mp_map = qfalse;
 	level.is_duel_mp_map = qfalse;
+	level.is_no_Dlight_map = qfalse;
 }
 
 /*
