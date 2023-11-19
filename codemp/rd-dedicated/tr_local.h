@@ -1347,8 +1347,7 @@ void RE_RegisterMedia_LevelLoadEnd(void);
 int RE_RegisterMedia_GetLevel(void);
 //
 qboolean RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
-void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName,
-	qboolean* pqbAlreadyFound, memtag_t eTag);
+void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag);
 void RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName,
 	int* piShaderIndexPoke);
 void RE_RegisterModels_Info_f(void);

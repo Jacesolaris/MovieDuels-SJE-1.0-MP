@@ -1823,8 +1823,9 @@ void R_Init() {
 RE_Shutdown
 ===============
 */
-void RE_Shutdown(const qboolean destroy_window, const qboolean restarting) {
-	//	ri->Printf( PRINT_ALL, "RE_Shutdown( %i )\n", destroyWindow );
+void RE_Shutdown(const qboolean destroyWindow, const qboolean restarting) 
+{
+	ri->Printf( PRINT_ALL, "RE_Shutdown( %i )\n", destroyWindow );
 
 	for (const auto& command : commands)
 		ri->Cmd_RemoveCommand(command.cmd);
@@ -1878,7 +1879,7 @@ void RE_Shutdown(const qboolean destroy_window, const qboolean restarting) {
 	R_ShutdownFonts();
 	if (tr.registered) {
 		R_IssuePendingRenderCommands();
-		if (destroy_window)
+		if (destroyWindow)
 		{
 			R_DeleteTextures();		// only do this for vid_restart now, not during things like map load
 
@@ -1890,7 +1891,7 @@ void RE_Shutdown(const qboolean destroy_window, const qboolean restarting) {
 	}
 
 	// shut down platform specific OpenGL stuff
-	if (destroy_window) {
+	if (destroyWindow) {
 		ri->WIN_Shutdown();
 	}
 
@@ -1904,7 +1905,7 @@ RE_EndRegistration
 Touch all images to make sure they are resident
 =============
 */
-void RE_EndRegistration() {
+static void RE_EndRegistration() {
 	R_IssuePendingRenderCommands();
 	if (!ri->Sys_LowPhysicalMemory()) {
 		RB_ShowImages();
