@@ -69,9 +69,9 @@ public:
 	~CGoreSet();
 };
 
-CGoreSet* FindGoreSet(int goreSetTag);
+CGoreSet* FindGoreSet(const int goreSetTag);
 CGoreSet* NewGoreSet();
-void DeleteGoreSet(int goreSetTag);
+void DeleteGoreSet(const int goreSetTag);
 
 #endif // _G2_GORE
 

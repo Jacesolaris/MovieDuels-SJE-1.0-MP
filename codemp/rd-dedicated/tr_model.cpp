@@ -133,7 +133,7 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index);
 //
 // don't use ri->xxx functions in case running on dedicated...
 //
-qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
+static qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
 {
 	char sModelName[MAX_QPATH];
 
@@ -234,8 +234,7 @@ void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, 
 
 // Unfortunately the dedicated server also hates shader loading. So we need an alternate of this func.
 //
-void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName,
-	qboolean* pqbAlreadyFound, const memtag_t eTag)
+void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName,	qboolean* pqbAlreadyFound, const memtag_t eTag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -673,7 +672,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 	if (!bAlreadyFound)
 	{
 		// horrible new hackery, if !bAlreadyFound then we've just done a tag-morph, so we need to set the
-		//	bool reference passed into this function to true, to tell the caller NOT to do an ri.FS_Freefile since
+		//	bool reference passed into this function to true, to tell the caller NOT to do an ri->FS_Freefile since
 		//	we've hijacked that memory block...
 		//
 		// Aaaargh. Kill me now...
@@ -1133,14 +1132,6 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 		return 0;
 	}
 
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	if (!tr.registered) {
-	//		Com_Printf (S_COLOR_YELLOW  "RE_RegisterModel (%s) called before ready!\n",name );
-	//		return 0;
-	//	}
-	//
 	// search the currently loaded models
 	//
 	int hash = generateHashValue(name, FILE_HASH_SIZE);
@@ -1579,10 +1570,10 @@ void R_ModelFree(void)
 
 /*
 ================
-R_Modellist_f
+R_model_list_f
 ================
 */
-void R_Modellist_f(void)
+void R_model_list_f(void)
 {
 	int total = 0;
 	for (int i = 1; i < tr.numModels; i++)

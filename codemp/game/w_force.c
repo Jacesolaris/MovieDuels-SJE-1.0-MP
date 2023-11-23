@@ -840,7 +840,7 @@ void WP_SpawnInitForcePowers(gentity_t* ent)
 	}
 }
 
-qboolean is_merc(const gentity_t* ent)
+static qboolean is_merc(const gentity_t* ent)
 {
 	if (!ent->client)
 	{
@@ -1079,7 +1079,7 @@ qboolean WP_ForcePowerAvailable(const gentity_t* self, const forcePowers_t force
 	return qtrue;
 }
 
-qboolean WP_ForcePowerInUse(const gentity_t* self, const forcePowers_t forcePower)
+static qboolean WP_ForcePowerInUse(const gentity_t* self, const forcePowers_t forcePower)
 {
 	if (self->client->ps.fd.forcePowersActive & 1 << forcePower)
 	{
@@ -1253,8 +1253,7 @@ qboolean WP_ForcePowerUsable(const gentity_t* self, const forcePowers_t forcePow
 	return WP_ForcePowerAvailable(self, forcePower, 0); // OVERRIDEFIXME
 }
 
-int wp_absorb_conversion(const gentity_t* attacked, const int atd_abs_level, const int at_power,
-	const int at_power_level, const int at_force_spent)
+static int wp_absorb_conversion(const gentity_t* attacked, const int atd_abs_level, const int at_power, const int at_power_level, const int at_force_spent)
 {
 	if (at_power != FP_DRAIN &&
 		at_power != FP_GRIP &&
@@ -1696,7 +1695,7 @@ void ForceHeal(gentity_t* self)
 	G_PlayBoltedEffect(G_EffectIndex("force/heal2.efx"), self, "thoracic");
 }
 
-void wp_add_to_client_bitflags(gentity_t* ent, const int ent_num)
+static void wp_add_to_client_bitflags(gentity_t* ent, const int ent_num)
 {
 	if (!ent)
 	{
@@ -1938,7 +1937,7 @@ void ForceTeamForceReplenish(const gentity_t* self)
 	}
 }
 
-qboolean IsHybrid(const gentity_t* ent)
+static qboolean IsHybrid(const gentity_t* ent)
 {
 	qboolean jedi = qfalse, merc = qfalse;
 
@@ -2076,7 +2075,7 @@ qboolean IsHybrid(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defender, const int attackPower)
+static qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defender, const int attackPower)
 {
 	if (BG_IsUsingHeavyWeap(&defender->client->ps))
 	{
@@ -2232,19 +2231,19 @@ void ForceGrip(const gentity_t* self)
 	trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 	if (tr.fraction != 1.0 &&
-		tr.entity_num != ENTITYNUM_NONE &&
-		g_entities[tr.entity_num].client &&
-		!g_entities[tr.entity_num].client->ps.fd.forceGripCripple &&
-		g_entities[tr.entity_num].client->ps.fd.forceGripBeingGripped < level.time &&
-		ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_GRIP) &&
-		!WP_CounterForce(self, &g_entities[tr.entity_num], FP_GRIP) &&
-		(g_friendlyFire.integer || !OnSameTeam(self, &g_entities[tr.entity_num])))
+		tr.entityNum != ENTITYNUM_NONE &&
+		g_entities[tr.entityNum].client &&
+		!g_entities[tr.entityNum].client->ps.fd.forceGripCripple &&
+		g_entities[tr.entityNum].client->ps.fd.forceGripBeingGripped < level.time &&
+		ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_GRIP) &&
+		!WP_CounterForce(self, &g_entities[tr.entityNum], FP_GRIP) &&
+		(g_friendlyFire.integer || !OnSameTeam(self, &g_entities[tr.entityNum])))
 		//don't grip someone who's still crippled
 	{
-		if (g_entities[tr.entity_num].s.number < MAX_CLIENTS && g_entities[tr.entity_num].client->ps.m_iVehicleNum)
+		if (g_entities[tr.entityNum].s.number < MAX_CLIENTS && g_entities[tr.entityNum].client->ps.m_iVehicleNum)
 		{
 			//a player on a vehicle
-			const gentity_t* vehEnt = &g_entities[g_entities[tr.entity_num].client->ps.m_iVehicleNum];
+			const gentity_t* vehEnt = &g_entities[g_entities[tr.entityNum].client->ps.m_iVehicleNum];
 			if (vehEnt->inuse && vehEnt->client && vehEnt->m_pVehicle)
 			{
 				if (vehEnt->m_pVehicle->m_pVehicleInfo->type == VH_SPEEDER ||
@@ -2252,12 +2251,12 @@ void ForceGrip(const gentity_t* self)
 				{
 					//push the guy off
 					vehEnt->m_pVehicle->m_pVehicleInfo->Eject(vehEnt->m_pVehicle,
-						(bgEntity_t*)&g_entities[tr.entity_num], qfalse);
+						(bgEntity_t*)&g_entities[tr.entityNum], qfalse);
 				}
 			}
 		}
-		self->client->ps.fd.forceGripEntityNum = tr.entity_num;
-		g_entities[tr.entity_num].client->ps.fd.forceGripStarted = level.time;
+		self->client->ps.fd.forceGripEntityNum = tr.entityNum;
+		g_entities[tr.entityNum].client->ps.fd.forceGripStarted = level.time;
 		self->client->ps.fd.forceGripDamageDebounceTime = 0;
 
 		self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
@@ -2296,7 +2295,7 @@ int IsPressingKickButton(const gentity_t* self)
 	return qfalse;
 }
 
-void WP_DebounceForceDeactivateTime(const gentity_t* self)
+static void WP_DebounceForceDeactivateTime(const gentity_t* self)
 {
 	if (self && self->client)
 	{
@@ -2385,7 +2384,7 @@ void ForceSpeed(gentity_t* self, const int forceDuration)
 	G_PlayBoltedEffect(G_EffectIndex("misc/breath.efx"), self, "*head_front");
 }
 
-void ForceDashAnim(gentity_t* self)
+static void ForceDashAnim(gentity_t* self)
 {
 	const int setAnimOverride = SETANIM_AFLAG_PACE;
 
@@ -2429,7 +2428,7 @@ void ForceDashAnimDash(gentity_t* self)
 	}
 }
 
-void ForceSpeedDash(gentity_t* self)
+static void ForceSpeedDash(gentity_t* self)
 {
 	if (self->health <= 0)
 	{
@@ -2784,7 +2783,7 @@ void ForceRage(gentity_t* self)
 	G_PlayBoltedEffect(G_EffectIndex("misc/breathSith.efx"), self, "*head_front");
 }
 
-qboolean ForceLightningCheckattack(const gentity_t* self)
+static qboolean ForceLightningCheckattack(const gentity_t* self)
 {
 	if (self->client->ps.torsoAnim == BOTH_FORCE_2HANDEDLIGHTNING
 		|| self->client->ps.torsoAnim == BOTH_FORCE_2HANDEDLIGHTNING_OLD
@@ -2892,7 +2891,7 @@ void ForceLightning(gentity_t* self)
 	WP_ForcePowerStart(self, FP_LIGHTNING, 500);
 }
 
-qboolean melee_block_lightning_counter_force(gentity_t* attacker, const gentity_t* defender, int attackPower)
+static qboolean melee_block_lightning_counter_force(gentity_t* attacker, const gentity_t* defender, int attackPower)
 {
 	//generically checks to see if the defender is able to block an attack from this attacker
 	if (!manual_forceblocking(defender))
@@ -2914,7 +2913,7 @@ qboolean melee_block_lightning_counter_force(gentity_t* attacker, const gentity_
 	return qtrue;
 }
 
-qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
+static qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
 {
 	const qboolean melee_light_block = qtrue;
 
@@ -2961,7 +2960,7 @@ qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
 	return qtrue;
 }
 
-qboolean saber_block_lightning(const gentity_t* attacker, const gentity_t* defender)
+static qboolean saber_block_lightning(const gentity_t* attacker, const gentity_t* defender)
 {
 	//defender is attempting to block lightning.  Try to do it.
 	const qboolean active_blocking = defender->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
@@ -3016,7 +3015,7 @@ qboolean saber_block_lightning(const gentity_t* attacker, const gentity_t* defen
 	return qtrue;
 }
 
-void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, const float dist, const float dot, vec3_t impact_point)
+static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, const float dist, const float dot, vec3_t impact_point)
 {
 	self->client->dangerTime = level.time;
 	self->client->ps.eFlags &= ~EF_INVULNERABLE;
@@ -3497,7 +3496,7 @@ void force_shoot_lightning(gentity_t* self)
 			//Now check and see if we can actually hit it
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 				qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -3514,12 +3513,12 @@ void force_shoot_lightning(gentity_t* self)
 
 		trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse, 0,
 			0);
-		if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+		if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 		{
 			return;
 		}
 
-		trace_ent = &g_entities[tr.entity_num];
+		trace_ent = &g_entities[tr.entityNum];
 		force_lightning_damage(self, trace_ent, forward, 0, 0, tr.endpos);
 	}
 }
@@ -3565,7 +3564,7 @@ void ForceDrain(gentity_t* self)
 
 qboolean Jedi_DrainReaction(gentity_t* self);
 
-void ForceDrainDamage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, vec3_t impact_point)
+static void ForceDrainDamage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, vec3_t impact_point)
 {
 	self->client->dangerTime = level.time;
 	self->client->ps.eFlags &= ~EF_INVULNERABLE;
@@ -3707,7 +3706,7 @@ static void FP_TraceSetStart(const gentity_t* ent, vec3_t start, vec3_t mins, ve
 #define	DESTRUCTION_RANGE				150
 
 //---------------------------------------------------------
-void WP_FireDestruction(gentity_t* ent, const int force_level)
+static void WP_FireDestruction(gentity_t* ent, const int force_level)
 //---------------------------------------------------------
 {
 	vec3_t start, forward;
@@ -3881,7 +3880,7 @@ int ForceShootDrain(gentity_t* self)
 				trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 					qfalse, 0, 0);
 
-				if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
+				if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
 				{
 					//must have clear LOS
 					continue;
@@ -3900,13 +3899,13 @@ int ForceShootDrain(gentity_t* self)
 
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse,
 				0, 0);
-			if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid || !g_entities[tr.
-				entity_num].client || !g_entities[tr.entity_num].inuse)
+			if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid || !g_entities[tr.
+				entityNum].client || !g_entities[tr.entityNum].inuse)
 			{
 				return 0;
 			}
 
-			trace_ent = &g_entities[tr.entity_num];
+			trace_ent = &g_entities[tr.entityNum];
 
 			ForceDrainDamage(self, trace_ent, forward, tr.endpos);
 			numDrained = 1;
@@ -4038,7 +4037,7 @@ int ForceShootDestruction(gentity_t* self)
 			//Now check and see if we can actually hit it
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 				qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -4062,7 +4061,7 @@ int ForceShootDestruction(gentity_t* self)
 	return numDrained;
 }
 
-void ForceJumpCharge(gentity_t* self, usercmd_t* ucmd)
+static void ForceJumpCharge(gentity_t* self, usercmd_t* ucmd)
 {
 	//I guess this is unused now. Was used for the "charge" jump type.
 	const float forceJumpChargeInterval = forceJumpStrength[0] / (FORCE_JUMP_CHARGE_TIME / FRAMETIME);
@@ -4292,7 +4291,7 @@ void ForceJump(gentity_t* self, const usercmd_t* ucmd)
 	self->client->ps.groundEntityNum = ENTITYNUM_NONE;
 }
 
-void WP_AddAsMindtricked(forcedata_t* fd, const int ent_num)
+static void WP_AddAsMindtricked(forcedata_t* fd, const int ent_num)
 {
 	if (!fd)
 	{
@@ -4317,7 +4316,7 @@ void WP_AddAsMindtricked(forcedata_t* fd, const int ent_num)
 	}
 }
 
-qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboolean* tookPower)
+static qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboolean* tookPower)
 {
 	qboolean targetLive = qfalse;
 	vec3_t tfrom, tto, fwd;
@@ -4333,7 +4332,7 @@ qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboole
 
 	trap->Trace(tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-	if (tr->entity_num == ENTITYNUM_NONE
+	if (tr->entityNum == ENTITYNUM_NONE
 		|| tr->fraction == 1.0f
 		|| tr->allsolid
 		|| tr->startsolid)
@@ -4341,7 +4340,7 @@ qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboole
 		return qfalse;
 	}
 
-	gentity_t* trace_ent = &g_entities[tr->entity_num];
+	gentity_t* trace_ent = &g_entities[tr->entityNum];
 
 	if (trace_ent->NPC && trace_ent->NPC->scriptFlags & SCF_NO_FORCE)
 	{
@@ -4605,13 +4604,13 @@ void ForceTelepathy(gentity_t* self)
 	if (self->client->ps.fd.forcePowerLevel[FP_TELEPATHY] == FORCE_LEVEL_1)
 	{
 		if (tr.fraction != 1.0 &&
-			tr.entity_num != ENTITYNUM_NONE &&
-			g_entities[tr.entity_num].inuse &&
-			g_entities[tr.entity_num].client &&
-			g_entities[tr.entity_num].client->pers.connected &&
-			g_entities[tr.entity_num].client->sess.sessionTeam != TEAM_SPECTATOR)
+			tr.entityNum != ENTITYNUM_NONE &&
+			g_entities[tr.entityNum].inuse &&
+			g_entities[tr.entityNum].client &&
+			g_entities[tr.entityNum].client->pers.connected &&
+			g_entities[tr.entityNum].client->sess.sessionTeam != TEAM_SPECTATOR)
 		{
-			WP_AddAsMindtricked(&self->client->ps.fd, tr.entity_num);
+			WP_AddAsMindtricked(&self->client->ps.fd, tr.entityNum);
 			if (!took_power)
 			{
 				WP_ForcePowerStart(self, FP_TELEPATHY, 0);
@@ -4760,7 +4759,7 @@ void ForceTelepathy(gentity_t* self)
 	}
 }
 
-void GEntity_UseFunc(gentity_t* self, gentity_t* other, gentity_t* activator)
+static void GEntity_UseFunc(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
 	GlobalUse(self, other, activator);
 }
@@ -4854,7 +4853,7 @@ static qboolean playeris_resisting_force_throw(const gentity_t* player, gentity_
 	return qfalse;
 }
 
-qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* thrower, const qboolean pull)
+static qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* thrower, const qboolean pull)
 {
 	int power_use;
 
@@ -5157,7 +5156,7 @@ void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, const qboolean
 	Jedi_PlayBlockedPushSound(self);
 }
 
-void RepulseDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
+static void RepulseDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
 {
 	switch (damageLevel)
 	{
@@ -5190,7 +5189,7 @@ void RepulseDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int
 	}
 }
 
-void PushDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
+static void PushDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
 {
 	switch (damageLevel)
 	{
@@ -5505,36 +5504,36 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID | CONTENTS_TRIGGER, qfalse, 0, 0);
 
 		if (tr.fraction != 1.0 &&
-			tr.entity_num != ENTITYNUM_NONE)
+			tr.entityNum != ENTITYNUM_NONE)
 		{
-			if (!g_entities[tr.entity_num].client && g_entities[tr.entity_num].s.eType == ET_NPC)
+			if (!g_entities[tr.entityNum].client && g_entities[tr.entityNum].s.eType == ET_NPC)
 			{
 				//g2animent
-				if (g_entities[tr.entity_num].s.genericenemyindex < level.time)
+				if (g_entities[tr.entityNum].s.genericenemyindex < level.time)
 				{
-					g_entities[tr.entity_num].s.genericenemyindex = level.time + 2000;
+					g_entities[tr.entityNum].s.genericenemyindex = level.time + 2000;
 				}
 			}
 			num_listed_entities = 0;
-			entity_list[num_listed_entities] = tr.entity_num;
+			entity_list[num_listed_entities] = tr.entityNum;
 
 			if (pull)
 			{
-				if (!ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_PULL))
+				if (!ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_PULL))
 				{
 					return;
 				}
 			}
 			else
 			{
-				if (!ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_PUSH))
+				if (!ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_PUSH))
 				{
 					return;
 				}
 			}
 
 			// if a CONTENTS_TRIGGER was traced, must be an item
-			if (g_entities[tr.entity_num].r.contents == CONTENTS_TRIGGER && g_entities[tr.entity_num].s.eType != ET_ITEM)
+			if (g_entities[tr.entityNum].r.contents == CONTENTS_TRIGGER && g_entities[tr.entityNum].s.eType != ET_ITEM)
 				return;
 
 			num_listed_entities++;
@@ -5560,7 +5559,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 			for (i1 = 0; i1 < func_num; i1++)
 			{
 				funcEnt = &g_entities[func_list[i1]];
-				if (!funcEnt->client && funcEnt->s.number != tr.entity_num)
+				if (!funcEnt->client && funcEnt->s.number != tr.entityNum)
 				{
 					//we have one, add it to the actual push list.
 					entity_list[num_listed_entities] = funcEnt->s.number;
@@ -5600,17 +5599,17 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 				if (tr.fraction != 1.0 &&
-					tr.entity_num != ENTITYNUM_NONE)
+					tr.entityNum != ENTITYNUM_NONE)
 				{
-					if (!g_entities[tr.entity_num].client && g_entities[tr.entity_num].s.eType == ET_NPC)
+					if (!g_entities[tr.entityNum].client && g_entities[tr.entityNum].s.eType == ET_NPC)
 					{
 						//g2animent
-						if (g_entities[tr.entity_num].s.genericenemyindex < level.time)
+						if (g_entities[tr.entityNum].s.genericenemyindex < level.time)
 						{
-							g_entities[tr.entity_num].s.genericenemyindex = level.time + 2000;
+							g_entities[tr.entityNum].s.genericenemyindex = level.time + 2000;
 						}
 					}
-					aiming_at = &g_entities[tr.entity_num];
+					aiming_at = &g_entities[tr.entityNum];
 					if (ent == aiming_at) //Looking at the sentry...so deactivate for 10 seconds
 						ent->nextthink = level.time + 5000;
 				}
@@ -5810,7 +5809,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				//really should have a clear LOS to this thing...
 				trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 					qfalse, 0, 0);
-				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
 				{
 					//must have clear LOS
 					//try from eyes too before you give up
@@ -5820,7 +5819,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					trap->Trace(&tr, eye_point, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0,
 						0);
 
-					if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
+					if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
 					{
 						continue;
 					}
@@ -6021,7 +6020,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				//really should have a clear LOS to this thing...
 				trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 					qfalse, 0, 0);
-				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
 				{
 					//must have clear LOS
 					//try from eyes too before you give up
@@ -6031,7 +6030,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					trap->Trace(&tr, eye_point, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0,
 						0);
 
-					if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
+					if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
 					{
 						continue;
 					}
@@ -6183,7 +6182,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 			//really should have a clear LOS to this thing...
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 				qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
+			if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
 			{
 				//must have clear LOS
 				//try from eyes too before you give up
@@ -6192,7 +6191,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				eye_point[2] += self->client->ps.viewheight;
 				trap->Trace(&tr, eye_point, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
 				{
 					continue;
 				}
@@ -6345,7 +6344,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 							if (tr.fraction != 1.0
-								&& tr.entity_num == push_target[x]->s.number)
+								&& tr.entityNum == push_target[x]->s.number)
 							{
 								vec3_t vecnorm;
 								vec3_t uorg;
@@ -6799,7 +6798,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				VectorNormalize(forward);
 				VectorMA(trFrom, radius, forward, end);
 				trap->Trace(&tr, trFrom, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
-				if (tr.entity_num != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+				if (tr.entityNum != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 				{
 					//must be pointing right at it
 					continue;
@@ -7103,7 +7102,7 @@ void DoGripAction(gentity_t* self, const forcePowers_t forcePower)
 	}
 
 	if (tr.fraction != 1.0f &&
-		tr.entity_num != gripEnt->s.number /*&&
+		tr.entityNum != gripEnt->s.number /*&&
 		gripLevel < FORCE_LEVEL_3*/)
 	{
 		WP_ForcePowerStop(self, forcePower);
@@ -7279,7 +7278,7 @@ void DoGripAction(gentity_t* self, const forcePowers_t forcePower)
 	}
 }
 
-qboolean G_IsMindTricked(const forcedata_t* fd, const int client)
+static qboolean G_IsMindTricked(const forcedata_t* fd, const int client)
 {
 	int checkIn;
 	int sub = 0;
@@ -7658,7 +7657,7 @@ static void wp_force_power_run(gentity_t* self, const forcePowers_t forcePower, 
 	}
 }
 
-int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers_t forcepower)
+static int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers_t forcepower)
 {
 	int powerSucceeded = 1;
 
@@ -7833,7 +7832,7 @@ int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers
 	return powerSucceeded;
 }
 
-void FindGenericEnemyIndex(const gentity_t* self)
+static void FindGenericEnemyIndex(const gentity_t* self)
 {
 	//Find another client that would be considered a threat.
 	int i = 0;
@@ -7871,10 +7870,9 @@ void FindGenericEnemyIndex(const gentity_t* self)
 	self->client->ps.genericEnemyIndex = besten->s.number;
 }
 
-void SeekerDroneUpdate(gentity_t* self)
+static void SeekerDroneUpdate(gentity_t* self)
 {
 	vec3_t org, elevated, dir, a;
-	gentity_t* en;
 	float angle;
 	trace_t tr;
 
@@ -7959,35 +7957,6 @@ void SeekerDroneUpdate(gentity_t* self)
 		self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
 	}
 
-	if (self->client->ps.genericEnemyIndex != ENTITYNUM_NONE && self->client->ps.genericEnemyIndex != -1)
-	{
-		en = &g_entities[self->client->ps.genericEnemyIndex];
-
-		if (en->s.number == self->s.number)
-		{
-			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-		}
-		else if (en->health < 1)
-		{
-			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-		}
-		else if (OnSameTeam(self, en))
-		{
-			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-		}
-		else
-		{
-			if (!in_front(en->client->ps.origin, self->client->ps.origin, self->client->ps.viewangles, 0.8f))
-			{
-				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-			}
-			else if (!org_visible(self->client->ps.origin, en->client->ps.origin, self->s.number))
-			{
-				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-			}
-		}
-	}
-
 	if (self->client->ps.genericEnemyIndex == ENTITYNUM_NONE || self->client->ps.genericEnemyIndex == -1)
 	{
 		FindGenericEnemyIndex(self);
@@ -7995,7 +7964,7 @@ void SeekerDroneUpdate(gentity_t* self)
 
 	if (self->client->ps.genericEnemyIndex != ENTITYNUM_NONE && self->client->ps.genericEnemyIndex != -1)
 	{
-		en = &g_entities[self->client->ps.genericEnemyIndex];
+		gentity_t* en = &g_entities[self->client->ps.genericEnemyIndex];
 
 		VectorCopy(self->client->ps.origin, elevated);
 		elevated[2] += 40;
@@ -8023,10 +7992,38 @@ void SeekerDroneUpdate(gentity_t* self)
 				self->client->ps.droneFireTime = level.time + Q_irand(400, 700);
 			}
 		}
+
+		if (!en || !en->client)
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else if (en->s.number == self->s.number)
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else if (en->health < 1)
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else if (OnSameTeam(self, en))
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else
+		{
+			if (!in_front(en->client->ps.origin, self->client->ps.origin, self->client->ps.viewangles, 0.8f))
+			{
+				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+			}
+			else if (!org_visible(self->client->ps.origin, en->client->ps.origin, self->s.number))
+			{
+				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+			}
+		}
 	}
 }
 
-void HolocronUpdate(gentity_t* self)
+static void HolocronUpdate(gentity_t* self)
 {
 	//keep holocron status updated in holocron mode
 	int i = 0;
@@ -8136,7 +8133,7 @@ void HolocronUpdate(gentity_t* self)
 	}
 }
 
-void JediMasterUpdate(gentity_t* self)
+static void JediMasterUpdate(gentity_t* self)
 {
 	//keep jedi master status updated for JM gametype
 	int i = 0;
@@ -8217,7 +8214,7 @@ qboolean WP_HasForcePowers(const playerState_t* ps)
 }
 
 //try a special roll getup move
-qboolean G_SpecialRollGetup(gentity_t* self)
+static qboolean G_SpecialRollGetup(gentity_t* self)
 {
 	//fixme: currently no knockdown will actually land you on your front... so froll's are pretty useless at the moment.
 	qboolean rolled = qfalse;

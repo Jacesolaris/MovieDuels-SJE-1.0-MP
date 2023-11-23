@@ -227,19 +227,19 @@ int trap_CM_MarkFragments(const int num_points, const vec3_t* points, const vec3
 		fragmentBuffer);
 }
 
-int trap_S_GetVoiceVolume(const int entity_num)
+int trap_S_GetVoiceVolume(const int entityNum)
 {
-	return Q_syscall(CG_S_GETVOICEVOLUME, entity_num);
+	return Q_syscall(CG_S_GETVOICEVOLUME, entityNum);
 }
 
-void trap_S_MuteSound(const int entity_num, const int entchannel)
+void trap_S_MuteSound(const int entityNum, const int entchannel)
 {
-	Q_syscall(CG_S_MUTESOUND, entity_num, entchannel);
+	Q_syscall(CG_S_MUTESOUND, entityNum, entchannel);
 }
 
-void trap_S_StartSound(const vec3_t origin, const int entity_num, const int entchannel, const sfxHandle_t sfx)
+void trap_S_StartSound(const vec3_t origin, const int entityNum, const int entchannel, const sfxHandle_t sfx)
 {
-	Q_syscall(CG_S_STARTSOUND, origin, entity_num, entchannel, sfx);
+	Q_syscall(CG_S_STARTSOUND, origin, entityNum, entchannel, sfx);
 }
 
 void trap_S_StartLocalSound(const sfxHandle_t sfx, const int channelNum)
@@ -252,29 +252,29 @@ void trap_S_ClearLoopingSounds(void)
 	Q_syscall(CG_S_CLEARLOOPINGSOUNDS);
 }
 
-void trap_S_AddLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void trap_S_AddLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	Q_syscall(CG_S_ADDLOOPINGSOUND, entity_num, origin, velocity, sfx);
+	Q_syscall(CG_S_ADDLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
 
-void trap_S_UpdateEntityPosition(const int entity_num, const vec3_t origin)
+void trap_S_UpdateEntityPosition(const int entityNum, const vec3_t origin)
 {
-	Q_syscall(CG_S_UPDATEENTITYPOSITION, entity_num, origin);
+	Q_syscall(CG_S_UPDATEENTITYPOSITION, entityNum, origin);
 }
 
-void trap_S_AddRealLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void trap_S_AddRealLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	Q_syscall(CG_S_ADDREALLOOPINGSOUND, entity_num, origin, velocity, sfx);
+	Q_syscall(CG_S_ADDREALLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
 
-void trap_S_StopLoopingSound(const int entity_num)
+void trap_S_StopLoopingSound(const int entityNum)
 {
-	Q_syscall(CG_S_STOPLOOPINGSOUND, entity_num);
+	Q_syscall(CG_S_STOPLOOPINGSOUND, entityNum);
 }
 
-void trap_S_Respatialize(const int entity_num, const vec3_t origin, matrix3_t axis, const int inwater)
+void trap_S_Respatialize(const int entityNum, const vec3_t origin, matrix3_t axis, const int inwater)
 {
-	Q_syscall(CG_S_RESPATIALIZE, entity_num, origin, axis, inwater);
+	Q_syscall(CG_S_RESPATIALIZE, entityNum, origin, axis, inwater);
 }
 
 void trap_S_ShutUp(const qboolean shutUpFactor)
@@ -495,9 +495,9 @@ void trap_R_SetRefractProp(const float alpha, const float stretch, const qboolea
 	Q_syscall(CG_R_SETREFRACTIONPROP, PASSFLOAT(alpha), PASSFLOAT(stretch), prepost, negate);
 }
 
-void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset)
+void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset)
 {
-	Q_syscall(CG_R_REMAP_SHADER, oldShader, newShader, timeOffset);
+	Q_syscall(CG_R_REMAP_SHADER, oldShader, newShader, time_offset);
 }
 
 void trap_R_GetLightStyle(const int style, color4ub_t color)
@@ -922,9 +922,9 @@ int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, const int
 		lodBias);
 }
 
-qboolean trap_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin, const qhandle_t renderSkin)
+qboolean trap_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin, const qhandle_t render_skin)
 {
-	return Q_syscall(CG_G2_SETSKIN, ghoul2, model_index, customSkin, renderSkin);
+	return Q_syscall(CG_G2_SETSKIN, ghoul2, model_index, customSkin, render_skin);
 }
 
 void trap_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position,
@@ -989,9 +989,9 @@ int trap_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int model_in
 	return Q_syscall(CG_G2_COPYGHOUL2INSTANCE, g2_from, g2_to, model_index);
 }
 
-void trap_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int model_to)
+void trap_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int modelTo)
 {
-	Q_syscall(CG_G2_COPYSPECIFICGHOUL2MODEL, g2_from, modelFrom, g2_to, model_to);
+	Q_syscall(CG_G2_COPYSPECIFICGHOUL2MODEL, g2_from, modelFrom, g2_to, modelTo);
 }
 
 void trap_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
@@ -1147,14 +1147,14 @@ qboolean trap_G2API_RemoveBone(void* ghoul2, const char* boneName, const int mod
 	return Q_syscall(CG_G2_REMOVEBONE, ghoul2, boneName, model_index);
 }
 
-void trap_G2API_AttachInstanceToEntNum(void* ghoul2, const int entity_num, const qboolean server)
+void trap_G2API_AttachInstanceToEntNum(void* ghoul2, const int entityNum, const qboolean server)
 {
-	Q_syscall(CG_G2_ATTACHINSTANCETOENTNUM, ghoul2, entity_num, server);
+	Q_syscall(CG_G2_ATTACHINSTANCETOENTNUM, ghoul2, entityNum, server);
 }
 
-void trap_G2API_ClearAttachedInstance(const int entity_num)
+void trap_G2API_ClearAttachedInstance(const int entityNum)
 {
-	Q_syscall(CG_G2_CLEARATTACHEDINSTANCE, entity_num);
+	Q_syscall(CG_G2_CLEARATTACHEDINSTANCE, entityNum);
 }
 
 void trap_G2API_CleanEntAttachments(void)

@@ -38,13 +38,13 @@ public:
 		const int				initsurfaceNum,
 		int* initboneUsedList,
 		surfaceInfo_v& initrootSList,
-		model_t* initcurrentModel,
+		model_t* initcurrent_model,
 		boneInfo_v& initboneList) :
 
 		surfaceNum(initsurfaceNum),
 		boneUsedList(initboneUsedList),
 		rootSList(initrootSList),
-		currentModel(initcurrentModel),
+		currentModel(initcurrent_model),
 		boneList(initboneList) { }
 };
 
@@ -100,8 +100,7 @@ int G2_IsSurfaceLegal(void* mod, const char* surface_name, int* flags)
  *    pointer to surface if successful, false otherwise
  *
  ************************************************************************************************/
-mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, const char* surface_name,
-	int* surf_index/*NULL*/)
+static mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, const char* surface_name, int* surf_index)
 {
 	// find the model we want
 	const auto mod = const_cast<model_t*>(ghlInfo->currentModel);
@@ -148,7 +147,7 @@ mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInfo_v& s
 	return nullptr;
 }
 
-// set a named surface offFlags - if it doesn't find a surface with this name in the list then it will add one.
+// set a named surface off_flags - if it doesn't find a surface with this name in the list then it will add one.
 qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghlInfo, surfaceInfo_v& slist, const char* surface_name, const int off_flags)
 {
 	int					surf_index = -1;
@@ -168,11 +167,11 @@ qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghlInfo, surfaceInfo_v& slist, co
 	{
 		// set descendants value
 
-		// slist[surf_index].offFlags = offFlags;
+		// slist[surf_index].off_flags = off_flags;
 		// seems to me that we shouldn't overwrite the other flags.
 		// the only bit we really care about in the incoming flags is the off bit
-		slist[surf_index].offFlags &= ~(G2SURFACEFLAG_OFF | G2SURFACEFLAG_NODESCENDANTS);
-		slist[surf_index].offFlags |= off_flags & (G2SURFACEFLAG_OFF | G2SURFACEFLAG_NODESCENDANTS);
+		slist[surf_index].off_flags &= ~(G2SURFACEFLAG_OFF | G2SURFACEFLAG_NODESCENDANTS);
+		slist[surf_index].off_flags |= off_flags & (G2SURFACEFLAG_OFF | G2SURFACEFLAG_NODESCENDANTS);
 		return qtrue;
 	}
 	// ok, not in the list already - in that case, lets verify this surface exists in the model mesh
@@ -189,7 +188,7 @@ qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghlInfo, surfaceInfo_v& slist, co
 		{
 			surfaceInfo_t temp_slist_entry;
 			// insert here then because it changed, no need to add an override otherwise
-			temp_slist_entry.offFlags = newflags;
+			temp_slist_entry.off_flags = newflags;
 			temp_slist_entry.surface = surfaceNum;
 
 			slist.push_back(temp_slist_entry);
@@ -242,7 +241,7 @@ int G2_IsSurfaceOff(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, cons
 	if (surf)
 	{
 		// set descendants value
-		return slist[surf_index].offFlags;
+		return slist[surf_index].off_flags;
 	}
 	// ok, we didn't find it in the surface list. Lets look at the original surface then.
 
@@ -263,7 +262,7 @@ int G2_IsSurfaceOff(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, cons
 	return 0;
 }
 
-void G2_FindRecursiveSurface(model_t* currentModel, int surfaceNum, surfaceInfo_v& root_list, int* active_surfaces)
+static void G2_FindRecursiveSurface(model_t* currentModel, int surfaceNum, surfaceInfo_v& root_list, int* active_surfaces)
 {
 	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(currentModel, surfaceNum, 0));
 	const auto surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(currentModel->mdxm) + sizeof(mdxmHeader_t));
@@ -273,22 +272,22 @@ void G2_FindRecursiveSurface(model_t* currentModel, int surfaceNum, surfaceInfo_
 	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(surfaceNum, root_list);
 
 	// really, we should use the default flags for this surface unless it's been overriden
-	int offFlags = surf_info->flags;
+	int off_flags = surf_info->flags;
 
 	// set the off flags if we have some
 	if (surfOverride)
 	{
-		offFlags = surfOverride->offFlags;
+		off_flags = surfOverride->off_flags;
 	}
 
 	// if this surface is not off, indicate as such in the active surface list
-	if (!(offFlags & G2SURFACEFLAG_OFF))
+	if (!(off_flags & G2SURFACEFLAG_OFF))
 	{
 		active_surfaces[surfaceNum] = 1;
 	}
 	else
 		// if we are turning off all descendants, then stop this recursion now
-		if (offFlags & G2SURFACEFLAG_NODESCENDANTS)
+		if (off_flags & G2SURFACEFLAG_NODESCENDANTS)
 		{
 			return;
 		}
@@ -301,7 +300,7 @@ void G2_FindRecursiveSurface(model_t* currentModel, int surfaceNum, surfaceInfo_
 	}
 }
 
-void G2_RemoveRedundantGeneratedSurfaces(surfaceInfo_v& slist, const int* active_surfaces)
+static void G2_RemoveRedundantGeneratedSurfaces(surfaceInfo_v& slist, const int* active_surfaces)
 {
 	// walk the surface list, removing surface overrides or generated surfaces that are pointing at surfaces that aren't active anymore
 	for (size_t i = 0; i < slist.size(); i++)
@@ -309,7 +308,7 @@ void G2_RemoveRedundantGeneratedSurfaces(surfaceInfo_v& slist, const int* active
 		if (slist[i].surface != -1)
 		{
 			// is this a generated surface?
-			if (slist[i].offFlags & G2SURFACEFLAG_GENERATED)
+			if (slist[i].off_flags & G2SURFACEFLAG_GENERATED)
 			{
 				// if it's not in the list, remove it
 				if (!active_surfaces[slist[i].genPolySurfaceIndex & 0xffff])
@@ -398,7 +397,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 				// if either the bolt list is too small, or the bolt we are pointing at references nothing, remove this model
 				if (static_cast<int>(ghoul2[bolt_mod].mBltlist.size()) <= bolt_num ||
 					ghoul2[bolt_mod].mBltlist[bolt_num].boneNumber == -1 &&
-					ghoul2[bolt_mod].mBltlist[bolt_num].surfaceNumber == -1)
+					ghoul2[bolt_mod].mBltlist[bolt_num].surface_number == -1)
 				{
 					CGhoul2Info_v* g2i = &ghoul2;
 					G2API_RemoveGhoul2Model(&g2i, i);
@@ -413,94 +412,10 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 
 		return qtrue;
 	}
-	/*
-	//g2r	if (entstate->ghoul2)
-		{
-			CGhoul2Info_v &ghoul2 = *((CGhoul2Info_v *)entstate->ghoul2);
-			model_t				*mod_m = R_GetModelByHandle(RE_RegisterModel(ghoul2[model_index].mFileName));
-			model_t				*mod_a = R_GetModelByHandle(mod_m->mdxm->animIndex);
-			int					surf;
-			int					flags;
-			int					*activeSurfaces, *activeBones;
-
-			// did we find a ghoul 2 model or not?
-			if (!mod_m->mdxm)
-			{
-				return qfalse;
-			}
-
-			// first find if we already have this surface in the list
-			surf = G2_IsSurfaceLegal(mod_m, surface_name, &flags);
-			if (surf != -1)
-			{
-				// first see if this ghoul2 model already has this as a root surface
-				if (ghoul2[model_index].mSurfaceRoot == surf)
-				{
-					return qtrue;
-				}
-
-				// set the root surface
-				ghoul2[model_index].mSurfaceRoot = surf;
-
-				// ok, now the tricky bits.
-				// firstly, generate a list of active / on surfaces below the root point
-
-				// gimme some space to put this list into
-				activeSurfaces = (int *)Z_Malloc(mod_m->mdxm->numSurfaces * 4, TAG_GHOUL2, qtrue);
-				memset(activeSurfaces, 0, (mod_m->mdxm->numSurfaces * 4));
-				activeBones = (int *)Z_Malloc(mod_a->mdxa->numBones * 4, TAG_GHOUL2, qtrue);
-				memset(activeBones, 0, (mod_a->mdxa->numBones * 4));
-
-				G2_FindRecursiveSurface(mod_m, surf, ghoul2[model_index].mSlist, activeSurfaces);
-
-				// now generate the used bone list
-				CConstructBoneList	CBL(ghoul2[model_index].mSurfaceRoot,
-									activeBones,
-									ghoul2[model_index].mSlist,
-									mod_m,
-									ghoul2[model_index].mBlist);
-
-				G2_ConstructUsedBoneList(CBL);
-
-				// now remove all procedural or override surfaces that refer to surfaces that arent on this list
-				G2_RemoveRedundantGeneratedSurfaces(ghoul2[model_index].mSlist, activeSurfaces);
-
-				// now remove all bones that are pointing at bones that aren't active
-				G2_RemoveRedundantBoneOverrides(ghoul2[model_index].mBlist, activeBones);
-
-				// then remove all bolts that point at surfaces or bones that *arent* active.
-				G2_RemoveRedundantBolts(ghoul2[model_index].mBltlist, ghoul2[model_index].mSlist, activeSurfaces, activeBones);
-
-				// then remove all models on this ghoul2 instance that use those bolts that are being removed.
-				for (int i=0; i<ghoul2.size(); i++)
-				{
-					// are we even bolted to anything?
-					if (ghoul2[i].mModelBoltLink != -1)
-					{
-						int	boltMod = (ghoul2[i].mModelBoltLink >> MODEL_SHIFT) & MODEL_AND;
-						int	boltNum = (ghoul2[i].mModelBoltLink >> BOLT_SHIFT) & BOLT_AND;
-						// if either the bolt list is too small, or the bolt we are pointing at references nothing, remove this model
-						if ((ghoul2[boltMod].mBltlist.size() <= boltNum) ||
-							((ghoul2[boltMod].mBltlist[boltNum].boneNumber == -1) &&
-							 (ghoul2[boltMod].mBltlist[boltNum].surfaceNumber == -1)))
-						{
-							G2API_RemoveGhoul2Model(entstate, i);
-						}
-					}
-				}
-
-				// remember to free what we used
-				Z_Free(activeSurfaces);
-				Z_Free(activeBones);
-
-				return (qtrue);
-			}
-		}
-		assert(0);*/
 	return qfalse;
 }
 
-extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, int use_lod);
+extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int use_lod);
 int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, int lod)
 {
 	surfaceInfo_t temp_slist_entry;
@@ -514,7 +429,7 @@ int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_
 		// is the surface count -1? That would indicate it's free
 		if (ghoul2->mSlist[i].surface == -1)
 		{
-			ghoul2->mSlist[i].offFlags = G2SURFACEFLAG_GENERATED;
+			ghoul2->mSlist[i].off_flags = G2SURFACEFLAG_GENERATED;
 			ghoul2->mSlist[i].surface = 10000;		// no model will ever have 10000 surfaces
 			ghoul2->mSlist[i].genBarycentricI = barycentric_i;
 			ghoul2->mSlist[i].genBarycentricJ = barycentric_j;
@@ -526,7 +441,7 @@ int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_
 
 	// ok, didn't find one. Better create one
 
-	temp_slist_entry.offFlags = G2SURFACEFLAG_GENERATED;
+	temp_slist_entry.off_flags = G2SURFACEFLAG_GENERATED;
 	temp_slist_entry.surface = 10000;
 	temp_slist_entry.genBarycentricI = barycentric_i;
 	temp_slist_entry.genBarycentricJ = barycentric_j;
@@ -634,7 +549,7 @@ int G2_IsSurfaceRendered(const CGhoul2Info* ghlInfo, const char* surface_name, c
 			if (parent_surf)
 			{
 				// set descendants value
-				parent_flags = slist[surf_index].offFlags;
+				parent_flags = slist[surf_index].off_flags;
 			}
 			// now we have the parent flags, lets see if any have the 'no descendants' flag set
 			if (parent_flags & G2SURFACEFLAG_NODESCENDANTS)
@@ -657,7 +572,7 @@ int G2_IsSurfaceRendered(const CGhoul2Info* ghlInfo, const char* surface_name, c
 		if (surf)
 		{
 			// set descendants value
-			flags = slist[surf_index].offFlags;
+			flags = slist[surf_index].off_flags;
 		}
 		// ok, at this point in flags we have what this surface is set to, and the index of the surface itself
 	}

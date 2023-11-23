@@ -64,7 +64,7 @@ using projectileinfo_t = struct projectileinfo_s
 	float bouncestop;
 };
 
-using weaponinfo_t = struct weaponinfo_s
+using weapon_info_t = struct weapon_info_s
 {
 	int valid; //true if the weapon info is valid
 	int number; //number of the weapon
@@ -99,7 +99,7 @@ void BotShutdownWeaponAI(void);
 //returns the best weapon to fight with
 int BotChooseBestFightWeapon(int weaponstate, int* inventory);
 //returns the information of the current weapon
-void BotGetWeaponInfo(int weaponstate, int weapon, weaponinfo_t* weaponinfo);
+void BotGetweapon_info(int weaponstate, int weapon, weapon_info_t* weaponInfo);
 //loads the weapon weights
 int BotLoadWeaponWeights(int weaponstate, char* filename);
 //returns a handle to a newly allocated weapon state

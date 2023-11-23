@@ -1202,9 +1202,9 @@ saber_moveName_t PM_CheckStabDown(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, fwd, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.entity_num < ENTITYNUM_WORLD)
+	if (tr.entityNum < ENTITYNUM_WORLD)
 	{
-		ent = PM_BGEntForNum(tr.entity_num);
+		ent = PM_BGEntForNum(tr.entityNum);
 	}
 
 	if (ent &&
@@ -2296,9 +2296,9 @@ qboolean PM_CanBackstab(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0 && tr.entity_num >= 0 && tr.entity_num < ENTITYNUM_NONE)
+	if (tr.fraction != 1.0 && tr.entityNum >= 0 && tr.entityNum < ENTITYNUM_NONE)
 	{
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
 
 		if (bgEnt && (bgEnt->s.eType == ET_PLAYER || bgEnt->s.eType == ET_NPC))
 		{
@@ -2623,7 +2623,7 @@ qboolean PM_Can_Do_Kill_Lunge(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0 && tr.entity_num >= 0 && tr.entity_num < MAX_CLIENTS)
+	if (tr.fraction != 1.0 && tr.entityNum >= 0 && tr.entityNum < MAX_CLIENTS)
 	{
 		//We don't have real entity access here so we can't do an in depth check. But if it's a client, I guess that's reason enough to attack
 		return qtrue;
@@ -2651,7 +2651,7 @@ qboolean PM_Can_Do_Kill_Lunge_back(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0 && tr.entity_num >= 0 && (tr.entity_num < MAX_CLIENTS))
+	if (tr.fraction != 1.0 && tr.entityNum >= 0 && (tr.entityNum < MAX_CLIENTS))
 	{ //We don't have real entity access here so we can't do an indepth check. But if it's a client and it's behind us, I guess that's reason enough to stab backward
 		return qtrue;
 	}
@@ -2978,10 +2978,10 @@ qboolean G_CheckEnemyPresence(const int dir, const float radius)
 	VectorMA(pm->ps->origin, radius, checkDir, tTo);
 	pm->trace(&tr, pm->ps->origin, tMins, tMaxs, tTo, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0f && tr.entity_num < ENTITYNUM_WORLD)
+	if (tr.fraction != 1.0f && tr.entityNum < ENTITYNUM_WORLD)
 	{
 		//let's see who we hit
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
 
 		if (bgEnt &&
 			(bgEnt->s.eType == ET_PLAYER || bgEnt->s.eType == ET_NPC))

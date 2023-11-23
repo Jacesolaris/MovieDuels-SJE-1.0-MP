@@ -411,31 +411,31 @@ qboolean GVM_NAV_CheckNodeFailedForEnt(const int ent_id, const int nodeNum)
 	return ge->NAV_CheckNodeFailedForEnt(ent_id, nodeNum);
 }
 
-qboolean GVM_NAV_EntIsUnlockedDoor(const int entity_num)
+qboolean GVM_NAV_EntIsUnlockedDoor(const int entityNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISUNLOCKEDDOOR, entity_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISUNLOCKEDDOOR, entityNum));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsUnlockedDoor(entity_num);
+	return ge->NAV_EntIsUnlockedDoor(entityNum);
 }
 
-qboolean GVM_NAV_EntIsDoor(const int entity_num)
+qboolean GVM_NAV_EntIsDoor(const int entityNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISDOOR, entity_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISDOOR, entityNum));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsDoor(entity_num);
+	return ge->NAV_EntIsDoor(entityNum);
 }
 
-qboolean GVM_NAV_EntIsBreakable(const int entity_num)
+qboolean GVM_NAV_EntIsBreakable(const int entityNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISBREAKABLE, entity_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISBREAKABLE, entityNum));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsBreakable(entity_num);
+	return ge->NAV_EntIsBreakable(entityNum);
 }
 
 qboolean GVM_NAV_EntIsRemovableUsable(const int ent_num)
@@ -1340,9 +1340,9 @@ static int SV_BotChooseBestFightWeapon(const int weaponstate, int* inventory)
 	return botlib_export->ai.BotChooseBestFightWeapon(weaponstate, inventory);
 }
 
-static void SV_BotGetWeaponInfo(const int weaponstate, const int weapon, void* weaponinfo)
+static void SV_BotGetweapon_info(const int weaponstate, const int weapon, void* weaponInfo)
 {
-	botlib_export->ai.BotGetWeaponInfo(weaponstate, weapon, static_cast<weaponinfo_s*>(weaponinfo));
+	botlib_export->ai.BotGetweapon_info(weaponstate, weapon, static_cast<weapon_info_s*>(weaponInfo));
 }
 
 static int SV_BotLoadWeaponWeights(const int weaponstate, char* filename)
@@ -1775,9 +1775,9 @@ static void SV_G2API_ListModelBones(void* ghlInfo, const int frame)
 	re->G2API_ListBones(static_cast<CGhoul2Info*>(ghlInfo), frame);
 }
 
-static void SV_G2API_SetGhoul2ModelIndexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list)
+static void SV_G2API_SetGhoul2model_indexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list)
 {
-	re->G2API_SetGhoul2ModelIndexes(*static_cast<CGhoul2Info_v*>(ghoul2), model_list, skin_list);
+	re->G2API_SetGhoul2model_indexes(*static_cast<CGhoul2Info_v*>(ghoul2), model_list, skin_list);
 }
 
 static qboolean SV_G2API_HaveWeGhoul2Models(void* ghoul2)
@@ -1824,10 +1824,10 @@ static int SV_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, cons
 }
 
 static qboolean SV_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin,
-	const qhandle_t renderSkin)
+	const qhandle_t render_skin)
 {
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	return re->G2API_SetSkin(g2, model_index, customSkin, renderSkin);
+	return re->G2API_SetSkin(g2, model_index, customSkin, render_skin);
 }
 
 static void SV_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
@@ -1899,14 +1899,14 @@ static int SV_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int mod
 		model_index);
 }
 
-static void SV_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int model_to)
+static void SV_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int modelTo)
 {
 	if (!g2_from || !g2_to)
 	{
 		return;
 	}
 	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), modelFrom, *static_cast<CGhoul2Info_v*>(g2_to),
-		model_to);
+		modelTo);
 }
 
 static void SV_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
@@ -2084,14 +2084,14 @@ static qboolean SV_G2API_RemoveBone(void* ghoul2, const char* boneName, const in
 	return re->G2API_RemoveBone(g2, model_index, boneName);
 }
 
-static void SV_G2API_AttachInstanceToEntNum(void* ghoul2, const int entity_num, const qboolean server)
+static void SV_G2API_AttachInstanceToEntNum(void* ghoul2, const int entityNum, const qboolean server)
 {
-	re->G2API_AttachInstanceToEntNum(*static_cast<CGhoul2Info_v*>(ghoul2), entity_num, server);
+	re->G2API_AttachInstanceToEntNum(*static_cast<CGhoul2Info_v*>(ghoul2), entityNum, server);
 }
 
-static void SV_G2API_ClearAttachedInstance(const int entity_num)
+static void SV_G2API_ClearAttachedInstance(const int entityNum)
 {
-	re->G2API_ClearAttachedInstance(entity_num);
+	re->G2API_ClearAttachedInstance(entityNum);
 }
 
 static void SV_G2API_CleanEntAttachments(void)
@@ -3008,7 +3008,7 @@ intptr_t SV_GameSystemCalls(intptr_t* args)
 	case BOTLIB_AI_CHOOSE_BEST_FIGHT_WEAPON:
 		return botlib_export->ai.BotChooseBestFightWeapon(args[1], static_cast<int*>(VMA(2)));
 	case BOTLIB_AI_GET_WEAPON_INFO:
-		botlib_export->ai.BotGetWeaponInfo(args[1], args[2], static_cast<weaponinfo_s*>(VMA(3)));
+		botlib_export->ai.BotGetweapon_info(args[1], args[2], static_cast<weapon_info_s*>(VMA(3)));
 		return 0;
 	case BOTLIB_AI_LOAD_WEAPON_WEIGHTS:
 		return botlib_export->ai.BotLoadWeaponWeights(args[1], static_cast<char*>(VMA(2)));
@@ -3041,7 +3041,7 @@ intptr_t SV_GameSystemCalls(intptr_t* args)
 		return re->G2API_HaveWeGhoul2Models(*reinterpret_cast<CGhoul2Info_v*>(args[1]));
 
 	case G_G2_SETMODELS:
-		re->G2API_SetGhoul2ModelIndexes(*reinterpret_cast<CGhoul2Info_v*>(args[1]), static_cast<qhandle_t*>(VMA(2)),
+		re->G2API_SetGhoul2model_indexes(*reinterpret_cast<CGhoul2Info_v*>(args[1]), static_cast<qhandle_t*>(VMA(2)),
 			static_cast<qhandle_t*>(VMA(3)));
 		return 0;
 
@@ -3566,7 +3566,7 @@ void SV_BindGame(void)
 		gi.BotFreeMoveState = SV_BotFreeMoveState;
 		gi.BotInitMoveState = SV_BotInitMoveState;
 		gi.BotChooseBestFightWeapon = SV_BotChooseBestFightWeapon;
-		gi.BotGetWeaponInfo = SV_BotGetWeaponInfo;
+		gi.BotGetweapon_info = SV_BotGetweapon_info;
 		gi.BotLoadWeaponWeights = SV_BotLoadWeaponWeights;
 		gi.BotAllocWeaponState = SV_BotAllocWeaponState;
 		gi.BotFreeWeaponState = SV_BotFreeWeaponState;
@@ -3655,7 +3655,7 @@ void SV_BindGame(void)
 		gi.G2API_ListModelBones = SV_G2API_ListModelBones;
 		gi.G2API_ListModelSurfaces = SV_G2API_ListModelSurfaces;
 		gi.G2API_HaveWeGhoul2Models = SV_G2API_HaveWeGhoul2Models;
-		gi.G2API_SetGhoul2ModelIndexes = SV_G2API_SetGhoul2ModelIndexes;
+		gi.G2API_SetGhoul2model_indexes = SV_G2API_SetGhoul2model_indexes;
 		gi.G2API_GetBoltMatrix = SV_G2API_GetBoltMatrix;
 		gi.G2API_GetBoltMatrix_NoReconstruct = SV_G2API_GetBoltMatrix_NoReconstruct;
 		gi.G2API_GetBoltMatrix_NoRecNoRot = SV_G2API_GetBoltMatrix_NoRecNoRot;

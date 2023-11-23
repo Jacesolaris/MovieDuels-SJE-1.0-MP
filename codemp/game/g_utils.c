@@ -32,7 +32,7 @@ typedef struct shaderRemap_s
 {
 	char oldShader[MAX_QPATH];
 	char newShader[MAX_QPATH];
-	float timeOffset;
+	float time_offset;
 } shaderRemap_t;
 
 #define MAX_SHADER_REMAPS 128
@@ -40,7 +40,7 @@ typedef struct shaderRemap_s
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
 
-void AddRemap(const char* oldShader, const char* newShader, const float timeOffset)
+void AddRemap(const char* oldShader, const char* newShader, const float time_offset)
 {
 	for (int i = 0; i < remapCount; i++)
 	{
@@ -48,7 +48,7 @@ void AddRemap(const char* oldShader, const char* newShader, const float timeOffs
 		{
 			// found it, just update this one
 			strcpy(remappedShaders[i].newShader, newShader);
-			remappedShaders[i].timeOffset = timeOffset;
+			remappedShaders[i].time_offset = time_offset;
 			return;
 		}
 	}
@@ -56,7 +56,7 @@ void AddRemap(const char* oldShader, const char* newShader, const float timeOffs
 	{
 		strcpy(remappedShaders[remapCount].newShader, newShader);
 		strcpy(remappedShaders[remapCount].oldShader, oldShader);
-		remappedShaders[remapCount].timeOffset = timeOffset;
+		remappedShaders[remapCount].time_offset = time_offset;
 		remapCount++;
 	}
 }
@@ -70,7 +70,7 @@ const char* BuildShaderStateConfig(void)
 	{
 		char out[MAX_QPATH * 2 + 5];
 		Com_sprintf(out, MAX_QPATH * 2 + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader,
-			remappedShaders[i].timeOffset);
+			remappedShaders[i].time_offset);
 		Q_strcat(buff, sizeof buff, out);
 	}
 	return buff;
@@ -1925,12 +1925,12 @@ void TryUse(gentity_t* ent)
 	trap->Trace(&trace, src, vec3_origin, vec3_origin, dest, ent->s.number,
 		MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE, qfalse, 0, 0);
 
-	if (trace.fraction == 1.0f || trace.entity_num == ENTITYNUM_NONE)
+	if (trace.fraction == 1.0f || trace.entityNum == ENTITYNUM_NONE)
 	{
 		goto tryJetPack;
 	}
 
-	gentity_t* target = &g_entities[trace.entity_num];
+	gentity_t* target = &g_entities[trace.entityNum];
 
 	//Enable for corpse dragging
 #if 0
@@ -2473,7 +2473,7 @@ gentity_t* ViewTarget(const gentity_t* ent, const int length, vec3_t* target, cp
 	if (target)
 		VectorCopy(tr.endpos, *target);
 
-	if (tr.entity_num >= ENTITYNUM_MAX_NORMAL)
+	if (tr.entityNum >= ENTITYNUM_MAX_NORMAL)
 		return NULL;
-	return &g_entities[tr.entity_num];
+	return &g_entities[tr.entityNum];
 }

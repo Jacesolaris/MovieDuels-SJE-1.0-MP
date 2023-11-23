@@ -486,7 +486,7 @@ using shader_t = struct shader_s
 	shaderStage_t* stages;
 
 	float clampTime; // time this shader is clamped to
-	float timeOffset; // current time offset for this shader
+	float time_offset; // current time offset for this shader
 
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
@@ -822,7 +822,7 @@ using world_t = struct world_s
 
 	bmodel_t* bmodels;
 
-	int numplanes;
+	int num_planes;
 	cplane_t* planes;
 
 	int numnodes; // includes leafs
@@ -864,6 +864,42 @@ using world_t = struct world_s
 
 //======================================================================
 
+typedef enum {
+	MOD_BAD,
+	MOD_BRUSH,
+	MOD_MESH,
+	/*
+	Ghoul2 Insert Start
+	*/
+	MOD_MDXM,
+	MOD_MDXA
+	/*
+	Ghoul2 Insert End
+	*/
+} modtype_t;
+
+typedef struct model_s {
+	char		name[MAX_QPATH];
+	modtype_t	type;
+	int			index;				// model = tr.models[model->mod_index]
+
+	int			dataSize;			// just for listing purposes
+	bmodel_t* bmodel;			// only if type == MOD_BRUSH
+	md3Header_t* md3[MD3_MAX_LODS];	// only if type == MOD_MESH
+	/*
+	Ghoul2 Insert Start
+	*/
+	mdxmHeader_t* mdxm;				// only if type == MOD_GL2M which is a GHOUL II Mesh file NOT a GHOUL II animation file
+	mdxaHeader_t* mdxa;				// only if type == MOD_GL2A which is a GHOUL II Animation file
+	/*
+	Ghoul2 Insert End
+	*/
+	unsigned char	numLods;
+	bool			bspInstance;			// model is a bsp instance
+} model_t;
+
+//======================================================================
+
 #define	MAX_MOD_KNOWN	1024
 
 void R_ModelInit();
@@ -873,7 +909,7 @@ model_t* R_GetModelByHandle(qhandle_t index);
 int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName);
 void R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
-void R_Modellist_f(void);
+void R_model_list_f(void);
 
 //====================================================
 
@@ -1035,8 +1071,8 @@ using trGlobals_t = struct trGlobals_s
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t worldEntity; // point currentEntity at this when rendering world
-	int currentEntityNum;
-	int shiftedEntityNum; // currentEntityNum << QSORT_ENTITYNUM_SHIFT
+	int currententity_num;
+	int shiftedentity_num; // currententity_num << QSORT_ENTITYNUM_SHIFT
 	model_t* currentModel;
 
 	viewParms_t viewParms;
@@ -1240,7 +1276,7 @@ extern cvar_t* r_simpleMipMaps;
 
 extern cvar_t* r_showImages;
 extern cvar_t* r_debugSort;
-extern	cvar_t* r_debugStyle;
+extern cvar_t* r_debugStyle;
 
 /*
 Ghoul2 Insert Start
@@ -1264,7 +1300,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader, int* fogNum, int* dlightMap);
+void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
 
 void R_AddDrawSurf(surfaceType_t* surface, shader_t* shader, int fogIndex, int dlightMap);
 
@@ -1392,16 +1428,16 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
 qhandle_t RE_RegisterShader(const char* name);
 qhandle_t RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 shader_t* R_FindShaderByName(const char* name);
-void R_InitShaders(qboolean server);
+void R_InitShaders(const qboolean server);
 void R_ShaderList_f();
 void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 
@@ -1504,7 +1540,7 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(const bmodel_t* bmodel, bool no_light);
+void R_DlightBmodel(const bmodel_t* bmodel, const bool no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
 void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
 int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);

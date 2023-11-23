@@ -78,7 +78,7 @@ using zoneStats_t = struct zoneStats_s
 	// I'm keeping these updated on the fly, since it's quicker for cache-pool
 	//	purposes rather than recalculating each time...
 	//
-	int iSizesPerTag[TAG_COUNT];
+	int i_sizesPerTag[TAG_COUNT];
 	int iCountsPerTag[TAG_COUNT];
 };
 
@@ -166,7 +166,7 @@ StaticMem_t gNumberString[] = {
 
 qboolean gbMemFreeupOccured = qfalse;
 
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit /* = qfalse */, int iUnusedAlign /* = 4 */)
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
 {
 	gbMemFreeupOccured = qfalse;
 
@@ -298,7 +298,7 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit /* =
 	//
 	TheZone.Stats.iCurrent += iSize;
 	TheZone.Stats.iCount++;
-	TheZone.Stats.iSizesPerTag[eTag] += iSize;
+	TheZone.Stats.i_sizesPerTag[eTag] += iSize;
 	TheZone.Stats.iCountsPerTag[eTag]++;
 
 	if (TheZone.Stats.iCurrent > TheZone.Stats.iPeak)
@@ -348,7 +348,7 @@ void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
+	TheZone.Stats.i_sizesPerTag[pMemory->eTag] -= pMemory->iSize;
 	TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
 
 	// morph...
@@ -359,7 +359,7 @@ void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.iSizesPerTag[pMemory->eTag] += pMemory->iSize;
+	TheZone.Stats.i_sizesPerTag[pMemory->eTag] += pMemory->iSize;
 	TheZone.Stats.iCountsPerTag[pMemory->eTag]++;
 }
 
@@ -371,7 +371,7 @@ static void Zone_FreeBlock(zoneHeader_t* pMemory)
 		//
 		TheZone.Stats.iCount--;
 		TheZone.Stats.iCurrent -= pMemory->iSize;
-		TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
+		TheZone.Stats.i_sizesPerTag[pMemory->eTag] -= pMemory->iSize;
 		TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
 
 		// Sanity checks...
@@ -463,7 +463,7 @@ void Z_Free(void* pv_address)
 
 int Z_MemSize(const memtag_t eTag)
 {
-	return TheZone.Stats.iSizesPerTag[eTag];
+	return TheZone.Stats.i_sizesPerTag[eTag];
 }
 
 // Frees all blocks with the specified tag...
@@ -546,7 +546,7 @@ static void Z_Details_f(void)
 	for (int i = 0; i < TAG_COUNT; i++)
 	{
 		const int iThisCount = TheZone.Stats.iCountsPerTag[i];
-		const int iThisSize = TheZone.Stats.iSizesPerTag[i];
+		const int iThisSize = TheZone.Stats.i_sizesPerTag[i];
 
 		if (iThisCount)
 		{
@@ -804,7 +804,7 @@ Hunk_Alloc
 Allocate permanent (until the hunk is cleared) memory
 =================
 */
-void* Hunk_Alloc(const int size, ha_pref preference)
+void* Hunk_Alloc(const int size, const ha_pref preference)
 {
 	return Z_Malloc(size, hunk_tag, qtrue);
 }

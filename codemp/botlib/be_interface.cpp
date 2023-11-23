@@ -848,7 +848,7 @@ static void Init_AI_Export(ai_export_t* ai) {
 	// be_ai_weap.h
 	//-----------------------------------
 	ai->BotChooseBestFightWeapon = BotChooseBestFightWeapon;
-	ai->BotGetWeaponInfo = BotGetWeaponInfo;
+	ai->BotGetweapon_info = BotGetweapon_info;
 	ai->BotLoadWeaponWeights = BotLoadWeaponWeights;
 	ai->BotAllocWeaponState = BotAllocWeaponState;
 	ai->BotFreeWeaponState = BotFreeWeaponState;

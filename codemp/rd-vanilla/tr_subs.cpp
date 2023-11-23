@@ -61,35 +61,43 @@ void QDECL Com_Error(const int level, const char* error, ...)
 }
 
 // HUNK
-void* Hunk_AllocateTempMemory(const int size) {
+void* Hunk_AllocateTempMemory(const int size)
+{
 	return ri->Hunk_AllocateTempMemory(size);
 }
 
-void Hunk_FreeTempMemory(void* buf) {
+void Hunk_FreeTempMemory(void* buf)
+{
 	ri->Hunk_FreeTempMemory(buf);
 }
 
-void* Hunk_Alloc(const int size, const ha_pref preference) {
+void* Hunk_Alloc(const int size, const ha_pref preference)
+{
 	return ri->Hunk_Alloc(size, preference);
 }
 
-int Hunk_MemoryRemaining(void) {
+int Hunk_MemoryRemaining(void)
+{
 	return ri->Hunk_MemoryRemaining();
 }
 
 // ZONE
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign) {
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
+{
 	return ri->Z_Malloc(iSize, eTag, bZeroit, iUnusedAlign);
 }
 
-void Z_Free(void* pv_address) {
-	ri->Z_Free(pv_address);
+void Z_Free(void* pvAddress)
+{
+	ri->Z_Free(pvAddress);
 }
 
-int Z_MemSize(const memtag_t eTag) {
+int Z_MemSize(const memtag_t eTag)
+{
 	return ri->Z_MemSize(eTag);
 }
 
-void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag) {
-	ri->Z_MorphMallocTag(pv_address, eDesiredTag);
+void Z_MorphMallocTag(void* pvAddress, const memtag_t eDesiredTag)
+{
+	ri->Z_MorphMallocTag(pvAddress, eDesiredTag);
 }

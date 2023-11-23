@@ -1402,7 +1402,7 @@ qboolean WE_ParseVector(const char** text, const int count, float* v)
 	return qtrue;
 }
 
-void RE_WorldEffectCommand(const char* command) // vanilla mp
+void RE_WorldEffectCommand(const char* command)
 {
 	if (!command)
 	{
@@ -1437,7 +1437,6 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 		}
 		mParticleClouds.clear();
 		mWindZones.clear();
-		mOutside.mOutsidePain = 0.0f;
 	}
 
 	// Freeze / UnFreeze - Stops All Particle Motion Updates
@@ -1614,20 +1613,20 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 			return;
 		}
 		CWeatherParticleCloud& nCloud = mParticleClouds.push_back();
-		nCloud.Initialize(1000, "gfx/effects/snowflake1");
+		nCloud.Initialize(1000, "gfx/effects/snowflake1.bmp");
 		nCloud.mBlendMode = 1;
 		nCloud.mRotationChangeNext = 0;
 		nCloud.mColor = 0.75f;
 		nCloud.mWaterParticles = true;
 	}
-	else if ((Q_stricmp(token, "lava") == 0) || r_weather->integer == 3)
+	else if ((Q_stricmp(token, "Lava") == 0) || r_weather->integer == 3)
 	{
 		if (mParticleClouds.full())
 		{
 			return;
 		}
 		CWeatherParticleCloud& nCloud = mParticleClouds.push_back();
-		nCloud.Initialize(1000, "gfx/effects/snowflake2");
+		nCloud.Initialize(1000, "gfx/effects/snowflake2.bmp");
 		nCloud.mBlendMode = 1;
 		nCloud.mRotationChangeNext = 0;
 		nCloud.mColor = 0.75f;
@@ -1664,7 +1663,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create A Sand Storm
 	//---------------------
-	else if (Q_stricmp(token, "Sandstorm") == 0)
+	else if ((Q_stricmp(token, "Sandstorm") == 0) || r_weather->integer == 4)
 	{
 		if (mParticleClouds.full())
 		{
@@ -1725,7 +1724,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 			return;
 		}
 		CWeatherParticleCloud& nCloud = mParticleClouds.push_back();
-		nCloud.Initialize(240, "gfx/effects/alpha_smoke2b.tga");
+		nCloud.Initialize(60, "gfx/effects/alpha_smoke2b.tga");
 		nCloud.mBlendMode = 1;
 		nCloud.mGravity = 0;
 		nCloud.mWidth = 70;

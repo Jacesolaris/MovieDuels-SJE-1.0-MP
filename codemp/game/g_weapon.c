@@ -879,7 +879,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, ignore, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		trace_ent = &g_entities[tr.entity_num];
+		trace_ent = &g_entities[tr.entityNum];
 
 		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
 		{
@@ -901,7 +901,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 		if (trace_ent && trace_ent->client && trace_ent->client->ps.duelInProgress &&
 			trace_ent->client->ps.duelIndex != ent->s.number)
 		{
-			ignore = tr.entity_num;
+			ignore = tr.entityNum;
 			VectorCopy(tr.endpos, start);
 			continue;
 		}
@@ -923,7 +923,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				}
 				WP_SaberBlockBolt(trace_ent, tr.endpos, qtrue);
 
-				ignore = tr.entity_num;
+				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -948,7 +948,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				//force player into a projective block move.
 				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
 
-				ignore = tr.entity_num;
+				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -973,11 +973,11 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 	VectorCopy(muzzle, tent->s.origin2);
 	tent->s.eventParm = ent->s.number;
 
-	trace_ent = &g_entities[tr.entity_num];
+	trace_ent = &g_entities[tr.entityNum];
 
 	if (render_impact)
 	{
-		if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
 		{
 			if (trace_ent->client && LogAccuracyHit(trace_ent, ent))
 			{
@@ -1130,7 +1130,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, ignore, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entity_num];
+		gentity_t* trace_ent = &g_entities[tr.entityNum];
 
 		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
 		{
@@ -1157,7 +1157,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		if (trace_ent && trace_ent->client && trace_ent->client->ps.duelInProgress &&
 			trace_ent->client->ps.duelIndex != ent->s.number)
 		{
-			ignore = tr.entity_num;
+			ignore = tr.entityNum;
 			VectorCopy(tr.endpos, start);
 			continue;
 		}
@@ -1179,7 +1179,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 				}
 				WP_SaberBlockBolt(trace_ent, tr.endpos, qtrue);
 
-				ignore = tr.entity_num;
+				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -1204,7 +1204,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 				//force player into a projective block move.
 				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
 
-				ignore = tr.entity_num;
+				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -1315,7 +1315,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		// Get ready for an attempt to trace through another person
 		VectorCopy(tr.endpos, muzzle);
 		VectorCopy(tr.endpos, start);
-		ignore = tr.entity_num;
+		ignore = tr.entityNum;
 	}
 }
 
@@ -2868,7 +2868,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 				if (trace.fraction < 1.0f)
 				{
 					//hit something
-					if (trace.entity_num == enemy_num)
+					if (trace.entityNum == enemy_num)
 					{
 						//hit the enemy, that's perfect!
 						break;
@@ -2888,10 +2888,10 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 					}
 					blocked = qtrue;
 					//see if we should store this as the failCase
-					if (trace.entity_num < ENTITYNUM_WORLD)
+					if (trace.entityNum < ENTITYNUM_WORLD)
 					{
 						//hit an ent
-						const gentity_t* trace_ent = &g_entities[trace.entity_num];
+						const gentity_t* trace_ent = &g_entities[trace.entityNum];
 						if (trace_ent && trace_ent->takedamage && !OnSameTeam(self, trace_ent))
 						{
 							//hit something breakable, so that's okay
@@ -3029,9 +3029,9 @@ void touchLaserTrap(gentity_t* ent, const gentity_t* other, trace_t* trace)
 	else
 	{
 		ent->touch = 0;
-		if (trace->entity_num != ENTITYNUM_NONE)
+		if (trace->entityNum != ENTITYNUM_NONE)
 		{
-			ent->enemy = &g_entities[trace->entity_num];
+			ent->enemy = &g_entities[trace->entityNum];
 		}
 		laserTrapStick(ent, trace->endpos, trace->plane.normal);
 	}
@@ -3108,7 +3108,7 @@ void laserTrapThink(gentity_t* ent)
 	VectorMA(ent->s.pos.trBase, 1024, ent->movedir, end);
 	trap->Trace(&tr, ent->r.currentOrigin, NULL, NULL, end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	const gentity_t* trace_ent = &g_entities[tr.entity_num];
+	const gentity_t* trace_ent = &g_entities[tr.entityNum];
 
 	ent->s.time = -1; //let all clients know to draw a beam from this guy
 
@@ -3778,7 +3778,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, skip, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entity_num];
+		gentity_t* trace_ent = &g_entities[tr.entityNum];
 
 		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
 		{
@@ -3800,10 +3800,10 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			render_impact = qfalse;
 		}
 
-		if (tr.entity_num == ent->s.number)
+		if (tr.entityNum == ent->s.number)
 		{
 			VectorCopy(tr.endpos, start);
-			skip = tr.entity_num;
+			skip = tr.entityNum;
 #ifdef _DEBUG
 			Com_Printf("BAD! Concussion gun shot somehow traced back and hit the owner!\n");
 #endif
@@ -3838,7 +3838,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 				//force player into a projective block move.
 				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
 
-				skip = tr.entity_num;
+				skip = tr.entityNum;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -3847,7 +3847,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		{
 			if (render_impact)
 			{
-				if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage
+				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage
 					|| !Q_stricmp(trace_ent->classname, "misc_model_breakable")
 					|| trace_ent->s.eType == ET_MOVER)
 				{
@@ -3941,7 +3941,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		// Get ready for an attempt to trace through another person
 		//VectorCopy( tr.endpos, muzzle2 );
 		VectorCopy(tr.endpos, start);
-		skip = tr.entity_num;
+		skip = tr.entityNum;
 		hit_dodged = qfalse;
 	}
 
@@ -4045,12 +4045,12 @@ void WP_FireStunBaton(gentity_t* ent, const qboolean alt_fire)
 
 		trap->Trace(&tr, muzzle_stun, mins, maxs, end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (tr.entity_num >= ENTITYNUM_WORLD)
+		if (tr.entityNum >= ENTITYNUM_WORLD)
 		{
 			return;
 		}
 
-		gentity_t* tr_ent = &g_entities[tr.entity_num];
+		gentity_t* tr_ent = &g_entities[tr.entityNum];
 
 		if (tr_ent && tr_ent->takedamage && tr_ent->client)
 		{
@@ -4150,10 +4150,10 @@ void WP_FireMelee(gentity_t* ent, qboolean alt_fire)
 
 	trap->Trace(&tr, muzzle_punch, mins, maxs, end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	if (tr.entity_num != ENTITYNUM_NONE)
+	if (tr.entityNum != ENTITYNUM_NONE)
 	{
 		//hit something
-		gentity_t* tr_ent = &g_entities[tr.entity_num];
+		gentity_t* tr_ent = &g_entities[tr.entityNum];
 
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
@@ -4465,7 +4465,7 @@ void WP_TouchVehMissile(gentity_t* ent, const gentity_t* other, const trace_t* t
 	memcpy(&myTrace, trace, sizeof myTrace);
 	if (other)
 	{
-		myTrace.entity_num = other->s.number;
+		myTrace.entityNum = other->s.number;
 	}
 	G_MissileImpact(ent, &myTrace);
 }
@@ -4523,7 +4523,7 @@ void WP_VehWeapSetSolidToOwner(gentity_t* self)
 
 #define VEH_HOMING_MISSILE_THINK_TIME		100
 
-gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWeaponInfo_t* veh_weapon,
+gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehweapon_info_t* veh_weapon,
 	const qboolean alt_fire,
 	const qboolean is_turret_weap)
 {
@@ -4648,7 +4648,7 @@ gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const 
 			}
 			missile->nextthink = level.time + veh_weapon->iLifeTime;
 		}
-		missile->s.otherEntityNum2 = veh_weapon - &g_vehWeaponInfo[0];
+		missile->s.otherEntityNum2 = veh_weapon - &g_vehweapon_info[0];
 		missile->s.eFlags |= EF_JETPACK_ACTIVE;
 		//homing
 		if (veh_weapon->fHoming)
@@ -5036,7 +5036,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 	Vehicle_t* p_veh = ent->m_pVehicle;
 	int muzzles_fired = 0;
 	gentity_t* missile = NULL;
-	const vehWeaponInfo_t* veh_weapon = NULL;
+	const vehweapon_info_t* veh_weapon = NULL;
 	qboolean clear_rocket_lock_entity = qfalse;
 
 	if (!p_veh)
@@ -5121,7 +5121,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 		int i, numMuzzles = 0, numMuzzlesReady = 0, cumulativeDelay = 0, cumulativeAmmo = 0;
 		qboolean sentAmmoWarning = qfalse;
 
-		veh_weapon = &g_vehWeaponInfo[vehweapon_index];
+		veh_weapon = &g_vehweapon_info[vehweapon_index];
 
 		if (p_veh->m_pVehicleInfo->weapon[weapon_num].linkable == 2)
 		{
@@ -5247,7 +5247,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 						{
 							vec3_t new_end;
 							VectorCopy(trace.endpos, new_end);
-							WP_VehLeadCrosshairVeh(&g_entities[trace.entity_num], new_end, fixed_dir, start, dir);
+							WP_VehLeadCrosshairVeh(&g_entities[trace.entityNum], new_end, fixed_dir, start, dir);
 						}
 					}
 

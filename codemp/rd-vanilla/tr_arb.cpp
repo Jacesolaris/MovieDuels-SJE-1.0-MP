@@ -125,7 +125,7 @@ END";
 #define GL_PROGRAM_ERROR_STRING_ARB						0x8874
 #define GL_PROGRAM_ERROR_POSITION_ARB					0x864B
 
-void ARB_InitGPUShaders() {
+void ARB_InitGPUShaders(void) {
 	if (!qglGenProgramsARB)
 	{
 		return;

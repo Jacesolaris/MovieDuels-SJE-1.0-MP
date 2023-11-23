@@ -312,13 +312,13 @@ PNG_FUNCTION(png_structp /* PRIVATE */,
 					return png_ptr;
 				}
 			}
-	}
+		}
 
 		/* A longjmp because of a bug in the application storage allocator or a
 		 * simple failure to allocate the png_struct.
 		 */
 		return NULL;
-}
+	}
 
 /* Allocate the memory for an info_struct for the application. */
 PNG_FUNCTION(png_infop, PNGAPI

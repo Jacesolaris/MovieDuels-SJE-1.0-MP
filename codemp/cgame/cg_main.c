@@ -100,7 +100,7 @@ static int C_PointContents(void)
 static void C_GetLerpOrigin(void)
 {
 	TCGVectorData* data = &cg.sharedBuffer.vectorData;
-	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mPoint);
+	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mPoint);
 }
 
 // only used by FX system to pass to getboltmat
@@ -108,19 +108,19 @@ static void C_GetLerpData(void)
 {
 	TCGGetBoltData* data = &cg.sharedBuffer.getBoltData;
 
-	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mOrigin);
-	VectorCopy(cg_entities[data->mEntityNum].modelScale, data->mScale);
-	VectorCopy(cg_entities[data->mEntityNum].lerpAngles, data->mAngles);
-	if (cg_entities[data->mEntityNum].currentState.eType == ET_PLAYER)
+	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mOrigin);
+	VectorCopy(cg_entities[data->mentity_num].modelScale, data->mScale);
+	VectorCopy(cg_entities[data->mentity_num].lerpAngles, data->mAngles);
+	if (cg_entities[data->mentity_num].currentState.eType == ET_PLAYER)
 	{
 		// normal player
 		data->mAngles[PITCH] = 0.0f;
 		data->mAngles[ROLL] = 0.0f;
 	}
-	else if (cg_entities[data->mEntityNum].currentState.eType == ET_NPC)
+	else if (cg_entities[data->mentity_num].currentState.eType == ET_NPC)
 	{
 		// an NPC
-		const Vehicle_t* p_veh = cg_entities[data->mEntityNum].m_pVehicle;
+		const Vehicle_t* p_veh = cg_entities[data->mentity_num].m_pVehicle;
 		if (!p_veh)
 		{
 			// for vehicles, we may or may not want to 0 out pitch and roll
@@ -162,14 +162,14 @@ static void C_G2Mark(void)
 	VectorMA(td->start, 64.0f, td->dir, end);
 	CG_G2Trace(&tr, td->start, NULL, NULL, end, ENTITYNUM_NONE, MASK_PLAYERSOLID);
 
-	if (tr.entity_num < ENTITYNUM_WORLD && cg_entities[tr.entity_num].ghoul2)
+	if (tr.entityNum < ENTITYNUM_WORLD && cg_entities[tr.entityNum].ghoul2)
 	{
 		// hit someone with a ghoul2 instance, let's project the decal on them then.
-		centity_t* cent = &cg_entities[tr.entity_num];
+		centity_t* cent = &cg_entities[tr.entityNum];
 
 		//	CG_TestLine( tr.endpos, end, 2000, 0x0000ff, 1 );
 
-		CG_AddGhoul2Mark(td->shader, td->size, tr.endpos, end, tr.entity_num, cent->lerpOrigin, cent->lerpAngles[YAW],
+		CG_AddGhoul2Mark(td->shader, td->size, tr.endpos, end, tr.entityNum, cent->lerpOrigin, cent->lerpAngles[YAW],
 			cent->ghoul2, cent->modelScale, Q_irand(2000, 4000));
 		// I'm making fx system decals have a very short lifetime.
 	}
@@ -391,7 +391,7 @@ centity_t cg_entities[MAX_GENTITIES];
 centity_t* cg_permanents[MAX_GENTITIES]; //rwwRMG - added
 int cg_numpermanents = 0;
 
-weaponInfo_t cg_weapons[MAX_WEAPONS];
+weapon_info_t cg_weapons[MAX_WEAPONS];
 itemInfo_t cg_items[MAX_ITEMS];
 
 int CG_CrosshairPlayer(void)
@@ -990,9 +990,9 @@ static void CG_RegisterSounds(void)
 	cgs.media.landSound = trap->S_RegisterSound("sound/player/land1.wav");
 	cgs.media.fallSound = trap->S_RegisterSound("sound/player/fallsplat.wav");
 
-	cgs.media.crackleSound = trap->S_RegisterSound("sound/effects/energy_crackle.wav");
-
 	cgs.media.bodyfadeSound = trap->S_RegisterSound("sound/effects/bodyfadeSound.mp3");
+
+	cgs.media.crackleSound = trap->S_RegisterSound("sound/effects/energy_crackle.wav");
 	//#ifdef JK2AWARDS
 	cgs.media.impressiveSound = trap->S_RegisterSound("sound/player/impressiveSound.mp3");
 	cgs.media.excellentSound = trap->S_RegisterSound("sound/player/excellentSound.mp3");

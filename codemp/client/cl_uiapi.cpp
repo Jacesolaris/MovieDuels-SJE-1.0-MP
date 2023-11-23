@@ -285,14 +285,14 @@ static void CL_G2API_ListModelBones(void* ghlInfo, const int frame)
 	re->G2API_ListBones(static_cast<CGhoul2Info*>(ghlInfo), frame);
 }
 
-static void CL_G2API_SetGhoul2ModelIndexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list)
+static void CL_G2API_SetGhoul2model_indexes(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list)
 {
 	if (!ghoul2)
 	{
 		return;
 	}
 
-	re->G2API_SetGhoul2ModelIndexes(*static_cast<CGhoul2Info_v*>(ghoul2), model_list, skin_list);
+	re->G2API_SetGhoul2model_indexes(*static_cast<CGhoul2Info_v*>(ghoul2), model_list, skin_list);
 }
 
 static qboolean CL_G2API_HaveWeGhoul2Models(void* ghoul2)
@@ -362,7 +362,7 @@ static int CL_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, cons
 }
 
 static qboolean CL_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin,
-	const qhandle_t renderSkin)
+	const qhandle_t render_skin)
 {
 	if (!ghoul2)
 	{
@@ -370,7 +370,7 @@ static qboolean CL_G2API_SetSkin(void* ghoul2, const int model_index, const qhan
 	}
 
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	return re->G2API_SetSkin(g2, model_index, customSkin, renderSkin);
+	return re->G2API_SetSkin(g2, model_index, customSkin, render_skin);
 }
 
 static void CL_G2API_CollisionDetect(
@@ -601,7 +601,7 @@ static int CL_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int mod
 		model_index);
 }
 
-static void CL_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int model_to)
+static void CL_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int modelTo)
 {
 	if (!g2_from || !g2_to)
 	{
@@ -609,7 +609,7 @@ static void CL_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom,
 	}
 
 	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), modelFrom, *static_cast<CGhoul2Info_v*>(g2_to),
-		model_to);
+		modelTo);
 }
 
 static void CL_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
@@ -1263,7 +1263,7 @@ intptr_t CL_UISystemCalls(intptr_t* args)
 		return re->G2API_HaveWeGhoul2Models(*reinterpret_cast<CGhoul2Info_v*>(args[1]));
 
 	case UI_G2_SETMODELS:
-		re->G2API_SetGhoul2ModelIndexes(*reinterpret_cast<CGhoul2Info_v*>(args[1]), static_cast<qhandle_t*>(VMA(2)),
+		re->G2API_SetGhoul2model_indexes(*reinterpret_cast<CGhoul2Info_v*>(args[1]), static_cast<qhandle_t*>(VMA(2)),
 			static_cast<qhandle_t*>(VMA(3)));
 		return 0;
 
@@ -1571,7 +1571,7 @@ void CL_BindUI()
 
 		uii.G2_ListModelSurfaces = CL_G2API_ListModelSurfaces;
 		uii.G2_ListModelBones = CL_G2API_ListModelBones;
-		uii.G2_SetGhoul2ModelIndexes = CL_G2API_SetGhoul2ModelIndexes;
+		uii.G2_SetGhoul2ModelIndexes = CL_G2API_SetGhoul2model_indexes;
 		uii.G2_HaveWeGhoul2Models = CL_G2API_HaveWeGhoul2Models;
 		uii.G2API_GetBoltMatrix = CL_G2API_GetBoltMatrix;
 		uii.G2API_GetBoltMatrix_NoReconstruct = CL_G2API_GetBoltMatrix_NoReconstruct;

@@ -30,7 +30,7 @@ FX_RocketProjectileThink
 ---------------------------
 */
 
-void FX_RocketProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_RocketProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -70,7 +70,7 @@ FX_RocketAltProjectileThink
 ---------------------------
 */
 
-void FX_RocketAltProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_RocketAltProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 

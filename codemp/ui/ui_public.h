@@ -22,8 +22,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
+#include <qcommon\q_shared.h>
+#include <rd-common\tr_types.h>
 
-#define UI_API_VERSION 3
+#define UI_API_VERSION 4
 #define UI_LEGACY_API_VERSION 7
 
 typedef struct uiClientState_s {
@@ -333,7 +335,7 @@ typedef struct uiImport_s {
 	qhandle_t(*R_RegisterSkin)						(const char* name);
 	qhandle_t(*R_RegisterShaderNoMip)				(const char* name);
 	qhandle_t(*R_RegisterFont)						(const char* fontName);
-	void			(*R_RemapShader)						(const char* oldShader, const char* newShader, const char* timeOffset);
+	void			(*R_RemapShader)						(const char* oldShader, const char* newShader, const char* time_offset);
 	void			(*R_RenderScene)						(const refdef_t* fd);
 	void			(*R_SetColor)							(const float* rgba);
 	void			(*R_ShaderNameFromIndex)				(char* name, int index);
@@ -355,7 +357,7 @@ typedef struct uiImport_s {
 	qboolean(*G2API_GetBoneFrame)					(void* ghoul2, const char* boneName, int current_time, float* current_frame, int* model_list, int model_index);
 	void			(*G2API_GetGLAName)						(void* ghoul2, int model_index, char* fillBuf);
 	int				(*G2API_CopyGhoul2Instance)				(void* g2_from, void* g2_to, int model_index);
-	void			(*G2API_CopySpecificGhoul2Model)		(void* g2_from, int modelFrom, void* g2_to, int model_to);
+	void			(*G2API_CopySpecificGhoul2Model)		(void* g2_from, int modelFrom, void* g2_to, int modelTo);
 	void			(*G2API_DuplicateGhoul2Instance)		(void* g2_from, void** g2_to);
 	qboolean(*G2API_HasGhoul2ModelOnIndex)			(void* ghlInfo, int model_index);
 	qboolean(*G2API_RemoveGhoul2Model)				(void* ghlInfo, int model_index);
@@ -371,7 +373,7 @@ typedef struct uiImport_s {
 	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* boneName, int ikState, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	void			(*G2API_GetSurfaceName)					(void* ghoul2, int surfNumber, int model_index, char* fillBuf);
-	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t renderSkin);
+	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t render_skin);
 	qboolean(*G2API_AttachG2Model)					(void* ghoul2From, int modelIndexFrom, void* ghoul2To, int toBoltIndex, int toModel);
 
 	struct {

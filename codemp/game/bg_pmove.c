@@ -2667,9 +2667,9 @@ void PM_AddEventWithParm(const int new_event, const int parm)
 PM_AddTouchEnt
 ===============
 */
-void PM_AddTouchEnt(const int entity_num)
+void PM_AddTouchEnt(const int entityNum)
 {
-	if (entity_num == ENTITYNUM_WORLD)
+	if (entityNum == ENTITYNUM_WORLD)
 	{
 		return;
 	}
@@ -2681,14 +2681,14 @@ void PM_AddTouchEnt(const int entity_num)
 	// see if it is already added
 	for (int i = 0; i < pm->numtouch; i++)
 	{
-		if (pm->touchents[i] == entity_num)
+		if (pm->touchents[i] == entityNum)
 		{
 			return;
 		}
 	}
 
 	// add it
-	pm->touchents[pm->numtouch++] = entity_num;
+	pm->touchents[pm->numtouch++] = entityNum;
 }
 
 /*
@@ -3701,10 +3701,10 @@ void PM_SetVelocityforLedgeMove(playerState_t* ps, const int anim)
 	}
 }
 
-qboolean LedgeGrabableEntity(const int entity_num)
+qboolean LedgeGrabableEntity(const int entityNum)
 {
 	//indicates if the given entity is an entity that can be ledgegrabbed.
-	const bgEntity_t* ent = PM_BGEntForNum(entity_num);
+	const bgEntity_t* ent = PM_BGEntForNum(entityNum);
 
 	switch (ent->s.eType)
 	{
@@ -3742,7 +3742,7 @@ void PM_AdjustAngleForWallGrab(playerState_t* ps, usercmd_t* ucmd)
 
 			pm->trace(&trace, traceFrom, NULL, NULL, traceTo, ps->client_num, pm->tracemask);
 
-			if (trace.fraction == 1 || !LedgeGrabableEntity(trace.entity_num) || pm->ps->client_num >= MAX_CLIENTS
+			if (trace.fraction == 1 || !LedgeGrabableEntity(trace.entityNum) || pm->ps->client_num >= MAX_CLIENTS
 				|| pm->cmd.buttons & BUTTON_FORCEPOWER
 				|| pm->cmd.buttons & BUTTON_FORCE_LIGHTNING
 				|| pm->cmd.buttons & BUTTON_FORCE_DRAIN
@@ -4989,7 +4989,7 @@ static qboolean pm_check_jump(void)
 					VectorNormalize(idealNormal);
 				}
 
-				if (!doTrace || trace.fraction < 1.0f && (trace.entity_num < MAX_CLIENTS || DotProduct(
+				if (!doTrace || trace.fraction < 1.0f && (trace.entityNum < MAX_CLIENTS || DotProduct(
 					wallNormal, idealNormal) > 0.7))
 				{
 					//there is a wall there.. or hit a client
@@ -5024,9 +5024,9 @@ static qboolean pm_check_jump(void)
 						{
 							if (doTrace && anim != BOTH_WALL_RUN_LEFT && anim != BOTH_WALL_RUN_RIGHT)
 							{
-								if (trace.entity_num < MAX_CLIENTS)
+								if (trace.entityNum < MAX_CLIENTS)
 								{
-									pm->ps->forceKickFlip = trace.entity_num + 1;
+									pm->ps->forceKickFlip = trace.entityNum + 1;
 									//let the server know that this person gets kicked by this client
 								}
 							}
@@ -5223,7 +5223,7 @@ static qboolean pm_check_jump(void)
 
 				if (pm->ps->userInt2 == 1 && pm->ps->velocity[2] > 200 && !PM_InSpecialJump(pm->ps->legsAnim))
 				{
-					if (trace.fraction < 1.0f && trace.entity_num < MAX_CLIENTS)
+					if (trace.fraction < 1.0f && trace.entityNum < MAX_CLIENTS)
 					{
 						int parts = SETANIM_LEGS;
 
@@ -5246,9 +5246,9 @@ static qboolean pm_check_jump(void)
 						pm->ps->fd.forceJumpSound = 1;
 						WP_ForcePowerDrain(pm->ps, FP_LEVITATION, 5);
 
-						if (trace.entity_num < MAX_CLIENTS)
+						if (trace.entityNum < MAX_CLIENTS)
 						{
-							pm->ps->forceKickFlip = trace.entity_num + 1;
+							pm->ps->forceKickFlip = trace.entityNum + 1;
 							//let the server know that this person gets kicked by this client
 						}
 					}
@@ -5292,10 +5292,10 @@ static qboolean pm_check_jump(void)
 						VectorSubtract(pm->ps->origin, trace_to, ideal_normal);
 						VectorNormalize(ideal_normal);
 
-						trace_ent = PM_BGEntForNum(trace_s.entity_num);
+						trace_ent = PM_BGEntForNum(trace_s.entityNum);
 
 						if (trace_s.fraction < 1.0f
-							&& (trace_s.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
+							&& (trace_s.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
 								DotProduct(trace_s.plane.normal, ideal_normal) > 0.7))
 						{
 							//there is a wall there
@@ -5390,10 +5390,10 @@ static qboolean pm_check_jump(void)
 						//FIXME: clip brushes too?
 						VectorSubtract(pm->ps->origin, traceto, idealNormal);
 						VectorNormalize(idealNormal);
-						trace_ent = PM_BGEntForNum(trace.entity_num);
+						trace_ent = PM_BGEntForNum(trace.entityNum);
 						if (trace.fraction < 1.0f
 							&& fabs(trace.plane.normal[2]) <= 0.2f /*MAX_WALL_GRAB_SLOPE*/
-							&& (trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
+							&& (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
 								DotProduct(trace.plane.normal, idealNormal) > 0.7))
 						{
 							//there is a wall there
@@ -5477,7 +5477,7 @@ qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, f
 
 	pm->trace(trace, traceFrom, NULL, NULL, traceTo, pm->ps->client_num, pm->tracemask);
 
-	if (trace->fraction < 1 && LedgeGrabableEntity(trace->entity_num))
+	if (trace->fraction < 1 && LedgeGrabableEntity(trace->entityNum))
 	{
 		//hit a wall, pop into the wall and fire down to find top of wall
 		VectorMA(trace->endpos, 0.5, dir, traceTo);
@@ -5488,7 +5488,7 @@ qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, f
 
 		pm->trace(trace, traceFrom, NULL, NULL, traceTo, pm->ps->client_num, pm->tracemask);
 
-		if (trace->fraction == 1.0 || trace->startsolid || !LedgeGrabableEntity(trace->entity_num))
+		if (trace->fraction == 1.0 || trace->startsolid || !LedgeGrabableEntity(trace->entityNum))
 		{
 			return qfalse;
 		}
@@ -5514,7 +5514,7 @@ qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, f
 	vectoangles(trace->plane.normal, wallangles);
 	if (trace->fraction == 1.0
 		|| wallangles[PITCH] > 20 || wallangles[PITCH] < -20
-		|| !LedgeGrabableEntity(trace->entity_num))
+		|| !LedgeGrabableEntity(trace->entityNum))
 	{
 		//no ledge or too steep of a ledge
 		return qfalse;
@@ -7841,14 +7841,14 @@ static void PM_GroundTraceMissed(void)
 												PM_FallToDeath(self);
 											}
 										}
-										else if (trace.entity_num < ENTITYNUM_NONE
+										else if (trace.entityNum < ENTITYNUM_NONE
 											&& pm->ps->weapon != WP_SABER
 											&& (!self || !self->client || self->client->NPC_class != CLASS_BOBAFETT
 												&& self->client->NPC_class != CLASS_REBORN
 												&& self->client->NPC_class != CLASS_ROCKETTROOPER))
 										{
 											//Jedi don't scream and die if they're heading for a hard impact
-											if (trace.entity_num == ENTITYNUM_WORLD)
+											if (trace.entityNum == ENTITYNUM_WORLD)
 											{
 												//hit architecture, find impact force
 												float dmg;
@@ -8156,12 +8156,12 @@ static void PM_GroundTrace(void)
 		PM_CrashLand();
 
 #ifdef _GAME
-		if (trace.entity_num != ENTITYNUM_WORLD
+		if (trace.entityNum != ENTITYNUM_WORLD
 			&& Q_stricmp(g_entities[pm->ps->client_num].NPC_type, "seeker")
 			&& g_entities[pm->ps->client_num].s.NPC_class != CLASS_VEHICLE
 			&& !G_InDFA(&g_entities[pm->ps->client_num]))
 		{
-			gentity_t* trEnt = &g_entities[trace.entity_num];
+			gentity_t* trEnt = &g_entities[trace.entityNum];
 
 			if (trEnt->inuse && trEnt->client && !trEnt->item
 				&& trEnt->s.NPC_class != CLASS_SEEKER && trEnt->s.NPC_class != CLASS_VEHICLE && !G_InDFA(trEnt))
@@ -8181,13 +8181,13 @@ static void PM_GroundTrace(void)
 		}
 		if (pm->ps->client_num < MAX_CLIENTS &&
 			!pm->ps->m_iVehicleNum &&
-			trace.entity_num < ENTITYNUM_WORLD &&
-			trace.entity_num >= MAX_CLIENTS &&
+			trace.entityNum < ENTITYNUM_WORLD &&
+			trace.entityNum >= MAX_CLIENTS &&
 			!pm->ps->zoomMode &&
 			pm_entSelf)
 		{
 			//check if we landed on a vehicle
-			const gentity_t* trEnt = &g_entities[trace.entity_num];
+			const gentity_t* trEnt = &g_entities[trace.entityNum];
 			if (trEnt->inuse && trEnt->client &&
 				trEnt->s.eType == ET_NPC &&
 				trEnt->s.NPC_class == CLASS_VEHICLE &&
@@ -8222,7 +8222,7 @@ static void PM_GroundTrace(void)
 		}
 	}
 
-	pm->ps->groundEntityNum = trace.entity_num;
+	pm->ps->groundEntityNum = trace.entityNum;
 	pm->ps->lastOnGround = pm->cmd.serverTime;
 
 	if (!pm->ps->client_num)
@@ -8231,7 +8231,7 @@ static void PM_GroundTrace(void)
 		pm->ps->fd.forceJumpCharge = 0;
 	}
 
-	PM_AddTouchEnt(trace.entity_num);
+	PM_AddTouchEnt(trace.entityNum);
 }
 
 /*
@@ -12024,7 +12024,7 @@ int BG_VehTraceFromCamPos(trace_t* cam_trace, const bgEntity_t* bg_ent, const ve
 		VectorCopy(cam_trace->endpos, new_end);
 		VectorSubtract(new_end, shot_start, shot_dir);
 		VectorNormalize(shot_dir);
-		return cam_trace->entity_num + 1;
+		return cam_trace->entityNum + 1;
 	}
 	return 0;
 }
@@ -12079,9 +12079,9 @@ void PM_RocketLock(const float lockDist, const qboolean vehicleLock)
 		}
 	}
 
-	if (tr.fraction != 1 && tr.entity_num < ENTITYNUM_NONE && tr.entity_num != pm->ps->client_num)
+	if (tr.fraction != 1 && tr.entityNum < ENTITYNUM_NONE && tr.entityNum != pm->ps->client_num)
 	{
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
 		if (bgEnt && bgEnt->s.powerups & PW_CLOAKED)
 		{
 			pm->ps->rocketLockIndex = ENTITYNUM_NONE;
@@ -12091,15 +12091,15 @@ void PM_RocketLock(const float lockDist, const qboolean vehicleLock)
 		{
 			if (pm->ps->rocketLockIndex == ENTITYNUM_NONE)
 			{
-				pm->ps->rocketLockIndex = tr.entity_num;
+				pm->ps->rocketLockIndex = tr.entityNum;
 				pm->ps->rocketLockTime = pm->cmd.serverTime;
 			}
-			else if (pm->ps->rocketLockIndex != tr.entity_num && pm->ps->rocketTargetTime < pm->cmd.serverTime)
+			else if (pm->ps->rocketLockIndex != tr.entityNum && pm->ps->rocketTargetTime < pm->cmd.serverTime)
 			{
-				pm->ps->rocketLockIndex = tr.entity_num;
+				pm->ps->rocketLockIndex = tr.entityNum;
 				pm->ps->rocketLockTime = pm->cmd.serverTime;
 			}
-			else if (pm->ps->rocketLockIndex == tr.entity_num)
+			else if (pm->ps->rocketLockIndex == tr.entityNum)
 			{
 				if (pm->ps->rocketLockTime == -1)
 				{
@@ -12107,7 +12107,7 @@ void PM_RocketLock(const float lockDist, const qboolean vehicleLock)
 				}
 			}
 
-			if (pm->ps->rocketLockIndex == tr.entity_num)
+			if (pm->ps->rocketLockIndex == tr.entityNum)
 			{
 				pm->ps->rocketTargetTime = pm->cmd.serverTime + 500;
 			}
@@ -12153,13 +12153,13 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 			{
 				//just make sure we have this veh info
 				if (pm->cmd.buttons & BUTTON_ATTACK
-					&& g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-					&& pm->ps->ammo[0] >= g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
+					&& g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+					&& pm->ps->ammo[0] >= g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
 					iAmmoPerShot
 					||
 					pm->cmd.buttons & BUTTON_ALT_ATTACK
-					&& g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming
-					&& pm->ps->ammo[1] >= g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
+					&& g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming
+					&& pm->ps->ammo[1] >= g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
 					iAmmoPerShot)
 				{
 					//pressing the appropriate fire button for the lock-on/charging weapon
@@ -12307,7 +12307,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 			if (vehicleRocketLock)
 			{
 				//check vehicle ammo
-				if (veh && pm->ps->ammo[1] < g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
+				if (veh && pm->ps->ammo[1] < g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].
 					iAmmoPerShot)
 				{
 					pm->ps->weaponstate = WEAPON_CHARGING_ALT;
@@ -12347,7 +12347,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 
 			if (vehicleRocketLock)
 			{
-				if (veh && pm->ps->ammo[0] < g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
+				if (veh && pm->ps->ammo[0] < g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].
 					iAmmoPerShot)
 				{
 					//check vehicle ammo
@@ -12490,7 +12490,7 @@ int PM_ItemUsable(const playerState_t* ps, int forced_use)
 
 		pm->trace(&tr, ps->origin, mins, maxs, trtest, ps->client_num, MASK_PLAYERSOLID);
 
-		if (tr.fraction != 1 && tr.entity_num != ps->client_num || tr.startsolid || tr.allsolid)
+		if (tr.fraction != 1 && tr.entityNum != ps->client_num || tr.startsolid || tr.allsolid)
 		{
 			PM_AddEventWithParm(EV_ITEMUSEFAIL, SENTRY_NOROOM);
 			return 0;
@@ -13118,8 +13118,8 @@ void PM_Weapon(void)
 #ifdef _GAME
 			pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
 #else
-			if (g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-				|| g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
+			if (g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+				|| g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
 			{
 				//our vehicle uses a rocket launcher, so do the normal checks
 				vehicleRocketLock = qtrue;
@@ -14096,8 +14096,8 @@ void PM_Weapon(void)
 	if (veh
 		&& veh->m_pVehicle)
 	{
-		if (g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
-			|| g_vehWeaponInfo[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
+		if (g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[0].ID].fHoming
+			|| g_vehweapon_info[veh->m_pVehicle->m_pVehicleInfo->weapon[1].ID].fHoming)
 		{
 			//don't clear the rocket locking ever?
 			vehicleRocketLock = qtrue;

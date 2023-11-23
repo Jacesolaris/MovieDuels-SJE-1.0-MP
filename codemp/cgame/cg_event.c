@@ -282,9 +282,9 @@ static void CG_Obituary(entityState_t* ent)
 	//check for specific vehicle weapon
 	if (ent->weapon > 0)
 	{
-		if (g_vehWeaponInfo[ent->weapon - 1].name)
+		if (g_vehweapon_info[ent->weapon - 1].name)
 		{
-			Q_strncpyz(attacker_veh_weap_name, g_vehWeaponInfo[ent->weapon - 1].name, sizeof attacker_veh_weap_name - 2);
+			Q_strncpyz(attacker_veh_weap_name, g_vehweapon_info[ent->weapon - 1].name, sizeof attacker_veh_weap_name - 2);
 		}
 	}
 
@@ -1258,16 +1258,16 @@ int CG_InClientBitflags(const entityState_t* ent, const int client)
 void CG_PlayDoorLoopSound(const centity_t* cent);
 void CG_PlayDoorSound(const centity_t* cent, int type);
 
-void CG_TryPlayCustomSound(vec3_t origin, const int entity_num, const soundChannel_t channel, const char* sound_name)
+void CG_TryPlayCustomSound(vec3_t origin, const int entityNum, const soundChannel_t channel, const char* sound_name)
 {
-	const sfxHandle_t c_sound = CG_CustomSound(entity_num, sound_name);
+	const sfxHandle_t c_sound = CG_CustomSound(entityNum, sound_name);
 
 	if (c_sound <= 0)
 	{
 		return;
 	}
 
-	trap->S_StartSound(origin, entity_num, channel, c_sound);
+	trap->S_StartSound(origin, entityNum, channel, c_sound);
 }
 
 void CG_G2MarkEvent(entityState_t* es)
@@ -1298,14 +1298,14 @@ void CG_G2MarkEvent(entityState_t* es)
 
 		CG_G2Trace(&tr, es->origin, NULL, NULL, es->origin2, ignore, MASK_PLAYERSOLID);
 
-		if (tr.entity_num != es->otherEntityNum)
+		if (tr.entityNum != es->otherEntityNum)
 		{
 			//try again if we hit an ent but not the one we wanted.
-			if (tr.entity_num < ENTITYNUM_WORLD)
+			if (tr.entityNum < ENTITYNUM_WORLD)
 			{
-				ignore = tr.entity_num;
+				ignore = tr.entityNum;
 				CG_G2Trace(&tr, es->origin, NULL, NULL, es->origin2, ignore, MASK_PLAYERSOLID);
-				if (tr.entity_num != es->otherEntityNum)
+				if (tr.entityNum != es->otherEntityNum)
 				{
 					//didn't manage to collide with the desired person. No mark will be placed then.
 					return;
@@ -1325,19 +1325,19 @@ void CG_G2MarkEvent(entityState_t* es)
 	{
 		// a vehicle weapon, make it a larger size mark
 		//OR base this on the size of the thing you hit?
-		if (g_vehWeaponInfo[es->otherEntityNum2].fG2MarkSize)
+		if (g_vehweapon_info[es->otherEntityNum2].fG2MarkSize)
 		{
-			size = flrand(0.6f, 1.4f) * g_vehWeaponInfo[es->otherEntityNum2].fG2MarkSize;
+			size = flrand(0.6f, 1.4f) * g_vehweapon_info[es->otherEntityNum2].fG2MarkSize;
 		}
 		else
 		{
 			size = flrand(32.0f, 72.0f);
 		}
 		//specify mark shader in vehWeapon file
-		if (g_vehWeaponInfo[es->otherEntityNum2].iG2MarkShaderHandle)
+		if (g_vehweapon_info[es->otherEntityNum2].iG2MarkShaderHandle)
 		{
 			//have one we want to use instead of defaults
-			shader = g_vehWeaponInfo[es->otherEntityNum2].iG2MarkShaderHandle;
+			shader = g_vehweapon_info[es->otherEntityNum2].iG2MarkShaderHandle;
 		}
 	}
 	switch (es->weapon)
@@ -1454,7 +1454,7 @@ void CG_VehMuzzleFireFX(centity_t* veh, const entityState_t* broadcaster)
 						if (p_veh->m_pVehicleInfo->turret[i].iMuzzle[j] - 1 == cur_muz)
 						{
 							//this muzzle belongs to this turret
-							muz_fx = g_vehWeaponInfo[p_veh->m_pVehicleInfo->turret[i].iWeapon].iMuzzleFX;
+							muz_fx = g_vehweapon_info[p_veh->m_pVehicleInfo->turret[i].iWeapon].iMuzzleFX;
 							break;
 						}
 					}
@@ -1462,7 +1462,7 @@ void CG_VehMuzzleFireFX(centity_t* veh, const entityState_t* broadcaster)
 			}
 			else
 			{
-				muz_fx = g_vehWeaponInfo[p_veh->m_pVehicleInfo->weapMuzzle[cur_muz]].iMuzzleFX;
+				muz_fx = g_vehweapon_info[p_veh->m_pVehicleInfo->weapMuzzle[cur_muz]].iMuzzleFX;
 			}
 			if (muz_fx)
 			{
@@ -1838,7 +1838,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					{
 						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, flash_point, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
 
-						if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
+						if (tr.fraction == 1.0 || tr.entityNum < MAX_CLIENTS)
 						{
 							cull_pass = qtrue;
 						}
@@ -2106,12 +2106,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			case TAUNT_BOW:
 				break;
 			case TAUNT_MEDITATE:
-				sound_index = CG_CustomSound(es->number, va("*pushfail"));
+				/*sound_index = CG_CustomSound(es->number, va("*pushfail"));
 
 				if (!sound_index)
 				{
 					sound_index = CG_CustomSound(es->number, "*taunt");
-				}
+				}*/
 				break;
 			case TAUNT_FLOURISH:
 				sound_index = CG_CustomSound(es->number, va("*victory%d", Q_irand(1, 3)));
@@ -2683,17 +2683,17 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		DEBUGNAME("EV_CHANGE_WEAPON");
 		{
 			int weapon = es->eventParm;
-			weaponInfo_t* weapon_info;
+			weapon_info_t* weaponInfo;
 
 			assert(weapon >= 0 && weapon < MAX_WEAPONS);
 
-			weapon_info = &cg_weapons[weapon];
+			weaponInfo = &cg_weapons[weapon];
 
-			assert(weapon_info);
+			assert(weaponInfo);
 
-			if (weapon_info->selectSound)
+			if (weaponInfo->selectSound)
 			{
-				trap->S_StartSound(NULL, es->number, CHAN_AUTO, weapon_info->selectSound);
+				trap->S_StartSound(NULL, es->number, CHAN_AUTO, weaponInfo->selectSound);
 			}
 			else if (weapon != WP_SABER)
 			{
@@ -2710,9 +2710,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			vec3_t gunpoint, gunangle;
 			mdxaBone_t matrix;
 
-			weaponInfo_t* weapon_info = &cg_weapons[WP_TURRET];
+			weapon_info_t* weaponInfo = &cg_weapons[WP_TURRET];
 
-			if (!weapon_info->registered)
+			if (!weaponInfo->registered)
 			{
 				CG_RegisterWeapon(WP_TURRET);
 			}
@@ -3237,7 +3237,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					{
 						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
 
-						if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
+						if (tr.fraction == 1.0 || tr.entityNum < MAX_CLIENTS)
 						{
 							cull_pass = qtrue;
 						}
@@ -3346,7 +3346,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					{
 						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
 
-						if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
+						if (tr.fraction == 1.0 || tr.entityNum < MAX_CLIENTS)
 						{
 							cull_pass = qtrue;
 						}
@@ -3475,7 +3475,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				{
 					CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
 
-					if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
+					if (tr.fraction == 1.0 || tr.entityNum < MAX_CLIENTS)
 					{
 						cull_pass = qtrue;
 					}

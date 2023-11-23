@@ -331,8 +331,8 @@ void trap_CIN_DrawCinematic(int handle) {
 void trap_CIN_SetExtents(int handle, int x, int y, int w, int h) {
 	Q_syscall(UI_CIN_SETEXTENTS, handle, x, y, w, h);
 }
-void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset) {
-	Q_syscall(UI_R_REMAP_SHADER, oldShader, newShader, timeOffset);
+void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset) {
+	Q_syscall(UI_R_REMAP_SHADER, oldShader, newShader, time_offset);
 }
 int trap_SP_GetNumLanguages(void) {
 	return Q_syscall(UI_SP_GETNUMLANGUAGES);
@@ -370,8 +370,8 @@ qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int model_index
 int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, int model_index, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias) {
 	return Q_syscall(UI_G2_INITGHOUL2MODEL, ghoul2Ptr, fileName, model_index, customSkin, customShader, modelFlags, lodBias);
 }
-qboolean trap_G2API_SetSkin(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t renderSkin) {
-	return Q_syscall(UI_G2_SETSKIN, ghoul2, model_index, customSkin, renderSkin);
+qboolean trap_G2API_SetSkin(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t render_skin) {
+	return Q_syscall(UI_G2_SETSKIN, ghoul2, model_index, customSkin, render_skin);
 }
 void trap_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, const vec3_t rayStart, const vec3_t rayEnd, const vec3_t scale, int traceFlags, int use_lod, float fRadius) {
 	Q_syscall(UI_G2_COLLISIONDETECT, collRecMap, ghoul2, angles, position, frameNumber, ent_num, rayStart, rayEnd, scale, traceFlags, use_lod, PASSFLOAT(fRadius));
@@ -400,8 +400,8 @@ void trap_G2API_GetGLAName(void* ghoul2, int model_index, char* fillBuf) {
 int trap_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, int model_index) {
 	return Q_syscall(UI_G2_COPYGHOUL2INSTANCE, g2_from, g2_to, model_index);
 }
-void trap_G2API_CopySpecificGhoul2Model(void* g2_from, int modelFrom, void* g2_to, int model_to) {
-	Q_syscall(UI_G2_COPYSPECIFICGHOUL2MODEL, g2_from, modelFrom, g2_to, model_to);
+void trap_G2API_CopySpecificGhoul2Model(void* g2_from, int modelFrom, void* g2_to, int modelTo) {
+	Q_syscall(UI_G2_COPYSPECIFICGHOUL2MODEL, g2_from, modelFrom, g2_to, modelTo);
 }
 void trap_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to) {
 	Q_syscall(UI_G2_DUPLICATEGHOUL2INSTANCE, g2_from, g2_to);

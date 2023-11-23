@@ -237,9 +237,9 @@ int AAS_PointAreaNum(vec3_t point)
 #endif //AAS_SAMPLE_DEBUG
 		node = &aasworld.nodes[nodenum];
 #ifdef AAS_SAMPLE_DEBUG
-		if (node->planenum < 0 || node->planenum >= aasworld.numplanes)
+		if (node->planenum < 0 || node->planenum >= aasworld.num_planes)
 		{
-			botimport.Print(PRT_ERROR, "node->planenum = %d >= aasworld.numplanes = %d\n", node->planenum, aasworld.numplanes);
+			botimport.Print(PRT_ERROR, "node->planenum = %d >= aasworld.num_planes = %d\n", node->planenum, aasworld.num_planes);
 			return 0;
 		} //end if
 #endif //AAS_SAMPLE_DEBUG

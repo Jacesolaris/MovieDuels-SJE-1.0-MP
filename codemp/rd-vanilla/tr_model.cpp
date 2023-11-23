@@ -149,8 +149,8 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 		// didn't have it cached, so try the disk...
 		//
 
-			// special case intercept first...
-			//
+		// special case intercept first...
+		//
 		if (strcmp(sDEFAULT_GLA_NAME ".gla", psModelFileName) == 0)
 		{
 			// return fake params as though it was found on disk...
@@ -1149,17 +1149,7 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_QPATH\n");
 		return 0;
 	}
-
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	if (!tr.registered) {
-	//		ri->Printf( PRINT_ALL, S_COLOR_YELLOW  "RE_RegisterModel (%s) called before ready!\n",name );
-	//		return 0;
-	//	}
-		//
-		// search the currently loaded models
-		//
+	// search the currently loaded models
 	int hash = generateHashValue(name, FILE_HASH_SIZE);
 
 	//
@@ -1603,10 +1593,10 @@ void R_ModelFree(void)
 
 /*
 ================
-R_Modellist_f
+R_model_list_f
 ================
 */
-void R_Modellist_f(void) {
+void R_model_list_f(void) {
 	int total = 0;
 	for (int i = 1; i < tr.numModels; i++) {
 		model_t* mod = tr.models[i];

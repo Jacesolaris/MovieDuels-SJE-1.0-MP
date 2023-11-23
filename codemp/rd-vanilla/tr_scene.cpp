@@ -106,8 +106,8 @@ void R_AddPolygonSurfaces() {
 	int			i;
 	srfPoly_t* poly;
 
-	tr.currentEntityNum = REFENTITYNUM_WORLD;
-	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
+	tr.currententity_num = REFENTITYNUM_WORLD;
+	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
 		const shader_t* sh = R_GetShaderByHandle(poly->h_shader);
@@ -121,18 +121,15 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(const qhandle_t h_shader, const int numVerts, const polyVert_t* verts, const int num_polys)
-{
+void RE_AddPolyToScene(const qhandle_t h_shader, const int numVerts, const polyVert_t* verts, const int num_polys) {
 	int			fogIndex;
 
-	if (!tr.registered)
-	{
+	if (!tr.registered) {
 		return;
 	}
 
-	if (!h_shader)
-	{
-		ri->Printf(PRINT_DEVELOPER, S_COLOR_YELLOW  "WARNING: RE_AddPolyToScene: NULL poly shader\n");
+	if (!h_shader) {
+		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: RE_AddPolyToScene: NULL poly shader\n");
 		return;
 	}
 

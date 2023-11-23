@@ -34,7 +34,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 FX_BryarProjectileThink
 -------------------------
 */
-void FX_BryarProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_BryarProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -46,7 +46,7 @@ void FX_BryarProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
 	trap->FX_PlayEffectID(cgs.effects.bryarShotEffect, cent->lerpOrigin, forward, -1, -1, qfalse);
 }
 
-void FX_SbdProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_SbdProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -99,7 +99,7 @@ void FX_BryarHitPlayer(vec3_t origin, vec3_t normal, const qboolean humanoid)
 FX_BryarAltProjectileThink
 -------------------------
 */
-void FX_BryarAltProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_BryarAltProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -188,7 +188,7 @@ void FX_BryarAltHitPlayer(vec3_t origin, vec3_t normal, const qboolean humanoid)
 FX_TurretProjectileThink
 -------------------------
 */
-void FX_TurretProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_TurretProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 
@@ -288,7 +288,7 @@ void FX_DestructionHitPlayer(vec3_t origin, vec3_t normal, const qboolean humano
 FX_ConcussionProjectileThink
 -------------------------
 */
-void FX_ConcussionProjectileThink(centity_t* cent, const struct weaponInfo_s* weapon)
+void FX_ConcussionProjectileThink(centity_t* cent, const struct weapon_info_s* weapon)
 {
 	vec3_t forward;
 

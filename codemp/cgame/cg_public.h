@@ -82,7 +82,7 @@ typedef struct TCGGetBoltData_s {
 	vec3_t		mOrigin;		// output
 	vec3_t		mAngles;		// output
 	vec3_t		mScale;			// output
-	int			mEntityNum;		// input
+	int			mentity_num;		// input
 } TCGGetBoltData;
 
 // CG_IMPACT_MARK
@@ -102,7 +102,7 @@ typedef struct TCGImpactMark_s {
 // CG_GET_LERP_ANGLES
 // CG_GET_MODEL_SCALE
 typedef struct TCGVectorData_s {
-	int			mEntityNum;		// input
+	int			mentity_num;		// input
 	vec3_t		mPoint;			// output
 } TCGVectorData;
 
@@ -527,19 +527,19 @@ typedef struct cgameImport_s {
 
 	// sound
 	int				(*S_AddLocalSet)						(const char* name, vec3_t listener_origin, vec3_t origin, int ent_id, int time);
-	void			(*S_AddLoopingSound)					(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
+	void			(*S_AddLoopingSound)					(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
 	void			(*S_ClearLoopingSounds)					(void);
 	int				(*S_GetVoiceVolume)						(int ent_id);
-	void			(*S_MuteSound)							(int entity_num, int entchannel);
+	void			(*S_MuteSound)							(int entityNum, int entchannel);
 	sfxHandle_t(*S_RegisterSound)						(const char* sample);
-	void			(*S_Respatialize)						(int entity_num, const vec3_t origin, matrix3_t axis, int inwater);
+	void			(*S_Respatialize)						(int entityNum, const vec3_t origin, matrix3_t axis, int inwater);
 	void			(*S_Shutup)								(qboolean shutup);
 	void			(*S_StartBackgroundTrack)				(const char* intro, const char* loop, qboolean bReturnWithoutStarting);
 	void			(*S_StartLocalSound)					(sfxHandle_t sfx, int channelNum);
 	void			(*S_StartSound)							(const vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx);
 	void			(*S_StopBackgroundTrack)				(void);
-	void			(*S_StopLoopingSound)					(int entity_num);
-	void			(*S_UpdateEntityPosition)				(int entity_num, const vec3_t origin);
+	void			(*S_StopLoopingSound)					(int entityNum);
+	void			(*S_UpdateEntityPosition)				(int entityNum, const vec3_t origin);
 	void			(*S_UpdateAmbientSet)					(const char* name, vec3_t origin);
 
 	// ambient sound
@@ -667,7 +667,7 @@ typedef struct cgameImport_s {
 	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
 	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
 	int				(*G2API_InitGhoul2Model)				(void** ghoul2Ptr, const char* fileName, int model_index, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias);
-	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t renderSkin);
+	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t render_skin);
 	void			(*G2API_CollisionDetect)				(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius);
 	void			(*G2API_CollisionDetectCache)			(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius);
 	void			(*G2API_CleanGhoul2Models)				(void** ghoul2Ptr);
@@ -677,7 +677,7 @@ typedef struct cgameImport_s {
 	qboolean(*G2API_GetBoneFrame)					(void* ghoul2, const char* boneName, int current_time, float* current_frame, int* model_list, int model_index);
 	void			(*G2API_GetGLAName)						(void* ghoul2, int model_index, char* fillBuf);
 	int				(*G2API_CopyGhoul2Instance)				(void* g2_from, void* g2_to, int model_index);
-	void			(*G2API_CopySpecificGhoul2Model)		(void* g2_from, int modelFrom, void* g2_to, int model_to);
+	void			(*G2API_CopySpecificGhoul2Model)		(void* g2_from, int modelFrom, void* g2_to, int modelTo);
 	void			(*G2API_DuplicateGhoul2Instance)		(void* g2_from, void** g2_to);
 	qboolean(*G2API_HasGhoul2ModelOnIndex)			(void* ghlInfo, int model_index);
 	qboolean(*G2API_RemoveGhoul2Model)				(void* ghlInfo, int model_index);
@@ -708,8 +708,8 @@ typedef struct cgameImport_s {
 	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* boneName, int ikState, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	qboolean(*G2API_RemoveBone)						(void* ghoul2, const char* boneName, int model_index);
-	void			(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entity_num, qboolean server);
-	void			(*G2API_ClearAttachedInstance)			(int entity_num);
+	void			(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entityNum, qboolean server);
+	void			(*G2API_ClearAttachedInstance)			(int entityNum);
 	void			(*G2API_CleanEntAttachments)			();
 	qboolean(*G2API_OverrideServer)					(void* serverInstance);
 	void			(*G2API_GetSurfaceName)					(void* ghoul2, int surfNumber, int model_index, char* fillBuf);

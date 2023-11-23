@@ -2778,7 +2778,7 @@ void G_BroadcastObit(gentity_t* self, const gentity_t* inflictor, const gentity_
 		{
 			//a vehicle missile
 			ent->s.eventParm = MOD_VEHICLE;
-			//store index into g_vehWeaponInfo
+			//store index into g_vehweapon_info
 			ent->s.weapon = inflictor->s.otherEntityNum2 + 1;
 			//store generic rocket or blaster type of missile
 			ent->s.generic1 = inflictor->s.weapon;
@@ -7453,8 +7453,8 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 
 			if (!testTrace.startsolid &&
 				!testTrace.allsolid &&
-				testTrace.entity_num == targ->s.number &&
-				testTrace.G2CollisionMap[0].mEntityNum != -1)
+				testTrace.entityNum == targ->s.number &&
+				testTrace.G2CollisionMap[0].mentity_num != -1)
 			{
 				if (chance_of_fizz > 0)
 				{
@@ -7980,7 +7980,7 @@ qboolean CanDamage(const gentity_t* targ, vec3_t origin)
 
 	VectorCopy(midpoint, dest);
 	trap->Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, qfalse, 0, 0);
-	if (tr.fraction == 1.0 || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	// this should probably check in the plane of projection,

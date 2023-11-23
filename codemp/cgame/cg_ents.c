@@ -141,9 +141,9 @@ CG_S_AddLoopingSound
 Set the current looping sounds on the entity.
 ==================
 */
-void CG_S_AddLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void CG_S_AddLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	centity_t* cent = &cg_entities[entity_num];
+	centity_t* cent = &cg_entities[entityNum];
 	cgLoopSound_t* cSound = NULL;
 	int i = 0;
 	qboolean alreadyPlaying = qfalse;
@@ -177,7 +177,7 @@ void CG_S_AddLoopingSound(const int entity_num, const vec3_t origin, const vec3_
 	//Add a new looping sound.
 	cSound = &cent->loopingSound[cent->numLoopingSounds];
 
-	cSound->entity_num = entity_num;
+	cSound->entityNum = entityNum;
 	VectorCopy(origin, cSound->origin);
 	VectorCopy(velocity, cSound->velocity);
 	cSound->sfx = sfx;
@@ -192,9 +192,9 @@ CG_S_AddLoopingSound
 For now just redirect, might eventually do something different.
 ==================
 */
-void CG_S_AddRealLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void CG_S_AddRealLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	CG_S_AddLoopingSound(entity_num, origin, velocity, sfx);
+	CG_S_AddLoopingSound(entityNum, origin, velocity, sfx);
 }
 
 /*
@@ -204,9 +204,9 @@ CG_S_AddLoopingSound
 Clear looping sounds.
 ==================
 */
-void CG_S_StopLoopingSound(const int entity_num, const sfxHandle_t sfx)
+void CG_S_StopLoopingSound(const int entityNum, const sfxHandle_t sfx)
 {
-	centity_t* cent = &cg_entities[entity_num];
+	centity_t* cent = &cg_entities[entityNum];
 
 	if (sfx == -1)
 	{
@@ -238,7 +238,7 @@ void CG_S_StopLoopingSound(const int entity_num, const sfxHandle_t sfx)
 			i++;
 		}
 	}
-	//trap->S_StopLoopingSound(entity_num);
+	//trap->S_StopLoopingSound(entityNum);
 }
 
 /*
@@ -248,9 +248,9 @@ CG_S_UpdateLoopingSounds
 Update any existing looping sounds on the entity.
 ==================
 */
-void CG_S_UpdateLoopingSounds(const int entity_num)
+void CG_S_UpdateLoopingSounds(const int entityNum)
 {
-	const centity_t* cent = &cg_entities[entity_num];
+	const centity_t* cent = &cg_entities[entityNum];
 	vec3_t lerp_org;
 	int i = 0;
 
@@ -284,9 +284,9 @@ void CG_S_UpdateLoopingSounds(const int entity_num)
 	{
 		const cgLoopSound_t* cSound = &cent->loopingSound[i];
 
-		//trap->S_AddLoopingSound(entity_num, cSound->origin, cSound->velocity, cSound->sfx);
+		//trap->S_AddLoopingSound(entityNum, cSound->origin, cSound->velocity, cSound->sfx);
 		//I guess just keep using lerpOrigin for now,
-		trap->S_AddLoopingSound(entity_num, lerp_org, cSound->velocity, cSound->sfx);
+		trap->S_AddLoopingSound(entityNum, lerp_org, cSound->velocity, cSound->sfx);
 		i++;
 	}
 }
@@ -1688,6 +1688,14 @@ static void CG_General(centity_t* cent)
 				if (!cent->dustTrailTime)
 				{
 					cent->dustTrailTime = cg.time;
+					/*if (light_side)
+					{
+						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO,trap->S_RegisterSound("sound/weapons/force/see.wav"));
+					}
+					else
+					{
+						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO,trap->S_RegisterSound("sound/weapons/force/lightning.mp3"));
+					}*/
 				}
 				ent.endTime = cent->dustTrailTime;
 				ent.renderfx |= RF_DISINTEGRATE2;
@@ -1754,10 +1762,10 @@ static void CG_General(centity_t* cent)
 					{
 						ent.customShader = cgs.media.electricBody2Shader;
 					}
-					/*if (Q_flrand(0.0f, 1.0f) > 0.9f)
+					if (Q_flrand(0.0f, 1.0f) > 0.9f)
 					{
-						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO, cgs.media.bodyfadeSound);
-					}*/
+						//trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO, cgs.media.bodyfadeSound);
+					}
 					trap->R_AddRefEntityToScene(&ent);
 				}
 			}
@@ -2280,7 +2288,7 @@ static void CG_Item(centity_t* cent)
 	entityState_t* es;
 	gitem_t* item;
 	int msec;
-	weaponInfo_t* wi;
+	weapon_info_t* wi;
 
 	es = &cent->currentState;
 	if (es->modelindex >= bg_numItems)
@@ -2823,7 +2831,7 @@ static void CG_Missile(centity_t* cent)
 {
 	refEntity_t ent;
 	entityState_t* s1;
-	const weaponInfo_t* weapon;
+	const weapon_info_t* weapon;
 
 	if (cg.snap->ps.duelInProgress &&
 		cent->currentState.eType == ET_MISSILE &&
@@ -3019,21 +3027,21 @@ static void CG_Missile(centity_t* cent)
 			forward[2] = 1.0f;
 		}
 		if (s1->eFlags & EF_JETPACK_ACTIVE //hack so we know we're a vehicle Weapon shot
-			&& (g_vehWeaponInfo[s1->otherEntityNum2].iShotFX
-				|| g_vehWeaponInfo[s1->otherEntityNum2].iModel != NULL_HANDLE))
+			&& (g_vehweapon_info[s1->otherEntityNum2].iShotFX
+				|| g_vehweapon_info[s1->otherEntityNum2].iModel != NULL_HANDLE))
 		{
 			//a vehicle with an override for the weapon trail fx or model
-			trap->FX_PlayEffectID(g_vehWeaponInfo[s1->otherEntityNum2].iShotFX, cent->lerpOrigin, forward, -1, -1,
+			trap->FX_PlayEffectID(g_vehweapon_info[s1->otherEntityNum2].iShotFX, cent->lerpOrigin, forward, -1, -1,
 				qfalse);
-			if (g_vehWeaponInfo[s1->otherEntityNum2].iLoopSound)
+			if (g_vehweapon_info[s1->otherEntityNum2].iLoopSound)
 			{
 				vec3_t velocity;
 				BG_EvaluateTrajectoryDelta(&cent->currentState.pos, cg.time, velocity);
 				trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, velocity,
-					g_vehWeaponInfo[s1->otherEntityNum2].iLoopSound);
+					g_vehweapon_info[s1->otherEntityNum2].iLoopSound);
 			}
 			//add custom model
-			if (g_vehWeaponInfo[s1->otherEntityNum2].iModel == NULL_HANDLE)
+			if (g_vehweapon_info[s1->otherEntityNum2].iModel == NULL_HANDLE)
 			{
 				return;
 			}
@@ -3165,9 +3173,9 @@ static void CG_Missile(centity_t* cent)
 	//add custom model
 	else
 	{
-		if (g_vehWeaponInfo[s1->otherEntityNum2].iModel != NULL_HANDLE)
+		if (g_vehweapon_info[s1->otherEntityNum2].iModel != NULL_HANDLE)
 		{
-			ent.hModel = g_vehWeaponInfo[s1->otherEntityNum2].iModel;
+			ent.hModel = g_vehweapon_info[s1->otherEntityNum2].iModel;
 		}
 		else
 		{
@@ -3588,14 +3596,14 @@ CG_Grapple
 This is called when the grapple is sitting up against the wall
 ===============
 */
-extern void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi);
+extern void CG_GrappleTrail(centity_t* ent, const weapon_info_t* wi);
 
 static void CG_Grapple(centity_t* cent)
 {
 	refEntity_t ent;
 
 	const entityState_t* s1 = &cent->currentState;
-	const weaponInfo_t* weapon = &cg_weapons[WP_MELEE];
+	const weapon_info_t* weapon = &cg_weapons[WP_MELEE];
 
 	// calculate the axis
 	VectorCopy(s1->angles, cent->lerpAngles);

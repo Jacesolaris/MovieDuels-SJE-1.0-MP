@@ -1336,9 +1336,9 @@ int trap_BotChooseBestFightWeapon(const int weaponstate, int* inventory)
 	return Q_syscall(BOTLIB_AI_CHOOSE_BEST_FIGHT_WEAPON, weaponstate, inventory);
 }
 
-void trap_BotGetWeaponInfo(const int weaponstate, const int weapon, void* weaponinfo)
+void trap_BotGetweapon_info(const int weaponstate, const int weapon, void* weaponInfo)
 {
-	Q_syscall(BOTLIB_AI_GET_WEAPON_INFO, weaponstate, weapon, weaponinfo);
+	Q_syscall(BOTLIB_AI_GET_WEAPON_INFO, weaponstate, weapon, weaponInfo);
 }
 
 int trap_BotLoadWeaponWeights(const int weaponstate, char* filename)
@@ -1443,9 +1443,9 @@ int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, const int
 		lodBias);
 }
 
-qboolean trap_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin, const qhandle_t renderSkin)
+qboolean trap_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin, const qhandle_t render_skin)
 {
-	return Q_syscall(G_G2_SETSKIN, ghoul2, model_index, customSkin, renderSkin);
+	return Q_syscall(G_G2_SETSKIN, ghoul2, model_index, customSkin, render_skin);
 }
 
 int trap_G2API_Ghoul2Size(void* ghlInfo)
@@ -1497,9 +1497,9 @@ int trap_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int model_in
 	return Q_syscall(G_G2_COPYGHOUL2INSTANCE, g2_from, g2_to, model_index);
 }
 
-void trap_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int model_to)
+void trap_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int modelTo)
 {
-	Q_syscall(G_G2_COPYSPECIFICGHOUL2MODEL, g2_from, modelFrom, g2_to, model_to);
+	Q_syscall(G_G2_COPYSPECIFICGHOUL2MODEL, g2_from, modelFrom, g2_to, modelTo);
 }
 
 void trap_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
@@ -1636,14 +1636,14 @@ qboolean trap_G2API_RemoveBone(void* ghoul2, const char* boneName, const int mod
 	return Q_syscall(G_G2_REMOVEBONE, ghoul2, boneName, model_index);
 }
 
-void trap_G2API_AttachInstanceToEntNum(void* ghoul2, const int entity_num, const qboolean server)
+void trap_G2API_AttachInstanceToEntNum(void* ghoul2, const int entityNum, const qboolean server)
 {
-	Q_syscall(G_G2_ATTACHINSTANCETOENTNUM, ghoul2, entity_num, server);
+	Q_syscall(G_G2_ATTACHINSTANCETOENTNUM, ghoul2, entityNum, server);
 }
 
-void trap_G2API_ClearAttachedInstance(const int entity_num)
+void trap_G2API_ClearAttachedInstance(const int entityNum)
 {
-	Q_syscall(G_G2_CLEARATTACHEDINSTANCE, entity_num);
+	Q_syscall(G_G2_CLEARATTACHEDINSTANCE, entityNum);
 }
 
 void trap_G2API_CleanEntAttachments(void)
@@ -1927,7 +1927,7 @@ static void TranslateSyscalls(void)
 	trap->BotFreeMoveState = trap_BotFreeMoveState;
 	trap->BotInitMoveState = trap_BotInitMoveState;
 	trap->BotChooseBestFightWeapon = trap_BotChooseBestFightWeapon;
-	trap->BotGetWeaponInfo = trap_BotGetWeaponInfo;
+	trap->BotGetweapon_info = trap_BotGetweapon_info;
 	trap->BotLoadWeaponWeights = trap_BotLoadWeaponWeights;
 	trap->BotAllocWeaponState = trap_BotAllocWeaponState;
 	trap->BotFreeWeaponState = trap_BotFreeWeaponState;
@@ -2016,7 +2016,7 @@ static void TranslateSyscalls(void)
 	trap->G2API_ListModelBones = trap_G2_ListModelBones;
 	trap->G2API_ListModelSurfaces = trap_G2_ListModelSurfaces;
 	trap->G2API_HaveWeGhoul2Models = trap_G2_HaveWeGhoul2Models;
-	trap->G2API_SetGhoul2ModelIndexes = trap_G2_SetGhoul2ModelIndexes;
+	trap->G2API_SetGhoul2model_indexes = trap_G2_SetGhoul2ModelIndexes;
 	trap->G2API_GetBoltMatrix = trap_G2API_GetBoltMatrix;
 	trap->G2API_GetBoltMatrix_NoReconstruct = trap_G2API_GetBoltMatrix_NoReconstruct;
 	trap->G2API_GetBoltMatrix_NoRecNoRot = trap_G2API_GetBoltMatrix_NoRecNoRot;

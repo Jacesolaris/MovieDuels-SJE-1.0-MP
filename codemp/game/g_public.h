@@ -980,7 +980,7 @@ typedef struct gameImport_s {
 	void		(*BotFreeMoveState)						(int handle);
 	void		(*BotInitMoveState)						(int handle, void* initmove);
 	int			(*BotChooseBestFightWeapon)				(int weaponstate, int* inventory);
-	void		(*BotGetWeaponInfo)						(int weaponstate, int weapon, void* weaponinfo);
+	void		(*BotGetweapon_info)						(int weaponstate, int weapon, void* weaponInfo);
 	int			(*BotLoadWeaponWeights)					(int weaponstate, char* filename);
 	int			(*BotAllocWeaponState)					(void);
 	void		(*BotFreeWeaponState)					(int weaponstate);
@@ -1078,12 +1078,12 @@ typedef struct gameImport_s {
 	void		(*G2API_ListModelBones)					(void* ghlInfo, int frame);
 	void		(*G2API_ListModelSurfaces)				(void* ghlInfo);
 	qboolean(*G2API_HaveWeGhoul2Models)				(void* ghoul2);
-	void		(*G2API_SetGhoul2ModelIndexes)			(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list);
+	void		(*G2API_SetGhoul2model_indexes)			(void* ghoul2, qhandle_t* model_list, qhandle_t* skin_list);
 	qboolean(*G2API_GetBoltMatrix)					(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
 	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
 	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list, vec3_t scale);
 	int			(*G2API_InitGhoul2Model)				(void** ghoul2Ptr, const char* fileName, int model_index, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias);
-	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t renderSkin);
+	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t customSkin, qhandle_t render_skin);
 	int			(*G2API_Ghoul2Size)						(void* ghlInfo);
 	int			(*G2API_AddBolt)						(void* ghoul2, int model_index, const char* boneName);
 	void		(*G2API_SetBoltInfo)					(void* ghoul2, int model_index, int boltInfo);
@@ -1092,7 +1092,7 @@ typedef struct gameImport_s {
 	qboolean(*G2API_GetBoneAnim)					(void* ghoul2, const char* boneName, int current_time, float* current_frame, int* startFrame, int* endFrame, int* flags, float* animSpeed, int* model_list, int model_index);
 	void		(*G2API_GetGLAName)						(void* ghoul2, int model_index, char* fillBuf);
 	int			(*G2API_CopyGhoul2Instance)				(void* g2_from, void* g2_to, int model_index);
-	void		(*G2API_CopySpecificGhoul2Model)		(void* g2_from, int modelFrom, void* g2_to, int model_to);
+	void		(*G2API_CopySpecificGhoul2Model)		(void* g2_from, int modelFrom, void* g2_to, int modelTo);
 	void		(*G2API_DuplicateGhoul2Instance)		(void* g2_from, void** g2_to);
 	qboolean(*G2API_HasGhoul2ModelOnIndex)			(void* ghlInfo, int model_index);
 	qboolean(*G2API_RemoveGhoul2Model)				(void* ghlInfo, int model_index);
@@ -1117,8 +1117,8 @@ typedef struct gameImport_s {
 	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* boneName, int ikState, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	qboolean(*G2API_RemoveBone)						(void* ghoul2, const char* boneName, int model_index);
-	void		(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entity_num, qboolean server);
-	void		(*G2API_ClearAttachedInstance)			(int entity_num);
+	void		(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entityNum, qboolean server);
+	void		(*G2API_ClearAttachedInstance)			(int entityNum);
 	void		(*G2API_CleanEntAttachments)			();
 	qboolean(*G2API_OverrideServer)					(void* serverInstance);
 	void		(*G2API_GetSurfaceName)					(void* ghoul2, int surfNumber, int model_index, char* fillBuf);
@@ -1159,9 +1159,9 @@ typedef struct gameExport_s {
 	qboolean(*NPC_ClearLOS2)					(int ent_id, const vec3_t end);
 	int			(*NAVNEW_ClearPathBetweenPoints)	(vec3_t start, vec3_t end, vec3_t mins, vec3_t maxs, int ignore, int clipmask);
 	qboolean(*NAV_CheckNodeFailedForEnt)		(int ent_id, int nodeNum);
-	qboolean(*NAV_EntIsUnlockedDoor)			(int entity_num);
-	qboolean(*NAV_EntIsDoor)					(int entity_num);
-	qboolean(*NAV_EntIsBreakable)				(int entity_num);
+	qboolean(*NAV_EntIsUnlockedDoor)			(int entityNum);
+	qboolean(*NAV_EntIsDoor)					(int entityNum);
+	qboolean(*NAV_EntIsBreakable)				(int entityNum);
 	qboolean(*NAV_EntIsRemovableUsable)			(int ent_num);
 	void		(*NAV_FindCombatPointWaypoints)		(void);
 	int			(*BG_GetItemIndexByTag)				(int tag, int type);

@@ -50,12 +50,12 @@ extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 extern void Player_CheckBurn(const gentity_t* self);
 extern void Player_CheckFreeze(const gentity_t* self);
-extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,int saber_anim_level);
-extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,int* saber_anim_level);
+extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
+extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int* saber_anim_level);
 
 forcedata_t Client_Force[MAX_CLIENTS];
 
-void g_Spectator(gentity_t* ent)
+static void g_Spectator(gentity_t* ent)
 {
 	if (ent->client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
@@ -416,7 +416,7 @@ void ThrowSaberToAttacker(gentity_t* self, const gentity_t* attacker)
 	trap->LinkEntity((sharedEntity_t*)ent);
 }
 
-void JMSaberThink(gentity_t* ent)
+static void JMSaberThink(gentity_t* ent)
 {
 	gJMSaberEnt = ent;
 
@@ -458,7 +458,7 @@ void JMSaberThink(gentity_t* ent)
 
 void DetermineDodgeMax(const gentity_t* ent);
 
-void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	int i = 0;
 
@@ -664,7 +664,7 @@ Find the spot that we DON'T want to use
 */
 #define	MAX_SPAWN_POINTS	128
 
-gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from)
+static gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from)
 {
 	float nearestDist = 999999;
 	gentity_t* nearestSpot = NULL;
@@ -736,7 +736,7 @@ SelectRandomFurthestSpawnPoint
 Chooses a player start, deathmatch start, etc
 ============
 */
-gentity_t* SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, const team_t team,
+static gentity_t* SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, const team_t team,
 	const qboolean isbot)
 {
 	vec3_t delta;
@@ -869,7 +869,7 @@ gentity_t* SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3
 	return list_spot[rnd];
 }
 
-gentity_t* SelectDuelSpawnPoint(const int team, vec3_t avoidPoint, vec3_t origin, vec3_t angles, const qboolean isbot)
+static gentity_t* SelectDuelSpawnPoint(const int team, vec3_t avoidPoint, vec3_t origin, vec3_t angles, const qboolean isbot)
 {
 	float list_dist[MAX_SPAWN_POINTS];
 	gentity_t* list_spot[MAX_SPAWN_POINTS];
@@ -987,7 +987,7 @@ Try to find a spawn point marked 'initial', otherwise
 use normal spawn selection.
 ============
 */
-gentity_t* SelectInitialSpawnPoint(vec3_t origin, vec3_t angles, const team_t team, const qboolean isbot)
+static gentity_t* SelectInitialSpawnPoint(vec3_t origin, vec3_t angles, const team_t team, const qboolean isbot)
 {
 	gentity_t* spot = NULL;
 	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL)
@@ -1022,7 +1022,7 @@ SelectSpectatorSpawnPoint
 
 ============
 */
-gentity_t* SelectSpectatorSpawnPoint(vec3_t origin, vec3_t angles)
+static gentity_t* SelectSpectatorSpawnPoint(vec3_t origin, vec3_t angles)
 {
 	FindIntermissionPoint();
 
@@ -1074,7 +1074,7 @@ BodySink
 After sitting around for five seconds, fall into the ground and disappear
 =============
 */
-void BodySink(gentity_t* ent)
+static void BodySink(gentity_t* ent)
 {
 	//while we're at it, I'm making the corpse removal time be set by a cvar like in SP.
 	if (g_corpseRemovalTime.integer && level.time - ent->timestamp > g_corpseRemovalTime.integer * 1000 + 2500)
@@ -1755,7 +1755,7 @@ static void client_clean_name(const char* in, char* out, const int outSize)
 }
 
 #ifdef _DEBUG
-void G_DebugWrite(const char* path, const char* text)
+static void G_DebugWrite(const char* path, const char* text)
 {
 	fileHandle_t f;
 
@@ -1765,7 +1765,7 @@ void G_DebugWrite(const char* path, const char* text)
 }
 #endif
 
-qboolean G_SaberModelSetup(const gentity_t* ent)
+static qboolean G_SaberModelSetup(const gentity_t* ent)
 {
 	int i = 0;
 	qboolean fallbackForSaber = qtrue;
@@ -2354,7 +2354,7 @@ void Svcmd_ToggleUserinfoValidation_f(void)
 			g_userinfoValidate.integer & 1 << index ? "Validated" : "Ignored");
 }
 
-char* G_ValidateUserinfo(const char* userinfo)
+static char* G_ValidateUserinfo(const char* userinfo)
 {
 	unsigned int i, count;
 	const size_t length = strlen(userinfo);
@@ -2444,7 +2444,7 @@ char* G_ValidateUserinfo(const char* userinfo)
 	return NULL;
 }
 
-char lcase(char c)
+static char lcase(char c)
 {
 	if (c >= 'A' && c <= 'Z')
 	{
@@ -2453,7 +2453,7 @@ char lcase(char c)
 	return c;
 }
 
-int Class_Model(char* haystack, char* needle)
+static int Class_Model(char* haystack, char* needle)
 {
 	while (*haystack)
 	{
@@ -3625,13 +3625,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "yun_mp")
 			|| Class_Model(model, "md_agen")
 			|| Class_Model(model, "md_agen_robed")
-			|| Class_Model(model, "jedi_hm")
 			|| Class_Model(model, "md_foul_moudama")
 			|| Class_Model(model, "md_micah_robed")
 			|| Class_Model(model, "md_tsuichoi")
 			|| Class_Model(model, "md_redath_robed")
 			|| Class_Model(model, "md_zett_jukassa")
-			|| Class_Model(model, "jedi_hm_mp")
 			|| Class_Model(model, "md_jed_nikto")
 			|| Class_Model(model, "md_jed_nikto_robed")
 			|| Class_Model(model, "md_joopi_robed")
@@ -3720,7 +3718,6 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "caleb_dume_mp/robed")
 			|| Class_Model(model, "caleb_dume_mp/hooded")
 			|| Class_Model(model, "caleb_dume_mp")
-			|| Class_Model(model, "jedi_hf")
 			|| Class_Model(model, "jedi_zf")
 			|| Class_Model(model, "jedi_tf")
 			|| Class_Model(model, "yun_mp")
@@ -3832,6 +3829,56 @@ qboolean client_userinfo_changed(const int client_num)
 		{
 			client->pers.nextbotclass = BCLASS_JEDITRAINER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "jedi_hm")
+			|| Class_Model(model, "jedi_hm/head_b1/torso_b1/lower_b1")
+			|| Class_Model(model, "jedi_hm/")
+			|| Class_Model(model, "jedi_hm_mp"))
+		{
+			if (ent->r.svFlags & SVF_ADMIN)
+			{
+				client->pers.nextbotclass = BCLASS_SERENITY;
+			}
+			else
+			{
+				client->pers.nextbotclass = BCLASS_JEDI;
+			}
+			client->pers.botmodelscale = BOTZIZE_NORMAL;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "jedi_hf")
+			|| Class_Model(model, "jedi_hf/"))
+		{
+			if (ent->r.svFlags & SVF_ADMIN)
+			{
+				client->pers.nextbotclass = BCLASS_CADENCE;
+			}
+			else
+			{
+				client->pers.nextbotclass = BCLASS_JEDI;
+			}
+			client->pers.botmodelscale = BOTZIZE_SMALL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
 				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
@@ -5646,7 +5693,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 			Q_strncpyz(sTemp, G_GetStringEdString("MP_SVGAME", "INVALID_ESCAPE_TO_MAIN"), sizeof sTemp);
 			return sTemp; // return "Invalid password";
 		}
-	}
+}
 
 	if (!isBot && firstTime)
 	{
@@ -6354,8 +6401,8 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
-		}
 	}
+}
 #endif
 }
 
@@ -6940,10 +6987,6 @@ void ClientSpawn(gentity_t* ent)
 					//botclass weapons and ammo here
 				case BCLASS_CADENCE:
 				case BCLASS_SERENITY:
-					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
-					client->ps.stats[STAT_WEAPONS] |= 1 << WP_SABER;
-					client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_SEEKER);
-					break;
 				case BCLASS_JEDITRAINER:
 				case BCLASS_ALORA:
 				case BCLASS_DESANN:
@@ -7865,7 +7908,6 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_JETPACK;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_FLAMETHROWER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
-			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
 			ent->flags |= FL_SABERDAMAGE_RESIST;
 			ent->flags |= FL_DINDJARIN;
@@ -8213,7 +8255,6 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_JETPACK;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_FLAMETHROWER;
-			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
@@ -8225,7 +8266,6 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_JETPACK;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_FLAMETHROWER;
-			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;

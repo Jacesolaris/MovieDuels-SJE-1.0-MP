@@ -116,7 +116,7 @@ Adds command text immediately after the current command
 Adds a \n to the text
 ============
 */
-void Cbuf_InsertText(const char* text)
+static void Cbuf_InsertText(const char* text)
 {
 	const int len = strlen(text) + 1;
 	if (len + cmd_text.cursize > cmd_text.maxsize)
@@ -284,8 +284,7 @@ static void Cmd_Exec_f(void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Com_Printf("exec%s <filename> : execute a script file%s\n",
-			quiet ? "q" : "", quiet ? " without notification" : "");
+		//Com_Printf("exec%s <filename> : execute a script file%s\n",	quiet ? "q" : "", quiet ? " without notification" : "");
 		return;
 	}
 
@@ -669,7 +668,7 @@ void Cmd_TokenizeStringIgnoreQuotes(const char* text_in)
 Cmd_FindCommand
 ============
 */
-cmd_function_t* Cmd_FindCommand(const char* cmd_name)
+static cmd_function_t* Cmd_FindCommand(const char* cmd_name)
 {
 	for (cmd_function_t* cmd = cmd_functions; cmd; cmd = cmd->next)
 		if (!Q_stricmp(cmd_name, cmd->name))
@@ -811,7 +810,7 @@ Cmd_Print
 
 ============
 */
-void Cmd_Print(const cmd_function_t* cmd)
+static void Cmd_Print(const cmd_function_t* cmd)
 {
 	Com_Printf(S_COLOR_GREY "Cmd " S_COLOR_WHITE "%s", cmd->name);
 
@@ -923,7 +922,7 @@ void Cmd_ExecuteString(const char* text)
 
 using CmdFuncVector = std::vector<const cmd_function_t*>;
 
-bool CmdSort(const cmd_function_t* cmd1, const cmd_function_t* cmd2)
+static bool CmdSort(const cmd_function_t* cmd1, const cmd_function_t* cmd2)
 {
 	return Q_stricmp(cmd1->name, cmd2->name) < 0;
 }
@@ -997,7 +996,7 @@ static void Cmd_PrintHelp_f(void)
 Cmd_CompleteCmdName
 ==================
 */
-void Cmd_CompleteCmdName(char* args, const int argNum)
+static void Cmd_CompleteCmdName(char* args, const int argNum)
 {
 	if (argNum == 2)
 	{

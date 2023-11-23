@@ -72,7 +72,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 	float magnitude = VectorLength(pm->ps->velocity) * p_self_veh->m_pVehicleInfo->mass / 50.0f;
 	qboolean force_surf_destruction = qfalse;
 #ifdef _GAME
-	gentity_t* hit_ent = trace != NULL ? &g_entities[trace->entity_num] : NULL;
+	gentity_t* hit_ent = trace != NULL ? &g_entities[trace->entityNum] : NULL;
 
 	if (!hit_ent ||
 		p_self_veh && p_self_veh->m_pPilot &&
@@ -96,7 +96,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 			return;
 		}
 		if (!VectorCompare(trace->plane.normal, vec3_origin)
-			&& (trace->entity_num == ENTITYNUM_WORLD || hit_ent->r.bmodel))
+			&& (trace->entityNum == ENTITYNUM_WORLD || hit_ent->r.bmodel))
 		{
 			//have a valid hit plane and we hit a solid brush
 			vec3_t moveDir;
@@ -113,7 +113,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 		}
 	}
 
-	if (trace->entity_num < ENTITYNUM_WORLD
+	if (trace->entityNum < ENTITYNUM_WORLD
 		&& hit_ent->s.eType == ET_MOVER
 		&& hit_ent->s.apos.trType != TR_STATIONARY //rotating
 		&& hit_ent->spawnflags & 16 //IMPACT
@@ -169,9 +169,9 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 				float l = pm->ps->speed * 0.5f;
 				vec3_t bounceDir;
 #ifdef _CGAME
-				bgEntity_t* hit_ent = PM_BGEntForNum(trace->entity_num);
+				bgEntity_t* hit_ent = PM_BGEntForNum(trace->entityNum);
 #endif
-				if ((trace->entity_num == ENTITYNUM_WORLD || hit_ent->s.solid == SOLID_BMODEL) //bounce off any brush
+				if ((trace->entityNum == ENTITYNUM_WORLD || hit_ent->s.solid == SOLID_BMODEL) //bounce off any brush
 					&& !VectorCompare(trace->plane.normal, vec3_origin)) //have a valid plane to bounce off of
 				{
 					//bounce off in the opposite direction of the impact
@@ -200,7 +200,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 				{
 					//check for impact with another fighter
 #ifdef _CGAME
-					bgEntity_t* hit_ent = PM_BGEntForNum(trace->entity_num);
+					bgEntity_t* hit_ent = PM_BGEntForNum(trace->entityNum);
 #endif
 					if (hit_ent->s.NPC_class == CLASS_VEHICLE
 						&& hit_ent->m_pVehicle
@@ -546,7 +546,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 			}
 #else	//this is gonna result in "double effects" for the client doing the prediction.
 			//it doesn't look bad though. could just use predicted events, but I'm too lazy.
-			hit_ent = PM_BGEntForNum(trace->entity_num);
+			hit_ent = PM_BGEntForNum(trace->entityNum);
 
 			if (!hit_ent || hit_ent->s.owner != p_ent->s.number)
 			{
@@ -599,7 +599,7 @@ extern qboolean PM_CheckGrabWall(trace_t* trace);
 
 qboolean PM_ClientImpact(const trace_t* trace, qboolean damageSelf)
 {
-	const int otherEntityNum = trace->entity_num;
+	const int otherEntityNum = trace->entityNum;
 
 	if (!pm_entSelf)
 	{
@@ -643,7 +643,7 @@ Returns qtrue if the velocity was clipped in some way
 qboolean PM_SlideMove(const qboolean gravity)
 {
 	int bumpcount;
-	int numplanes;
+	int num_planes;
 	vec3_t normal, planes[MAX_CLIP_PLANES];
 	vec3_t primal_velocity;
 	int i;
@@ -678,7 +678,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 	// never turn against the ground plane
 	if (pml.groundPlane)
 	{
-		numplanes = 1;
+		num_planes = 1;
 		VectorCopy(pml.groundTrace.plane.normal, planes[0]);
 		if (!PM_GroundSlideOkay(planes[0][2]))
 		{
@@ -688,12 +688,12 @@ qboolean PM_SlideMove(const qboolean gravity)
 	}
 	else
 	{
-		numplanes = 0;
+		num_planes = 0;
 	}
 
 	// never turn against original velocity
-	VectorNormalize2(pm->ps->velocity, planes[numplanes]);
-	numplanes++;
+	VectorNormalize2(pm->ps->velocity, planes[num_planes]);
+	num_planes++;
 
 	for (bumpcount = 0; bumpcount < numbumps; bumpcount++)
 	{
@@ -723,7 +723,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 		}
 
 		// save entity for contact
-		PM_AddTouchEnt(trace.entity_num);
+		PM_AddTouchEnt(trace.entityNum);
 
 		if (pm->ps->client_num >= MAX_CLIENTS)
 		{
@@ -748,7 +748,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 
 		time_left -= time_left * trace.fraction;
 
-		if (numplanes >= MAX_CLIP_PLANES)
+		if (num_planes >= MAX_CLIP_PLANES)
 		{
 			// this shouldn't really happen
 			VectorClear(pm->ps->velocity);
@@ -772,7 +772,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 		if (!(pm->ps->pm_flags & PMF_STUCK_TO_WALL))
 		{
 			//no sliding if stuck to wall!
-			for (i = 0; i < numplanes; i++)
+			for (i = 0; i < num_planes; i++)
 			{
 				if (VectorCompare(normal, planes[i]))
 				{
@@ -781,20 +781,20 @@ qboolean PM_SlideMove(const qboolean gravity)
 					break;
 				}
 			}
-			if (i < numplanes)
+			if (i < num_planes)
 			{
 				continue;
 			}
 		}
-		VectorCopy(normal, planes[numplanes]);
-		numplanes++;
+		VectorCopy(normal, planes[num_planes]);
+		num_planes++;
 
 		//
 		// modify velocity so it parallels all of the clip planes
 		//
 
 		// find a plane that it enters
-		for (i = 0; i < numplanes; i++)
+		for (i = 0; i < num_planes; i++)
 		{
 			vec3_t end_clip_velocity;
 			vec3_t clip_velocity;
@@ -817,7 +817,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 			PM_ClipVelocity(end_velocity, planes[i], end_clip_velocity, OVERCLIP);
 
 			// see if there is a second plane that the new move enters
-			for (int j = 0; j < numplanes; j++)
+			for (int j = 0; j < num_planes; j++)
 			{
 				vec3_t dir;
 				if (j == i)
@@ -851,7 +851,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 				VectorScale(dir, d, end_clip_velocity);
 
 				// see if there is a third plane the the new move enters
-				for (int k = 0; k < numplanes; k++)
+				for (int k = 0; k < num_planes; k++)
 				{
 					if (k == i || k == j)
 					{
@@ -1034,7 +1034,7 @@ void PM_StepSlideMove(qboolean gravity)
 	{
 		if (pm->ps->client_num >= MAX_CLIENTS //NPC
 			&& is_giant
-			&& trace.entity_num < MAX_CLIENTS
+			&& trace.entityNum < MAX_CLIENTS
 			&& p_ent
 			&& p_ent->s.NPC_class == CLASS_RANCOR)
 		{
