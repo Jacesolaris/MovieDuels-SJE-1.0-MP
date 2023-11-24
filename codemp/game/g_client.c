@@ -5838,7 +5838,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 
 void G_WriteClientSessionData(const gclient_t* client);
 
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saberName);
 
 /*
 ===========

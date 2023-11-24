@@ -1011,14 +1011,14 @@ static void CG_ConfigStringModified(void)
 }
 
 //frees all ghoul2 stuff and npc stuff from a centity -rww
-void CG_KillCEntityG2(const int ent_num)
+void CG_KillCEntityG2(const int entNum)
 {
 	clientInfo_t* ci;
-	centity_t* cent = &cg_entities[ent_num];
+	centity_t* cent = &cg_entities[entNum];
 
-	if (ent_num < MAX_CLIENTS)
+	if (entNum < MAX_CLIENTS)
 	{
-		ci = &cgs.clientinfo[ent_num];
+		ci = &cgs.clientinfo[entNum];
 	}
 	else
 	{

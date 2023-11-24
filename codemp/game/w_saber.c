@@ -4544,7 +4544,7 @@ int wp_saber_must_bolt_block(gentity_t* self, const gentity_t* atk, const qboole
 typedef struct content_s
 {
 	int content;
-	int ent_num;
+	int entNum;
 } content_t;
 
 content_t real_trace_content[MAX_REAL_PASSTHRU];
@@ -4556,7 +4556,7 @@ void init_real_trace_content(void)
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
 		real_trace_content[i].content = REALTRACEDATADEFAULT;
-		real_trace_content[i].ent_num = REALTRACEDATADEFAULT;
+		real_trace_content[i].entNum = REALTRACEDATADEFAULT;
 	}
 }
 
@@ -4571,12 +4571,12 @@ qboolean add_real_trace_content(const int entityNum)
 
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
-		if (real_trace_content[i].content == REALTRACEDATADEFAULT && real_trace_content[i].ent_num ==
+		if (real_trace_content[i].content == REALTRACEDATADEFAULT && real_trace_content[i].entNum ==
 			REALTRACEDATADEFAULT)
 		{
 			//found an empty slot.  Use it.
 			//Stored Data
-			real_trace_content[i].ent_num = entityNum;
+			real_trace_content[i].entNum = entityNum;
 			real_trace_content[i].content = g_entities[entityNum].r.contents;
 
 			//Blank it.
@@ -4594,14 +4594,14 @@ void restore_real_trace_content(void)
 {
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
-		if (real_trace_content[i].ent_num != REALTRACEDATADEFAULT)
+		if (real_trace_content[i].entNum != REALTRACEDATADEFAULT)
 		{
 			if (real_trace_content[i].content != REALTRACEDATADEFAULT)
 			{
-				g_entities[real_trace_content[i].ent_num].r.contents = real_trace_content[i].content;
+				g_entities[real_trace_content[i].entNum].r.contents = real_trace_content[i].content;
 
 				//Let's clean things out to be sure.
-				real_trace_content[i].ent_num = REALTRACEDATADEFAULT;
+				real_trace_content[i].entNum = REALTRACEDATADEFAULT;
 				real_trace_content[i].content = REALTRACEDATADEFAULT;
 			}
 			else
@@ -7492,7 +7492,7 @@ void Jedi_Ambush(gentity_t* self);
 evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitloc, vec3_t phit_dir,
 	const gentity_t* incoming,
 	float dist);
-void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 int blockedfor_quad(int quad);
 int invert_quad(int quad);
 

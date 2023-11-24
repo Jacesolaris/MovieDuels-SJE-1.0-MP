@@ -840,7 +840,7 @@ typedef struct gameImport_s {
 	void		(*SetUserinfo)							(int num, const char* buffer);
 	void		(*SiegePersSet)							(siegePers_t* pers);
 	void		(*SiegePersGet)							(siegePers_t* pers);
-	void		(*Trace)								(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int pass_entity_num, int contentmask, int capsule, int traceFlags, int use_lod);
+	void		(*Trace)								(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int pass_entity_num, int contentmask, int capsule, int traceFlags, int useLod);
 	void		(*UnlinkEntity)							(sharedEntity_t* ent);
 
 	qboolean(*SMP_GetStringTextString)				(const char* text, char* buffer, int bufferLength);
@@ -1098,8 +1098,8 @@ typedef struct gameImport_s {
 	qboolean(*G2API_RemoveGhoul2Model)				(void* ghlInfo, int model_index);
 	qboolean(*G2API_RemoveGhoul2Models)				(void* ghlInfo);
 	void		(*G2API_CleanGhoul2Models)				(void** ghoul2Ptr);
-	void		(*G2API_CollisionDetect)				(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius);
-	void		(*G2API_CollisionDetectCache)			(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int use_lod, float fRadius);
+	void		(*G2API_CollisionDetect)				(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int useLod, float fRadius);
+	void		(*G2API_CollisionDetectCache)			(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int useLod, float fRadius);
 	qboolean(*G2API_SetRootSurface)					(void* ghoul2, int model_index, const char* surface_name);
 	qboolean(*G2API_SetSurfaceOnOff)				(void* ghoul2, const char* surface_name, int flags);
 	qboolean(*G2API_SetNewOrigin)					(void* ghoul2, int bolt_index);
@@ -1162,7 +1162,7 @@ typedef struct gameExport_s {
 	qboolean(*NAV_EntIsUnlockedDoor)			(int entityNum);
 	qboolean(*NAV_EntIsDoor)					(int entityNum);
 	qboolean(*NAV_EntIsBreakable)				(int entityNum);
-	qboolean(*NAV_EntIsRemovableUsable)			(int ent_num);
+	qboolean(*NAV_EntIsRemovableUsable)			(int entNum);
 	void		(*NAV_FindCombatPointWaypoints)		(void);
 	int			(*BG_GetItemIndexByTag)				(int tag, int type);
 } gameExport_t;

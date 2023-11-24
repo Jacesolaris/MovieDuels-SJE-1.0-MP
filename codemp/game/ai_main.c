@@ -1037,14 +1037,14 @@ BotAI_GetSnapshotEntity
 */
 int BotAI_GetSnapshotEntity(const int client_num, const int sequence, entityState_t* state)
 {
-	const int ent_num = trap->BotGetSnapshotEntity(client_num, sequence);
-	if (ent_num == -1)
+	const int entNum = trap->BotGetSnapshotEntity(client_num, sequence);
+	if (entNum == -1)
 	{
 		memset(state, 0, sizeof(entityState_t));
 		return -1;
 	}
 
-	bot_ai_get_entity_state(ent_num, state);
+	bot_ai_get_entity_state(entNum, state);
 
 	return sequence + 1;
 }

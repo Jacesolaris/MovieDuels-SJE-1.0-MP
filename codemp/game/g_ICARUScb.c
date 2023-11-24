@@ -1248,15 +1248,15 @@ void G_DebugPrint(const int printLevel, const char* format, ...)
 
 	case WL_DEBUG:
 	{
-		int ent_num = atoi(text);
+		int entNum = atoi(text);
 
 		char* buffer = text;
 		buffer += 5;
 
-		if (ent_num < 0 || ent_num >= MAX_GENTITIES)
-			ent_num = 0;
+		if (entNum < 0 || entNum >= MAX_GENTITIES)
+			entNum = 0;
 
-		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[ent_num].script_targetname, ent_num, buffer);
+		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[entNum].script_targetname, entNum, buffer);
 		break;
 	}
 	default:
@@ -6818,7 +6818,7 @@ Q3_LookTarget
 ?
 ============
 */
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 extern void NPC_ClearLookTarget(const gentity_t* self);
 
 static void Q3_LookTarget(const int ent_id, char* targetName)

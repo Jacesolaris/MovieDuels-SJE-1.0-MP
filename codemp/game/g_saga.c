@@ -865,9 +865,9 @@ void SiegeRespawn(gentity_t* ent)
 	}
 }
 
-void SiegeBeginRound(const int ent_num)
+void SiegeBeginRound(const int entNum)
 {
-	//ent_num is just used as something to fire targets from.
+	//entNum is just used as something to fire targets from.
 	char targname[1024];
 
 	if (!g_preroundState)
@@ -913,7 +913,7 @@ void SiegeBeginRound(const int ent_num)
 	{
 		if (targname[0])
 		{
-			G_UseTargets2(&g_entities[ent_num], &g_entities[ent_num], targname);
+			G_UseTargets2(&g_entities[entNum], &g_entities[entNum], targname);
 		}
 	}
 

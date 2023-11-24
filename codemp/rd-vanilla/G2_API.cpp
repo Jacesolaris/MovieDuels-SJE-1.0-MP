@@ -1901,7 +1901,7 @@ qboolean G2API_DetachG2Model(CGhoul2Info* ghlInfo)
 	return qfalse;
 }
 
-qboolean G2API_AttachEnt(int* boltInfo, CGhoul2Info_v& ghoul2, const int model_index, int toBoltIndex, int ent_num, int toModelNum)
+qboolean G2API_AttachEnt(int* boltInfo, CGhoul2Info_v& ghoul2, const int model_index, int toBoltIndex, int entNum, int toModelNum)
 {
 	CGhoul2Info* ghlInfoTo = &ghoul2[model_index];
 
@@ -1914,8 +1914,8 @@ qboolean G2API_AttachEnt(int* boltInfo, CGhoul2Info_v& ghoul2, const int model_i
 			// encode the bolt address into the model bolt link
 			toModelNum &= MODEL_AND;
 			toBoltIndex &= BOLT_AND;
-			ent_num &= ENTITY_AND;
-			*boltInfo = toBoltIndex << BOLT_SHIFT | toModelNum << MODEL_SHIFT | ent_num << ENTITY_SHIFT;
+			entNum &= ENTITY_AND;
+			*boltInfo = toBoltIndex << BOLT_SHIFT | toModelNum << MODEL_SHIFT | entNum << ENTITY_SHIFT;
 			return qtrue;
 		}
 	}
@@ -2231,7 +2231,7 @@ static bool G2_NeedRetransform(CGhoul2Info* g2, const int frame_num)
 	return needTrans;
 }
 
-void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int use_lod, float fRadius)
+void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius)
 {
 	//this will store off the transformed verts for the next trace - this is slower, but for models that do not animate
 	//frequently it is much much faster. -rww
@@ -2278,9 +2278,9 @@ void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& gh
 
 			// now having done that, time to build the model
 #ifdef _G2_GORE
-			G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, use_lod, false);
+			G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, useLod, false);
 #else
-			G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, use_lod);
+			G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, useLod);
 #endif
 
 			//don't need to do this anymore now that I am using a flag for zone alloc.
@@ -2310,10 +2310,10 @@ void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& gh
 
 		// now walk each model and check the ray against each poly - sigh, this is SO expensive. I wish there was a better way to do this.
 #ifdef _G2_GORE
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, traceFlags, use_lod, fRadius, 0, 0, 0, 0,
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, entNum, traceFlags, useLod, fRadius, 0, 0, 0, 0,
 			nullptr, qfalse);
 #else
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, traceFlags, use_lod, fRadius);
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, entNum, traceFlags, useLod, fRadius);
 #endif
 		int i;
 		// ReSharper disable once CppPossiblyErroneousEmptyStatements
@@ -2325,7 +2325,7 @@ void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& gh
 	}
 }
 
-void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int use_lod, float fRadius)
+void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius)
 {
 	if (G2_SetupModelPointers(ghoul2))
 	{
@@ -2341,9 +2341,9 @@ void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2,
 
 		// now having done that, time to build the model
 #ifdef _G2_GORE
-		G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, use_lod, false);
+		G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, useLod, false);
 #else
-		G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, use_lod);
+		G2_TransformModel(ghoul2, frameNumber, scale, G2VertSpace, useLod);
 #endif
 
 		// model is built. Lets check to see if any triangles are actually hit.
@@ -2353,10 +2353,10 @@ void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2,
 
 		// now walk each model and check the ray against each poly - sigh, this is SO expensive. I wish there was a better way to do this.
 #ifdef _G2_GORE
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, traceFlags, use_lod, fRadius, 0, 0, 0, 0,
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, entNum, traceFlags, useLod, fRadius, 0, 0, 0, 0,
 			nullptr, qfalse);
 #else
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, traceFlags, use_lod, fRadius);
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, entNum, traceFlags, useLod, fRadius);
 #endif
 		int i;
 		// ReSharper disable once CppPossiblyErroneousEmptyStatements
@@ -2750,7 +2750,7 @@ void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2)
 	}
 }
 
-extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int use_lod);
+extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod);
 void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)
 {
 	if (VectorLength(gore.rayDirection) < .1f)
@@ -2783,7 +2783,7 @@ void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)
 		G2_TransformModel(ghoul2, gore.current_time, gore.scale, ri->GetG2VertSpaceServer(), lod, true);
 
 		// now walk each model and compute new texture coordinates
-		G2_TraceModels(ghoul2, transHitLocation, transRayDirection, nullptr, gore.ent_num, 0, lod, 0.0f, gore.SSize,gore.TSize, gore.theta, gore.shader, &gore, qtrue);
+		G2_TraceModels(ghoul2, transHitLocation, transRayDirection, nullptr, gore.entNum, 0, lod, 0.0f, gore.SSize,gore.TSize, gore.theta, gore.shader, &gore, qtrue);
 	}
 }
 #endif

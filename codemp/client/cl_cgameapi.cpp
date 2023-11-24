@@ -534,14 +534,14 @@ static void CL_RMG_Init(int /* terrainID */, const char* /* terrainInfo */)
 {
 }
 
-static qboolean CGFX_PlayBoltedEffectID(const int id, vec3_t org, void* ghoul2, const int boltNum, const int ent_num,
+static qboolean CGFX_PlayBoltedEffectID(const int id, vec3_t org, void* ghoul2, const int boltNum, const int entNum,
 	const int modelNum, const int iLooptime, const qboolean isRelative)
 {
 	if (!ghoul2) return qfalse;
 
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
 	int boltInfo = 0;
-	if (re->G2API_AttachEnt(&boltInfo, g2, modelNum, boltNum, ent_num, modelNum))
+	if (re->G2API_AttachEnt(&boltInfo, g2, modelNum, boltNum, entNum, modelNum))
 	{
 		FX_PlayBoltedEffectID(id, org, boltInfo, &g2, iLooptime, isRelative);
 		return qtrue;
@@ -636,23 +636,23 @@ static qboolean CL_G2API_SetSkin(void* ghoul2, const int model_index, const qhan
 }
 
 static void CL_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
-	const vec3_t position, const int frameNumber, const int ent_num, vec3_t rayStart,
-	vec3_t rayEnd, vec3_t scale, const int traceFlags, const int use_lod,
+	const vec3_t position, const int frameNumber, const int entNum, vec3_t rayStart,
+	vec3_t rayEnd, vec3_t scale, const int traceFlags, const int useLod,
 	const float fRadius)
 {
 	if (!ghoul2) return;
-	re->G2API_CollisionDetect(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, ent_num,
-		rayStart, rayEnd, scale, G2VertSpaceClient, traceFlags, use_lod, fRadius);
+	re->G2API_CollisionDetect(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, entNum,
+		rayStart, rayEnd, scale, G2VertSpaceClient, traceFlags, useLod, fRadius);
 }
 
 static void CL_G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
-	const vec3_t position, const int frameNumber, const int ent_num,
+	const vec3_t position, const int frameNumber, const int entNum,
 	vec3_t rayStart, vec3_t rayEnd, vec3_t scale, const int traceFlags,
-	const int use_lod, const float fRadius)
+	const int useLod, const float fRadius)
 {
 	if (!ghoul2) return;
 	re->G2API_CollisionDetectCache(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber,
-		ent_num, rayStart, rayEnd, scale, G2VertSpaceClient, traceFlags, use_lod, fRadius);
+		entNum, rayStart, rayEnd, scale, G2VertSpaceClient, traceFlags, useLod, fRadius);
 }
 
 static void CL_G2API_CleanGhoul2Models(void** ghoul2Ptr)
@@ -803,12 +803,12 @@ static int CL_G2API_AddBolt(void* ghoul2, const int model_index, const char* bon
 	return re->G2API_AddBolt(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, boneName);
 }
 
-static qboolean CL_G2API_AttachEnt(int* boltInfo, void* ghlInfoTo, const int toBoltIndex, const int ent_num,
+static qboolean CL_G2API_AttachEnt(int* boltInfo, void* ghlInfoTo, const int toBoltIndex, const int entNum,
 	const int toModelNum)
 {
 	if (!ghlInfoTo) return qfalse;
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghlInfoTo);
-	return re->G2API_AttachEnt(boltInfo, g2, 0, toBoltIndex, ent_num, toModelNum);
+	return re->G2API_AttachEnt(boltInfo, g2, 0, toBoltIndex, entNum, toModelNum);
 }
 
 static void CL_G2API_SetBoltInfo(void* ghoul2, const int model_index, const int boltInfo)

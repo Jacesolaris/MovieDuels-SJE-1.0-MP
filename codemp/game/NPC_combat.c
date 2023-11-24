@@ -1788,9 +1788,9 @@ gentity_t* NPC_PickEnemy(const gentity_t* closestTo, const int enemyTeam, const 
 	bestDist = 2048.0f;
 	closestEnemy = NULL;
 
-	for (int ent_num = 0; ent_num < level.num_entities; ent_num++)
+	for (int entNum = 0; entNum < level.num_entities; entNum++)
 	{
-		newenemy = &g_entities[ent_num];
+		newenemy = &g_entities[entNum];
 
 		if (newenemy->client && !(newenemy->flags & FL_NOTARGET) && !(newenemy->s.eFlags & EF_NODRAW))
 		{
@@ -1938,9 +1938,9 @@ gentity_t* NPC_PickAlly(const qboolean facingEachOther, const float range, const
 	gentity_t* closestAlly = NULL;
 	float bestDist = range;
 
-	for (int ent_num = 0; ent_num < level.num_entities; ent_num++)
+	for (int entNum = 0; entNum < level.num_entities; entNum++)
 	{
-		gentity_t* ally = &g_entities[ent_num];
+		gentity_t* ally = &g_entities[entNum];
 
 		if (ally->client)
 		{

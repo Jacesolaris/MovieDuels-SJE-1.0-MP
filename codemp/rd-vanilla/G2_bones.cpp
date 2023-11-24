@@ -2578,7 +2578,7 @@ static void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, c
 	else
 	{
 		results->entityNum = ENTITYNUM_NONE;
-		//SV_Trace(results, start, mins, maxs, end, pass_entity_num, contentmask, e_g2_trace_type, use_lod);
+		//SV_Trace(results, start, mins, maxs, end, pass_entity_num, contentmask, eG2TraceType, useLod);
 		ri->CM_BoxTrace(results, start, end, mins, maxs, 0, contentmask, 0);
 		results->entityNum = results->fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	}
@@ -2917,7 +2917,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, const v
 							ragCallbackBoneInSolid_t* callData = (ragCallbackBoneInSolid_t*)ri->GetSharedMemory();
 
 							VectorCopy(e.currentOrigin, callData->bonePos);
-							callData->ent_num = params->me;
+							callData->entNum = params->me;
 							callData->solidCount = bone.solidCount;
 
 							ri->CGVM_RagCallback(RAG_CALLBACK_BONEINSOLID);
@@ -2944,7 +2944,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, const v
 						ragCallbackBoneInSolid_t* callData = (ragCallbackBoneInSolid_t*)ri->GetSharedMemory();
 
 						VectorCopy(e.currentOrigin, callData->bonePos);
-						callData->ent_num = params->me;
+						callData->entNum = params->me;
 						callData->solidCount = bone.solidCount;
 
 						ri->CGVM_RagCallback(RAG_CALLBACK_BONEINSOLID);
@@ -3036,7 +3036,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, const v
 							ragCallbackBoneInSolid_t* callData = (ragCallbackBoneInSolid_t*)ri->GetSharedMemory();
 
 							VectorCopy(e.currentOrigin, callData->bonePos);
-							callData->ent_num = params->me;
+							callData->entNum = params->me;
 							callData->solidCount = bone.solidCount;
 
 							ri->CGVM_RagCallback(RAG_CALLBACK_BONEINSOLID);
@@ -3071,7 +3071,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, const v
 								ragCallbackBoneInSolid_t* callData = (ragCallbackBoneInSolid_t*)ri->GetSharedMemory();
 
 								VectorCopy(e.currentOrigin, callData->bonePos);
-								callData->ent_num = params->me;
+								callData->entNum = params->me;
 								callData->solidCount = bone.solidCount;
 
 								ri->CGVM_RagCallback(RAG_CALLBACK_BONEINSOLID);
@@ -3678,7 +3678,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDol
 					ragCallbackBoneInSolid_t* callData = (ragCallbackBoneInSolid_t*)ri->GetSharedMemory();
 
 					VectorCopy(e.currentOrigin, callData->bonePos);
-					callData->ent_num = params->me;
+					callData->entNum = params->me;
 					callData->solidCount = bone.solidCount;
 
 					ri->CGVM_RagCallback(RAG_CALLBACK_BONEINSOLID);
@@ -3798,7 +3798,7 @@ static void G2_BoneSnap(CGhoul2Info_v& ghoul2_v, const boneInfo_t& bone, const C
 
 	const auto call_data = reinterpret_cast<ragCallbackBoneSnap_t*>(ri->GetSharedMemory());
 
-	call_data->ent_num = params->me;
+	call_data->entNum = params->me;
 	strcpy(call_data->boneName, G2_Get_Bone_Name(&ghoul2_v[0], ghoul2_v[0].mBlist, bone.boneNumber));
 
 	ri->CGVM_RagCallback(RAG_CALLBACK_BONESNAP);

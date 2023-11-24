@@ -57,7 +57,7 @@ qboolean GVM_NAV_CheckNodeFailedForEnt(int ent_id, int nodeNum);
 qboolean GVM_NAV_EntIsUnlockedDoor(int entityNum);
 qboolean GVM_NAV_EntIsDoor(int entityNum);
 qboolean GVM_NAV_EntIsBreakable(int entityNum);
-qboolean GVM_NAV_EntIsRemovableUsable(int ent_num);
+qboolean GVM_NAV_EntIsRemovableUsable(int entNum);
 void GVM_NAV_FindCombatPointWaypoints(void);
 int GVM_BG_GetItemIndexByTag(int tag, int type);
 

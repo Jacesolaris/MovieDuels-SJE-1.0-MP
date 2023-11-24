@@ -204,7 +204,7 @@ extern void SetTeamNumbers(void);
 extern qboolean G_ActivateBehavior(gentity_t* self, int bset);
 extern void NPC_AimWiggle(vec3_t enemy_org);
 extern void NPC_ClearLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 
 //g_nav.cpp
 extern int NAV_FindClosestWaypointForEnt(gentity_t* ent, int targWp);

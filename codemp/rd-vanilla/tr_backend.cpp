@@ -609,7 +609,7 @@ RB_RenderDrawSurfList
 
 using postRender_t = struct postRender_s {
 	int			fogNum;
-	int			ent_num;
+	int			entNum;
 	int			dlighted;
 	int			depthRange;
 	drawSurf_t* drawSurf;
@@ -744,7 +744,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 				depthRange = oldDepthRange;
 
 				//store off the ent num
-				pRender->ent_num = entityNum;
+				pRender->entNum = entityNum;
 
 				//remember the other values necessary for rendering this surf
 				pRender->drawSurf = drawSurf;
@@ -791,7 +791,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 			depthRange = oldDepthRange;
 
 			//store off the ent num
-			pRender->ent_num = entityNum;
+			pRender->entNum = entityNum;
 
 			//remember the other values necessary for rendering this surf
 			pRender->drawSurf = drawSurf;
@@ -936,7 +936,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 
 			RB_BeginSurface(pRender->shader, pRender->fogNum);
 			{ //ent
-				backEnd.currentEntity = &backEnd.refdef.entities[pRender->ent_num];
+				backEnd.currentEntity = &backEnd.refdef.entities[pRender->entNum];
 
 				backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 				// we have to reset the shaderTime as well otherwise image animations start
@@ -1043,8 +1043,8 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 			if (!pRender->eValid)
 			{
 			}
-			else if (backEnd.refdef.entities[pRender->ent_num].e.renderfx & RF_DISTORTION &&
-				lastPostEnt != pRender->ent_num)
+			else if (backEnd.refdef.entities[pRender->entNum].e.renderfx & RF_DISTORTION &&
+				lastPostEnt != pRender->entNum)
 			{ //do the capture now, we only need to do it once per ent
 				int x, y;
 				int rad;
@@ -1101,7 +1101,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 					//now copy a portion of the screen to this texture
 					qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, cX, cY, rad, rad, 0);
 
-					lastPostEnt = pRender->ent_num;
+					lastPostEnt = pRender->entNum;
 				}
 			}
 

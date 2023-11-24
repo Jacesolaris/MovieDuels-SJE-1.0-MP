@@ -161,7 +161,7 @@ using refexport_t = struct refexport_s
 	int (*G2API_AddSurface)(CGhoul2Info* ghlInfo, int surface_number, int poly_number, float barycentric_i,
 		float barycentric_j, int lod);
 	void (*G2API_AnimateG2ModelsRag)(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
-	qboolean(*G2API_AttachEnt)(int* boltInfo, CGhoul2Info_v& ghoul2, int model_index, int toBoltIndex, int ent_num,
+	qboolean(*G2API_AttachEnt)(int* boltInfo, CGhoul2Info_v& ghoul2, int model_index, int toBoltIndex, int entNum,
 		int toModelNum);
 	qboolean(*G2API_AttachG2Model)(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex,
 		int toModel);
@@ -173,12 +173,12 @@ using refexport_t = struct refexport_s
 	void (*G2API_CleanGhoul2Models)(CGhoul2Info_v** ghoul2Ptr);
 	void (*G2API_ClearAttachedInstance)(int entityNum);
 	void (*G2API_CollisionDetect)(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
-		const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd,
-		vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int use_lod, float fRadius);
+		const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd,
+		vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius);
 	void (*G2API_CollisionDetectCache)(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
-		const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart,
+		const vec3_t position, int frameNumber, int entNum, vec3_t rayStart,
 		vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags,
-		int use_lod, float fRadius);
+		int useLod, float fRadius);
 	int (*G2API_CopyGhoul2Instance)(const CGhoul2Info_v& g2_from, CGhoul2Info_v& g2_to, int model_index);
 	void (*G2API_CopySpecificG2Model)(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo);
 	qboolean(*G2API_DetachG2Model)(CGhoul2Info* ghlInfo);

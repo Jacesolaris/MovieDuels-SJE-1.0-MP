@@ -3027,7 +3027,7 @@ void WP_RemoveSaber(saberInfo_t* sabers, const int saber_num)
 	BG_SI_SetLength(&sabers[saber_num], 0.0f);
 }
 
-void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saberName)
+void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, const char* saberName)
 {
 	if (!sabers)
 	{
@@ -3043,7 +3043,7 @@ void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, co
 		return;
 	}
 
-	if (ent_num < MAX_CLIENTS &&
+	if (entNum < MAX_CLIENTS &&
 		!WP_SaberValidForPlayerInMP(saberName))
 	{
 		WP_SaberParseParms(DEFAULT_SABER, &sabers[saber_num]); //get saber info

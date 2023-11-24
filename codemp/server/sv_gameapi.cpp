@@ -438,13 +438,13 @@ qboolean GVM_NAV_EntIsBreakable(const int entityNum)
 	return ge->NAV_EntIsBreakable(entityNum);
 }
 
-qboolean GVM_NAV_EntIsRemovableUsable(const int ent_num)
+qboolean GVM_NAV_EntIsRemovableUsable(const int entNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISREMOVABLEUSABLE, ent_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISREMOVABLEUSABLE, entNum));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsRemovableUsable(ent_num);
+	return ge->NAV_EntIsRemovableUsable(entNum);
 }
 
 void GVM_NAV_FindCombatPointWaypoints(void)
@@ -1831,21 +1831,21 @@ static qboolean SV_G2API_SetSkin(void* ghoul2, const int model_index, const qhan
 }
 
 static void SV_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
-	const vec3_t position, const int frameNumber, const int ent_num, vec3_t rayStart,
-	vec3_t rayEnd, vec3_t scale, const int traceFlags, const int use_lod,
+	const vec3_t position, const int frameNumber, const int entNum, vec3_t rayStart,
+	vec3_t rayEnd, vec3_t scale, const int traceFlags, const int useLod,
 	const float fRadius)
 {
-	re->G2API_CollisionDetect(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, ent_num,
-		rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, use_lod, fRadius);
+	re->G2API_CollisionDetect(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber, entNum,
+		rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, useLod, fRadius);
 }
 
 static void SV_G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
-	const vec3_t position, const int frameNumber, const int ent_num,
+	const vec3_t position, const int frameNumber, const int entNum,
 	vec3_t rayStart, vec3_t rayEnd, vec3_t scale, const int traceFlags,
-	const int use_lod, const float fRadius)
+	const int useLod, const float fRadius)
 {
 	re->G2API_CollisionDetectCache(collRecMap, *static_cast<CGhoul2Info_v*>(ghoul2), angles, position, frameNumber,
-		ent_num, rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, use_lod, fRadius);
+		entNum, rayStart, rayEnd, scale, G2VertSpaceServer, traceFlags, useLod, fRadius);
 }
 
 static void SV_G2API_CleanGhoul2Models(void** ghoul2Ptr)

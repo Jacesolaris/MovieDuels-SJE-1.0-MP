@@ -1528,20 +1528,20 @@ void trap_G2API_CleanGhoul2Models(void** ghoul2Ptr)
 }
 
 void trap_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position,
-	const int frameNumber, const int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
-	const int traceFlags, const int use_lod, const float fRadius)
+	const int frameNumber, const int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
+	const int traceFlags, const int useLod, const float fRadius)
 {
-	Q_syscall(G_G2_COLLISIONDETECT, collRecMap, ghoul2, angles, position, frameNumber, ent_num, rayStart, rayEnd, scale,
-		traceFlags, use_lod, PASSFLOAT(fRadius));
+	Q_syscall(G_G2_COLLISIONDETECT, collRecMap, ghoul2, angles, position, frameNumber, entNum, rayStart, rayEnd, scale,
+		traceFlags, useLod, PASSFLOAT(fRadius));
 }
 
 void trap_G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
-	const vec3_t position, const int frameNumber, const int ent_num, vec3_t rayStart,
+	const vec3_t position, const int frameNumber, const int entNum, vec3_t rayStart,
 	vec3_t rayEnd,
-	vec3_t scale, const int traceFlags, const int use_lod, const float fRadius)
+	vec3_t scale, const int traceFlags, const int useLod, const float fRadius)
 {
-	Q_syscall(G_G2_COLLISIONDETECTCACHE, collRecMap, ghoul2, angles, position, frameNumber, ent_num, rayStart, rayEnd,
-		scale, traceFlags, use_lod, PASSFLOAT(fRadius));
+	Q_syscall(G_G2_COLLISIONDETECTCACHE, collRecMap, ghoul2, angles, position, frameNumber, entNum, rayStart, rayEnd,
+		scale, traceFlags, useLod, PASSFLOAT(fRadius));
 }
 
 void trap_G2API_GetSurfaceName(void* ghoul2, const int surfNumber, const int model_index, char* fillBuf)
@@ -1703,12 +1703,12 @@ qboolean SVSyscall_EntityContact(const vec3_t mins, const vec3_t maxs, const sha
 
 void SVSyscall_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
 	const int pass_entity_num, const int contentmask, const int capsule, const int traceFlags,
-	const int use_lod)
+	const int useLod)
 {
 	if (capsule)
 		trap_TraceCapsule(results, start, mins, maxs, end, pass_entity_num, contentmask);
 	else if (traceFlags)
-		trap_G2Trace(results, start, mins, maxs, end, pass_entity_num, contentmask, traceFlags, use_lod);
+		trap_G2Trace(results, start, mins, maxs, end, pass_entity_num, contentmask, traceFlags, useLod);
 	else
 		trap_Trace(results, start, mins, maxs, end, pass_entity_num, contentmask);
 }

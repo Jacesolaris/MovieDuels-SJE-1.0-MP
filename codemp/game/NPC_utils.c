@@ -1442,7 +1442,7 @@ void NPC_ClearLookTarget(const gentity_t* self)
 NPC_SetLookTarget
 -------------------------
 */
-void NPC_SetLookTarget(const gentity_t* self, const int ent_num, const int clear_time)
+void NPC_SetLookTarget(const gentity_t* self, const int entNum, const int clear_time)
 {
 	if (!self->client)
 	{
@@ -1455,7 +1455,7 @@ void NPC_SetLookTarget(const gentity_t* self, const int ent_num, const int clear
 		return;
 	}
 
-	self->client->renderInfo.lookTarget = ent_num;
+	self->client->renderInfo.lookTarget = entNum;
 	self->client->renderInfo.lookTargetClearTime = clear_time;
 }
 

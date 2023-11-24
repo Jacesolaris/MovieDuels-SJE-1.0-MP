@@ -43,7 +43,7 @@ extern qboolean in_camera;
 int AcceptBotCommand(const char* cmd, const gentity_t* pl);
 //end rww
 
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saberName);
 
 void Cmd_NPC_f(gentity_t* ent);
 void Cmd_AdminNPC_f(gentity_t* ent);

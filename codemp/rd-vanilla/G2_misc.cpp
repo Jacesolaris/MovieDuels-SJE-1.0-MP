@@ -184,7 +184,7 @@ public:
 	vec3_t				rayStart;
 	vec3_t				rayEnd;
 	CollisionRecord_t* collRecMap;
-	int					ent_num;
+	int					entNum;
 	int					model_index;
 	skin_t* skin;
 	shader_t* cust_shader;
@@ -236,7 +236,7 @@ public:
 		currentModel(initcurrent_model),
 		lod(initlod),
 		collRecMap(initcollRecMap),
-		ent_num(initentNum),
+		entNum(initentNum),
 		model_index(initmodel_index),
 		skin(initskin),
 		cust_shader(initcust_shader),
@@ -351,9 +351,9 @@ qboolean G2_GetAnimFileName(const char* file_name, char** filename)
 //
 /////////////////////////////////////////////////////////////////////
 
-int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int use_lod)
+int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod)
 {
-	int returnLod = use_lod;
+	int returnLod = useLod;
 
 	// if we are overriding the LOD at top level, then we can afford to only check this level of model
 	if (ghoul2.mLodBias > returnLod)
@@ -524,9 +524,9 @@ static void G2_TransformSurfaces(const int surfaceNum, surfaceInfo_v& rootSList,
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod, const bool ApplyGore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int useLod, const bool ApplyGore)
 #else
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int useLod)
 #endif
 {
 	int lod;
@@ -579,7 +579,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 #ifdef _G2_GORE
 		if (ApplyGore)
 		{
-			lod = use_lod;
+			lod = useLod;
 			assert(g.currentModel);
 			if (lod >= g.currentModel->numLods)
 			{
@@ -596,7 +596,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 		else
 		{
 #endif
-			lod = G2_DecideTraceLod(g, use_lod);
+			lod = G2_DecideTraceLod(g, useLod);
 #ifdef _G2_GORE
 		}
 #endif
@@ -1072,7 +1072,7 @@ static bool G2_TracePolys(const mdxmSurface_t* surface, const mdxmSurfHierarchy_
 					float				x_pos = 0, y_pos = 0;
 
 					newCol.mPolyIndex = j;
-					newCol.mentity_num = TS.ent_num;
+					newCol.mentity_num = TS.entNum;
 					newCol.mSurfaceIndex = surface->thisSurfaceIndex;
 					newCol.mmodel_index = TS.model_index;
 					if (face > 0)
@@ -1297,7 +1297,7 @@ static bool G2_RadiusTracePolys(const mdxmSurface_t* surface,CTraceSurface& TS)
 				CollisionRecord_t& newCol = TS.collRecMap[i];
 
 				newCol.mPolyIndex = j;
-				newCol.mentity_num = TS.ent_num;
+				newCol.mentity_num = TS.entNum;
 				newCol.mSurfaceIndex = surface->thisSurfaceIndex;
 				newCol.mmodel_index = TS.model_index;
 				//					if (face>0)
@@ -1454,9 +1454,9 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 }
 
 #ifdef _G2_GORE
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int ent_num, int e_g2_trace_type, int use_lod, float fRadius, const float ssize, const float tsize, const float theta, const int shader, SSkinGoreData* gore, const qboolean skipIfLODNotMatch)
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int entNum, int eG2TraceType, int useLod, float fRadius, const float ssize, const float tsize, const float theta, const int shader, SSkinGoreData* gore, const qboolean skipIfLODNotMatch)
 #else
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int ent_num, int e_g2_trace_type, int use_lod, float fRadius)
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int entNum, int eG2TraceType, int useLod, float fRadius)
 #endif
 {
 	int lod;
@@ -1520,11 +1520,11 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 			skin = nullptr;
 		}
 
-		lod = G2_DecideTraceLod(ghoul2[i], use_lod);
+		lod = G2_DecideTraceLod(ghoul2[i], useLod);
 #ifdef _G2_GORE
 		if (skipIfLODNotMatch)
 		{//we only want to hit this SPECIFIC LOD...
-			if (lod != use_lod)
+			if (lod != useLod)
 			{//doesn't match, skip this model
 				continue;
 			}
@@ -1535,9 +1535,9 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 		G2_FindOverrideSurface(-1, ghoul2[i].mSlist);
 
 #ifdef _G2_GORE
-		CTraceSurface TS(ghoul2[i].mSurfaceRoot, ghoul2[i].mSlist, const_cast<model_t*>(ghoul2[i].currentModel), lod, rayStart, rayEnd, collRecMap, ent_num, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, e_g2_trace_type, fRadius, ssize, tsize, theta, shader, &ghoul2[i], gore);
+		CTraceSurface TS(ghoul2[i].mSurfaceRoot, ghoul2[i].mSlist, const_cast<model_t*>(ghoul2[i].currentModel), lod, rayStart, rayEnd, collRecMap, entNum, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, eG2TraceType, fRadius, ssize, tsize, theta, shader, &ghoul2[i], gore);
 #else
-		CTraceSurface TS(ghoul2[i].mSurfaceRoot, ghoul2[i].mSlist, (model_t*)ghoul2[i].currentModel, lod, rayStart, rayEnd, collRecMap, ent_num, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, e_g2_trace_type, fRadius);
+		CTraceSurface TS(ghoul2[i].mSurfaceRoot, ghoul2[i].mSlist, (model_t*)ghoul2[i].currentModel, lod, rayStart, rayEnd, collRecMap, entNum, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, eG2TraceType, fRadius);
 #endif
 		// start the surface recursion loop
 		G2_TraceSurfaces(TS);

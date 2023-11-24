@@ -2110,7 +2110,7 @@ typedef struct SSkinGoreData_s
 	vec3_t			angles;
 	vec3_t			position;
 	int				current_time;
-	int				ent_num;
+	int				entNum;
 	vec3_t			rayDirection;	// in world space
 	vec3_t			hitLocation;	// in world space
 	vec3_t			scale;

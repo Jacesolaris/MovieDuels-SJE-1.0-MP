@@ -1816,7 +1816,7 @@ CG_NewClientInfo
 */
 void ParseRGBSaber(char* str, vec3_t c);
 void CG_ParseScriptedSaber(char* script, clientInfo_t* ci, int snum);
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saberName);
 extern void* CG_G2WeaponInstance2(const centity_t* cent, int weapon);
 
 void CG_NewClientInfo(int client_num, qboolean entities_initialized)
@@ -2934,13 +2934,13 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 }
 
 /*
-void CG_PlayerAnimEvents( int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, const vec3_t org, int ent_num )
+void CG_PlayerAnimEvents( int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, const vec3_t org, int entNum )
 
 play any keyframed sounds - only when start a new frame
 This func is called once for legs and once for torso
 */
 void CG_PlayerAnimEvents(const int anim_file_index, const int event_file_index, const qboolean torso,
-	const int old_frame, const int frame, const int ent_num)
+	const int old_frame, const int frame, const int entNum)
 {
 	int first_frame = 0, last_frame = 0;
 	qboolean do_event = qfalse, in_same_anim = qfalse, loop_anim = qfalse, anim_backward = qfalse;
@@ -2960,13 +2960,13 @@ void CG_PlayerAnimEvents(const int anim_file_index, const int event_file_index, 
 		int old_anim, anim;
 		if (torso)
 		{
-			old_anim = cg_entities[ent_num].currentState.torsoAnim;
-			anim = cg_entities[ent_num].nextState.torsoAnim;
+			old_anim = cg_entities[entNum].currentState.torsoAnim;
+			anim = cg_entities[entNum].nextState.torsoAnim;
 		}
 		else
 		{
-			old_anim = cg_entities[ent_num].currentState.legsAnim;
-			anim = cg_entities[ent_num].nextState.legsAnim;
+			old_anim = cg_entities[entNum].currentState.legsAnim;
+			anim = cg_entities[entNum].nextState.legsAnim;
 		}
 		if (anim != old_anim)
 		{
@@ -3146,7 +3146,7 @@ void CG_PlayerAnimEvents(const int anim_file_index, const int event_file_index, 
 			// do event
 			if (do_event)
 			{
-				CG_PlayerAnimEventDo(&cg_entities[ent_num], &anim_events[i]);
+				CG_PlayerAnimEventDo(&cg_entities[entNum], &anim_events[i]);
 			}
 		}
 	}
@@ -12502,7 +12502,7 @@ void CG_AddGhoul2Mark(const int shader, const float size, vec3_t start, vec3_t e
 	gore_skin.baseModelOnly = qfalse;
 
 	gore_skin.current_time = cg.time;
-	gore_skin.ent_num = entnum;
+	gore_skin.entNum = entnum;
 	gore_skin.SSize = size;
 	gore_skin.TSize = size;
 	gore_skin.theta = flrand(0.0f, 6.28f);

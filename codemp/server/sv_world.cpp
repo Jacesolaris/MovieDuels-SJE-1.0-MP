@@ -490,7 +490,7 @@ using moveclip_t = struct moveclip_s
 	int capsule;
 
 	int traceFlags;
-	int use_lod;
+	int useLod;
 	trace_t trace; // make sure nothing goes under here for Ghoul2 collision purposes
 	/*
 	Ghoul2 Insert End
@@ -715,7 +715,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				}
 
 				G2API_CollisionDetect(&clip->trace.G2CollisionMap[0], *((CGhoul2Info_v*)touch->s.ghoul2),
-					touch->s.angles, touch->s.origin, sv.time, touch->s.number, clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer, clip->traceFlags, clip->use_lod);
+					touch->s.angles, touch->s.origin, sv.time, touch->s.number, clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer, clip->traceFlags, clip->useLod);
 
 				// set our new trace record size
 
@@ -784,7 +784,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 #ifndef FINAL_BUILD
 			if (sv_showghoultraces->integer)
 			{
-				Com_Printf("Ghoul2 trace   lod=%1d   length=%6.0f   to %s\n", clip->use_lod, VectorDistance(clip->start, clip->end), re->G2API_GetModelName(*(CGhoul2Info_v*)touch->ghoul2, 0));
+				Com_Printf("Ghoul2 trace   lod=%1d   length=%6.0f   to %s\n", clip->useLod, VectorDistance(clip->start, clip->end), re->G2API_GetModelName(*(CGhoul2Info_v*)touch->ghoul2, 0));
 			}
 #endif
 
@@ -797,13 +797,13 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				//for vehicles cache the transform data.
 				re->G2API_CollisionDetectCache(G2Trace, *static_cast<CGhoul2Info_v*>(touch->ghoul2), vec_out,
 					touch->r.currentOrigin, sv.time, touch->s.number, clip->start, clip->end,
-					touch->modelScale, G2VertSpaceServer, 0, clip->use_lod, f_radius);
+					touch->modelScale, G2VertSpaceServer, 0, clip->useLod, f_radius);
 			}
 			else
 			{
 				re->G2API_CollisionDetect(G2Trace, *static_cast<CGhoul2Info_v*>(touch->ghoul2), vec_out,
 					touch->r.currentOrigin, sv.time, touch->s.number, clip->start, clip->end,
-					touch->modelScale, G2VertSpaceServer, 0, clip->use_lod, f_radius);
+					touch->modelScale, G2VertSpaceServer, 0, clip->useLod, f_radius);
 			}
 
 			t_n = 0;
@@ -863,7 +863,7 @@ pass_entity_num and entities owned by pass_entity_num are explicitly not checked
 Ghoul2 Insert Start
 */
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	const int pass_entity_num, const int contentmask, const int capsule, const int traceFlags, const int use_lod)
+	const int pass_entity_num, const int contentmask, const int capsule, const int traceFlags, const int useLod)
 {
 	/*
 	Ghoul2 Insert End
@@ -896,7 +896,7 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 	*/
 	VectorCopy(start, clip.start);
 	clip.traceFlags = traceFlags;
-	clip.use_lod = use_lod;
+	clip.useLod = useLod;
 	/*
 	Ghoul2 Insert End
 	*/

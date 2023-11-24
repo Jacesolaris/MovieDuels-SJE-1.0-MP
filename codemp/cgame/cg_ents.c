@@ -627,19 +627,19 @@ void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 	// extract the wraith ID from the bolt info
 	int model_num = cent->boltInfo >> MODEL_SHIFT;
 	int bolt_num = cent->boltInfo >> BOLT_SHIFT;
-	int ent_num = cent->boltInfo >> ENTITY_SHIFT;
+	int entNum = cent->boltInfo >> ENTITY_SHIFT;
 	mdxaBone_t bolt_matrix;
 
 	model_num &= MODEL_AND;
 	bolt_num &= BOLT_AND;
-	ent_num &= ENTITY_AND;
+	entNum &= ENTITY_AND;
 
 	//NOTENOTE I put this here because the cgs.game_models array no longer gets initialized.
 	assert(0);
 
 	// go away and get me the bolt position for this frame please
-	trap->G2API_GetBoltMatrix(cent->ghoul2, model_num, bolt_num, &bolt_matrix, cg_entities[ent_num].currentState.angles,
-		cg_entities[ent_num].currentState.origin, cg.time, cgs.game_models, cent->modelScale);
+	trap->G2API_GetBoltMatrix(cent->ghoul2, model_num, bolt_num, &bolt_matrix, cg_entities[entNum].currentState.angles,
+		cg_entities[entNum].currentState.origin, cg.time, cgs.game_models, cent->modelScale);
 
 	// set up the axis and origin we need for the actual effect spawning
 	ent->origin[0] = bolt_matrix.matrix[0][3];

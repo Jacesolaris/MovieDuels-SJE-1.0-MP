@@ -53,7 +53,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 int GROUND_TIME[MAX_GENTITIES];
 
 #ifdef _GAME
-extern void G_CheapWeaponFire(int ent_num, int ev);
+extern void G_CheapWeaponFire(int entNum, int ev);
 extern qboolean TryGrapple(gentity_t* ent); //g_cmds.c
 extern qboolean g_standard_humanoid(gentity_t* self);
 #endif // _GAME

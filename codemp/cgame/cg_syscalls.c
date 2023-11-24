@@ -737,10 +737,10 @@ void trap_FX_PlayEffect(const char* file, vec3_t org, vec3_t fwd, const int vol,
 	Q_syscall(CG_FX_PLAY_EFFECT, file, org, fwd, vol, rad);
 }
 
-void trap_FX_PlayEntityEffect(const char* file, vec3_t org, matrix3_t axis, const int boltInfo, const int ent_num,
+void trap_FX_PlayEntityEffect(const char* file, vec3_t org, matrix3_t axis, const int boltInfo, const int entNum,
 	const int vol, const int rad)
 {
-	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT, file, org, axis, boltInfo, ent_num, vol, rad);
+	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT, file, org, axis, boltInfo, entNum, vol, rad);
 }
 
 void trap_FX_PlayEffectID(const int id, vec3_t org, vec3_t fwd, const int vol, const int rad)
@@ -753,16 +753,16 @@ void trap_FX_PlayPortalEffectID(const int id, vec3_t org, vec3_t fwd, int vol, i
 	Q_syscall(CG_FX_PLAY_PORTAL_EFFECT_ID, id, org, fwd);
 }
 
-void trap_FX_PlayEntityEffectID(const int id, vec3_t org, matrix3_t axis, const int boltInfo, const int ent_num,
+void trap_FX_PlayEntityEffectID(const int id, vec3_t org, matrix3_t axis, const int boltInfo, const int entNum,
 	const int vol, const int rad)
 {
-	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT_ID, id, org, axis, boltInfo, ent_num, vol, rad);
+	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT_ID, id, org, axis, boltInfo, entNum, vol, rad);
 }
 
-qboolean trap_FX_PlayBoltedEffectID(const int id, vec3_t org, void* ghoul2, const int boltNum, const int ent_num,
+qboolean trap_FX_PlayBoltedEffectID(const int id, vec3_t org, void* ghoul2, const int boltNum, const int entNum,
 	const int modelNum, const int iLooptime, const qboolean isRelative)
 {
-	return Q_syscall(CG_FX_PLAY_BOLTED_EFFECT_ID, id, org, ghoul2, boltNum, ent_num, modelNum, iLooptime, isRelative);
+	return Q_syscall(CG_FX_PLAY_BOLTED_EFFECT_ID, id, org, ghoul2, boltNum, entNum, modelNum, iLooptime, isRelative);
 }
 
 void trap_FX_AddScheduledEffects(const qboolean skyPortal)
@@ -928,20 +928,20 @@ qboolean trap_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t
 }
 
 void trap_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position,
-	const int frameNumber, const int ent_num, const vec3_t rayStart, const vec3_t rayEnd,
-	const vec3_t scale, const int traceFlags, const int use_lod, const float fRadius)
+	const int frameNumber, const int entNum, const vec3_t rayStart, const vec3_t rayEnd,
+	const vec3_t scale, const int traceFlags, const int useLod, const float fRadius)
 {
-	Q_syscall(CG_G2_COLLISIONDETECT, collRecMap, ghoul2, angles, position, frameNumber, ent_num, rayStart, rayEnd, scale,
-		traceFlags, use_lod, PASSFLOAT(fRadius));
+	Q_syscall(CG_G2_COLLISIONDETECT, collRecMap, ghoul2, angles, position, frameNumber, entNum, rayStart, rayEnd, scale,
+		traceFlags, useLod, PASSFLOAT(fRadius));
 }
 
 void trap_G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
-	const vec3_t position, const int frameNumber, const int ent_num,
+	const vec3_t position, const int frameNumber, const int entNum,
 	const vec3_t rayStart, const vec3_t rayEnd, const vec3_t scale,
-	const int traceFlags, const int use_lod, const float fRadius)
+	const int traceFlags, const int useLod, const float fRadius)
 {
-	Q_syscall(CG_G2_COLLISIONDETECTCACHE, collRecMap, ghoul2, angles, position, frameNumber, ent_num, rayStart, rayEnd,
-		scale, traceFlags, use_lod, PASSFLOAT(fRadius));
+	Q_syscall(CG_G2_COLLISIONDETECTCACHE, collRecMap, ghoul2, angles, position, frameNumber, entNum, rayStart, rayEnd,
+		scale, traceFlags, useLod, PASSFLOAT(fRadius));
 }
 
 void trap_G2API_CleanGhoul2Models(void** ghoul2Ptr)
@@ -1039,10 +1039,10 @@ int trap_G2API_AddBolt(void* ghoul2, const int model_index, const char* boneName
 	return Q_syscall(CG_G2_ADDBOLT, ghoul2, model_index, boneName);
 }
 
-qboolean trap_G2API_AttachEnt(int* boltInfo, void* ghlInfoTo, const int toBoltIndex, const int ent_num,
+qboolean trap_G2API_AttachEnt(int* boltInfo, void* ghlInfoTo, const int toBoltIndex, const int entNum,
 	const int toModelNum)
 {
-	return Q_syscall(CG_G2_ATTACHENT, boltInfo, ghlInfoTo, toBoltIndex, ent_num, toModelNum);
+	return Q_syscall(CG_G2_ATTACHENT, boltInfo, ghlInfoTo, toBoltIndex, entNum, toModelNum);
 }
 
 void trap_G2API_SetBoltInfo(void* ghoul2, const int model_index, const int boltInfo)
@@ -1247,12 +1247,12 @@ void CGSyscall_FX_PlayEffectID(const int id, vec3_t org, vec3_t fwd, const int v
 }
 
 void CGSyscall_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,
-	const vec3_t position, const int frameNumber, const int ent_num, vec3_t rayStart,
-	vec3_t rayEnd, vec3_t scale, const int traceFlags, const int use_lod,
+	const vec3_t position, const int frameNumber, const int entNum, vec3_t rayStart,
+	vec3_t rayEnd, vec3_t scale, const int traceFlags, const int useLod,
 	const float fRadius)
 {
-	trap_G2API_CollisionDetect(collRecMap, ghoul2, angles, position, frameNumber, ent_num, rayStart, rayEnd, scale,
-		traceFlags, use_lod, fRadius);
+	trap_G2API_CollisionDetect(collRecMap, ghoul2, angles, position, frameNumber, entNum, rayStart, rayEnd, scale,
+		traceFlags, useLod, fRadius);
 }
 
 void QDECL CG_Error(int level, const char* error, ...)
