@@ -202,7 +202,7 @@ void SP_info_player_start_blue(gentity_t* ent)
 	SP_info_player_deathmatch(ent);
 }
 
-void SiegePointUse(gentity_t* self, gentity_t* other, gentity_t* activator)
+static void SiegePointUse(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
 	//Toggle the point on/off
 	if (self->genericValue1)
@@ -619,7 +619,7 @@ qboolean SpotWouldTelefrag(const gentity_t* spot)
 	for (int i = 0; i < num; i++)
 	{
 		const gentity_t* hit = &g_entities[touch[i]];
-		//if ( hit->client && hit->client->ps.stats[STAT_HEALTH] > 0 ) {
+
 		if (hit->client)
 		{
 			return qtrue;
@@ -736,8 +736,7 @@ SelectRandomFurthestSpawnPoint
 Chooses a player start, deathmatch start, etc
 ============
 */
-static gentity_t* SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, const team_t team,
-	const qboolean isbot)
+static gentity_t* SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, const team_t team, const qboolean isbot)
 {
 	vec3_t delta;
 	float dist;
@@ -5129,6 +5128,22 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
+		else if (Class_Model(model, "baylan_mp"))
+		{
+			client->pers.botmodelscale = BOTZIZE_TALL;
+			client->pers.nextbotclass = BCLASS_SITHINQUISITOR1;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_MOVIEDUELS_DUEL && g_gametype.integer != GT_MOVIEDUELS_POWERDUEL && g_gametype.integer !=
+					GT_MOVIEDUELS_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
 		else if (Class_Model(model, "jedi_palpatine")
 			|| Class_Model(model, "sithinquisitor1/default")
 			|| Class_Model(model, "sithinquisitor3/default")
@@ -5693,7 +5708,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 			Q_strncpyz(sTemp, G_GetStringEdString("MP_SVGAME", "INVALID_ESCAPE_TO_MAIN"), sizeof sTemp);
 			return sTemp; // return "Invalid password";
 		}
-}
+	}
 
 	if (!isBot && firstTime)
 	{
@@ -6401,8 +6416,8 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
+		}
 	}
-}
 #endif
 }
 

@@ -323,7 +323,7 @@ void String_Init()
 PC_SourceWarning
 =================
 */
-void PC_SourceWarning(int handle, char* format, ...) {
+static void PC_SourceWarning(int handle, char* format, ...) {
 	int line;
 	char filename[128];
 	va_list argptr;
@@ -346,7 +346,7 @@ void PC_SourceWarning(int handle, char* format, ...) {
 PC_SourceError
 =================
 */
-void PC_SourceError(const int handle, char* format, ...)
+static void PC_SourceError(const int handle, char* format, ...)
 {
 	int line;
 	char filename[128];

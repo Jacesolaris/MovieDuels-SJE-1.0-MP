@@ -105,8 +105,6 @@ cvar_t* cl_lanForcePackets;
 
 cvar_t* cl_drawRecording;
 
-vec3_t cl_windVec;
-
 clientActive_t cl;
 clientConnection_t clc;
 clientStatic_t cls;

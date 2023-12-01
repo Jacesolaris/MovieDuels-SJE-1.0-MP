@@ -40,9 +40,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define QKEY_FILE "jakey"
 #define QKEY_SIZE 2048
 
-// Wind
-extern vec3_t cl_windVec;
-
 // snapshots are a view of the server at a given time
 using clSnapshot_t = struct clSnapshot_s
 {

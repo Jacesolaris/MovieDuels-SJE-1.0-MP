@@ -4689,7 +4689,7 @@ void LimbThink(gentity_t* ent)
 	ent->nextthink = level.time;
 }
 
-extern qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* root_surf_name, char* return_surf_name,
+extern qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* rootSurfName, char* returnSurfName,
 	int return_size);
 
 void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, const int limb_type)

@@ -160,12 +160,12 @@ void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, genti
 	}
 }
 
-void misc_model_breakable_touch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void misc_model_breakable_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	//touch function for model breakable.  doesn't actually do anything, but we need one to prevent crashs like the one on taspir2
 }
 
-void misc_model_throw_at_target4(gentity_t* self, const gentity_t* activator)
+static void misc_model_throw_at_target4(gentity_t* self, const gentity_t* activator)
 {
 	vec3_t push_dir, kvel;
 	float knockback = 200;
@@ -225,7 +225,7 @@ void misc_model_throw_at_target4(gentity_t* self, const gentity_t* activator)
 	}
 }
 
-void misc_model_use(gentity_t* self, const gentity_t* other, gentity_t* activator)
+static void misc_model_use(gentity_t* self, const gentity_t* other, gentity_t* activator)
 {
 	if (self->target4)
 	{
@@ -289,7 +289,7 @@ void misc_model_breakable_pain(gentity_t* self, gentity_t* attacker, int damage)
 	}
 }
 
-void health_shutdown(gentity_t* self)
+static void health_shutdown(gentity_t* self)
 {
 	if (!(self->s.eFlags & EF_ANIM_ONCE))
 	{
@@ -319,7 +319,7 @@ void health_shutdown(gentity_t* self)
 }
 
 //add amount number of health to given player
-qboolean ITM_AddHealth(gentity_t* ent, const int amount)
+static qboolean ITM_AddHealth(gentity_t* ent, const int amount)
 {
 	if (ent->health == ent->client->ps.stats[STAT_MAX_HEALTH])
 	{
@@ -335,7 +335,7 @@ qboolean ITM_AddHealth(gentity_t* ent, const int amount)
 	return qtrue;
 }
 
-qboolean ITM_AddArmor(const gentity_t* ent, const int amount)
+static qboolean ITM_AddArmor(const gentity_t* ent, const int amount)
 {
 	if (ent->client->ps.stats[STAT_ARMOR] == ent->client->ps.stats[STAT_MAX_HEALTH])
 	{
@@ -352,7 +352,7 @@ qboolean ITM_AddArmor(const gentity_t* ent, const int amount)
 
 void health_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 
-void health_think(gentity_t* ent)
+static void health_think(gentity_t* ent)
 {
 	// He's dead, Jim. Don't give him health
 	if (ent->enemy->health < 1)
@@ -499,7 +499,7 @@ void health_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 	}
 }
 
-void ammo_shutdown(gentity_t* self)
+static void ammo_shutdown(gentity_t* self)
 {
 	if (!(self->s.eFlags & EF_ANIM_ONCE))
 	{
@@ -510,7 +510,7 @@ void ammo_shutdown(gentity_t* self)
 	}
 }
 
-qboolean Add_Ammo2(const gentity_t* ent, const int ammotype, const int amount)
+static qboolean Add_Ammo2(const gentity_t* ent, const int ammotype, const int amount)
 {
 	if (ent->client->ps.ammo[ammotype] == ammoData[ammotype].max)
 	{
@@ -528,7 +528,7 @@ qboolean Add_Ammo2(const gentity_t* ent, const int ammotype, const int amount)
 
 void ammo_use(gentity_t* self, gentity_t* other, gentity_t* activator);
 
-void ammo_think(gentity_t* ent)
+static void ammo_think(gentity_t* ent)
 {
 	// Still has ammo to give
 	if (ent->count > 0 && ent->enemy)
@@ -619,7 +619,7 @@ void ammo_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 }
 
 //initization for misc_model_breakable
-void misc_model_breakable_init(gentity_t* ent)
+static void misc_model_breakable_init(gentity_t* ent)
 {
 	const int type = MDL_OTHER;
 
@@ -773,7 +773,7 @@ void TieFighterThink(gentity_t* self)
 	}
 }
 
-void misc_model_breakable_gravity_init(gentity_t* ent, const qboolean dropToFloor)
+static void misc_model_breakable_gravity_init(gentity_t* ent, const qboolean dropToFloor)
 {
 	trace_t tr;
 

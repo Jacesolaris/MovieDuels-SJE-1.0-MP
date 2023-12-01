@@ -42,7 +42,7 @@ int nodenum; //so we can connect broken trails
 
 int gLevelFlags = 0;
 
-char* GetFlagStr(const int flags)
+static char* GetFlagStr(const int flags)
 {
 	char* flagstr = B_TempAlloc(128);
 	int i = 0;
@@ -402,7 +402,7 @@ checkprint:
 	}
 }
 
-void TransferWPData(const int from, const int to)
+static void TransferWPData(const int from, const int to)
 {
 	if (!gWPArray[to])
 	{
@@ -424,7 +424,7 @@ void TransferWPData(const int from, const int to)
 	VectorCopy(gWPArray[from]->origin, gWPArray[to]->origin);
 }
 
-void CreateNewWP(vec3_t origin, const int flags)
+static void CreateNewWP(vec3_t origin, const int flags)
 {
 	if (gWPNum >= MAX_WPARRAY_SIZE)
 	{
@@ -456,7 +456,7 @@ void CreateNewWP(vec3_t origin, const int flags)
 	gWPNum++;
 }
 
-void CreateNewWP_FromObject(const wpobject_t* wp)
+static void CreateNewWP_FromObject(const wpobject_t* wp)
 {
 	if (gWPNum >= MAX_WPARRAY_SIZE)
 	{
@@ -507,7 +507,7 @@ void CreateNewWP_FromObject(const wpobject_t* wp)
 	gWPNum++;
 }
 
-void RemoveWP(void)
+static void RemoveWP(void)
 {
 	if (gWPNum <= 0)
 	{
@@ -527,8 +527,6 @@ void RemoveWP(void)
 		memset(gWPArray[gWPNum], 0, sizeof * gWPArray[gWPNum]);
 	}
 
-	//gWPArray[gWPNum] = NULL;
-
 	if (gWPArray[gWPNum])
 	{
 		gWPArray[gWPNum]->inuse = 0;
@@ -543,7 +541,7 @@ void RemoveAllWP(void)
 	}
 }
 
-void RemoveWP_InTrail(const int afterindex)
+static void RemoveWP_InTrail(const int afterindex)
 {
 	int foundindex = 0;
 	int foundanindex = 0;
@@ -580,8 +578,6 @@ void RemoveWP_InTrail(const int afterindex)
 	{
 		if (gWPArray[i] && gWPArray[i]->index == foundindex)
 		{
-			//B_Free(gWPArray[i]);
-
 			//Keep reusing the memory
 			memset(gWPArray[i], 0, sizeof * gWPArray[i]);
 
@@ -606,7 +602,7 @@ void RemoveWP_InTrail(const int afterindex)
 	gWPNum--;
 }
 
-int CreateNewWP_InTrail(vec3_t origin, const int flags, const int afterindex)
+static int CreateNewWP_InTrail(vec3_t origin, const int flags, const int afterindex)
 {
 	int foundindex = 0;
 	int foundanindex = 0;
@@ -680,7 +676,7 @@ int CreateNewWP_InTrail(vec3_t origin, const int flags, const int afterindex)
 	return 1;
 }
 
-int CreateNewWP_InsertUnder(vec3_t origin, const int flags, const int afterindex)
+static int CreateNewWP_InsertUnder(vec3_t origin, const int flags, const int afterindex)
 {
 	int foundindex = 0;
 	int foundanindex = 0;
@@ -755,7 +751,7 @@ int CreateNewWP_InsertUnder(vec3_t origin, const int flags, const int afterindex
 	return 1;
 }
 
-void TeleportToWP(const gentity_t* pl, const int afterindex)
+static void TeleportToWP(const gentity_t* pl, const int afterindex)
 {
 	if (!pl || !pl->client)
 	{
@@ -793,7 +789,7 @@ void TeleportToWP(const gentity_t* pl, const int afterindex)
 	VectorCopy(gWPArray[foundindex]->origin, pl->client->ps.origin);
 }
 
-void WPFlagsModify(const int wpnum, const int flags)
+static void WPFlagsModify(const int wpnum, const int flags)
 {
 	if (wpnum < 0 || wpnum >= gWPNum || !gWPArray[wpnum] || !gWPArray[wpnum]->inuse)
 	{
@@ -819,7 +815,7 @@ static int NotWithinRange(const int base, const int extent)
 	return 1;
 }
 
-int NodeHere(vec3_t spot)
+static int NodeHere(vec3_t spot)
 {
 	int i = 0;
 
@@ -841,7 +837,7 @@ int NodeHere(vec3_t spot)
 	return 0;
 }
 
-int CanGetToVector(vec3_t org1, vec3_t org2, vec3_t mins, vec3_t maxs)
+static int CanGetToVector(vec3_t org1, vec3_t org2, vec3_t mins, vec3_t maxs)
 {
 	trace_t tr;
 
@@ -856,7 +852,7 @@ int CanGetToVector(vec3_t org1, vec3_t org2, vec3_t mins, vec3_t maxs)
 }
 
 #if 0
-int CanGetToVectorTravel(vec3_t org1, vec3_t org2, vec3_t mins, vec3_t maxs)
+static int CanGetToVectorTravel(vec3_t org1, vec3_t org2, vec3_t mins, vec3_t maxs)
 {
 	trace_t tr;
 	vec3_t a, ang, fwd;
@@ -912,7 +908,7 @@ int CanGetToVectorTravel(vec3_t org1, vec3_t org2, vec3_t mins, vec3_t maxs)
 	return 1;
 }
 #else
-int CanGetToVectorTravel(vec3_t org1, vec3_t moveTo, vec3_t mins, vec3_t maxs)
+static int CanGetToVectorTravel(vec3_t org1, vec3_t moveTo, vec3_t mins, vec3_t maxs)
 //int ExampleAnimEntMove(gentity_t *self, vec3_t moveTo, float stepSize)
 {
 	trace_t tr;
@@ -1030,7 +1026,7 @@ int CanGetToVectorTravel(vec3_t org1, vec3_t moveTo, vec3_t mins, vec3_t maxs)
 }
 #endif
 
-int ConnectTrail(const int startindex, const int endindex, const qboolean behind_the_scenes)
+static int ConnectTrail(const int startindex, const int endindex, const qboolean behind_the_scenes)
 {
 	static byte extendednodes[MAX_NODETABLE_SIZE];
 	//for storing checked nodes and not trying to extend them each a bazillion times
@@ -1334,16 +1330,6 @@ int ConnectTrail(const int startindex, const int endindex, const qboolean behind
 				"Since points cannot be connected, point %i has been flagged as only-forward and point %i has been flagged as only-backward.\n",
 				startindex, endindex);
 		}
-
-		/*while (nodenum >= 0)
-		{
-			if (nodetable[nodenum].origin[0] || nodetable[nodenum].origin[1] || nodetable[nodenum].origin[2])
-			{
-				CreateNewWP(nodetable[nodenum].origin, nodetable[nodenum].flags);
-			}
-
-			nodenum--;
-		}*/
 		//The above code transfers nodes into the "rendered" waypoint array. Strictly for debugging.
 
 		if (!behind_the_scenes)
@@ -1437,7 +1423,7 @@ int ConnectTrail(const int startindex, const int endindex, const qboolean behind
 	return 1;
 }
 
-int OpposingEnds(const int start, const int end)
+static int OpposingEnds(const int start, const int end)
 {
 	if (!gWPArray[start] || !gWPArray[start]->inuse || !gWPArray[end] || !gWPArray[end]->inuse)
 	{
@@ -1453,7 +1439,7 @@ int OpposingEnds(const int start, const int end)
 	return 0;
 }
 
-int DoorBlockingSection(const int start, const int end)
+static int DoorBlockingSection(const int start, const int end)
 {
 	//if a door blocks the trail, we'll just have to assume the points on each side are in visibility when it's open
 	trace_t tr;
@@ -1501,7 +1487,7 @@ int DoorBlockingSection(const int start, const int end)
 	return 0;
 }
 
-int RepairPaths(const qboolean behind_the_scenes)
+static int RepairPaths(const qboolean behind_the_scenes)
 {
 	//	int ctRet;
 	float max_dist_factor = 400;
@@ -1555,7 +1541,7 @@ int RepairPaths(const qboolean behind_the_scenes)
 	return 1;
 }
 
-int OrgVisibleCurve(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, const int ignore)
+static int OrgVisibleCurve(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, const int ignore)
 {
 	trace_t tr;
 	vec3_t evenorg1;
@@ -1578,7 +1564,7 @@ int OrgVisibleCurve(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, const in
 	return 0;
 }
 
-int CanForceJumpTo(const int baseindex, const int testingindex, const float distance)
+static int CanForceJumpTo(const int baseindex, const int testingindex, const float distance)
 {
 	float heightdif;
 	vec3_t xy_base, xy_test, v, mins, maxs;
@@ -1651,7 +1637,7 @@ int CanForceJumpTo(const int baseindex, const int testingindex, const float dist
 	return 1;
 }
 
-void CalculatePaths(void)
+static void CalculatePaths(void)
 {
 	int max_neighbor_dist = MAX_NEIGHBOR_LINK_DISTANCE;
 	vec3_t mins, maxs;
@@ -1741,7 +1727,7 @@ void CalculatePaths(void)
 	}
 }
 
-gentity_t* GetObjectThatTargets(const gentity_t* ent)
+static gentity_t* GetObjectThatTargets(const gentity_t* ent)
 {
 	gentity_t* next = NULL;
 
@@ -1760,7 +1746,7 @@ gentity_t* GetObjectThatTargets(const gentity_t* ent)
 	return NULL;
 }
 
-void CalculateSiegeGoals(void)
+static void CalculateSiegeGoals(void)
 {
 	int i = 0;
 	vec3_t dif;
@@ -1843,7 +1829,7 @@ float botGlobalNavWeaponWeights[WP_NUM_WEAPONS] =
 	0 //WP_EMPLACED_GUN,
 };
 
-int GetNearestVisibleWPToItem(vec3_t org, const int ignore)
+static int GetNearestVisibleWPToItem(vec3_t org, const int ignore)
 {
 	vec3_t mins, maxs;
 
@@ -1882,7 +1868,7 @@ int GetNearestVisibleWPToItem(vec3_t org, const int ignore)
 	return bestindex;
 }
 
-void CalculateWeightGoals(void)
+static void CalculateWeightGoals(void)
 {
 	//set waypoint weights depending on weapon and item placement
 	int i = 0;
@@ -1977,7 +1963,7 @@ void CalculateWeightGoals(void)
 	}
 }
 
-void CalculateJumpRoutes(void)
+static void CalculateJumpRoutes(void)
 {
 	int i = 0;
 
@@ -2031,7 +2017,7 @@ void CalculateJumpRoutes(void)
 	}
 }
 
-int LoadPathData(const char* filename)
+static int LoadPathData(const char* filename)
 {
 	fileHandle_t f;
 	char file_string[WPARRAY_BUFFER_SIZE];
@@ -2269,7 +2255,7 @@ int LoadPathData(const char* filename)
 	return 1;
 }
 
-void FlagObjects(void)
+static void FlagObjects(void)
 {
 	int i = 0, bestindex = 0, found = 0;
 	float bestdist = 999999, tlen;
@@ -2387,7 +2373,7 @@ void FlagObjects(void)
 	}
 }
 
-int SavePathData(const char* filename)
+static int SavePathData(const char* filename)
 {
 	fileHandle_t f;
 	char file_string[WPARRAY_BUFFER_SIZE];
@@ -2515,7 +2501,7 @@ int SavePathData(const char* filename)
 int gSpawnPointNum = 0;
 gentity_t* gSpawnPoints[MAX_SPAWNPOINT_ARRAY];
 
-int G_NearestNodeToPoint(vec3_t point)
+static int G_NearestNodeToPoint(vec3_t point)
 {
 	//gets the node on the entire grid which is nearest to the specified coordinates.
 	int best_index = -1;
@@ -2548,7 +2534,7 @@ int G_NearestNodeToPoint(vec3_t point)
 	return best_index;
 }
 
-void G_NodeClearForNext(void)
+static void G_NodeClearForNext(void)
 {
 	//reset nodes for the next trail connection.
 	int i = 0;
@@ -2575,7 +2561,7 @@ void G_NodeClearFlags(void)
 	}
 }
 
-int G_NodeMatchingXY(const float x, const float y)
+static int G_NodeMatchingXY(const float x, const float y)
 {
 	//just get the first unflagged node with the matching x,y coordinates.
 	int i = 0;
@@ -2595,7 +2581,7 @@ int G_NodeMatchingXY(const float x, const float y)
 	return -1;
 }
 
-int G_NodeMatchingXY_BA(const int x, const int y, const int final)
+static int G_NodeMatchingXY_BA(const int x, const int y, const int final)
 {
 	//return the node with the lowest weight that matches the specified x,y coordinates.
 	int i = 0;
@@ -2623,7 +2609,7 @@ int G_NodeMatchingXY_BA(const int x, const int y, const int final)
 	return bestindex;
 }
 
-int G_RecursiveConnection(const int start, const int end, const int weight, const qboolean trace_check,
+static int G_RecursiveConnection(const int start, const int end, const int weight, const qboolean trace_check,
 	const float base_height)
 {
 	int index_directions[4]; //0 == down, 1 == up, 2 == left, 3 == right
@@ -2706,7 +2692,7 @@ int G_RecursiveConnection(const int start, const int end, const int weight, cons
 }
 
 #ifdef DEBUG_NODE_FILE
-void G_DebugNodeFile()
+static void G_DebugNodeFile()
 {
 	fileHandle_t f;
 	int i = 0;
@@ -2744,7 +2730,7 @@ void G_DebugNodeFile()
 
 #define ALLOWABLE_DEBUG_FILE_SIZE 1048576
 
-void CreateAsciiTableRepresentation()
+static void CreateAsciiTableRepresentation()
 { //Draw a text grid of the entire waypoint array (useful for debugging final waypoint placement)
 	fileHandle_t f;
 	int i = 0;
@@ -2868,7 +2854,7 @@ void CreateAsciiTableRepresentation()
 	trap->FS_Close(f);
 }
 
-void CreateAsciiNodeTableRepresentation(int start, int end)
+static void CreateAsciiNodeTableRepresentation(int start, int end)
 { //draw a text grid of a single node path, from point A to Z.
 	fileHandle_t f;
 	int i = 0;
@@ -2993,7 +2979,7 @@ void CreateAsciiNodeTableRepresentation(int start, int end)
 }
 #endif
 
-qboolean G_BackwardAttachment(const int start, const int final_destination, const int insert_after)
+static qboolean G_BackwardAttachment(const int start, const int final_destination, const int insert_after)
 {
 	//After creating a node path between 2 points, this function links the 2 points with actual waypoint data.
 	int index_directions[4]; //0 == down, 1 == up, 2 == left, 3 == right
@@ -3068,7 +3054,7 @@ qboolean G_BackwardAttachment(const int start, const int final_destination, cons
 #define PATH_TIME_DEBUG
 #endif
 
-void G_RMGPathing(void)
+static void G_RMGPathing(void)
 {
 	//Generate waypoint information on-the-fly for the random mission.
 	float place_x, place_y, place_z;
@@ -3247,7 +3233,7 @@ void G_RMGPathing(void)
 #endif
 }
 
-void BeginAutoPathRoutine(void)
+static void BeginAutoPathRoutine(void)
 {
 	//Called for RMG levels.
 	int i = 0;
@@ -3383,7 +3369,7 @@ void LoadPath_ThisLevel(void)
 	}
 }
 
-gentity_t* GetClosestSpawn(const gentity_t* ent)
+static gentity_t* GetClosestSpawn(const gentity_t* ent)
 {
 	gentity_t* closest_spawn = NULL;
 	float closest_dist = -1;
@@ -3393,8 +3379,8 @@ gentity_t* GetClosestSpawn(const gentity_t* ent)
 	{
 		gentity_t* spawn = &g_entities[i];
 
-		if (spawn && spawn->inuse && (!Q_stricmp(spawn->classname, "info_player_start") || !Q_stricmp(
-			spawn->classname, "info_player_deathmatch")))
+		if (spawn && spawn->inuse &&
+			(!Q_stricmp(spawn->classname, "info_player_start") || !Q_stricmp(spawn->classname, "info_player_deathmatch")))
 		{
 			vec3_t v_sub;
 
@@ -3414,7 +3400,7 @@ gentity_t* GetClosestSpawn(const gentity_t* ent)
 	return closest_spawn;
 }
 
-gentity_t* GetNextSpawnInIndex(const gentity_t* current_spawn)
+static gentity_t* GetNextSpawnInIndex(const gentity_t* current_spawn)
 {
 	gentity_t* next_spawn = NULL;
 	int i = current_spawn->s.number + 1;

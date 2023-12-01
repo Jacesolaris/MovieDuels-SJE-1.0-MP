@@ -550,7 +550,7 @@ void G_InitGame(int levelTime, int randomSeed, int restart)
 		level.is_duel_mp_map = qtrue;
 	}
 
-	if (Q_stricmp(sje_mapname, "duel_hangar") == 0)
+	if (Q_stricmp(sje_mapname, "duel_hangar") == 0 && com_rend2.integer == 0)
 	{
 		level.is_no_Dlight_map = qtrue;
 	}

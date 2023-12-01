@@ -10969,6 +10969,8 @@ void standard_bot_ai(bot_state_t* bs)
 		return;
 	}
 
+	// Bot just spawned it, set his saber style
+
 	qboolean dualSabers = qfalse;
 	qboolean staffSaber = qfalse;
 
@@ -10993,7 +10995,11 @@ void standard_bot_ai(bot_state_t* bs)
 	}
 
 	if (!dualSabers && !staffSaber
-		&& (bs->cur_ps.fd.saber_anim_level != SS_FAST && bs->cur_ps.fd.saber_anim_level != SS_MEDIUM && bs->cur_ps.fd.saber_anim_level != SS_STRONG))
+		&& (bs->cur_ps.fd.saber_anim_level != SS_FAST && 
+			bs->cur_ps.fd.saber_anim_level != SS_TAVION &&
+			bs->cur_ps.fd.saber_anim_level != SS_MEDIUM &&
+			bs->cur_ps.fd.saber_anim_level != SS_STRONG &&
+			bs->cur_ps.fd.saber_anim_level != SS_DESANN))
 	{//using a single saber
 		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
@@ -12162,7 +12168,7 @@ void standard_bot_ai(bot_state_t* bs)
 		bs->saberThrowTime = level.time + Q_irand(4000, 10000);
 	}
 
-	if (bs->currentEnemy)
+	if (bs->currentEnemy) // bot found a saber enemy
 	{
 		if (bot_get_weapon_range(bs) == BWEAPONRANGE_SABER)
 		{
@@ -12187,18 +12193,18 @@ void standard_bot_ai(bot_state_t* bs)
 			}
 
 			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
-				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
+				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL) // dont change staff or dual styles
 			{
-				if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_MISSILE
-					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2)
+				if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_FULL   // enemy has high BP
+					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2) // We have offense level 3
 				{
 					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG
-						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DESANN && bs->saberPower)
+						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DESANN && bs->saberPower)  // should swap from desann to strong and vise versa
 					{ //if we are up against someone with a lot of blockpoints and we have a strong attack available, then h4q them
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
 				}
-				else if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_FOURTY
+				else if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_HALF
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 1)
 				{
 					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)

@@ -5140,7 +5140,7 @@ static void ClientThink_real(gentity_t* ent)
 		//Keep the time updated, so once this duel ends this player can't engage in a duel for another
 		//10 seconds. This will give other people a chance to engage in duels in case this player wants
 		//to engage again right after he's done fighting and someone else is waiting.
-		client->ps.fd.privateDuelTime = level.time + 10000;
+		client->ps.fd.privateDuelTime = level.time + 5000;
 
 		if (client->ps.duelTime < level.time)
 		{
@@ -6914,13 +6914,13 @@ static void ClientThink_real(gentity_t* ent)
 	// Did we kick someone in our pmove sequence?
 	if (client->ps.forceKickFlip && !(client->buttons & BUTTON_GRAPPLE))
 	{
-		gentity_t* face_kicked = &g_entities[client->ps.forceKickFlip - 1];
+		gentity_t* faceKicked = &g_entities[client->ps.forceKickFlip - 1];
 
-		if (face_kicked && face_kicked->client && (!OnSameTeam(ent, face_kicked) || g_friendlyFire.integer) &&
-			(!face_kicked->client->ps.duelInProgress || face_kicked->client->ps.duelIndex == ent->s.number) &&
-			(!ent->client->ps.duelInProgress || ent->client->ps.duelIndex == face_kicked->s.number))
+		if (faceKicked && faceKicked->client && (!OnSameTeam(ent, faceKicked) || g_friendlyFire.integer) &&
+			(!faceKicked->client->ps.duelInProgress || faceKicked->client->ps.duelIndex == ent->s.number) &&
+			(!ent->client->ps.duelInProgress || ent->client->ps.duelIndex == faceKicked->s.number))
 		{
-			if (face_kicked && face_kicked->client && face_kicked->health && face_kicked->takedamage)
+			if (faceKicked && faceKicked->client && faceKicked->health && faceKicked->takedamage)
 			{
 				//push them away and do pain
 				vec3_t oppDir;
@@ -6932,53 +6932,53 @@ static void ClientThink_real(gentity_t* ent)
 
 				if (ent->client->ps.fd.forceGripCripple)
 				{
-					G_Damage(face_kicked, ent, ent, oppDir, client->ps.origin, 5, DAMAGE_NO_ARMOR, MOD_MELEE);
+					G_Damage(faceKicked, ent, ent, oppDir, client->ps.origin, 5, DAMAGE_NO_ARMOR, MOD_MELEE);
 				}
 				else
 				{
-					G_Damage(face_kicked, ent, ent, oppDir, client->ps.origin, strength, DAMAGE_NO_ARMOR, MOD_MELEE);
+					G_Damage(faceKicked, ent, ent, oppDir, client->ps.origin, strength, DAMAGE_NO_ARMOR, MOD_MELEE);
 				}
 
 				//WE NEED TO RELEASE THE WALL!!!!
-				if (face_kicked->client->ps.pm_flags & PMF_STUCK_TO_WALL)
+				if (faceKicked->client->ps.pm_flags & PMF_STUCK_TO_WALL)
 				{
-					face_kicked->client->ps.pm_flags &= ~PMF_STUCK_TO_WALL;
+					faceKicked->client->ps.pm_flags &= ~PMF_STUCK_TO_WALL;
 				}
 
-				if (face_kicked->client->ps.weapon != WP_SABER ||
-					face_kicked->client->ps.fd.saber_anim_level != FORCE_LEVEL_3 ||
-					!PM_SaberInAttack(face_kicked->client->ps.saber_move) && !
-					PM_SaberInStart(face_kicked->client->ps.saber_move) && !
-					PM_SaberInReturn(face_kicked->client->ps.saber_move) && !PM_SaberInTransition(
-						face_kicked->client->ps.saber_move))
+				if (faceKicked->client->ps.weapon != WP_SABER ||
+					faceKicked->client->ps.fd.saber_anim_level != FORCE_LEVEL_3 ||
+					!PM_SaberInAttack(faceKicked->client->ps.saber_move) && !
+					PM_SaberInStart(faceKicked->client->ps.saber_move) && !
+					PM_SaberInReturn(faceKicked->client->ps.saber_move) && !PM_SaberInTransition(
+						faceKicked->client->ps.saber_move))
 				{
-					if (face_kicked->health > 0 &&
-						face_kicked->client->ps.stats[STAT_HEALTH] > 0 &&
-						face_kicked->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
+					if (faceKicked->health > 0 &&
+						faceKicked->client->ps.stats[STAT_HEALTH] > 0 &&
+						faceKicked->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
 					{
-						if (BG_KnockDownable(&face_kicked->client->ps) && Q_irand(1, 10) <= 3)
+						if (BG_KnockDownable(&faceKicked->client->ps) && Q_irand(1, 10) <= 3)
 						{
 							//only actually knock over sometimes, but always do velocity hit
-							face_kicked->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
-							face_kicked->client->ps.forceHandExtendTime = level.time + 1100;
-							face_kicked->client->ps.forceDodgeAnim = 0;
+							faceKicked->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
+							faceKicked->client->ps.forceHandExtendTime = level.time + 1100;
+							faceKicked->client->ps.forceDodgeAnim = 0;
 							//this toggles between 1 and 0, when it's 1 we should play the get up anim
 						}
 
-						face_kicked->client->ps.otherKiller = ent->s.number;
-						face_kicked->client->ps.otherKillerTime = level.time + 5000;
-						face_kicked->client->ps.otherKillerDebounceTime = level.time + 100;
-						face_kicked->client->otherKillerMOD = MOD_MELEE;
-						face_kicked->client->otherKillerVehWeapon = 0;
-						face_kicked->client->otherKillerWeaponType = WP_NONE;
+						faceKicked->client->ps.otherKiller = ent->s.number;
+						faceKicked->client->ps.otherKillerTime = level.time + 5000;
+						faceKicked->client->ps.otherKillerDebounceTime = level.time + 100;
+						faceKicked->client->otherKillerMOD = MOD_MELEE;
+						faceKicked->client->otherKillerVehWeapon = 0;
+						faceKicked->client->otherKillerWeaponType = WP_NONE;
 
-						face_kicked->client->ps.velocity[0] = oppDir[0] * (strength * 40);
-						face_kicked->client->ps.velocity[1] = oppDir[1] * (strength * 40);
-						face_kicked->client->ps.velocity[2] = 200;
+						faceKicked->client->ps.velocity[0] = oppDir[0] * (strength * 40);
+						faceKicked->client->ps.velocity[1] = oppDir[1] * (strength * 40);
+						faceKicked->client->ps.velocity[2] = 200;
 					}
 				}
 
-				G_Sound(face_kicked, CHAN_AUTO, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+				G_Sound(faceKicked, CHAN_AUTO, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 			}
 		}
 

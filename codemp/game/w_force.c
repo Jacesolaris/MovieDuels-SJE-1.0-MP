@@ -3384,7 +3384,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 	}
 }
 
-void force_shoot_lightning(gentity_t* self)
+static void force_shoot_lightning(gentity_t* self)
 {
 	trace_t tr;
 	vec3_t forward;

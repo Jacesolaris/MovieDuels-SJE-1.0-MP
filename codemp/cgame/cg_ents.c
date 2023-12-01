@@ -380,7 +380,7 @@ static void CG_EntityEffects(const centity_t* cent)
 	}
 }
 
-localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const float st_scale, const float scale,
+static localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const float st_scale, const float scale,
 	const float dscale, const float startalpha, const float endalpha,
 	const float kill_time,
 	const qhandle_t shader)
@@ -432,7 +432,7 @@ localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const
 	return le;
 }
 
-void FX_DrawPortableShield(const centity_t* cent)
+static void FX_DrawPortableShield(const centity_t* cent)
 {
 	//rww - this code differs a bit from the draw code in EF, I don't know why I had to do
 	//it this way yet it worked in EF the other way.
@@ -512,7 +512,7 @@ void FX_DrawPortableShield(const centity_t* cent)
 CG_Special
 ==================
 */
-void CG_Special(const centity_t* cent)
+static void CG_Special(const centity_t* cent)
 {
 	const entityState_t* s1 = &cent->currentState;
 
@@ -622,7 +622,7 @@ void CG_CreateBBRefEnts(entityState_t* s1, vec3_t origin)
 }
 
 // write in the axis and stuff
-void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
+static void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
 	int model_num = cent->boltInfo >> MODEL_SHIFT;
@@ -2253,7 +2253,7 @@ static void CG_Speaker(centity_t* cent)
 		Q_flrand(-1.0f, 1.0f);
 }
 
-qboolean CG_GreyItem(const int type, const int tag, const int pl_side)
+static qboolean CG_GreyItem(const int type, const int tag, const int pl_side)
 {
 	if (type == IT_POWERUP &&
 		(tag == PW_FORCE_ENLIGHTENED_LIGHT || tag == PW_FORCE_ENLIGHTENED_DARK))
@@ -2753,7 +2753,7 @@ static void CG_Item(centity_t* cent)
 
 //============================================================================
 
-void CG_CreateDistortionTrailPart(const centity_t* cent, const float scale, vec3_t pos)
+static void CG_CreateDistortionTrailPart(const centity_t* cent, const float scale, vec3_t pos)
 {
 	refEntity_t ent;
 	vec3_t ang;
@@ -2822,9 +2822,7 @@ void CG_CreateDistortionTrailPart(const centity_t* cent, const float scale, vec3
 CG_Missile
 ===============
 */
-extern void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx,
-	int saber_num, int blade_num, vec3_t origin, vec3_t angles, qboolean from_saber,
-	qboolean dont_draw);
+extern void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber_num, int blade_num, vec3_t origin, vec3_t angles, qboolean from_saber, qboolean dont_draw);
 extern void CG_DoSaberLight(const saberInfo_t* saber, int cnum, int bnum);
 
 static void CG_Missile(centity_t* cent)

@@ -6236,14 +6236,14 @@ CG_LightVerts
 int CG_LightVerts(vec3_t normal, const int numVerts, polyVert_t* verts)
 {
 	vec3_t ambient_light;
-	vec3_t light_dir;
+	vec3_t lightDir;
 	vec3_t directed_light;
 
-	trap->R_LightForPoint(verts[0].xyz, ambient_light, directed_light, light_dir);
+	trap->R_LightForPoint(verts[0].xyz, ambient_light, directed_light, lightDir);
 
 	for (int i = 0; i < numVerts; i++)
 	{
-		const float incoming = DotProduct(normal, light_dir);
+		const float incoming = DotProduct(normal, lightDir);
 		if (incoming <= 0)
 		{
 			verts[i].modulate[0] = ambient_light[0];

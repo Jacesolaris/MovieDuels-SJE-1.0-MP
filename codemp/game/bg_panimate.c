@@ -194,7 +194,7 @@ qboolean PM_Saberinstab(const int move)
 	return qfalse;
 }
 
-qboolean PM_WeponFatiguedAnim(const int anim)
+static qboolean PM_WeponFatiguedAnim(const int anim)
 {
 	switch (anim)
 	{
@@ -637,7 +637,7 @@ qboolean PM_FaceProtectAnim(const int anim)
 	return qfalse;
 }
 
-int PM_AnimLevelForSaberAnim(const int anim)
+static int PM_AnimLevelForSaberAnim(const int anim)
 {
 	if (anim >= BOTH_A1_T__B_ && anim <= BOTH_D1_B____)
 	{
@@ -1050,56 +1050,6 @@ qboolean PM_BoltBlockingAnim(const int anim)
 	case BOTH_V7_BL_S7:
 	case BOTH_V6_BL_S6:
 	case BOTH_V1_BL_S1:
-		//New Bolt block anims
-	case BOTH_BOLT_BLOCK_BACKHAND_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_BACKHAND_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_BACKHAND_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_BACKHAND_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_BACKHAND_MIDDLE_TOP:
-	case BOTH_BOLT_BLOCK_BACKHAND_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_BACKHAND_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_DUAL_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_DUAL_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_DUAL_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_DUAL_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_DUAL_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_DUAL_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_DUAL_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_STAFF_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_STAFF_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_STAFF_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_STAFF_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_STAFF_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_STAFF_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_STAFF_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_TWO_HAND_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_TWO_HAND_TOP_RIGHT:
-		return qtrue;
-	default:;
-	}
-	return qfalse;
-}
-
-qboolean PM_LetsSmoothTheseAnimsPlease(const int anim)
-{
-	switch (anim)
-	{
 		//New Bolt block anims
 	case BOTH_BOLT_BLOCK_BACKHAND_BOTTOM_LEFT:
 	case BOTH_BOLT_BLOCK_BACKHAND_BOTTOM_RIGHT:
@@ -2216,7 +2166,7 @@ qboolean BG_InRoll(const playerState_t* ps, const int anim)
 	return qfalse;
 }
 
-qboolean BG_InSpecialDeathAnim(const int anim)
+static qboolean BG_InSpecialDeathAnim(const int anim)
 {
 	switch (anim)
 	{
@@ -2985,7 +2935,7 @@ qboolean PM_SaberInBashedAnim(const int anim)
 	return qfalse;
 }
 
-qboolean BG_InWalk(const int anim)
+static qboolean BG_InWalk(const int anim)
 {
 	switch (anim)
 	{
@@ -4882,7 +4832,7 @@ int PM_AnimLength(const animNumber_t anim)
 	return pm->animations[anim].numFrames * fabs(pm->animations[anim].frameLerp);
 }
 
-void PM_DebugLegsAnim(const int anim)
+static void PM_DebugLegsAnim(const int anim)
 {
 	const int old_anim = pm->ps->legsAnim;
 	const int new_anim = anim;
@@ -4927,7 +4877,7 @@ END: Animation utility functions (sequence checking)
 ==============================================================================
 */
 
-void BG_FlipPart(playerState_t* ps, const int part)
+static void BG_FlipPart(playerState_t* ps, const int part)
 {
 	if (part == SETANIM_TORSO)
 	{
@@ -4973,7 +4923,7 @@ void BG_ClearAnimsets(void)
 {
 }
 
-animation_t* BG_AnimsetAlloc(void)
+static animation_t* BG_AnimsetAlloc(void)
 {
 	assert(bgNumAllAnims < MAX_ANIM_FILES);
 	bgAllAnims[bgNumAllAnims].anims = (animation_t*)BG_Alloc(sizeof(animation_t) * MAX_TOTALANIMATIONS);
@@ -4981,7 +4931,7 @@ animation_t* BG_AnimsetAlloc(void)
 	return bgAllAnims[bgNumAllAnims].anims;
 }
 
-void BG_AnimsetFree()
+static void BG_AnimsetFree()
 {
 }
 
@@ -5040,8 +4990,7 @@ int CheckAnimFrameForEventType(const animevent_t* anim_events, const int key_fra
 	return -1;
 }
 
-void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* anim_events, const animation_t* animations,
-	const char** text_p)
+static void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* anim_events, const animation_t* animations,const char** text_p)
 {
 	const char* token;
 	int num, n, lowest_val, highest_val, cur_anim_event, last_anim_event = 0;
@@ -6091,7 +6040,7 @@ TORSO Animations
 Override animations for upper body
 ===================
 */
-void BG_StartTorsoAnim(playerState_t* ps, const int anim)
+static void BG_StartTorsoAnim(playerState_t* ps, const int anim)
 {
 	if (ps->pm_type >= PM_DEAD)
 	{
@@ -6159,7 +6108,7 @@ void BG_SetLegsAnimTimer(playerState_t* ps, const int time)
 #endif
 }
 
-void PM_SetLegsAnimTimer(const int time)
+static void PM_SetLegsAnimTimer(const int time)
 {
 	BG_SetLegsAnimTimer(pm->ps, time);
 }
@@ -6201,7 +6150,7 @@ void BG_SetTorsoAnimTimer(playerState_t* ps, const int time)
 #endif
 }
 
-void PM_SetTorsoAnimTimer(const int time)
+static void PM_SetTorsoAnimTimer(const int time)
 {
 	BG_SetTorsoAnimTimer(pm->ps, time);
 }
@@ -6377,7 +6326,7 @@ PM_SetAnimFinal
 qboolean PM_RunningAnim(int anim);
 qboolean PM_WalkingAnim(int anim);
 
-void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int set_anim_parts, const int anim,
+static void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int set_anim_parts, const int anim,
 	const int set_anim_flags)
 {
 	float edit_anim_speed = 1;
@@ -6496,7 +6445,7 @@ setAnimLegs:
 setAnimDone:;
 }
 
-void PM_SetAnimFinal(const int set_anim_parts, const int anim, const int set_anim_flags)
+static void PM_SetAnimFinal(const int set_anim_parts, const int anim, const int set_anim_flags)
 {
 	BG_SetAnimFinal(pm->ps, pm->animations, set_anim_parts, anim, set_anim_flags);
 }
