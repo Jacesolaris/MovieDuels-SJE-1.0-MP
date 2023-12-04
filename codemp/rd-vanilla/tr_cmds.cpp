@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 R_PerformanceCounters
 =====================
 */
-void R_PerformanceCounters(void) {
+static void R_PerformanceCounters(void) {
 	if (!r_speeds->integer) {
 		// clear the counters even if we aren't printing
 		memset(&tr.pc, 0, sizeof tr.pc);
@@ -88,7 +88,7 @@ void R_PerformanceCounters(void) {
 R_IssueRenderCommands
 ====================
 */
-void R_IssueRenderCommands(const qboolean runPerformanceCounters)
+static void R_IssueRenderCommands(const qboolean runPerformanceCounters)
 {
 	renderCommandList_t* cmd_list = &backEndData->commands;
 
@@ -133,7 +133,7 @@ R_GetCommandBufferReserved
 make sure there is enough command space
 ============
 */
-void* R_GetCommandBufferReserved(unsigned int bytes, const int reservedBytes)
+static void* R_GetCommandBufferReserved(unsigned int bytes, const int reservedBytes)
 {
 	renderCommandList_t* cmdList = &backEndData->commands;
 	bytes = PAD(bytes, sizeof(void*));
@@ -158,7 +158,7 @@ R_GetCommandBuffer
 returns NULL if there is not enough space for important commands
 ============
 */
-void* R_GetCommandBuffer(const unsigned int bytes) {
+static void* R_GetCommandBuffer(const unsigned int bytes) {
 	return R_GetCommandBufferReserved(bytes, PAD(sizeof(swapBuffersCommand_t), sizeof(void*)));
 }
 
@@ -168,7 +168,7 @@ R_AddDrawSurfCmd
 
 =============
 */
-void	R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs) {
+void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 	drawSurfsCommand_t* cmd = static_cast<drawSurfsCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 	if (!cmd) {
 		return;

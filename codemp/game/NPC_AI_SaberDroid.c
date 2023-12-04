@@ -4,7 +4,7 @@
 #include "g_nav.h"
 #include "anims.h"
 
-extern void WP_DeactivateSaber(const gentity_t* self, qboolean clear_length);
+extern void WP_DeactivateSaber(const gentity_t* self);
 extern int PM_AnimLength(animNumber_t anim);
 
 qboolean NPC_CheckPlayerTeamStealth(void);
@@ -43,7 +43,7 @@ NPC_BSSaberDroid_Patrol
 -------------------------
 */
 
-void NPC_BSSaberDroid_Patrol(void)
+static void NPC_BSSaberDroid_Patrol(void)
 {
 	//FIXME: pick up on bodies of dead buddies?
 	if (NPCS.NPCInfo->confusionTime < level.time)
@@ -129,7 +129,7 @@ void NPC_BSSaberDroid_Patrol(void)
 		if (!NPCS.NPC->client->ps.saber_holstered)
 		{
 			//saber is on.
-			WP_DeactivateSaber(NPCS.NPC, qfalse);
+			WP_DeactivateSaber(NPCS.NPC);
 			NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_TURNOFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		}
 	}
@@ -143,7 +143,7 @@ NPC_BSSaberDroid_Attack
 -------------------------
 */
 
-void NPC_SaberDroid_PickAttack(void)
+static void NPC_SaberDroid_PickAttack(void)
 {
 	int attackAnim = Q_irand(0, 3);
 	switch (attackAnim)
@@ -178,7 +178,7 @@ void NPC_SaberDroid_PickAttack(void)
 	NPCS.NPC->client->ps.weaponstate = WEAPON_FIRING;
 }
 
-void NPC_BSSaberDroid_Attack(void)
+static void NPC_BSSaberDroid_Attack(void)
 {
 	//attack behavior
 	//Don't do anything if we're hurt

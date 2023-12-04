@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 R_PerformanceCounters
 =====================
 */
-void R_PerformanceCounters(void) {
+static void R_PerformanceCounters(void) {
 	gpuFrame_t* current_frame = backEndData->frames + (backEndData->realFrameNumber % MAX_FRAMES);
 
 	if (!r_speeds->integer) {
@@ -139,7 +139,7 @@ void R_PerformanceCounters(void) {
 R_IssueRenderCommands
 ====================
 */
-void R_IssueRenderCommands(qboolean runPerformanceCounters) {
+static void R_IssueRenderCommands(qboolean runPerformanceCounters) {
 	renderCommandList_t* cmdList;
 
 	cmdList = &backEndData->commands;
@@ -450,7 +450,7 @@ void RE_StretchPic(float x, float y, float w, float h,
 #define MODE_GREEN_MAGENTA 4
 #define MODE_MAX	MODE_GREEN_MAGENTA
 
-void R_SetColorMode(GLboolean* rgba, stereoFrame_t stereoFrame, int colormode)
+static void R_SetColorMode(GLboolean* rgba, stereoFrame_t stereoFrame, int colormode)
 {
 	rgba[0] = rgba[1] = rgba[2] = rgba[3] = GL_TRUE;
 

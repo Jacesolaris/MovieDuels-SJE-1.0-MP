@@ -74,7 +74,7 @@ extern qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, i
 extern qboolean WP_ForcePowerUsable(const gentity_t* self, forcePowers_t forcePower);
 extern qboolean WP_ForcePowerAvailable(const gentity_t* self, forcePowers_t forcePower, int overrideAmt);
 extern void WP_ForcePowerStop(gentity_t* self, forcePowers_t forcePower);
-extern void WP_DeactivateSaber(const gentity_t* self, qboolean clear_length);
+extern void WP_DeactivateSaber(const gentity_t* self);
 extern void WP_ActivateSaber(gentity_t* self);
 
 extern qboolean PM_SaberInStart(int move);
@@ -2075,14 +2075,14 @@ static void Jedi_AggressionErosion(const int amt)
 		CLASS_DESANN)
 	{
 		//turn off the saber
-		WP_DeactivateSaber(NPCS.NPC, qfalse);
+		WP_DeactivateSaber(NPCS.NPC);
 	}
 
 	if (NPCS.NPCInfo->stats.aggression < 4 || NPCS.NPCInfo->stats.aggression < 6 && NPCS.NPC->client->NPC_class ==
 		CLASS_VADER)
 	{
 		//turn off the saber
-		WP_DeactivateSaber(NPCS.NPC, qfalse);
+		WP_DeactivateSaber(NPCS.NPC);
 	}
 }
 
@@ -2136,7 +2136,7 @@ static void Jedi_Rage(void)
 	ForceRage(NPCS.NPC);
 }
 
-void Jedi_RageStop(const gentity_t* self)
+static void Jedi_RageStop(const gentity_t* self)
 {
 	if (self->NPC)
 	{
@@ -7519,7 +7519,7 @@ static void Jedi_CombatIdle(const int enemy_dist)
 						&& NPCS.NPC->client->ps.fd.saber_anim_level != SS_DUAL)
 					{
 						//those taunts leave saber on
-						WP_DeactivateSaber(NPCS.NPC, qfalse);
+						WP_DeactivateSaber(NPCS.NPC);
 					}
 					//Don't attack for a bit
 					NPCS.NPCInfo->stats.aggression = 3;

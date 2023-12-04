@@ -146,7 +146,7 @@ void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trac
 int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projectile);
 void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 
-float VectorBlockDistance(vec3_t v1, vec3_t v2)
+static float VectorBlockDistance(vec3_t v1, vec3_t v2)
 {
 	//returns the distance between the two points.
 	vec3_t dir;
@@ -691,7 +691,7 @@ void G_BounceAttacker(gentity_t* atk)
 	}
 }
 
-void G_Stumble(gentity_t* hit_ent)
+static void G_Stumble(gentity_t* hit_ent)
 {
 	if (PM_SaberInBashedAnim(hit_ent->client->ps.torsoAnim))
 	{
@@ -844,7 +844,7 @@ float rand_float(const float min, const float max)
 }
 
 //#ifdef DEBUG_SABER_BOX
-void G_DebugBoxLines(vec3_t mins, vec3_t maxs, const int duration)
+static void G_DebugBoxLines(vec3_t mins, vec3_t maxs, const int duration)
 {
 	vec3_t start;
 	vec3_t end;
@@ -878,7 +878,7 @@ void G_DebugBoxLines(vec3_t mins, vec3_t maxs, const int duration)
 	G_TestLine(start, mins, 0x00000ff, duration);
 }
 
-void G_DebugBlockBoxLines(vec3_t mins, vec3_t maxs, const int duration)
+static void G_DebugBlockBoxLines(vec3_t mins, vec3_t maxs, const int duration)
 {
 	vec3_t start;
 	vec3_t end;
@@ -1194,7 +1194,7 @@ void SaberUpdateSelf(gentity_t* ent)
 	ent->nextthink = level.time;
 }
 
-void SaberGotHit(const gentity_t* self, gentity_t* other, trace_t* trace)
+static void SaberGotHit(const gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	const gentity_t* own = &g_entities[self->r.ownerNum];
 
@@ -1864,7 +1864,7 @@ static QINLINE void G_G2PlayerAngles(gentity_t* ent, matrix3_t legs, vec3_t legs
 	}
 }
 
-qboolean SaberAttacking(const gentity_t* self)
+static qboolean SaberAttacking(const gentity_t* self)
 {
 	if (PM_SaberInParry(self->client->ps.saber_move))
 	{
@@ -1925,7 +1925,7 @@ typedef enum
 #define LOCK_IDEAL_DIST_TOP 32.0f
 #define LOCK_IDEAL_DIST_CIRCLE 48.0f
 
-int g_saber_lock_anim(const int attacker_saber_style, const int defender_saber_style, const int top_or_side,
+static int g_saber_lock_anim(const int attacker_saber_style, const int defender_saber_style, const int top_or_side,
 	const int lock_or_break_or_super_break,
 	const int win_or_lose)
 {
@@ -2556,7 +2556,7 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 
 extern qboolean g_standard_humanoid(gentity_t* self);
 
-void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
+static void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 {
 	if (victim->health <= 20)
 	{
@@ -2606,7 +2606,7 @@ extern int pm_saber_deflection_for_quad(int quad);
 
 extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
 
-int G_KnockawayForParry(const int move)
+static int G_KnockawayForParry(const int move)
 {
 	switch (move)
 	{
@@ -2631,7 +2631,7 @@ int G_KnockawayForParry(const int move)
 	}
 }
 
-int G_KnockawayForParryOld(const int move)
+static int G_KnockawayForParryOld(const int move)
 {
 	switch (move)
 	{
@@ -2661,7 +2661,7 @@ int G_KnockawayForParryOld(const int move)
 #define SABER_NONATTACK_DAMAGE 1
 #define SABER_TRANSITION_DAMAGE 2
 
-float calc_trace_fraction(vec3_t start, vec3_t end, vec3_t endpos)
+static float calc_trace_fraction(vec3_t start, vec3_t end, vec3_t endpos)
 {
 	const float fulldist = VectorDistance(start, end);
 	const float dist = VectorDistance(start, endpos);
@@ -3051,7 +3051,7 @@ static QINLINE qboolean g_saber_face_collision_check(const int f_num, saber_face
 
 //Copies all the important data from one trace_t to another.  Please note that this doesn't transfer ALL
 //of the trace_t data.
-void trace_copy(const trace_t* a, trace_t* b)
+static void trace_copy(const trace_t* a, trace_t* b)
 {
 	b->allsolid = a->allsolid;
 	b->contents = a->contents;
@@ -3254,7 +3254,7 @@ int BasicWeaponBlockCosts[MOD_MAX] =
 	//MOD_MAX
 };
 
-int BasicSaberBlockCost(const int attackerStyle)
+static int BasicSaberBlockCost(const int attackerStyle)
 {
 	//returns the basic saber block cost of blocking an attack from the given saber style.
 	switch (attackerStyle)
@@ -3278,7 +3278,7 @@ int BasicSaberBlockCost(const int attackerStyle)
 	}
 }
 
-qboolean IsMoving(const gentity_t* ent)
+static qboolean IsMoving(const gentity_t* ent)
 {
 	if (!ent || !ent->client)
 		return qfalse;
@@ -3887,7 +3887,7 @@ int WP_SaberBoltBlockCost(gentity_t* defender, const gentity_t* attacker)
 
 qboolean wp_using_dual_saber_as_primary(const playerState_t* ps);
 
-int wp_saber_must_block(gentity_t* self, const gentity_t* atk, const qboolean check_b_box_block, vec3_t point,
+static int wp_saber_must_block(gentity_t* self, const gentity_t* atk, const qboolean check_b_box_block, vec3_t point,
 	const int r_saber_num, const int r_blade_num)
 {
 	if (!self || !self->client || !atk)
@@ -4551,7 +4551,7 @@ content_t real_trace_content[MAX_REAL_PASSTHRU];
 
 #define REALTRACEDATADEFAULT	-2
 
-void init_real_trace_content(void)
+static void init_real_trace_content(void)
 {
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
@@ -4561,7 +4561,7 @@ void init_real_trace_content(void)
 }
 
 //returns true on success
-qboolean add_real_trace_content(const int entityNum)
+static qboolean add_real_trace_content(const int entityNum)
 {
 	if (entityNum == ENTITYNUM_WORLD || entityNum == ENTITYNUM_NONE)
 	{
@@ -4590,7 +4590,7 @@ qboolean add_real_trace_content(const int entityNum)
 }
 
 //Restored all the entities that have been blanked out in the RealTrace
-void restore_real_trace_content(void)
+static void restore_real_trace_content(void)
 {
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
@@ -4831,7 +4831,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 	return finish_real_trace(tr, &closest_trace, end);
 }
 
-float wp_saber_blade_length(const saberInfo_t* saber)
+static float wp_saber_blade_length(const saberInfo_t* saber)
 {
 	float len = 0.0f;
 	for (int i = 0; i < saber->numBlades; i++)
@@ -4898,7 +4898,7 @@ static qboolean dismemberDmg[MAX_SABER_VICTIMS];
 static int saberKnockbackFlags[MAX_SABER_VICTIMS];
 static int numVictims = 0;
 
-void WP_SaberClearDamage(void)
+static void WP_SaberClearDamage(void)
 {
 	for (int ven = 0; ven < MAX_SABER_VICTIMS; ven++)
 	{
@@ -4913,7 +4913,7 @@ void WP_SaberClearDamage(void)
 	numVictims = 0;
 }
 
-void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const int blade_num, const gentity_t* victim, vec3_t impactpoint, const int dmg)
+static void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const int blade_num, const gentity_t* victim, vec3_t impactpoint, const int dmg)
 {
 	qboolean is_droid = qfalse;
 
@@ -5012,7 +5012,7 @@ static int saberClashOther = -1; //the client_num for the other player involved 
 static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3_t impact_normal);
 static QINLINE void G_SetViewLockDebounce(const gentity_t* self);
 
-void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade_num)
+static void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade_num)
 {
 	if (saberDoClashEffect)
 	{
@@ -5038,7 +5038,7 @@ void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade
 	saberDoClashEffect = qfalse;
 }
 
-void WP_SaberBounceSound(gentity_t* ent, const int saber_num, const int blade_num)
+static void WP_SaberBounceSound(gentity_t* ent, const int saber_num, const int blade_num)
 {
 	if (!ent || !ent->client)
 	{
@@ -5072,7 +5072,7 @@ void WP_SaberBounceSound(gentity_t* ent, const int saber_num, const int blade_nu
 	}
 }
 
-void WP_SaberBounceOnWallSound(gentity_t* ent, const int saber_num, const int blade_num)
+static void WP_SaberBounceOnWallSound(gentity_t* ent, const int saber_num, const int blade_num)
 {
 	if (!ent || !ent->client)
 	{
@@ -5225,7 +5225,7 @@ static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3
 	}
 }
 
-void AnimateKnockaway(gentity_t* self, vec3_t impact)
+static void AnimateKnockaway(gentity_t* self, vec3_t impact)
 {
 	//do an knockaway.
 	if (!PM_SaberInKnockaway(self->client->ps.saber_move) && !PM_InKnockDown(&self->client->ps))
@@ -5426,7 +5426,7 @@ qboolean pm_walking_or_standing(const gentity_t* self)
 	return qfalse;
 }
 
-void DoNormalDodge(gentity_t* self, const int dodge_anim)
+static void DoNormalDodge(gentity_t* self, const int dodge_anim)
 {
 	//have self go into the given dodgeAnim
 	//Our own happy way of forcing an anim:
@@ -5439,7 +5439,7 @@ void DoNormalDodge(gentity_t* self, const int dodge_anim)
 	G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
 }
 
-qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3_t forward, vec3_t right)
+static qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3_t forward, vec3_t right)
 {
 	//checks to see if there's a cliff in the direction that dodgeAnim would travel.
 	vec3_t mins, maxs, traceto_mod, tracefrom_mod, move_dir;
@@ -6152,7 +6152,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 	return qfalse;
 }
 
-qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
+static qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
 {
 	int dodge_anim = -1;
 	int dpcost = BasicWeaponBlockCosts[MOD_SABER];
@@ -8335,13 +8335,13 @@ static QINLINE void saberMoveBack(gentity_t* ent)
 	VectorCopy(origin, ent->r.currentOrigin);
 }
 
-void SaberBounceSound(gentity_t* self, gentity_t* other, trace_t* trace)
+static void SaberBounceSound(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	VectorCopy(self->r.currentAngles, self->s.apos.trBase);
 	self->s.apos.trBase[PITCH] = 90;
 }
 
-void DeadSaberThink(gentity_t* saberent)
+static void DeadSaberThink(gentity_t* saberent)
 {
 	if (saberent->s.owner != ENTITYNUM_NONE && g_entities[saberent->s.owner].s.eFlags & EF_DEAD)
 	{
@@ -8357,7 +8357,7 @@ void DeadSaberThink(gentity_t* saberent)
 	G_RunObject(saberent);
 }
 
-void MakeDeadSaber(const gentity_t* ent)
+static void MakeDeadSaber(const gentity_t* ent)
 {
 	//spawn a "dead" saber entity here so it looks like the saber fell out of the air.
 	//This entity will remove itself after a very short time period.
@@ -8474,7 +8474,7 @@ void MakeDeadSaber(const gentity_t* ent)
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner);
 void saberBackToOwner(gentity_t* saberent);
 
-void DownedSaberThink(gentity_t* saberent)
+static void DownedSaberThink(gentity_t* saberent)
 {
 	qboolean not_disowned = qfalse;
 	qboolean pull_back = qfalse;
@@ -8624,7 +8624,7 @@ void DownedSaberThink(gentity_t* saberent)
 	saberent->nextthink = level.time;
 }
 
-void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	//similar to SaberBounceSound but the saber's owners can also pick up their saber by crouching or rolling over it
 	VectorCopy(self->r.currentAngles, self->s.apos.trBase);
@@ -8718,7 +8718,7 @@ void saberReactivate(gentity_t* saberent, gentity_t* saber_owner)
 #define SABER_BOTRETRIEVE_DELAY 600
 #define SABER_RETRIEVE_DELAY 3000 //3 seconds for now. This will leave you nice and open if you lose your saber.
 
-void saberKnockDown(gentity_t* saberent, gentity_t* saber_owner, const gentity_t* other)
+static void saberKnockDown(gentity_t* saberent, gentity_t* saber_owner, const gentity_t* other)
 {
 	trace_t tr;
 
@@ -9477,7 +9477,7 @@ void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trac
 
 #define SABER_MAX_THROW_DISTANCE 1000
 
-void saberFirstThrown(gentity_t* saberent)
+static void saberFirstThrown(gentity_t* saberent)
 {
 	vec3_t v_sub;
 	gentity_t* saber_own = &g_entities[saberent->r.ownerNum];
@@ -9743,7 +9743,7 @@ void UpdateClientRenderBolts(gentity_t* self, vec3_t render_origin, vec3_t rende
 	self->client->renderInfo.boltValidityTime = level.time;
 }
 
-void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render_angles)
+static void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render_angles)
 {
 	renderInfo_t* ri = &self->client->renderInfo;
 	if (ri->mPCalcTime < level.time)
@@ -9905,7 +9905,7 @@ extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int m
 
 extern qboolean BG_InKnockDown(int anim);
 
-qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir)
+static qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir)
 {
 	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
@@ -10199,7 +10199,7 @@ extern void G_ThrownDeathAnimForDeathAnim(gentity_t* hit_ent, vec3_t impactPoint
 
 extern void g_kick_throw(gentity_t* targ, const vec3_t new_dir, float push);
 
-gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, vec3_t kick_end, const int kick_damage,
+static gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, vec3_t kick_end, const int kick_damage,
 	const float kick_push,
 	const qboolean do_sound_on_walls)
 {
@@ -12953,7 +12953,7 @@ int WP_MissileBlockForBlock(const int saber_block)
 	return saber_block;
 }
 
-float wp_block_force_chance(const gentity_t* defender)
+static float wp_block_force_chance(const gentity_t* defender)
 {
 	float block_factor = 1.0f;
 
@@ -15324,7 +15324,7 @@ saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 	return kick_move;
 }
 
-qboolean G_EnemyInKickRange(const gentity_t* self, const gentity_t* enemy)
+static qboolean G_EnemyInKickRange(const gentity_t* self, const gentity_t* enemy)
 {
 	//is the enemy within kick range?
 	if (!self || !enemy)
@@ -15358,7 +15358,7 @@ qboolean G_CanKickEntity(const gentity_t* self, const gentity_t* target)
 	return qfalse;
 }
 
-void SaberBallisticsTouch(gentity_t* saberent, const gentity_t* other, trace_t* trace)
+static void SaberBallisticsTouch(gentity_t* saberent, const gentity_t* other, trace_t* trace)
 {
 	//touch function for sabers in ballistics mode
 	gentity_t* saber_own = &g_entities[saberent->r.ownerNum];
@@ -15377,7 +15377,7 @@ void SaberBallisticsTouch(gentity_t* saberent, const gentity_t* other, trace_t* 
 //when to make the switch to a simple dropped saber.
 #define BALLISTICSABER_BOUNCECOUNT 10
 
-void SaberBallisticsThink(gentity_t* saber_ent)
+static void SaberBallisticsThink(gentity_t* saber_ent)
 {
 	//think function for sabers in ballistics mode
 	//G_RunObject(saberEnt);
@@ -15790,7 +15790,7 @@ void player_StopBurn(const gentity_t* self)
 
 void player_Freeze(const gentity_t* self);
 
-void player_StopFreeze(const gentity_t* self)
+static void player_StopFreeze(const gentity_t* self)
 {
 	if (self && self->client)
 	{
