@@ -127,12 +127,13 @@ R_SetupEntityLightingGrid
 
 =================
 */
-static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world) {
+static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world)
+{
 	vec3_t	lightOrigin;
-	int		pos[3];
+	int		pos[3]{};
 	int		i, j;
-	float	frac[3];
-	int		gridStep[3];
+	float	frac[3]{};
+	int		gridStep[3]{};
 	vec3_t	direction;
 	float	totalFactor;
 	uint32_t startGridPos;
@@ -180,7 +181,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world) {
 		mgrid_t* data;
 		uint32_t gridPos;
 		int		lat, lng;
-		vec3_t	normal;
+		vec3_t	normal{};
 
 #if idppc
 		float d0, d1, d2, d3, d4, d5;
@@ -451,7 +452,10 @@ int R_LightDirForPoint(vec3_t point, vec3_t lightDir, vec3_t normal, world_t* wo
 	trRefEntity_t ent;
 
 	if (world->lightGridData == NULL)
+	{
+		VectorCopy(normal, lightDir);
 		return qfalse;
+	}
 
 	Com_Memset(&ent, 0, sizeof(ent));
 	VectorCopy(point, ent.e.origin);

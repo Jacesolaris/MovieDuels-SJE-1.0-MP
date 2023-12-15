@@ -34,7 +34,7 @@ stringID_table_t holsterBoneTable[] =
 	ENUM2STRING(HOLSTER_RIGHTHIP)
 };
 
-void InitHolsterData(clientInfo_t* ci)
+static void InitHolsterData(clientInfo_t* ci)
 {
 	//initialize holster data with the premade defaults.
 	for (int i = 0; i < MAX_HOLSTER; i++)

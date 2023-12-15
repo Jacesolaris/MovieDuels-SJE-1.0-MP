@@ -63,7 +63,7 @@ void RB_CheckOverflow(int verts, int indexes) {
 	RB_BeginSurface(tess.shader, tess.fogNum, tess.cubemapIndex);
 }
 
-void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
+static void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
 {
 	if (vbo != glState.currentVBO ||
 		ibo != glState.currentIBO ||
@@ -226,7 +226,7 @@ void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4])
 
 void RB_InstantQuad(vec4_t quadVerts[4])
 {
-	vec2_t texCoords[4];
+	vec2_t texCoords[4]{};
 
 	VectorSet2(texCoords[0], 0.0f, 0.0f);
 	VectorSet2(texCoords[1], 1.0f, 0.0f);
@@ -254,7 +254,7 @@ RB_SurfaceSprite
 static void RB_SurfaceSprite(void) {
 	vec3_t		left, up;
 	float		radius;
-	float			colors[4];
+	float			colors[4]{};
 	trRefEntity_t* ent = backEnd.currentEntity;
 
 	// calculate the xyz locations for the four corners
@@ -295,7 +295,7 @@ static void RB_SurfaceOrientedQuad(void)
 {
 	vec3_t	left, up;
 	float	radius;
-	float	color[4];
+	float	color[4]{};
 
 	// calculate the xyz locations for the four corners
 	radius = backEnd.currentEntity->e.radius;
@@ -606,9 +606,9 @@ static void RB_SurfaceBeam(void)
 	shaderProgram_t* sp = &tr.textureColorShader;
 	int	i;
 	vec3_t perpvec;
-	vec3_t direction, normalized_direction;
-	vec3_t	start_points[NUM_BEAM_SEGS], end_points[NUM_BEAM_SEGS];
-	vec3_t oldorigin, origin;
+	vec3_t direction{}, normalized_direction{};
+	vec3_t	start_points[NUM_BEAM_SEGS]{}, end_points[NUM_BEAM_SEGS]{};
+	vec3_t oldorigin{}, origin{};
 
 	e = &backEnd.currentEntity->e;
 
@@ -698,7 +698,7 @@ static void DoSprite(vec3_t origin, float radius, float rotation)
 	float	s, c;
 	float	ang;
 	vec3_t	left, up;
-	float	color[4];
+	float	color[4]{};
 
 	ang = M_PI * rotation / 180.0f;
 	s = sin(ang);
@@ -1344,7 +1344,7 @@ static void RB_SurfaceElectricity()
 	DoBoltSeg(start, end, right, radius);
 }
 
-void RB_SurfaceLightningBolt()
+static void RB_SurfaceLightningBolt()
 {
 	vec3_t		right;
 	vec3_t		vec;
@@ -1801,7 +1801,7 @@ static void RB_SurfaceBSPFace(srfBspSurface_t* srf) {
 }
 
 static float	LodErrorForVolume(vec3_t local, float radius) {
-	vec3_t		world;
+	vec3_t		world{};
 	float		d;
 
 	// never let it go negative
@@ -1840,7 +1840,7 @@ Just copy the grid of points and triangulate
 static void RB_SurfaceBSPGrid(srfBspSurface_t* srf) {
 	int		i, j;
 	float* xyz;
-	float* texCoords, * lightCoords[MAXLIGHTMAPS];
+	float* texCoords, * lightCoords[MAXLIGHTMAPS]{};
 	uint32_t* normal;
 	uint32_t* tangent;
 	float* color;
@@ -1848,8 +1848,8 @@ static void RB_SurfaceBSPGrid(srfBspSurface_t* srf) {
 	srfVert_t* dv;
 	int		rows, irows, vrows;
 	int		used;
-	int		widthTable[MAX_GRID_SIZE];
-	int		heightTable[MAX_GRID_SIZE];
+	int		widthTable[MAX_GRID_SIZE]{};
+	int		heightTable[MAX_GRID_SIZE]{};
 	float	lodError;
 	int		lodWidth, lodHeight;
 	int		num_vertexes;
@@ -2147,7 +2147,7 @@ static void RB_SurfaceVBOMesh(srfBspSurface_t* srf)
 		srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qfalse);
 }
 
-void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
+static void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 {
 	int i, mergeForward, mergeBack;
 	GLvoid* firstIndexOffset, * lastIndexOffset;
@@ -2162,7 +2162,12 @@ void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 		RB_EndSurface();
 	}
 
-	//drawSurf_t drawSurf =
+	//FIXME: Implement GPU vertex interpolation instead!
+	if (backEnd.currentEntity->e.oldframe != 0 || backEnd.currentEntity->e.frame != 0)
+	{
+		RB_SurfaceMesh(surface->mdvSurface);
+		return;
+	}
 
 	R_BindVBO(surface->vbo);
 	R_BindIBO(surface->ibo);

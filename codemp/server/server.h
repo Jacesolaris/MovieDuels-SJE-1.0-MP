@@ -163,7 +163,7 @@ using client_t = struct client_s
 	int lastMessageNum; // for delta compression
 	int lastClientCommand; // reliable client message sequence
 	char lastClientCommandString[MAX_STRING_CHARS];
-	sharedEntity_t* gentity; // SV_GentityNum(client_num)
+	sharedEntity_t* gentity; // SV_GentityNum(clientNum)
 	char name[MAX_NAME_LENGTH]; // extracted from userinfo, high bits masked
 
 	// downloading
@@ -403,7 +403,7 @@ qboolean SV_inPVS(const vec3_t p1, const vec3_t p2);
 //
 void SV_BotFrame(int time);
 int SV_BotAllocateClient(void);
-void SV_BotFreeClient(int client_num);
+void SV_BotFreeClient(int clientNum);
 
 void SV_BotInitCvars(void);
 int SV_BotGetSnapshotEntity(int client, int sequence);

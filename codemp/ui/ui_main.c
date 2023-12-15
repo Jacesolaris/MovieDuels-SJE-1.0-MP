@@ -256,7 +256,7 @@ animation_t uiHumanoidAnimations[MAX_TOTALANIMATIONS];
 bgLoadedAnim_t bgAllAnims[MAX_ANIM_FILES];
 int uiNumAllAnims = 1; //start off at 0, because 0 will always be assigned to humanoid.
 
-animation_t* UI_AnimsetAlloc(void)
+static animation_t* UI_AnimsetAlloc(void)
 {
 	assert(uiNumAllAnims < MAX_ANIM_FILES);
 	bgAllAnims[uiNumAllAnims].anims = (animation_t*)BG_Alloc(sizeof(animation_t) * MAX_TOTALANIMATIONS);
@@ -603,7 +603,7 @@ static const char* GetMonthAbbrevString(int iMonth)
 #define UI_MAX_MASTER_SERVERS	5
 
 // Convert ui's net source to AS_* used by trap calls.
-int UI_SourceForLAN(void)
+static int UI_SourceForLAN(void)
 {
 	switch (ui_netSource.integer)
 	{
@@ -645,7 +645,7 @@ static const char* GetNetSourceString(int iSource)
 	return result;
 }
 
-void AssetCache(void)
+static void AssetCache(void)
 {
 	//if (Assets.textFont == NULL) {
 	//}
@@ -697,14 +697,14 @@ void AssetCache(void)
 	}
 }
 
-void _UI_DrawSides(float x, float y, float w, float h, float size)
+static void _UI_DrawSides(float x, float y, float w, float h, float size)
 {
 	size *= uiInfo.uiDC.xscale;
 	trap->R_DrawStretchPic(x, y, size, h, 0, 0, 0, 0, uiInfo.uiDC.whiteShader);
 	trap->R_DrawStretchPic(x + w - size, y, size, h, 0, 0, 0, 0, uiInfo.uiDC.whiteShader);
 }
 
-void _UI_DrawTopBottom(float x, float y, float w, float h, float size)
+static void _UI_DrawTopBottom(float x, float y, float w, float h, float size)
 {
 	size *= uiInfo.uiDC.yscale;
 	trap->R_DrawStretchPic(x, y, w, size, 0, 0, 0, 0, uiInfo.uiDC.whiteShader);
@@ -718,7 +718,7 @@ UI_DrawRect
 Coordinates are 640*480 virtual values
 =================
 */
-void _UI_DrawRect(float x, float y, float width, float height, float size, const float* color)
+static void _UI_DrawRect(float x, float y, float width, float height, float size, const float* color)
 {
 	trap->R_SetColor(color);
 
@@ -742,21 +742,21 @@ int MenuFontToHandle(int i_menu_font)
 	return uiInfo.uiDC.Assets.qhMediumFont; // 0;
 }
 
-int Text_Width(const char* text, float scale, int i_menu_font)
+static int Text_Width(const char* text, float scale, int i_menu_font)
 {
 	const int iFontIndex = MenuFontToHandle(i_menu_font);
 
 	return trap->R_Font_StrLenPixels(text, iFontIndex, scale);
 }
 
-int Text_Height(const char* text, float scale, int i_menu_font)
+static int Text_Height(const char* text, float scale, int i_menu_font)
 {
 	const int iFontIndex = MenuFontToHandle(i_menu_font);
 
 	return trap->R_Font_HeightPixels(iFontIndex, scale);
 }
 
-void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, float adjust, int limit, int style,
+static void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, float adjust, int limit, int style,
 	int i_menu_font)
 {
 	int iStyleOR = 0;
@@ -794,7 +794,7 @@ void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, f
 	);
 }
 
-void Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const char* text, int cursorPos, char cursor,
+static void Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const char* text, int cursorPos, char cursor,
 	int limit, int style, int i_menu_font)
 {
 	Text_Paint(x, y, scale, color, text, 0, limit, style, i_menu_font);
@@ -877,7 +877,7 @@ static void Text_Paint_Limit(float* maxX, float x, float y, float scale, vec4_t 
 	}
 }
 
-void UI_LoadNonIngame()
+static void UI_LoadNonIngame()
 {
 	const char* menuSet = UI_Cvar_VariableString("ui_menuFilesMP");
 	if (menuSet == NULL || menuSet[0] == '\0')
@@ -900,8 +900,8 @@ static void UI_BuildPlayerList()
 	char info[MAX_INFO_STRING];
 
 	trap->GetClientState(&cs);
-	trap->GetConfigString(CS_PLAYERS + cs.client_num, info, MAX_INFO_STRING);
-	uiInfo.playerNumber = cs.client_num;
+	trap->GetConfigString(CS_PLAYERS + cs.clientNum, info, MAX_INFO_STRING);
+	uiInfo.playerNumber = cs.clientNum;
 	uiInfo.teamLeader = atoi(Info_ValueForKey(info, "tl"));
 	const int team = atoi(Info_ValueForKey(info, "t"));
 	trap->GetConfigString(CS_SERVERINFO, info, sizeof info);
@@ -964,7 +964,7 @@ static void UI_BuildPlayerList()
 
 void UI_ParseMenu(const char* menuFile);
 
-void UI_LoadSingleMenuFile(const char* menuFile)
+static void UI_LoadSingleMenuFile(const char* menuFile)
 {
 	//load in a single menu file
 	trap->PC_LoadGlobalDefines("ui/mdmp/menudef.h"); //Load globaldefines for parsing.
@@ -972,7 +972,7 @@ void UI_LoadSingleMenuFile(const char* menuFile)
 	trap->PC_RemoveAllGlobalDefines(); //Close globaldefines.
 }
 
-void UI_SetActiveMenu(uiMenuCommand_t menu)
+static void UI_SetActiveMenu(uiMenuCommand_t menu)
 {
 	// this should be the ONLY way the menu system is brought up
 	// enusure minumum menu data is cached
@@ -1100,7 +1100,7 @@ void UI_SetActiveMenu(uiMenuCommand_t menu)
 	}
 }
 
-void UI_DrawCenteredPic(qhandle_t image, int w, int h)
+static void UI_DrawCenteredPic(qhandle_t image, int w, int h)
 {
 	const int x = (SCREEN_WIDTH - w) / 2;
 	const int y = (SCREEN_HEIGHT - h) / 2;
@@ -1125,7 +1125,7 @@ const char* UI_GetStringEdString(const char* refSection, const char* refName)
 	return text;
 }
 
-void UI_SetColor(const float* rgba)
+static void UI_SetColor(const float* rgba)
 {
 	trap->R_SetColor(rgba);
 }
@@ -1138,7 +1138,7 @@ _UI_Shutdown
 void UI_CleanupGhoul2(void);
 void UI_FreeAllSpecies(void);
 
-void UI_Shutdown(void)
+static void UI_Shutdown(void)
 {
 	trap->LAN_SaveCachedServers();
 	UI_CleanupGhoul2();
@@ -1147,7 +1147,7 @@ void UI_Shutdown(void)
 
 char* defaultMenu = NULL;
 
-char* GetMenuBuffer(const char* filename)
+static char* GetMenuBuffer(const char* filename)
 {
 	fileHandle_t f;
 	static char buf[MAX_MENUFILE];
@@ -1172,7 +1172,7 @@ char* GetMenuBuffer(const char* filename)
 	return buf;
 }
 
-qboolean Asset_Parse(int handle)
+static qboolean Asset_Parse(int handle)
 {
 	pc_token_t token;
 
@@ -1643,7 +1643,7 @@ void UI_ParseMenu(const char* menuFile)
 	trap->PC_FreeSource(handle);
 }
 
-qboolean Load_Menu(int handle)
+static qboolean Load_Menu(int handle)
 {
 	pc_token_t token;
 
@@ -1777,7 +1777,7 @@ void UI_Load(void)
 char sAll[15] = { 0 };
 char sJediAcademy[30] = { 0 };
 
-const char* UI_FilterDescription(int value)
+static const char* UI_FilterDescription(int value)
 {
 	if (value <= 0 || value > uiInfo.modCount)
 	{
@@ -1787,7 +1787,7 @@ const char* UI_FilterDescription(int value)
 	return uiInfo.modList[value - 1].modDescr;
 }
 
-const char* UI_FilterDir(int value)
+static const char* UI_FilterDir(int value)
 {
 	if (value <= 0 || value > uiInfo.modCount)
 	{
@@ -2178,7 +2178,7 @@ static void UI_DrawForceSide(rectDef_t* rect, float scale, vec4_t color, int tex
 	Text_Paint(rect->x, rect->y, scale, color, s, 0, 0, textStyle, i_menu_font);
 }
 
-qboolean UI_HasSetSaberOnly(const char* info, const int gametype)
+static qboolean UI_HasSetSaberOnly(const char* info, const int gametype)
 {
 	int i = 0;
 	int wDisable;
@@ -2263,7 +2263,6 @@ static void UI_DrawJediNonJedi(rectDef_t* rect, float scale, vec4_t color, int t
 	int i_menu_font)
 {
 	char s[256];
-	//menuDef_t *menu;
 
 	char info[MAX_INFO_VALUE];
 
@@ -2371,7 +2370,7 @@ int SCREENSHOT_TOTAL = -1;
 int SCREENSHOT_CHOICE = 0;
 int SCREENSHOT_NEXT_UPDATE_TIME = 0;
 
-char* UI_GetCurrentLevelshot(void)
+static char* UI_GetCurrentLevelshot(void)
 {
 	const int time = trap->Milliseconds();
 
@@ -2532,7 +2531,7 @@ static void UI_SetForceDisabled(int force)
 }
 
 // The game type on create server has changed - make the HUMAN/BOTS fields active
-void UpdateBotButtons(void)
+static void UpdateBotButtons(void)
 {
 	menuDef_t* menu = Menu_GetFocused();
 
@@ -2553,22 +2552,8 @@ void UpdateBotButtons(void)
 	}
 }
 
-void UpdateForceStatus()
+static void UpdateForceStatus()
 {
-	// Currently we don't make a distinction between those that wish to play Jedi of lower than maximum skill.
-	/*	if (ui_forcePowerDisable.integer)
-		{
-			uiForceRank = 0;
-			uiForceAvailable = 0;
-			uiForceUsed = 0;
-		}
-		else
-		{
-			uiForceRank = uiMaxRank;
-			uiForceUsed = 0;
-			uiForceAvailable = forceMasteryPoints[uiForceRank];
-		}
-	*/
 	menuDef_t* menu = Menus_FindByName("ingame_player");
 	if (menu)
 	{
@@ -3549,20 +3534,6 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 	case UI_FORCE_RANK_SABERDEFEND:
 	case UI_FORCE_RANK_SABERTHROW:
 
-		//		uiForceRank
-		/*
-				uiForceUsed
-				// Only fields for white stars
-				if (uiForceUsed<3)
-				{
-					Menu_ShowItemByName(menu, "lightpowers_team", qtrue);
-				}
-				else if (uiForceUsed<6)
-				{
-					Menu_ShowItemByName(menu, "lightpowers_team", qtrue);
-				}
-		*/
-
 		findex = ownerDraw - UI_FORCE_RANK - 1;
 		//this will give us the index as long as UI_FORCE_RANK is always one below the first force rank index
 		if (uiForcePowerDarkLight[findex] && uiForceSide != uiForcePowerDarkLight[findex])
@@ -3571,13 +3542,6 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 			color[1] *= 0.5;
 			color[2] *= 0.5;
 		}
-		/*		else if (uiForceRank < UI_ForceColorMinRank[bgForcePowerCost[findex][FORCE_LEVEL_1]])
-				{
-					color[0] *= 0.5;
-					color[1] *= 0.5;
-					color[2] *= 0.5;
-				}
-		*/
 		drawRank = uiForcePowersRank[findex];
 
 		UI_DrawForceStars(&rect, scale, color, textStyle, findex, drawRank, 0, NUM_FORCE_POWER_LEVELS - 1);
@@ -5563,7 +5527,7 @@ their real counterparts.  This is to create a interface which allows
 you to discard your changes if you did something you didnt want
 =================
 */
-void UI_UpdateVideoSetup(void)
+static void UI_UpdateVideoSetup(void)
 {
 	trap->Cvar_Set("r_mode", UI_Cvar_VariableString("ui_r_mode"));
 	trap->Cvar_Set("r_fullscreen", UI_Cvar_VariableString("ui_r_fullscreen"));
@@ -5593,7 +5557,7 @@ Retrieves the current actual video settings into the temporary user
 interface versions of the cvars.
 =================
 */
-void UI_GetVideoSetup(void)
+static void UI_GetVideoSetup(void)
 {
 	trap->Cvar_Register(NULL, "ui_r_glCustom", "4", CVAR_INTERNAL | CVAR_ARCHIVE);
 
@@ -5760,7 +5724,7 @@ static void UI_GetCharacterCvars(void)
 	}
 }
 
-void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const char* cvarName)
+static void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const char* cvarName)
 {
 	const char* holdVal;
 	char* hold_buf;
@@ -5799,7 +5763,7 @@ void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const
 	}
 }
 
-void UI_FindCurrentSiegeTeamClass(void)
+static void UI_FindCurrentSiegeTeamClass(void)
 {
 	const int myTeam = (int)trap->Cvar_VariableValue("ui_myteam");
 	char* itemname;
@@ -5868,7 +5832,7 @@ void UI_FindCurrentSiegeTeamClass(void)
 	}
 }
 
-void UI_UpdateSiegeObjectiveGraphics(void)
+static void UI_UpdateSiegeObjectiveGraphics(void)
 {
 	int teamI, objI;
 
@@ -5946,15 +5910,11 @@ static void UI_SetSaberBoxesandHilts(void)
 
 	if (Q_stricmp("dual", sType) != 0)
 	{
-		//		trap->Cvar_Set("ui_saber", "single_1");
-		//		trap->Cvar_Set("ui_saber2", "single_1");
 		getBig = qtrue;
 	}
 
 	else if (Q_stricmp("staff", sType) != 0)
 	{
-		//		trap->Cvar_Set("ui_saber", "dual_1");
-		//		trap->Cvar_Set("ui_saber2", "none");
 		getBig = qtrue;
 	}
 
@@ -6330,21 +6290,6 @@ static qboolean UI_CheckPassword(void)
 		return qfalse;
 	}
 
-	// This isn't going to make it (too late in dev), like James said I should check to see when we receive
-	// a packet *if* we do indeed get a 0 ping just make it 1 so then a 0 ping is guaranteed to be bad
-	/*
-	// also check ping!
-	ping = atoi(Info_ValueForKey(info, "ping"));
-	// NOTE : PING -- it's very questionable as to whether a ping of < 0 or <= 0 indicates a bad server
-	// what I do know, is that getting "ping" from the ServerInfo on a bad server returns 0.
-	// So I'm left with no choice but to not allow you to enter a server with a ping of 0
-	if( ping <= 0 )
-	{
-		Menus_OpenByName("bad_server");
-		return qfalse;
-	}
-	*/
-
 	return qtrue;
 }
 
@@ -6370,7 +6315,7 @@ static void UI_JoinServer(void)
 	}
 }
 
-int UI_SiegeClassNum(siegeClass_t* scl)
+static int UI_SiegeClassNum(siegeClass_t* scl)
 {
 	for (int i = 0; i < bgNumSiegeClasses; i++)
 	{
@@ -6382,7 +6327,7 @@ int UI_SiegeClassNum(siegeClass_t* scl)
 }
 
 //called every time a class is selected from a feeder, sets info for shaders to be displayed in the menu about the class -rww
-void UI_SiegeSetCvarsForClass(siegeClass_t* scl)
+static void UI_SiegeSetCvarsForClass(siegeClass_t* scl)
 {
 	int i = 0;
 	int count = 0;
@@ -6540,7 +6485,7 @@ void UI_SiegeSetCvarsForClass(siegeClass_t* scl)
 
 static int g_siegedFeederForcedSet = 0;
 
-void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index)
+static void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index)
 {
 	// Is it a valid team
 	if (team == SIEGETEAM_TEAM1 ||
@@ -6580,7 +6525,7 @@ void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index
 	}
 }
 
-void UI_ClampMaxPlayers(void)
+static void UI_ClampMaxPlayers(void)
 {
 	// duel requires 2 players
 	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_MOVIEDUELS_DUEL)
@@ -6603,7 +6548,7 @@ void UI_ClampMaxPlayers(void)
 	}
 }
 
-void UI_UpdateSiegeStatusIcons(void)
+static void UI_UpdateSiegeStatusIcons(void)
 {
 	const menuDef_t* menu = Menu_GetFocused();
 
@@ -6748,7 +6693,7 @@ static void UI_RunMenuScript(char** args)
 		{
 			trap->Cmd_ExecuteText(EXEC_APPEND, "cvar_restart\n");
 			Controls_SetDefaults();
-			trap->Cmd_ExecuteText(EXEC_APPEND, "exec mpdefault.cfg\n");
+			trap->Cmd_ExecuteText(EXEC_APPEND, "exec MD-MP-default.cfg\n");
 			trap->Cmd_ExecuteText(EXEC_APPEND, "vid_restart\n");
 		}
 		else if (Q_stricmp(name, "loadArenas") == 0)
@@ -7991,7 +7936,7 @@ static void UI_GetTeamColor(vec4_t* color)
 {
 }
 
-void UI_SetSiegeTeams(void)
+static void UI_SetSiegeTeams(void)
 {
 	char info[MAX_INFO_VALUE];
 	char* mapname = NULL;
@@ -8154,7 +8099,7 @@ static int UI_MapCountByGameType(qboolean singlePlayer)
 	return c;
 }
 
-qboolean UI_hasSkinForBase(const char* base, const char* team)
+static qboolean UI_hasSkinForBase(const char* base, const char* team)
 {
 	char test[1024];
 	fileHandle_t f;
@@ -10652,7 +10597,7 @@ static void UI_BuildQ3Model_List(void)
 	}
 }
 
-void UI_SiegeInit(void)
+static void UI_SiegeInit(void)
 {
 	//Load the player class types
 	BG_SiegeLoadClasses(g_UIClassDescriptions);
@@ -10911,15 +10856,18 @@ static void UI_BuildPlayerModel_List(qboolean inGameLoad)
 				continue;
 			}
 			uiInfo.playerSpeciesCount++;
-			if (!inGameLoad && ui_PrecacheModels.integer)
+
+			if (com_rend2.integer == 0) //rend2 is off
 			{
-				void* ghoul2 = 0;
-				Com_sprintf(fpath, sizeof fpath, "models/players/%s/model.glm", dirptr);
-				const int g2Model = trap->G2API_InitGhoul2Model(&ghoul2, fpath, 0, 0, 0, 0, 0);
-				if (g2Model >= 0)
+				if (!inGameLoad && ui_PrecacheModels.integer)
 				{
-					//					trap->G2API_RemoveGhoul2Model( &ghoul2, 0 );
-					trap->G2API_CleanGhoul2Models(&ghoul2);
+					void* ghoul2 = 0;
+					Com_sprintf(fpath, sizeof fpath, "models/players/%s/model.glm", dirptr);
+					const int g2Model = trap->G2API_InitGhoul2Model(&ghoul2, fpath, 0, 0, 0, 0, 0);
+					if (g2Model >= 0)
+					{
+						trap->G2API_CleanGhoul2Models(&ghoul2);
+					}
 				}
 			}
 		}
@@ -10951,7 +10899,7 @@ static qhandle_t UI_RegisterShaderNoMip(const char* name)
 UI_Init
 =================
 */
-void UI_Init(qboolean inGameLoad)
+static void UI_Init(qboolean inGameLoad)
 {
 	// Get the list of possible languages
 	uiInfo.languageCount = trap->SE_GetNumLanguages(); // this does a dir scan, so use carefully
@@ -11119,7 +11067,7 @@ void UI_Init(qboolean inGameLoad)
 
 #define	UI_FPS_FRAMES	4
 
-void UI_Refresh(int realtime)
+static void UI_Refresh(int realtime)
 {
 	static int index;
 	static int previousTimes[UI_FPS_FRAMES];
@@ -11258,17 +11206,6 @@ void UI_Refresh(int realtime)
 			uiMaxRank = ui_rankChange.integer;
 			uiForceRank = uiMaxRank;
 
-			/*
-			while (x < NUM_FORCE_POWERS)
-			{
-				//For now just go ahead and clear force powers upon rank change
-				uiForcePowersRank[x] = 0;
-				x++;
-			}
-			uiForcePowersRank[FP_LEVITATION] = 1;
-			uiForceUsed = 0;
-			*/
-
 			//Use BG_LegalizedForcePowers and transfer the result into the UI force settings
 			UI_ReadLegalForce();
 		}
@@ -11297,34 +11234,6 @@ void UI_Refresh(int realtime)
 		bgForcePowerCost[FP_SABER_OFFENSE][FORCE_LEVEL_1] = 1;
 		bgForcePowerCost[FP_SABER_DEFENSE][FORCE_LEVEL_1] = 1;
 	}
-
-	/*
-	if (parsedFPMessage[0] && FPMessageTime > realtime)
-	{
-		vec4_t txtCol;
-		int txtStyle = ITEM_TEXTSTYLE_SHADOWED;
-
-		if ((FPMessageTime - realtime) < 2000)
-		{
-			txtCol[0] = colorWhite[0];
-			txtCol[1] = colorWhite[1];
-			txtCol[2] = colorWhite[2];
-			txtCol[3] = (((float)FPMessageTime - (float)realtime)/2000);
-
-			txtStyle = 0;
-		}
-		else
-		{
-			txtCol[0] = colorWhite[0];
-			txtCol[1] = colorWhite[1];
-			txtCol[2] = colorWhite[2];
-			txtCol[3] = colorWhite[3];
-		}
-
-		Text_Paint(10, 0, 1, txtCol, parsedFPMessage, 0, 1024, txtStyle, FONT_MEDIUM);
-	}
-	*/
-	//For now, don't bother.
 }
 
 /*
@@ -11332,7 +11241,7 @@ void UI_Refresh(int realtime)
 UI_KeyEvent
 =================
 */
-void UI_KeyEvent(int key, qboolean down)
+static void UI_KeyEvent(int key, qboolean down)
 {
 	if (Menu_Count() > 0)
 	{
@@ -11366,7 +11275,7 @@ void UI_KeyEvent(int key, qboolean down)
 UI_MouseEvent
 =================
 */
-void UI_MouseEvent(int dx, int dy)
+static void UI_MouseEvent(int dx, int dy)
 {
 	// update mouse screen position
 	uiInfo.uiDC.cursorx += dx;
@@ -11564,7 +11473,7 @@ This will also be overlaid on the cgame info screen during loading
 to prevent it from blinking away too rapidly on local or lan games.
 ========================
 */
-void UI_DrawConnectScreen(qboolean overlay)
+static void UI_DrawConnectScreen(qboolean overlay)
 {
 	const char* s;
 	uiClientState_t cstate;

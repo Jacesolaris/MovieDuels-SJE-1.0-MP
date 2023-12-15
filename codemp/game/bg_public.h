@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-12,Day-04,BuildNum-02" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-12,Day-15,BuildNum-06" // build date
 
 #define	STEPSIZE		18
 
@@ -692,7 +692,7 @@ typedef enum {
 	PERS_TEAM,						// player team
 	PERS_SPAWN_COUNT,				// incremented every respawn
 	PERS_PLAYEREVENTS,				// 16 bits that can be flipped for events
-	PERS_ATTACKER,					// client_num of last damage inflicter
+	PERS_ATTACKER,					// clientNum of last damage inflicter
 	PERS_ATTACKEE_ARMOR,			// health/armor of last person we attacked
 	PERS_KILLED,					// count of the number of times you died
 	// player awards tracking
@@ -2014,7 +2014,7 @@ qboolean BG_InSaberLockOld(int anim);
 qboolean PM_InSaberLock(int anim);
 int PM_BrokenParryForAttack(int move);
 
-void pm_saber_start_trans_anim(int client_num, int saber_anim_level, int weapon, int anim, float* anim_speed, int
+void pm_saber_start_trans_anim(int clientNum, int saber_anim_level, int weapon, int anim, float* anim_speed, int
 	fatigued);
 
 void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int override_amt);

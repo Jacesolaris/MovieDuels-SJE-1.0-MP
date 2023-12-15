@@ -45,7 +45,7 @@ static QINLINE qboolean CG_Piloting(const int veh_num)
 
 	const centity_t* veh = &cg_entities[veh_num];
 
-	if (veh->currentState.owner != cg.predicted_player_state.client_num)
+	if (veh->currentState.owner != cg.predicted_player_state.clientNum)
 	{
 		//the owner should be the current pilot
 		return qfalse;
@@ -132,7 +132,7 @@ void CG_BuildSolidList(void)
 		if (k > 255)
 			k = 255;
 
-		cg_solidEntities[cg_numSolidEntities] = &cg_entities[cg.predicted_player_state.client_num];
+		cg_solidEntities[cg_numSolidEntities] = &cg_entities[cg.predicted_player_state.clientNum];
 		cg_solidEntities[cg_numSolidEntities]->currentState.solid = k << 16 | j << 8 | i1;
 
 		cg_numSolidEntities++;
@@ -238,7 +238,7 @@ CG_ClipMoveToEntities
 ====================
 */
 extern void bg_vehicle_adjust_b_box_for_orientation(const Vehicle_t* veh, vec3_t origin, vec3_t mins, vec3_t maxs,
-	int client_num, int tracemask,
+	int clientNum, int tracemask,
 	void (*local_trace)(trace_t* results, const vec3_t start,
 		const vec3_t minimum_mins,
 		const vec3_t maximum_maxs, const vec3_t end,
@@ -275,8 +275,8 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 
 		if (ent->number > MAX_CLIENTS
 			&& ent->eType != ET_NPC
-			&& (ent->genericenemyindex - MAX_GENTITIES == cg.predicted_player_state.client_num || ent->genericenemyindex -
-				MAX_GENTITIES == cg.predictedVehicleState.client_num))
+			&& (ent->genericenemyindex - MAX_GENTITIES == cg.predicted_player_state.clientNum || ent->genericenemyindex -
+				MAX_GENTITIES == cg.predictedVehicleState.clientNum))
 		{
 			//rww - method of keeping objects from colliding in client-prediction (in case of ownership)
 			continue;
@@ -339,7 +339,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		{
 			if (ent->weapon == WP_TURRET || ent->modelindex == HI_SHIELD)
 			{ // this is a sentrygun or portable shield, check for owner info
-				if (ent->otherEntityNum != cg.snap->ps.client_num &&
+				if (ent->otherEntityNum != cg.snap->ps.clientNum &&
 					ent->otherEntityNum != cg.snap->ps.duelIndex)
 				{ // not part of your duel
 					continue;
@@ -864,7 +864,7 @@ static void CG_TouchTriggerPrediction(void)
 static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t* ps)
 {
 	//currently unused vars commented out for speed.. only uncomment if you need them.
-	ps->client_num = s->number;
+	ps->clientNum = s->number;
 	VectorCopy(s->pos.trBase, ps->origin);
 	VectorCopy(s->pos.trDelta, ps->velocity);
 	ps->saberLockFrame = s->forceFrame;
@@ -872,7 +872,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	ps->torsoAnim = s->torsoAnim;
 	ps->legsFlip = s->legsFlip;
 	ps->torsoFlip = s->torsoFlip;
-	ps->client_num = s->client_num;
+	ps->clientNum = s->clientNum;
 	ps->saber_move = s->saber_move;
 
 	/*
@@ -1093,18 +1093,18 @@ void CG_PredictPlayerState(void)
 	cg_pmove.trace = CG_Trace;
 	cg_pmove.pointcontents = CG_PointContents;
 
-	const centity_t* p_ent = &cg_entities[cg.predicted_player_state.client_num];
+	const centity_t* pEnt = &cg_entities[cg.predicted_player_state.clientNum];
 	//rww - bgghoul2
-	if (cg_pmove.ghoul2 != p_ent->ghoul2) //only update it if the g2 instance has changed
+	if (cg_pmove.ghoul2 != pEnt->ghoul2) //only update it if the g2 instance has changed
 	{
 		if (cg.snap &&
-			p_ent->ghoul2 &&
+			pEnt->ghoul2 &&
 			!(cg.snap->ps.pm_flags & PMF_FOLLOW) &&
 			cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 		{
-			cg_pmove.ghoul2 = p_ent->ghoul2;
-			cg_pmove.g2Bolts_LFoot = trap->G2API_AddBolt(p_ent->ghoul2, 0, "*l_leg_foot");
-			cg_pmove.g2Bolts_RFoot = trap->G2API_AddBolt(p_ent->ghoul2, 0, "*r_leg_foot");
+			cg_pmove.ghoul2 = pEnt->ghoul2;
+			cg_pmove.g2Bolts_LFoot = trap->G2API_AddBolt(pEnt->ghoul2, 0, "*l_leg_foot");
+			cg_pmove.g2Bolts_RFoot = trap->G2API_AddBolt(pEnt->ghoul2, 0, "*r_leg_foot");
 		}
 		else
 		{
@@ -1112,10 +1112,10 @@ void CG_PredictPlayerState(void)
 		}
 	}
 
-	const clientInfo_t* ci = &cgs.clientinfo[cg.predicted_player_state.client_num];
+	const clientInfo_t* ci = &cgs.clientinfo[cg.predicted_player_state.clientNum];
 
 	//I'll just do this every frame in case the scale changes in realtime (don't need to update the g2 inst for that)
-	VectorCopy(p_ent->modelScale, cg_pmove.modelScale);
+	VectorCopy(pEnt->modelScale, cg_pmove.modelScale);
 	//rww end bgghoul2
 
 	if (cg_pmove.ps->pm_type == PM_DEAD)
@@ -1218,14 +1218,14 @@ void CG_PredictPlayerState(void)
 			cgSendPS[i]->torsoAnim = cg_entities[i].currentState.torsoAnim;
 			cgSendPS[i]->legsFlip = cg_entities[i].currentState.legsFlip;
 			cgSendPS[i]->torsoFlip = cg_entities[i].currentState.torsoFlip;
-			cgSendPS[i]->client_num = cg_entities[i].currentState.client_num;
+			cgSendPS[i]->clientNum = cg_entities[i].currentState.clientNum;
 			cgSendPS[i]->saber_move = cg_entities[i].currentState.saber_move;
 		}
 	}
 
 	if (CG_Piloting(cg.predicted_player_state.m_iVehicleNum))
 	{
-		cg_entities[cg.predicted_player_state.client_num].playerState = &cg.predicted_player_state;
+		cg_entities[cg.predicted_player_state.clientNum].playerState = &cg.predicted_player_state;
 		cg_entities[cg.predicted_player_state.m_iVehicleNum].playerState = &cg.predictedVehicleState;
 
 		//use the player command time, because we are running with the player cmds (this is even the case
@@ -1404,13 +1404,13 @@ void CG_PredictPlayerState(void)
 				pmove_msec.integer;
 		}
 
-		cg_pmove.animations = bgAllAnims[p_ent->localAnimIndex].anims;
+		cg_pmove.animations = bgAllAnims[pEnt->localAnimIndex].anims;
 		cg_pmove.gametype = cgs.gametype;
 
 		cg_pmove.stepSlideFix = cgs.stepSlideFix;
 		cg_pmove.noSpecMove = cgs.noSpecMove;
 
-		cg_pmove.nonHumanoid = p_ent->localAnimIndex > 0;
+		cg_pmove.nonHumanoid = pEnt->localAnimIndex > 0;
 
 		if (cg.snap && cg.snap->ps.saberLockTime > cg.time)
 		{
@@ -1527,7 +1527,7 @@ void CG_PredictPlayerState(void)
 				cg_vehPmove.pmove_fixed = pmove_fixed.integer;
 				cg_vehPmove.pmove_msec = pmove_msec.integer;
 
-				cg_entities[cg.predicted_player_state.client_num].playerState = &cg.predicted_player_state;
+				cg_entities[cg.predicted_player_state.clientNum].playerState = &cg.predicted_player_state;
 				veh->playerState = &cg.predictedVehicleState;
 
 				//update boarding value sent from server. boarding is not predicted, but no big deal
@@ -1628,7 +1628,7 @@ revertES:
 			veh->m_pVehicle->m_vOrientation = &cgSendPS[veh->currentState.number]->vehOrientation[0];
 		}
 
-		cg_entities[cg.predicted_player_state.client_num].playerState = cgSendPS[cg.predicted_player_state.client_num];
+		cg_entities[cg.predicted_player_state.clientNum].playerState = cgSendPS[cg.predicted_player_state.clientNum];
 		veh->playerState = cgSendPS[veh->currentState.number];
 	}
 

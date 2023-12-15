@@ -765,7 +765,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const 
 {
 	int				j;
 	vec3_t basis1;
-	vec3_t basis2;
+	vec3_t basis2{};
 	vec3_t taxis;
 	vec3_t saxis;
 
@@ -1163,7 +1163,7 @@ static bool G2_TracePolys(const mdxmSurface_t* surface, const mdxmSurfHierarchy_
 }
 
 // now we're at poly level, check each model space transformed poly against the model world transfomed ray
-static bool G2_RadiusTracePolys(const mdxmSurface_t* surface,CTraceSurface& TS)
+static bool G2_RadiusTracePolys(const mdxmSurface_t* surface, CTraceSurface& TS)
 {
 	int		j;
 	vec3_t basis1;

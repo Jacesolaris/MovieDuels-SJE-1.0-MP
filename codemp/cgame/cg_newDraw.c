@@ -72,7 +72,7 @@ float CG_GetValue(const int owner_draw)
 {
 	clientInfo_t* ci;
 
-	const centity_t* cent = &cg_entities[cg.snap->ps.client_num];
+	const centity_t* cent = &cg_entities[cg.snap->ps.clientNum];
 	const playerState_t* ps = &cg.snap->ps;
 
 	switch (owner_draw)

@@ -2569,7 +2569,7 @@ void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping right from 
 #ifdef _G2_GORE
 			if (RS.gore_set)
 			{
-				const int cur_time = G2API_GetTime(tr.refdef.time);
+				const int curTime = G2API_GetTime(tr.refdef.time);
 				const std::pair<std::multimap<int, SGoreSurface>::iterator, std::multimap<int, SGoreSurface>::iterator>
 					range =
 					RS.gore_set->mGoreRecords.equal_range(RS.surfaceNum);
@@ -2580,7 +2580,7 @@ void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping right from 
 					++k;
 					GoreTextureCoordinates* tex = FindGoreRecord((*kcur).second.mGoreTag);
 					if (!tex || // it is gone, lets get rid of it
-						kcur->second.mDeleteTime && cur_time >= kcur->second.mDeleteTime) // out of time
+						kcur->second.mDeleteTime && curTime >= kcur->second.mDeleteTime) // out of time
 					{
 						if (tex)
 						{
@@ -2601,15 +2601,15 @@ void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping right from 
 						newSurf2->fade = 1.0f;
 						newSurf2->impactTime = 1.0f; // done with
 						constexpr int magicFactor42 = 500; // ms, impact time
-						if (cur_time > (*kcur).second.mGoreGrowStartTime && cur_time < (*kcur).second.mGoreGrowStartTime +
+						if (curTime > (*kcur).second.mGoreGrowStartTime && curTime < (*kcur).second.mGoreGrowStartTime +
 							magicFactor42)
 						{
-							newSurf2->impactTime = static_cast<float>(cur_time - (*kcur).second.mGoreGrowStartTime) /
+							newSurf2->impactTime = static_cast<float>(curTime - (*kcur).second.mGoreGrowStartTime) /
 								static_cast<float>(magicFactor42); // linear
 						}
-						if (cur_time < (*kcur).second.mGoreGrowEndTime)
+						if (curTime < (*kcur).second.mGoreGrowEndTime)
 						{
-							newSurf2->scale = 1.0f / ((cur_time - (*kcur).second.mGoreGrowStartTime) * (*kcur).second.
+							newSurf2->scale = 1.0f / ((curTime - (*kcur).second.mGoreGrowStartTime) * (*kcur).second.
 								mGoreGrowFactor + (*kcur).second.mGoreGrowOffset);
 							if (newSurf2->scale < 1.0f)
 							{
@@ -2630,9 +2630,9 @@ void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping right from 
 						//Only if we have a fade time set, and let us fade on rgb if we want -rww
 						if ((*kcur).second.mDeleteTime && (*kcur).second.mFadeTime)
 						{
-							if ((*kcur).second.mDeleteTime - cur_time < (*kcur).second.mFadeTime)
+							if ((*kcur).second.mDeleteTime - curTime < (*kcur).second.mFadeTime)
 							{
-								newSurf2->fade = static_cast<float>((*kcur).second.mDeleteTime - cur_time) / (*kcur).
+								newSurf2->fade = static_cast<float>((*kcur).second.mDeleteTime - curTime) / (*kcur).
 									second.mFadeTime;
 								if ((*kcur).second.mFadeRGB)
 								{

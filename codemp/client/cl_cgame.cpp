@@ -559,7 +559,7 @@ void CL_InitCGame(void)
 	// init for this gamestate
 	// use the lastExecutedServerCommand instead of the serverCommandSequence
 	// otherwise server commands sent just before a gamestate are dropped
-	CGVM_Init(clc.serverMessageSequence, clc.lastExecutedServerCommand, clc.client_num);
+	CGVM_Init(clc.serverMessageSequence, clc.lastExecutedServerCommand, clc.clientNum);
 
 	const int clRate = Cvar_VariableIntegerValue("rate");
 	if (clRate == 4000)

@@ -175,5 +175,6 @@ XCVAR_DEF(g_update6firststartup, "1", NULL, CVAR_ARCHIVE)
 XCVAR_DEF(g_totgfirststartup, "1", NULL, CVAR_ARCHIVE)
 
 XCVAR_DEF(r_weather, "0", NULL, CVAR_ARCHIVE)
+XCVAR_DEF(com_rend2, "0", NULL, CVAR_ARCHIVE)
 
 #undef XCVAR_DEF

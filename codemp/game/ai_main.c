@@ -519,7 +519,7 @@ qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* en
 
 	down[2] -= 4096;
 
-	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.clientNum, MASK_SOLID, qfalse, 0, 0);
 	// Look for ground.
 
 	VectorSubtract(use, tr.endpos, down);
@@ -535,7 +535,7 @@ qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* en
 
 	down[2] -= 4096;
 
-	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.clientNum, MASK_SOLID, qfalse, 0, 0);
 	// Look for ground.
 
 	VectorSubtract(use, tr.endpos, down);
@@ -551,7 +551,7 @@ qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* en
 
 	down[2] -= 4096;
 
-	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.clientNum, MASK_SOLID, qfalse, 0, 0);
 	// Look for ground.
 
 	VectorSubtract(use, tr.endpos, down);
@@ -606,7 +606,7 @@ void ai_mod_jump(bot_state_t* bs)
 		return;
 	}
 
-	const gentity_t* target = &g_entities[bs->currentEnemy->client->ps.client_num]; // We NEED a valid enemy!
+	const gentity_t* target = &g_entities[bs->currentEnemy->client->ps.clientNum]; // We NEED a valid enemy!
 
 	if (!target)
 	{
@@ -843,7 +843,7 @@ void BotReportStatus(const bot_state_t* bs)
 }
 
 //accept a team order from a player
-void bot_order(gentity_t* ent, const int client_num, const int ordernum)
+void bot_order(gentity_t* ent, const int clientNum, const int ordernum)
 {
 	int state_min = 0;
 	int state_max = 0;
@@ -853,12 +853,12 @@ void bot_order(gentity_t* ent, const int client_num, const int ordernum)
 		return;
 	}
 
-	if (client_num != -1 && !botstates[client_num])
+	if (clientNum != -1 && !botstates[clientNum])
 	{
 		return;
 	}
 
-	if (client_num != -1 && !OnSameTeam(ent, &g_entities[client_num]))
+	if (clientNum != -1 && !OnSameTeam(ent, &g_entities[clientNum]))
 	{
 		return;
 	}
@@ -889,21 +889,21 @@ void bot_order(gentity_t* ent, const int client_num, const int ordernum)
 		return;
 	}
 
-	if (client_num != -1)
+	if (clientNum != -1)
 	{
 		if (ordernum == -1)
 		{
-			BotReportStatus(botstates[client_num]);
+			BotReportStatus(botstates[clientNum]);
 		}
 		else
 		{
-			bot_straight_tp_order_check(ent, ordernum, botstates[client_num]);
-			botstates[client_num]->state_Forced = ordernum;
-			botstates[client_num]->chatObject = ent;
-			botstates[client_num]->chatAltObject = NULL;
-			if (BotDoChat(botstates[client_num], "OrderAccepted", 1))
+			bot_straight_tp_order_check(ent, ordernum, botstates[clientNum]);
+			botstates[clientNum]->state_Forced = ordernum;
+			botstates[clientNum]->chatObject = ent;
+			botstates[clientNum]->chatAltObject = NULL;
+			if (BotDoChat(botstates[clientNum], "OrderAccepted", 1))
 			{
-				botstates[client_num]->chatTeam = 1;
+				botstates[clientNum]->chatTeam = 1;
 			}
 		}
 	}
@@ -998,9 +998,9 @@ int is_teamplay(void)
 BotAI_GetClientState
 ==================
 */
-int bot_ai_get_client_state(const int client_num, playerState_t* state)
+int bot_ai_get_client_state(const int clientNum, playerState_t* state)
 {
-	const gentity_t* ent = &g_entities[client_num];
+	const gentity_t* ent = &g_entities[clientNum];
 	if (!ent->inuse)
 	{
 		return qfalse;
@@ -1035,9 +1035,9 @@ int bot_ai_get_entity_state(const int entityNum, entityState_t* state)
 BotAI_GetSnapshotEntity
 ==================
 */
-int BotAI_GetSnapshotEntity(const int client_num, const int sequence, entityState_t* state)
+int BotAI_GetSnapshotEntity(const int clientNum, const int sequence, entityState_t* state)
 {
-	const int entNum = trap->BotGetSnapshotEntity(client_num, sequence);
+	const int entNum = trap->BotGetSnapshotEntity(clientNum, sequence);
 	if (entNum == -1)
 	{
 		memset(state, 0, sizeof(entityState_t));
@@ -1345,13 +1345,13 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
 			&& bs->jumpTime <= level.time // Don't walk during jumping...
-			&& (VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < 300
-				|| walktime[bs->cur_ps.client_num] > level.time))
+			&& (VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < 300
+				|| walktime[bs->cur_ps.clientNum] > level.time))
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || walktime[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || walktime[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_WALK;
-				walktime[bs->cur_ps.client_num] = level.time + 2000;
+				walktime[bs->cur_ps.clientNum] = level.time + 2000;
 				if (bs->cur_ps.saber_holstered)
 				{
 					bs->cur_ps.saber_holstered = 0;
@@ -1360,28 +1360,28 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			else
 			{
 				// Reset.
-				walktime[bs->cur_ps.client_num] = 0;
+				walktime[bs->cur_ps.clientNum] = 0;
 				bi.actionflags &= ~ACTION_WALK;
 			}
 		}
 		else
 		{
 			// Reset.
-			walktime[bs->cur_ps.client_num] = 0;
+			walktime[bs->cur_ps.clientNum] = 0;
 			bi.actionflags &= ~ACTION_WALK;
 		}
 	}
 
-	if (next_kick[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_kick[bs->cur_ps.clientNum] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < SABER_KICK_RANGE
-			|| next_kick[bs->cur_ps.client_num] > level.time)
+			&& VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < SABER_KICK_RANGE
+			|| next_kick[bs->cur_ps.clientNum] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_kick[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || next_kick[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_KICK;
 
@@ -1390,22 +1390,22 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				next_kick[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+				next_kick[bs->cur_ps.clientNum] = level.time + 20000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				next_kick[bs->cur_ps.client_num] = 0;
+				next_kick[bs->cur_ps.clientNum] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			next_kick[bs->cur_ps.client_num] = 0;
+			next_kick[bs->cur_ps.clientNum] = 0;
 		}
 	}
 
-	if (next_gloat[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_gloat[bs->cur_ps.clientNum] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
@@ -1414,11 +1414,11 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& !bs->doAttack
 			&& !bs->doAltAttack
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
+			&& VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
-			|| next_gloat[bs->cur_ps.client_num] > level.time)
+			|| next_gloat[bs->cur_ps.clientNum] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_gloat[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || next_gloat[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_GLOAT;
 
@@ -1427,22 +1427,22 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				next_gloat[bs->cur_ps.client_num] = level.time + 30000 / check_val;
+				next_gloat[bs->cur_ps.clientNum] = level.time + 30000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				next_gloat[bs->cur_ps.client_num] = 0;
+				next_gloat[bs->cur_ps.clientNum] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			next_gloat[bs->cur_ps.client_num] = 0;
+			next_gloat[bs->cur_ps.clientNum] = 0;
 		}
 	}
 
-	if (next_flourish[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_flourish[bs->cur_ps.clientNum] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
@@ -1451,11 +1451,11 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& !bs->doAttack
 			&& !bs->doAltAttack
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
+			&& VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
-			|| next_flourish[bs->cur_ps.client_num] > level.time)
+			|| next_flourish[bs->cur_ps.clientNum] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_flourish[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || next_flourish[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_FLOURISH;
 
@@ -1464,18 +1464,18 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				next_flourish[bs->cur_ps.client_num] = level.time + 60000 / check_val;
+				next_flourish[bs->cur_ps.clientNum] = level.time + 60000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				next_flourish[bs->cur_ps.client_num] = 0;
+				next_flourish[bs->cur_ps.clientNum] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			next_flourish[bs->cur_ps.client_num] = 0;
+			next_flourish[bs->cur_ps.clientNum] = 0;
 		}
 	}
 
@@ -5318,7 +5318,7 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 		return;
 	}
 
-	if (bot->ps.client_num >= MAX_CLIENTS)
+	if (bot->ps.clientNum >= MAX_CLIENTS)
 	{
 		//an NPC.. do nothing for them.
 		return;
@@ -5335,14 +5335,14 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 	if (bs_a)
 	{
 		//if the client attacking us is a bot as well
-		bs_a->lastAttacked = &g_entities[bot->ps.client_num];
+		bs_a->lastAttacked = &g_entities[bot->ps.clientNum];
 		i = 0;
 
 		while (i < MAX_CLIENTS)
 		{
 			if (botstates[i] &&
 				i != bs_a->client &&
-				botstates[i]->lastAttacked == &g_entities[bot->ps.client_num])
+				botstates[i]->lastAttacked == &g_entities[bot->ps.clientNum])
 			{
 				botstates[i]->lastAttacked = NULL;
 			}
@@ -5357,7 +5357,7 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 		while (i < MAX_CLIENTS)
 		{
 			if (botstates[i] &&
-				botstates[i]->lastAttacked == &g_entities[bot->ps.client_num])
+				botstates[i]->lastAttacked == &g_entities[bot->ps.clientNum])
 			{
 				botstates[i]->lastAttacked = NULL;
 			}
@@ -5366,7 +5366,7 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 		}
 	}
 
-	bot_state_t* bs = botstates[bot->ps.client_num];
+	bot_state_t* bs = botstates[bot->ps.clientNum];
 
 	if (!bs)
 	{
@@ -5842,7 +5842,7 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 			|| bs->currentEnemy->client && bs->currentEnemy->client->sess.sessionTeam == TEAM_SPECTATOR
 			|| bs->currentEnemy->s.eFlags & EF_DEAD
 			|| bs->currentEnemy->client && bs->currentEnemy->client->ps.eFlags & EF_DEAD
-			|| OnSameTeam(bs->currentEnemy, &g_entities[bs->cur_ps.client_num]))
+			|| OnSameTeam(bs->currentEnemy, &g_entities[bs->cur_ps.clientNum]))
 		{
 			//target died or because invalid, move to next target
 			bs->currentEnemy = NULL;
@@ -8618,7 +8618,7 @@ void bot_behave_attack_basic(bot_state_t* bs, const gentity_t* target)
 
 	if (!VectorCompare(vec3_origin, move_dir))
 	{
-		trace_move(bs, move_dir, target->s.client_num);
+		trace_move(bs, move_dir, target->s.clientNum);
 		trap->EA_Move(bs->client, move_dir, 5000);
 	}
 
@@ -10654,20 +10654,20 @@ int numberof_siege_specific_class(const int team, const char* classname)
 }
 
 //has the bot select the siege class with the fewest number of players on this team.
-void select_best_siege_class(const int client_num, const qboolean force_join)
+void select_best_siege_class(const int clientNum, const qboolean force_join)
 {
 	int best_num = MAX_CLIENTS;
 	int best_base_class = -1;
 
-	if (client_num < 0 || client_num > MAX_CLIENTS)
+	if (clientNum < 0 || clientNum > MAX_CLIENTS)
 	{
-		//bad client_num
+		//bad clientNum
 		return;
 	}
 
 	for (int i = 0; i < SPC_MAX; i++)
 	{
-		const int x = numberof_siege_basic_classes(g_entities[client_num].client->sess.siegeDesiredTeam, i);
+		const int x = numberof_siege_basic_classes(g_entities[clientNum].client->sess.siegeDesiredTeam, i);
 		if (x < best_num)
 		{
 			//this class has fewer players.
@@ -10679,18 +10679,18 @@ void select_best_siege_class(const int client_num, const qboolean force_join)
 	if (best_base_class != -1)
 	{
 		//found one, join that class
-		siegeClass_t* hold_class = BG_GetClassOnBaseClass(g_entities[client_num].client->sess.siegeDesiredTeam,
+		siegeClass_t* hold_class = BG_GetClassOnBaseClass(g_entities[clientNum].client->sess.siegeDesiredTeam,
 			best_base_class, 0);
-		if (Q_stricmp(g_entities[client_num].client->sess.siegeClass, hold_class->name)
+		if (Q_stricmp(g_entities[clientNum].client->sess.siegeClass, hold_class->name)
 			|| force_join)
 		{
 			//we're not already this class.
-			trap->EA_Command(client_num, va("siegeclass \"%s\"\n", hold_class->name));
+			trap->EA_Command(clientNum, va("siegeclass \"%s\"\n", hold_class->name));
 		}
 	}
 }
 
-extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
+extern saberInfo_t* BG_MySaber(int clientNum, int saber_num);
 //the main AI loop.
 //please don't be too frightened.
 void standard_bot_ai(bot_state_t* bs)
@@ -11914,7 +11914,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->cur_ps.weapon == WP_SABER
 				&& bs->BOTjumpState <= JS_WAITING // Not in a jump right now.
@@ -11928,7 +11928,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK
 				&& bs->BOTjumpState <= JS_WAITING // Not in a jump right now.
@@ -11942,7 +11942,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK
 				&& bs->BOTjumpState <= JS_WAITING // Not in a jump right now.
@@ -11956,7 +11956,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->BOTjumpState >= JS_CROUCHING)
 			{

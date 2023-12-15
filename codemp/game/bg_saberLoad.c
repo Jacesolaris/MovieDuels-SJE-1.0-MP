@@ -49,7 +49,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
 
-int BG_SoundIndex(const char* sound)
+static int BG_SoundIndex(const char* sound)
 {
 #ifdef _GAME
 	return G_SoundIndex(sound);
@@ -365,7 +365,7 @@ qboolean BG_ParseLiteral(const char** data, const char* string)
 	return qfalse;
 }
 
-qboolean BG_ParseLiteralSilent(const char** data, const char* string)
+static qboolean BG_ParseLiteralSilent(const char** data, const char* string)
 {
 	const char* token = COM_ParseExt(data, qtrue);
 	if (!token[0])
@@ -823,7 +823,7 @@ qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber)
 	return qtrue;
 }
 
-void wp_saber_set_defaults(saberInfo_t* saber)
+static void wp_saber_set_defaults(saberInfo_t* saber)
 {
 	//Set defaults so that, if it fails, there's at least something there
 	for (int i = 0; i < MAX_BLADES; i++)
@@ -2992,7 +2992,7 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 	return qfalse;
 }
 
-qboolean WP_SaberValidForPlayerInMP(const char* saberName)
+static qboolean WP_SaberValidForPlayerInMP(const char* saberName)
 {
 	char allowed[8] = { 0 };
 
@@ -3066,7 +3066,7 @@ void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, con
 	}
 }
 
-void WP_SaberSetColor(saberInfo_t* sabers, const int saber_num, const int blade_num, const char* colorName)
+static void WP_SaberSetColor(saberInfo_t* sabers, const int saber_num, const int blade_num, const char* colorName)
 {
 	if (!sabers)
 	{
@@ -3140,7 +3140,7 @@ void WP_SaberLoadParms()
 }
 
 #ifdef UI_BUILD
-qboolean WP_IsSaberTwoHanded(const char* saberName)
+static qboolean WP_IsSaberTwoHanded(const char* saberName)
 {
 	char twoHandedString[8] = { 0 };
 	WP_SaberParseParm(saberName, "twoHanded", twoHandedString);

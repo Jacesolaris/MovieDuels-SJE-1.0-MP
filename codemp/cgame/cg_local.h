@@ -817,7 +817,7 @@ typedef struct chatBoxItem_s
 typedef struct cg_s {
 	int			clientFrame;		// incremented each frame
 
-	int			client_num;
+	int			clientNum;
 
 	qboolean	demoPlayback;
 	qboolean	levelShot;			// taking a level menu screenshot
@@ -2027,20 +2027,6 @@ void CG_TestModelPrevSkin_f(void);
 void CG_AddBufferedSound(sfxHandle_t sfx);
 
 void CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView, qboolean demoPlayback);
-/*
-Ghoul2 Insert Start
-*/
-
-void CG_TestG2Model_f(void);
-void CG_TestModelSurfaceOnOff_f(void);
-void CG_ListModelSurfaces_f(void);
-void CG_ListModelBones_f(void);
-void CG_TestModelSetAnglespre_f(void);
-void CG_TestModelSetAnglespost_f(void);
-void CG_TestModelAnimate_f(void);
-/*
-Ghoul2 Insert End
-*/
 
 //
 // cg_drawtools.c
@@ -2081,7 +2067,7 @@ extern  char systemChat[256];
 void CG_AddLagometerFrameInfo(void);
 void CG_AddLagometerSnapshotInfo(const snapshot_t* snap);
 void CG_CenterPrint(const char* str, int y, int char_width);
-void CG_DrawHead(float x, float y, float w, float h, int client_num);
+void CG_DrawHead(float x, float y, float w, float h, int clientNum);
 void CG_DrawActive(stereoFrame_t stereo_view);
 void CG_DrawFlagModel(float x, float y, float w, float h, int team, qboolean force_2d);
 void CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team);
@@ -2117,8 +2103,8 @@ void CG_DestroyNPCClient(clientInfo_t** ci);
 void CG_Player(centity_t* cent);
 void CG_ResetPlayerEntity(centity_t* cent);
 void CG_AddRefEntityWithPowerups(const refEntity_t* ent, const entityState_t* state);
-void CG_NewClientInfo(int client_num, qboolean entities_initialized);
-sfxHandle_t	CG_CustomSound(int client_num, const char* sound_name);
+void CG_NewClientInfo(int clientNum, qboolean entities_initialized);
+sfxHandle_t	CG_CustomSound(int clientNum, const char* sound_name);
 void CG_PlayerShieldHit(int entitynum, vec3_t dir, int amount);
 
 //
@@ -2267,7 +2253,7 @@ void CG_ProcessSnapshots(void);
 //
 void CG_LoadingString(const char* s);
 void CG_LoadingItem(int item_num);
-void CG_LoadingClient(int client_num);
+void CG_LoadingClient(int clientNum);
 void CG_DrawInformation(void);
 
 //

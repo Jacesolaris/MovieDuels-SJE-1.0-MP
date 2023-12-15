@@ -768,11 +768,11 @@ static int GoreIndecies[MAX_GORE_INDECIES];
 int	G2API_GetTime(int arg_time);
 
 // now we at poly level, check each model space transformed poly against the model world transfomed ray
-void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const mdxmSurfHierarchy_t* surfInfo)
+static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const mdxmSurfHierarchy_t* surfInfo)
 {
 	int				j;
 	vec3_t basis1;
-	vec3_t basis2;
+	vec3_t basis2{};
 	vec3_t taxis;
 	vec3_t saxis;
 
@@ -1173,7 +1173,7 @@ static bool G2_TracePolys(const mdxmSurface_t* surface, const mdxmSurfHierarchy_
 }
 
 // now we're at poly level, check each model space transformed poly against the model world transfomed ray
-static bool G2_RadiusTracePolys(const mdxmSurface_t* surface,CTraceSurface& TS)
+static bool G2_RadiusTracePolys(const mdxmSurface_t* surface, CTraceSurface& TS)
 {
 	int		j;
 	vec3_t basis1;
@@ -1557,7 +1557,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 	}
 }
 
-void TransformPoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat) 
+void TransformPoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat)
 {
 	for (int i = 0; i < 3; i++)
 	{

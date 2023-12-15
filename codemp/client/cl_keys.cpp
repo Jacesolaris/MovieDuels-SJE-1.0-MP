@@ -378,7 +378,34 @@ keyname_t keynames[MAX_KEYS] =
 	{0x13c, 0x13c, "AUX28", A_AUX28, false},
 	{0x13d, 0x13d, "AUX29", A_AUX29, false},
 	{0x13e, 0x13e, "AUX30", A_AUX30, false},
-	{0x13f, 0x13f, "AUX31", A_AUX31, false}
+	{0x13f, 0x13f, "AUX31", A_AUX31, false},
+
+	{ 0x140, 0x140, "PAD0", A_PAD0_A, false },
+	{ 0x141, 0x141, "PAD1", A_PAD0_B, false },
+	{ 0x142, 0x142, "PAD2", A_PAD0_X, false },
+	{ 0x143, 0x143, "PAD3", A_PAD0_Y, false },
+	{ 0x144, 0x144, "PAD4", A_PAD0_BACK, false },
+	{ 0x145, 0x145, "PAD5", A_PAD0_GUIDE, false },
+	{ 0x146, 0x146, "PAD6", A_PAD0_START, false },
+	{ 0x147, 0x147, "PAD7", A_PAD0_LEFTSTICK_CLICK, false },
+	{ 0x148, 0x148, "PAD8", A_PAD0_RIGHTSTICK_CLICK, false },
+	{ 0x149, 0x149, "PAD9", A_PAD0_LEFTSHOULDER, false },
+	{ 0x14a, 0x14a, "PAD10", A_PAD0_RIGHTSHOULDER, false },
+	{ 0x14b, 0x14b, "PAD11", A_PAD0_DPAD_UP, false },
+	{ 0x14c, 0x14c, "PAD12", A_PAD0_DPAD_DOWN, false },
+	{ 0x14d, 0x14d, "PAD13", A_PAD0_DPAD_LEFT, false },
+	{ 0x14e, 0x14e, "PAD14", A_PAD0_DPAD_RIGHT, false },
+	{ 0x14f, 0x14f, "PAD15", A_PAD0_MISC1, false },
+	{ 0x150, 0x150, "PAD16", A_PAD0_LEFTSTICK_LEFT, false },
+	{ 0x151, 0x151, "PAD17", A_PAD0_LEFTSTICK_RIGHT, false },
+	{ 0x152, 0x152, "PAD18", A_PAD0_LEFTSTICK_UP, false },
+	{ 0x153, 0x153, "PAD19", A_PAD0_LEFTSTICK_DOWN, false },
+	{ 0x154, 0x154, "PAD20", A_PAD0_RIGHTSTICK_LEFT, false },
+	{ 0x155, 0x155, "PAD21", A_PAD0_RIGHTSTICK_RIGHT, false },
+	{ 0x156, 0x156, "PAD22", A_PAD0_RIGHTSTICK_UP, false },
+	{ 0x157, 0x157, "PAD23", A_PAD0_RIGHTSTICK_DOWN, false },
+	{ 0x158, 0x158, "PAD24", A_PAD0_LEFTTRIGGER, false },
+	{ 0x159, 0x159, "PAD25", A_PAD0_RIGHTTRIGGER, false }
 };
 static constexpr size_t numKeynames = std::size(keynames);
 
@@ -861,7 +888,7 @@ Message_Key
 In game talk message
 ================
 */
-void Message_Key(const int key)
+static void Message_Key(const int key)
 {
 	char buffer[MAX_STRING_CHARS] = { 0 };
 
@@ -1439,7 +1466,7 @@ void CL_KeyDownEvent(int key, const unsigned time)
 	}
 
 	// escape is always handled special
-	if (key == A_ESCAPE)
+	if (key == A_ESCAPE || key == A_PAD0_GUIDE)
 	{
 		if (!kg.keys[A_SHIFT].down && Key_GetCatcher() & KEYCATCH_CONSOLE)
 		{

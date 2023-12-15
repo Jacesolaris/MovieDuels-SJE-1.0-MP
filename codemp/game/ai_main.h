@@ -389,7 +389,7 @@ typedef struct bot_state_s
 	qboolean doSaberThrow;
 	bot_route_t botRoute;
 	int botOrder;
-	//bot orderer's client_num
+	//bot orderer's clientNum
 	int ordererNum;
 	//order's relivent entity
 	gentity_t* orderEntity;

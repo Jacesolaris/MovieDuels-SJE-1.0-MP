@@ -151,7 +151,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p, const vec3_t vel,
 	return le;
 }
 
-int CGDEBUG_SaberColor(const int saber_color)
+static int CGDEBUG_SaberColor(const int saber_color)
 {
 	switch (saber_color)
 	{
@@ -497,7 +497,7 @@ void CG_InitGlass(void)
 #define TIME_DECAY_MED		0.04f
 #define TIME_DECAY_FAST		0.009f
 
-void CG_DoGlass(vec3_t verts[], vec3_t dmg_pt, vec3_t dmg_dir, const float dmg_radius, const int max_shards)
+static void CG_DoGlass(vec3_t verts[], vec3_t dmg_pt, vec3_t dmg_dir, const float dmg_radius, const int max_shards)
 {
 	int i, t;
 	int mx_height;
@@ -699,7 +699,7 @@ intensity ranges from 1 (minor tremble) to 16 (major quake)
 -------------------------
 */
 
-void CG_ExplosionEffects(vec3_t origin, const float intensity, const int radius, const int time)
+static void CG_ExplosionEffects(vec3_t origin, const float intensity, const int radius, const int time)
 {
 	//FIXME: When exactly is the vieworg calculated in relation to the rest of the frame?s
 
@@ -1046,7 +1046,7 @@ void CG_ScorePlum(const int client, vec3_t org, const int score)
 	static vec3_t last_pos;
 
 	// only visualize for the client that scored
-	if (client != cg.predicted_player_state.client_num || cg_scorePlums.integer == 0)
+	if (client != cg.predicted_player_state.clientNum || cg_scorePlums.integer == 0)
 	{
 		return;
 	}
@@ -1162,7 +1162,7 @@ localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
 CG_LaunchGib
 ==================
 */
-void CG_LaunchGib(vec3_t origin, vec3_t velocity, const qhandle_t h_model)
+static void CG_LaunchGib(vec3_t origin, vec3_t velocity, const qhandle_t h_model)
 {
 	localEntity_t* le = CG_AllocLocalEntity();
 	refEntity_t* re = &le->refEntity;
@@ -1186,12 +1186,12 @@ void CG_LaunchGib(vec3_t origin, vec3_t velocity, const qhandle_t h_model)
 	le->leMarkType = LEMT_BLOOD;
 }
 
-inline float random()
+inline static float random()
 {
 	return rand() / (float)0x7fff;
 }
 
-inline float crandom()
+inline static float crandom()
 {
 	return 2.0F * (random() - 0.5F);
 }

@@ -847,15 +847,15 @@ CG_DrawHead
 Used for both the status bar and the scoreboard
 ================
 */
-void CG_DrawHead(const float x, const float y, const float w, const float h, const int client_num)
+void CG_DrawHead(const float x, const float y, const float w, const float h, const int clientNum)
 {
-	if (client_num >= MAX_CLIENTS)
+	if (clientNum >= MAX_CLIENTS)
 	{
 		//npc?
 		return;
 	}
 
-	const clientInfo_t* ci = &cgs.clientinfo[client_num];
+	const clientInfo_t* ci = &cgs.clientinfo[clientNum];
 
 	CG_DrawPic(x, y, w, h, ci->modelIcon);
 
@@ -1062,7 +1062,7 @@ void CG_DrawMDHealthVer(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1156,7 +1156,7 @@ void CG_DrawMDArmourVer(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1249,7 +1249,7 @@ void CG_DrawMDSprintVer(const menuDef_t* menu_hud)
 {
 	vec4_t calc_color;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1325,7 +1325,7 @@ void CG_DrawMDJetpackFuelVer(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1401,7 +1401,7 @@ void CG_DrawMDcloakFuelVer(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1478,7 +1478,7 @@ void CG_DrawMDForceVer(const menuDef_t* menu_hud)
 	const playerState_t* ps = &cg.snap->ps;
 	const int		maxForcePower = 100;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1572,7 +1572,7 @@ void CG_DrawMDBlockPointsVert(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1666,7 +1666,7 @@ void CG_DrawMDAmmoVert(const centity_t* cent, const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1753,7 +1753,7 @@ void CG_DrawMDSaberstyleFatigueVert(const centity_t* cent, const menuDef_t* menu
 {
 	itemDef_t* focus_item;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -1914,7 +1914,7 @@ void CG_DrawMDSaberstyleFatigueVert(const centity_t* cent, const menuDef_t* menu
 
 void CG_DrawMDHiltVert(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2366,7 +2366,7 @@ void CG_DrawWeaponTripMine(const int x, const int y)
 
 void CG_DrawMDWeaponIcon(const centity_t* cent)
 {
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2455,7 +2455,7 @@ void CG_DrawMDWeaponIcon(const centity_t* cent)
 
 void CG_DrawMDWeaponfatigueIconVert(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2504,7 +2504,7 @@ void CG_DrawMDWeaponfatigueIconVert(const centity_t* cent, const menuDef_t* menu
 
 void CG_DrawMDWeaponFatigueVert(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2570,7 +2570,7 @@ void CG_DrawMDHealthHoz(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2665,7 +2665,7 @@ void CG_DrawMDArmourHoz(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2759,7 +2759,7 @@ void CG_DrawMDSprinthoz(const menuDef_t* menu_hud)
 {
 	vec4_t calc_color;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2836,7 +2836,7 @@ void CG_DrawMDJetpackFuelhoz(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2913,7 +2913,7 @@ void CG_DrawMDcloakFuelhoz(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -2991,7 +2991,7 @@ void CG_DrawMDForcehoz(const menuDef_t* menu_hud)
 	const playerState_t* ps = &cg.snap->ps;
 	const int		maxForcePower = 100;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -3086,7 +3086,7 @@ void CG_DrawMDBlockPointsHoz(const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -3181,7 +3181,7 @@ void CG_DrawMDAmmoHoz(const centity_t* cent, const menuDef_t* menu_hud)
 	vec4_t calc_color;
 	const playerState_t* ps = &cg.snap->ps;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -3269,7 +3269,7 @@ void CG_DrawMDSaberstyleFatigueHoz(const centity_t* cent, const menuDef_t* menu_
 {
 	itemDef_t* focus_item;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -3437,7 +3437,7 @@ void CG_DrawMDSaberstyleFatigueHoz(const centity_t* cent, const menuDef_t* menu_
 
 void CG_DrawMDHiltHoz(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -3505,7 +3505,7 @@ void CG_DrawMDHiltHoz(const centity_t* cent, const menuDef_t* menu_hud)
 
 void CG_DrawMDWeaponfatigueIconHoz(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -3555,7 +3555,7 @@ void CG_DrawMDWeaponfatigueIconHoz(const centity_t* cent, const menuDef_t* menu_
 
 void CG_DrawMDWeaponFatigueHoz(const centity_t* cent, const menuDef_t* menu_hud)
 {
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -4265,7 +4265,7 @@ void CG_DrawCusgunfatigue(const menuDef_t* menu_hud)
 	const int max_blaster_attack_chain_count = BLASTERMISHAPLEVEL_OVERLOAD;
 	qboolean flash = qfalse;
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -4402,7 +4402,7 @@ void CG_DrawoldblockPoints(void)
 		cg.blockHUDActive = qtrue;
 	}
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -4887,7 +4887,7 @@ void CG_Draw_JKA_ForcePower(const centity_t* cent, const menuDef_t* menu_hud)
 	}
 
 	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 << FLAG_FATIGUED)
+	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.clientNum].currentState.userInt3 & 1 << FLAG_FATIGUED)
 	{
 		flash = qtrue;
 		if (cg.forceHUDNextFlashTime < cg.time)
@@ -5670,7 +5670,7 @@ static void CG_DrawSimpleForcePower()
 	}
 
 	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 <<
+	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.clientNum].currentState.userInt3 & 1 <<
 		FLAG_FATIGUED)
 	{
 		flash = qtrue;
@@ -7520,7 +7520,7 @@ void CG_DrawVehicleWeaponsLinked(const menuDef_t* menu_hud, const centity_t* veh
 	{
 		//state changed, play sound
 		cg_drawLink = draw_link;
-		trap->S_StartSound(NULL, cg.predicted_player_state.client_num, CHAN_LOCAL,
+		trap->S_StartSound(NULL, cg.predicted_player_state.clientNum, CHAN_LOCAL,
 			trap->S_RegisterSound("sound/vehicles/common/linkweaps.wav"));
 	}
 
@@ -7966,7 +7966,7 @@ static void CG_DrawStats(void)
 {
 	qboolean drawHUD = qtrue;
 
-	const centity_t* cent = &cg_entities[cg.snap->ps.client_num];
+	const centity_t* cent = &cg_entities[cg.snap->ps.clientNum];
 
 	if (cent)
 	{
@@ -8096,7 +8096,7 @@ CG_DrawEnemyInfo
 static float CG_DrawEnemyInfo(float y)
 {
 	float size;
-	int client_num;
+	int clientNum;
 	const char* title;
 	const int x_offset = 0;
 
@@ -8125,9 +8125,9 @@ static float CG_DrawEnemyInfo(float y)
 	{
 		//title = "Jedi Master";
 		title = CG_GetStringEdString("MP_INGAME", "MASTERY7");
-		client_num = cgs.jediMaster;
+		clientNum = cgs.jediMaster;
 
-		if (client_num < 0)
+		if (clientNum < 0)
 		{
 			//return y;
 			//			title = "Get Saber!";
@@ -8150,22 +8150,22 @@ static float CG_DrawEnemyInfo(float y)
 	{
 		//		title = "Dueling";
 		title = CG_GetStringEdString("MP_INGAME", "DUELING");
-		client_num = cg.snap->ps.duelIndex;
+		clientNum = cg.snap->ps.duelIndex;
 	}
-	else if (cgs.gametype == GT_MOVIEDUELS_DUEL && cgs.clientinfo[cg.snap->ps.client_num].team != TEAM_SPECTATOR)
+	else if (cgs.gametype == GT_MOVIEDUELS_DUEL && cgs.clientinfo[cg.snap->ps.clientNum].team != TEAM_SPECTATOR)
 	{
 		title = CG_GetStringEdString("MP_INGAME", "DUELING");
-		if (cg.snap->ps.client_num == cgs.duelist1)
+		if (cg.snap->ps.clientNum == cgs.duelist1)
 		{
-			client_num = cgs.duelist2; //if power duel, should actually draw both duelists 2 and 3 I guess
+			clientNum = cgs.duelist2; //if power duel, should actually draw both duelists 2 and 3 I guess
 		}
-		else if (cg.snap->ps.client_num == cgs.duelist2)
+		else if (cg.snap->ps.clientNum == cgs.duelist2)
 		{
-			client_num = cgs.duelist1;
+			clientNum = cgs.duelist1;
 		}
-		else if (cg.snap->ps.client_num == cgs.duelist3)
+		else if (cg.snap->ps.clientNum == cgs.duelist3)
 		{
-			client_num = cgs.duelist1;
+			clientNum = cgs.duelist1;
 		}
 		else
 		{
@@ -8182,15 +8182,15 @@ static float CG_DrawEnemyInfo(float y)
 
 		title = va("%s: %i", CG_GetStringEdString("MP_INGAME", "LEADER"), cgs.scores1);
 
-		client_num = cgs.duelWinner;
+		clientNum = cgs.duelWinner;
 	}
 
-	if (client_num >= MAX_CLIENTS || !&cgs.clientinfo[client_num])
+	if (clientNum >= MAX_CLIENTS || !&cgs.clientinfo[clientNum])
 	{
 		return y;
 	}
 
-	const clientInfo_t* ci = &cgs.clientinfo[client_num];
+	const clientInfo_t* ci = &cgs.clientinfo[clientNum];
 
 	size = ICON_SIZE * 1.25;
 	y += 5;
@@ -8211,13 +8211,13 @@ static float CG_DrawEnemyInfo(float y)
 	CG_Text_Paint(630 - CG_Text_Width(title, 1.0f, FONT_SMALL2) + x_offset, y, 1.0f, colorWhite, title, 0, 0, 0,
 		FONT_SMALL2);
 
-	if ((cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL) && cgs.clientinfo[cg.snap->ps.client_num].team !=
+	if ((cgs.gametype == GT_MOVIEDUELS_DUEL || cgs.gametype == GT_MOVIEDUELS_POWERDUEL) && cgs.clientinfo[cg.snap->ps.clientNum].team !=
 		TEAM_SPECTATOR)
 	{
 		//also print their score
 		char text[1024];
 		y += 15;
-		Com_sprintf(text, sizeof text, "%i/%i", cgs.clientinfo[client_num].score, cgs.fraglimit);
+		Com_sprintf(text, sizeof text, "%i/%i", cgs.clientinfo[clientNum].score, cgs.fraglimit);
 		CG_Text_Paint(630 - CG_Text_Width(text, 0.7f, FONT_MEDIUM) + x_offset, y, 0.7f, colorWhite, text, 0, 0, 0,
 			FONT_MEDIUM);
 	}
@@ -8226,11 +8226,11 @@ static float CG_DrawEnemyInfo(float y)
 	if (cgs.showDuelHealths >= 2)
 	{
 		y += 15;
-		if (cgs.duelist1 == client_num)
+		if (cgs.duelist1 == clientNum)
 		{
 			CG_DrawDuelistHealth(640 - size - 5 + x_offset, y, 64, 8, 1);
 		}
-		else if (cgs.duelist2 == client_num)
+		else if (cgs.duelist2 == clientNum)
 		{
 			CG_DrawDuelistHealth(640 - size - 5 + x_offset, y, 64, 8, 2);
 		}
@@ -8408,7 +8408,7 @@ float cg_draw_radar(float y)
 	}
 
 	team = cg.snap->ps.persistant[PERS_TEAM];
-	local = &cgs.clientinfo[cg.snap->ps.client_num];
+	local = &cgs.clientinfo[cg.snap->ps.clientNum];
 
 	if (!local->infoValid)
 	{
@@ -8876,7 +8876,7 @@ float cg_draw_radar(float y)
 				{
 					//I'm in a vehicle
 					//if it's targetting me, then play an alarm sound if I'm in a vehicle
-					if (cent->currentState.otherEntityNum == cg.predicted_player_state.client_num || cent->currentState.
+					if (cent->currentState.otherEntityNum == cg.predicted_player_state.clientNum || cent->currentState.
 						otherEntityNum == cg.predicted_player_state.m_iVehicleNum)
 					{
 						if (radarLockSoundDebounceTime < cg.time)
@@ -9907,7 +9907,7 @@ void CG_DrawSiegeInfo(const centity_t* cent, const float ch_x, const float ch_y,
 		return;
 	}
 
-	const char* configstring = CG_ConfigString(cg.predicted_player_state.client_num + CS_PLAYERS);
+	const char* configstring = CG_ConfigString(cg.predicted_player_state.clientNum + CS_PLAYERS);
 	const char* v = Info_ValueForKey(configstring, "siegeclass");
 
 	if (!v || !v[0])
@@ -10329,7 +10329,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			else if (cross_ent->currentState.number < MAX_CLIENTS)
 			{
 				if (cgs.gametype >= GT_MOVIEDUELS_TEAM &&
-					cgs.clientinfo[cross_ent->currentState.number].team == cgs.clientinfo[cg.snap->ps.client_num].team)
+					cgs.clientinfo[cross_ent->currentState.number].team == cgs.clientinfo[cg.snap->ps.clientNum].team)
 				{
 					//Allies are green
 					ecolor[0] = 0.0; //R
@@ -10340,7 +10340,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				{
 					if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL &&
 						cgs.clientinfo[cross_ent->currentState.number].duelTeam == cgs.clientinfo[cg.snap->ps.
-						client_num].
+						clientNum].
 						duelTeam)
 					{
 						//on the same duel team in powerduel, so he's a friend
@@ -10472,7 +10472,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 						ecolor[1] = 1.0f; //G
 						ecolor[2] = 0.0f; //B
 					}
-					else if (cross_ent->currentState.teamowner != cgs.clientinfo[cg.snap->ps.client_num].team)
+					else if (cross_ent->currentState.teamowner != cgs.clientinfo[cg.snap->ps.clientNum].team)
 					{
 						//on the enemy team
 						ecolor[0] = 1.0f; //R
@@ -10487,9 +10487,9 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 						ecolor[2] = 0.0f; //B
 					}
 				}
-				else if (cross_ent->currentState.owner == cg.snap->ps.client_num ||
+				else if (cross_ent->currentState.owner == cg.snap->ps.clientNum ||
 					cgs.gametype >= GT_MOVIEDUELS_TEAM &&
-					cross_ent->currentState.teamowner == cgs.clientinfo[cg.snap->ps.client_num].team)
+					cross_ent->currentState.teamowner == cgs.clientinfo[cg.snap->ps.clientNum].team)
 				{
 					ecolor[0] = 0.0f; //R
 					ecolor[1] = 1.0f; //G
@@ -10497,7 +10497,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 				}
 				else if (cross_ent->currentState.teamowner == 16 ||
 					cgs.gametype >= GT_MOVIEDUELS_TEAM &&
-					cross_ent->currentState.teamowner && cross_ent->currentState.teamowner != cgs.clientinfo[cg.snap->ps.client_num].team)
+					cross_ent->currentState.teamowner && cross_ent->currentState.teamowner != cgs.clientinfo[cg.snap->ps.clientNum].team)
 				{
 					ecolor[0] = 1.0f; //R
 					ecolor[1] = 0.0f; //G
@@ -10936,8 +10936,8 @@ void CG_BracketEntity(centity_t* cent, const float radius)
 	VectorSubtract(cent->lerpOrigin, cg.refdef.vieworg, dif);
 	const float len = VectorNormalize(dif);
 
-	if (cg.crosshairclient_num != cent->currentState.client_num
-		&& (!cg.snap || cg.snap->ps.rocketLockIndex != cent->currentState.client_num))
+	if (cg.crosshairclient_num != cent->currentState.clientNum
+		&& (!cg.snap || cg.snap->ps.rocketLockIndex != cent->currentState.clientNum))
 	{
 		//if they're the entity you're locking onto or under your crosshair, always draw bracket
 		//Hmm... for now, if they're closer than 2000, don't bracket?
@@ -10964,7 +10964,7 @@ void CG_BracketEntity(centity_t* cent, const float radius)
 	//just to see if it's centered
 	//CG_DrawPic( x-2, y-2, 4, 4, cgs.media.whiteShader );
 
-	const clientInfo_t* local = &cgs.clientinfo[cg.snap->ps.client_num];
+	const clientInfo_t* local = &cgs.clientinfo[cg.snap->ps.clientNum];
 	if (cent->currentState.m_iVehicleNum //vehicle has a driver
 		&& cent->currentState.m_iVehicleNum - 1 < MAX_CLIENTS
 		&& cgs.clientinfo[cent->currentState.m_iVehicleNum - 1].infoValid)
@@ -11196,7 +11196,7 @@ static void CG_DrawHolocronIcons(void)
 		return;
 	}
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -11259,7 +11259,7 @@ static void CG_DrawActivePowers(void)
 		return;
 	}
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -11307,7 +11307,7 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 		return;
 	}
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		return;
 	}
@@ -11370,7 +11370,7 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 
 		if (ci)
 		{
-			if (ci->team == cgs.clientinfo[cg.snap->ps.client_num].team)
+			if (ci->team == cgs.clientinfo[cg.snap->ps.clientNum].team)
 			{
 				if (cgs.gametype >= GT_MOVIEDUELS_TEAM)
 				{
@@ -11393,7 +11393,7 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 					{
 						ci = cg_entities[hit_ent->currentState.owner].npcClient;
 					}
-					if (ci && ci->team == cgs.clientinfo[cg.snap->ps.client_num].team)
+					if (ci && ci->team == cgs.clientinfo[cg.snap->ps.clientNum].team)
 					{
 						return;
 					}
@@ -11618,7 +11618,7 @@ static void CG_ScanForCrosshairEntity(void)
 	vec3_t start, end;
 	qboolean b_veh_check_trace_from_cam_pos = qfalse;
 
-	int ignore = cg.predicted_player_state.client_num;
+	int ignore = cg.predicted_player_state.clientNum;
 
 	if (cg_dynamicCrosshair.integer)
 	{
@@ -11632,7 +11632,7 @@ static void CG_ScanForCrosshairEntity(void)
 			const centity_t* veh = &cg_entities[cg.predicted_player_state.m_iVehicleNum];
 			qboolean gunner;
 
-			//if (veh->currentState.owner == cg.predicted_player_state.client_num)
+			//if (veh->currentState.owner == cg.predicted_player_state.clientNum)
 			{
 				//the pilot
 				ignore = cg.predicted_player_state.m_iVehicleNum;
@@ -11698,7 +11698,7 @@ static void CG_ScanForCrosshairEntity(void)
 
 				AngleVectors(pitchConstraint, d_f, d_rt, d_up);
 			}
-			CG_Calcmuzzle_point(cg.snap->ps.client_num, start);
+			CG_Calcmuzzle_point(cg.snap->ps.clientNum, start);
 		}
 
 		VectorMA(start, cg.distanceCull, d_f, end);
@@ -11758,7 +11758,7 @@ static void CG_ScanForCrosshairEntity(void)
 			cg_entities[trace.entityNum].currentState.trickedentindex2,
 			cg_entities[trace.entityNum].currentState.trickedentindex3,
 			cg_entities[trace.entityNum].currentState.trickedentindex4,
-			cg.snap->ps.client_num))
+			cg.snap->ps.clientNum))
 		{
 			if (cg.crosshairclient_num == trace.entityNum)
 			{
@@ -11876,7 +11876,7 @@ qboolean CG_CheckClientVisibility(const centity_t* cent)
 	VectorCopy(cent->lerpOrigin, end);
 	end[2] += 42;
 
-	CG_Trace(&trace, start, NULL, NULL, end, cg.client_num, MASK_PLAYERSOLID);
+	CG_Trace(&trace, start, NULL, NULL, end, cg.clientNum, MASK_PLAYERSOLID);
 
 	const centity_t* trace_ent = &cg_entities[trace.entityNum];
 
@@ -12378,7 +12378,7 @@ static void CG_DrawVote(void)
 	else
 		s = va("%s(%i):<%s> %s:%i %s:%i", s_vote, sec, s_cmd, s_yes, cgs.voteYes, s_no, cgs.voteNo);
 	CG_DrawSmallString(4, 58, s, 1.0F);
-	if (cgs.clientinfo[cg.client_num].team != TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.clientNum].team != TEAM_SPECTATOR)
 	{
 		s = CG_GetStringEdString("MP_INGAME", "OR_PRESS_ESC_THEN_CLICK_VOTE"); //	s = "or press ESC then click Vote";
 		CG_DrawSmallString(4, 58 + SMALLCHAR_HEIGHT + 2, s, 1.0F);
@@ -12395,9 +12395,9 @@ static void CG_DrawTeamVote(void)
 	char* s;
 	int cs_offset;
 
-	if (cgs.clientinfo[cg.client_num].team == TEAM_RED)
+	if (cgs.clientinfo[cg.clientNum].team == TEAM_RED)
 		cs_offset = 0;
-	else if (cgs.clientinfo[cg.client_num].team == TEAM_BLUE)
+	else if (cgs.clientinfo[cg.clientNum].team == TEAM_BLUE)
 		cs_offset = 1;
 	else
 		return;
@@ -12494,7 +12494,7 @@ static qboolean CG_DrawFollow(void)
 
 	if (cgs.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
-		const clientInfo_t* ci = &cgs.clientinfo[cg.snap->ps.client_num];
+		const clientInfo_t* ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 
 		if (ci->duelTeam == DUELTEAM_LONE)
 		{
@@ -12516,7 +12516,7 @@ static qboolean CG_DrawFollow(void)
 
 	CG_Text_Paint(320 - CG_Text_Width(s, 0.5f, FONT_SMALL) / 2, 30, 0.5f, colorWhite, s, 0, 0, 0, FONT_SMALL);
 
-	s = cgs.clientinfo[cg.snap->ps.client_num].name;
+	s = cgs.clientinfo[cg.snap->ps.clientNum].name;
 	CG_Text_Paint(320 - CG_Text_Width(s, 1.0f, FONT_SMALL) / 2, 60, 1.0f, colorWhite, s, 0, 0, 0, FONT_SMALL);
 
 	return qtrue;
@@ -13541,7 +13541,7 @@ static void CG_Draw2DScreenTints(void)
 	//cutscene camera fade code
 	CGCam_DoFade();
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team != TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team != TEAM_SPECTATOR)
 	{
 		float ysal_time;
 		float protect_time;
@@ -13966,7 +13966,7 @@ static void CG_Draw2D(void)
 {
 	const float in_time = cg.invenSelectTime + WEAPON_SELECT_TIME;
 	const float wp_time = cg.weaponSelectTime + WEAPON_SELECT_TIME;
-	const centity_t* cent = &cg_entities[cg.snap->ps.client_num];
+	const centity_t* cent = &cg_entities[cg.snap->ps.clientNum];
 
 	const playerState_t* ps = &cg.predicted_player_state;
 
@@ -13976,7 +13976,7 @@ static void CG_Draw2D(void)
 		return;
 	}
 
-	if (cgs.clientinfo[cg.snap->ps.client_num].team == TEAM_SPECTATOR)
+	if (cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_SPECTATOR)
 	{
 		cgRageTime = 0;
 		cgRageFadeTime = 0;

@@ -1105,7 +1105,7 @@ static void G2_Animate_Bone_List(CGhoul2Info_v& ghoul2, const int current_time, 
 */
 static void G2_RagDollSolve(CGhoul2Info_v& ghoul2_v, int g2_index, float decay, bool limit_angles, const CRagDollUpdateParams* params = nullptr);
 static void G2_RagDollCurrentPosition(CGhoul2Info_v& ghoul2_v, int g2_index, int frame_num, const vec3_t angles, const vec3_t position, const vec3_t scale);
-static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDollUpdateParams* params, int cur_time);
+static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDollUpdateParams* params, int curTime);
 static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frame_num, bool reset_origin, const vec3_t origin, bool any_rendered);
 
 void G2_GetBoneBasepose(const CGhoul2Info& ghoul2, int bone_num, mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
@@ -1565,7 +1565,7 @@ void G2_SetRagDoll(CGhoul2Info_v& ghoul2_v, CRagDollParams* parms)
 	{
 		return;
 	}
-	const int cur_time = G2API_GetTime(0);
+	const int curTime = G2API_GetTime(0);
 	boneInfo_v& blist = ghoul2.mBlist;
 	int	index = G2_Find_Bone_Rag(&ghoul2, blist, "model_root");
 	switch (parms->RagPhase)
@@ -1698,7 +1698,7 @@ void G2_SetRagDoll(CGhoul2Info_v& ghoul2_v, CRagDollParams* parms)
 	parms->CallRagDollBegin = qtrue;
 
 	G2_GenerateWorldMatrix(parms->angles, parms->position);
-	G2_ConstructGhoulSkeleton(ghoul2_v, cur_time, false, parms->scale);
+	G2_ConstructGhoulSkeleton(ghoul2_v, curTime, false, parms->scale);
 
 	G2_Set_Bone_Rag(blist, "model_root", ghoul2, parms->scale, parms->position);
 	G2_Set_Bone_Rag(blist, "pelvis", ghoul2, parms->scale, parms->position);
@@ -1738,7 +1738,7 @@ void G2_SetRagDoll(CGhoul2Info_v& ghoul2_v, CRagDollParams* parms)
 		1.0f);
 	//	G2_Set_Bone_Anim_No_BS(ghoul2, mod_a,blist,"model_root",startFrame,endFrame-1,
 	//		BONE_ANIM_OVERRIDE_FREEZE|BONE_ANIM_BLEND,
-	//		1.0f,cur_time,float(startFrame),150,0,true);
+	//		1.0f,curTime,float(startFrame),150,0,true);
 	G2_Set_Bone_Anim_No_BS(ghoul2, blist, "lfemurYZ", startFrame, endFrame - 1, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND,
 		1.0f);
 	G2_Set_Bone_Anim_No_BS(ghoul2, blist, "rfemurYZ", startFrame, endFrame - 1, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND,
@@ -1750,7 +1750,7 @@ void G2_SetRagDoll(CGhoul2Info_v& ghoul2_v, CRagDollParams* parms)
 		1.0f);
 
 	//    should already be set					G2_GenerateWorldMatrix(parms->angles, parms->position);
-	G2_ConstructGhoulSkeleton(ghoul2_v, cur_time, false, parms->scale);
+	G2_ConstructGhoulSkeleton(ghoul2_v, curTime, false, parms->scale);
 
 	static constexpr float f_rad_scale = 0.3f;//0.5f;
 
@@ -1891,12 +1891,12 @@ void G2_SetRagDoll(CGhoul2Info_v& ghoul2_v, CRagDollParams* parms)
 	G2_Set_Bone_Angles_Rag(ghoul2, blist, "lfemurX", RAG_EFFECTOR | RAG_BONE_LIGHTWEIGHT, 10.0f * s_rad_e_leg * f_rad_scale);
 	G2_Set_Bone_Angles_Rag(ghoul2, blist, "ceyebrow", RAG_EFFECTOR | RAG_BONE_LIGHTWEIGHT, 5.0f);
 	//match the currrent animation
-	if (!G2_RagDollSetup(ghoul2, cur_time, true, parms->position, false))
+	if (!G2_RagDollSetup(ghoul2, curTime, true, parms->position, false))
 	{
 		assert(!"failed to add any rag bones");
 		return;
 	}
-	G2_RagDollCurrentPosition(ghoul2_v, model, cur_time, parms->angles, parms->position, parms->scale);
+	G2_RagDollCurrentPosition(ghoul2_v, model, curTime, parms->angles, parms->position, parms->scale);
 #if 0
 	if (rhand > 0)
 	{
@@ -1916,7 +1916,7 @@ void G2_SetRagDoll(CGhoul2Info_v& ghoul2_v, CRagDollParams* parms)
 	fparms.settleFrame = parms->endFrame;
 
 	//Guess I don't need to do this, do I?
-	G2_ConstructGhoulSkeleton(ghoul2_v, cur_time, false, parms->scale);
+	G2_ConstructGhoulSkeleton(ghoul2_v, curTime, false, parms->scale);
 
 	vec3_t d_pos;
 	VectorCopy(parms->position, d_pos);
@@ -1926,9 +1926,9 @@ void G2_SetRagDoll(CGhoul2Info_v& ghoul2_v, CRagDollParams* parms)
 
 	for (int k = 0; k </*10*/20; k++)
 	{
-		G2_RagDollSettlePositionNumeroTrois(ghoul2_v, &fparms, cur_time);
+		G2_RagDollSettlePositionNumeroTrois(ghoul2_v, &fparms, curTime);
 
-		G2_RagDollCurrentPosition(ghoul2_v, model, cur_time, parms->angles, d_pos, parms->scale);
+		G2_RagDollCurrentPosition(ghoul2_v, model, curTime, parms->angles, d_pos, parms->scale);
 		G2_RagDollMatchPosition();
 		G2_RagDollSolve(ghoul2_v, model, 1.0f * (1.0f - k / 40.0f), false);
 	}
@@ -1968,7 +1968,7 @@ static void G2_SetRagDollBullet(CGhoul2Info& ghoul2, const vec3_t ray_start, con
 					{
 						firstOne = true;
 #if 0
-						int cur_time = G2API_GetTime(0);
+						int curTime = G2API_GetTime(0);
 						const mdxaHeader_t* mod_a = G2_GetModA(ghoul2);
 						int startFrame = 0, endFrame = 0;
 #if 1
@@ -1981,13 +1981,13 @@ static void G2_SetRagDollBullet(CGhoul2Info& ghoul2, const vec3_t ray_start, con
 						}
 						G2_Set_Bone_Anim_No_BS(mod_a, blist, "upper_lumbar", startFrame, endFrame - 1,
 							BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND,
-							1.0f, cur_time, float(startFrame), 75, 0, true);
+							1.0f, curTime, float(startFrame), 75, 0, true);
 						G2_Set_Bone_Anim_No_BS(mod_a, blist, "lfemurYZ", startFrame, endFrame - 1,
 							BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND,
-							1.0f, cur_time, float(startFrame), 75, 0, true);
+							1.0f, curTime, float(startFrame), 75, 0, true);
 						G2_Set_Bone_Anim_No_BS(mod_a, blist, "rfemurYZ", startFrame, endFrame - 1,
 							BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND,
-							1.0f, cur_time, float(startFrame), 75, 0, true);
+							1.0f, curTime, float(startFrame), 75, 0, true);
 #else
 						TheGhoul2Wraith()->GetAnimFrames(ghoul2.mID, "backdeadflop01", startFrame, endFrame);
 						if (startFrame == -1 && endFrame == -1)
@@ -1998,13 +1998,13 @@ static void G2_SetRagDollBullet(CGhoul2Info& ghoul2, const vec3_t ray_start, con
 						}
 						G2_Set_Bone_Anim_No_BS(mod_a, blist, "upper_lumbar", endFrame, startFrame + 1,
 							BONE_ANIM_OVERRIDE_FREEZE,
-							-1.0f, cur_time, float(endFrame - 1), 50, 0, true);
+							-1.0f, curTime, float(endFrame - 1), 50, 0, true);
 						G2_Set_Bone_Anim_No_BS(mod_a, blist, "lfemurYZ", endFrame, startFrame + 1,
 							BONE_ANIM_OVERRIDE_FREEZE,
-							-1.0f, cur_time, float(endFrame - 1), 50, 0, true);
+							-1.0f, curTime, float(endFrame - 1), 50, 0, true);
 						G2_Set_Bone_Anim_No_BS(mod_a, blist, "rfemurYZ", endFrame, startFrame + 1,
 							BONE_ANIM_OVERRIDE_FREEZE,
-							-1.0f, cur_time, float(endFrame - 1), 50, 0, true);
+							-1.0f, curTime, float(endFrame - 1), 50, 0, true);
 #endif
 #endif
 					}
@@ -2284,7 +2284,7 @@ static bool G2_RagDollSetup(CGhoul2Info& ghoul2, const int frame_num, const bool
 	return true;
 }
 
-static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpdateParams* params, const int cur_time)
+static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpdateParams* params, const int curTime)
 {
 	if (!broadsword || !broadsword->integer)
 	{
@@ -2417,7 +2417,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpda
 		{
 			G2_RagDollCurrentPosition(ghoul2_v, g2_index, frame_num, params->angles, d_pos, params->scale);
 
-			if (G2_RagDollSettlePositionNumeroTrois(ghoul2_v, params, cur_time))
+			if (G2_RagDollSettlePositionNumeroTrois(ghoul2_v, params, curTime))
 			{
 #if 0
 				//effectors are start solid alot, so this was pretty extreme
@@ -2785,7 +2785,7 @@ static void G2_RagDebugLine(vec3_t start, vec3_t end, const int time, const int 
 #endif
 
 #ifdef _OLD_STYLE_SETTLE
-static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, const vec3_t currentOrg, CRagDollUpdateParams* params, int cur_time)
+static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, const vec3_t currentOrg, CRagDollUpdateParams* params, int curTime)
 {
 	haveDesiredPelvisOffset = false;
 	vec3_t desiredPos;
@@ -3293,7 +3293,7 @@ static void G2_RagGetPelvisLumbarOffsets(CGhoul2Info& ghoul2, CRagDollUpdatePara
 	*/
 }
 
-static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDollUpdateParams* params, const int cur_time)
+static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDollUpdateParams* params, const int curTime)
 { //now returns true if any bone was in solid, otherwise false
 	static int i;
 	static vec3_t goal_spot;
@@ -3373,7 +3373,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDol
 
 		if (in_air)
 		{
-			bone.airTime = cur_time + 30;
+			bone.airTime = curTime + 30;
 		}
 
 		if (bone.RagFlags & RAG_PCJ_PELVIS)
@@ -4352,11 +4352,11 @@ static int G2_Set_Bone_Angles_IK(const CGhoul2Info& ghoul2, boneInfo_v& blist, c
 static void G2_InitIK(CGhoul2Info_v& ghoul2_v, sharedRagDollUpdateParams_t* parms, const int time, const int model)
 {
 	CGhoul2Info& ghoul2 = ghoul2_v[model];
-	int cur_time = time;
+	int curTime = time;
 	boneInfo_v& blist = ghoul2.mBlist;
 
 	G2_GenerateWorldMatrix(parms->angles, parms->position);
-	G2_ConstructGhoulSkeleton(ghoul2_v, cur_time, false, parms->scale);
+	G2_ConstructGhoulSkeleton(ghoul2_v, curTime, false, parms->scale);
 
 	// new base anim, unconscious flop
 	int pcj_flags;
@@ -4383,7 +4383,7 @@ static void G2_InitIK(CGhoul2Info_v& ghoul2_v, sharedRagDollUpdateParams_t* parm
 	G2_Set_Bone_Angles_IK(ghoul2, mod_a, blist, "rtibia", pcj_flags, 4.0f, pcjMin, pcjMax, 500);
 	G2_Set_Bone_Angles_IK(ghoul2, mod_a, blist, "ltibia", pcj_flags, 4.0f, pcjMin, pcjMax, 500);
 
-	G2_ConstructGhoulSkeleton(ghoul2_v, cur_time, false, parms->scale);
+	G2_ConstructGhoulSkeleton(ghoul2_v, curTime, false, parms->scale);
 #endif
 	//Only need the standard effectors for this.
 	pcj_flags = RAG_PCJ | RAG_PCJ_POST_MULT | RAG_EFFECTOR;
@@ -4406,7 +4406,7 @@ static void G2_InitIK(CGhoul2Info_v& ghoul2_v, sharedRagDollUpdateParams_t* parm
 qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* boneName, const int ikState, sharedSetBoneIKStateParams_t* params)
 {
 	constexpr int g2_index = 0;
-	int cur_time = time;
+	int curTime = time;
 	CGhoul2Info& g2 = ghoul2[g2_index];
 	const mdxaHeader_t* rmod_a = G2_GetModA(g2);
 
@@ -4447,7 +4447,7 @@ qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bo
 		VectorCopy(params->origin, s_rdup.position);
 		VectorCopy(params->scale, s_rdup.scale);
 		VectorClear(s_rdup.velocity);
-		G2_InitIK(ghoul2, &s_rdup, cur_time, g2_index);
+		G2_InitIK(ghoul2, &s_rdup, curTime, g2_index);
 		return qtrue;
 	}
 
@@ -4506,18 +4506,18 @@ qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bo
 		VectorCopy(params->origin, sRDUP.position);
 		VectorCopy(params->scale, sRDUP.scale);
 		VectorClear(sRDUP.velocity);
-		G2_InitIK(ghoul2, &sRDUP, cur_time, rmod_a, g2_index);
+		G2_InitIK(ghoul2, &sRDUP, curTime, rmod_a, g2_index);
 
-		G2_ConstructGhoulSkeleton(ghoul2, cur_time, false, params->scale);
+		G2_ConstructGhoulSkeleton(ghoul2, curTime, false, params->scale);
 	}
 	else
 	{
 		G2_GenerateWorldMatrix(params->angles, params->origin);
-		G2_ConstructGhoulSkeleton(ghoul2, cur_time, false, params->scale);
+		G2_ConstructGhoulSkeleton(ghoul2, curTime, false, params->scale);
 	}
 #else
 	G2_GenerateWorldMatrix(params->angles, params->origin);
-	G2_ConstructGhoulSkeleton(ghoul2, cur_time, false, params->scale);
+	G2_ConstructGhoulSkeleton(ghoul2, curTime, false, params->scale);
 #endif
 
 	int pcj_flags = RAG_PCJ | RAG_PCJ_IK_CONTROLLED | RAG_PCJ_POST_MULT | RAG_EFFECTOR;
@@ -4540,12 +4540,12 @@ qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bo
 			1.0f);
 	}
 
-	G2_ConstructGhoulSkeleton(ghoul2, cur_time, false, params->scale);
+	G2_ConstructGhoulSkeleton(ghoul2, curTime, false, params->scale);
 
 	bone.lastTimeUpdated = 0;
 	G2_Set_Bone_Angles_Rag(g2, blist, boneName, pcj_flags, params->radius, params->pcjMins, params->pcjMaxs, params->blend_time);
 
-	if (!G2_RagDollSetup(g2, cur_time, true, params->origin, false))
+	if (!G2_RagDollSetup(g2, curTime, true, params->origin, false))
 	{
 		assert(!"failed to add any rag bones");
 		return qfalse;
@@ -4559,7 +4559,7 @@ qboolean G2_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params
 #if 0
 	model_t* mod_a;
 	int g2_index = 0;
-	int cur_time = time;
+	int curTime = time;
 	CGhoul2Info& g2 = ghoul2[g2_index];
 
 	boneInfo_v& blist = g2.mBlist;
@@ -4593,11 +4593,11 @@ qboolean G2_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params
 	blist[index].ikSpeed = params->movementSpeed;
 #else
 	int g2_index = 0;
-	int cur_time = time;
+	int curTime = time;
 	CGhoul2Info& g2 = ghoul2[g2_index];
 
 	//rwwFIXMEFIXME: Doing this on all bones at the moment, fix this later?
-	if (!G2_RagDollSetup(g2, cur_time, true, params->origin, false))
+	if (!G2_RagDollSetup(g2, curTime, true, params->origin, false))
 	{ //changed models, possibly.
 		return qfalse;
 	}

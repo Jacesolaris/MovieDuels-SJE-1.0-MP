@@ -369,7 +369,7 @@ Com_ParseCommandLine
 Break it up into multiple console lines
 ==================
 */
-void Com_ParseCommandLine(char* commandLine)
+static void Com_ParseCommandLine(char* commandLine)
 {
 	int inq = 0;
 	com_consoleLines[0] = commandLine;
@@ -459,7 +459,7 @@ Returns qtrue if any late commands were added, which
 will keep the demoloop from immediately starting
 =================
 */
-qboolean Com_AddStartupCommands(void)
+static qboolean Com_AddStartupCommands(void)
 {
 	qboolean added = qfalse;
 	// quote every token, so args with semicolons can work
@@ -530,7 +530,7 @@ void Info_Print(const char* s)
 Com_StringContains
 ============
 */
-char* Com_StringContains(char* str1, char* str2, const int casesensitive)
+static char* Com_StringContains(char* str1, char* str2, const int casesensitive)
 {
 	int j;
 
@@ -762,7 +762,7 @@ static sysEvent_t com_pushedEvents[MAX_PUSHED_EVENTS];
 Com_InitJournaling
 =================
 */
-void Com_InitJournaling(void)
+static void Com_InitJournaling(void)
 {
 	Com_StartupVariable("journal");
 	com_journal = Cvar_Get("journal", "0", CVAR_INIT);
@@ -798,7 +798,7 @@ void Com_InitJournaling(void)
 Com_GetRealEvent
 =================
 */
-sysEvent_t Com_GetRealEvent(void)
+static sysEvent_t Com_GetRealEvent(void)
 {
 	int r;
 	sysEvent_t ev;
@@ -852,7 +852,7 @@ sysEvent_t Com_GetRealEvent(void)
 Com_InitPushEvent
 =================
 */
-void Com_InitPushEvent(void)
+static void Com_InitPushEvent(void)
 {
 	// clear the static buffer array
 	// this requires SE_NONE to be accepted as a valid but NOP event
@@ -868,7 +868,7 @@ void Com_InitPushEvent(void)
 Com_PushEvent
 =================
 */
-void Com_PushEvent(sysEvent_t* event)
+static void Com_PushEvent(sysEvent_t* event)
 {
 	static int printedWarning = 0;
 
@@ -903,7 +903,7 @@ void Com_PushEvent(sysEvent_t* event)
 Com_GetEvent
 =================
 */
-sysEvent_t Com_GetEvent(void)
+static sysEvent_t Com_GetEvent(void)
 {
 	if (com_pushedEventsHead > com_pushedEventsTail)
 	{
@@ -1111,9 +1111,9 @@ Com_ExecuteCfg
 ==================
 */
 
-void Com_ExecuteCfg(void)
+static void Com_ExecuteCfg(void)
 {
-	Cbuf_ExecuteText(EXEC_NOW, "exec mpdefault.cfg\n");
+	Cbuf_ExecuteText(EXEC_NOW, "exec MD-MP-default.cfg\n");
 	Cbuf_Execute(); // Always execute after exec to prevent text buffer overflowing
 
 	if (!Com_SafeMode())
@@ -1418,7 +1418,7 @@ void Com_Init(char* commandLine)
 
 //==================================================================
 
-void Com_WriteConfigToFile(const char* filename)
+static void Com_WriteConfigToFile(const char* filename)
 {
 	const fileHandle_t f = FS_FOpenFileWrite(filename);
 	if (!f)
@@ -1440,7 +1440,7 @@ Com_WriteConfiguration
 Writes key bindings and archived cvars to config file if modified
 ===============
 */
-void Com_WriteConfiguration(void)
+static void Com_WriteConfiguration(void)
 {
 	// if we are quiting without fully initializing, make sure
 	// we don't write out anything
@@ -1484,7 +1484,7 @@ void Com_WriteConfig_f(void)
 		return;
 	}
 
-	if (!FS_FilenameCompare(filename, "mpdefault.cfg") || !FS_FilenameCompare(filename, "spdefault.cfg"))
+	if (!FS_FilenameCompare(filename, "MD-MP-default.cfg") || !FS_FilenameCompare(filename, "MD-SP-default.cfg"))
 	{
 		Com_Printf(S_COLOR_YELLOW "Com_WriteConfig_f: The filename \"%s\" is reserved! Please choose another name.\n",
 			filename);
@@ -1500,7 +1500,7 @@ void Com_WriteConfig_f(void)
 Com_ModifyMsec
 ================
 */
-int Com_ModifyMsec(int msec)
+static int Com_ModifyMsec(int msec)
 {
 	int clampTime;
 
@@ -1573,7 +1573,7 @@ Com_TimeVal
 =================
 */
 
-int Com_TimeVal(const int minMsec)
+static int Com_TimeVal(const int minMsec)
 {
 	int timeVal = Sys_Milliseconds() - com_frameTime;
 

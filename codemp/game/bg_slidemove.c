@@ -59,16 +59,16 @@ extern bgEntity_t* pm_entVeh;
 //vehicle impact stuff continued...
 #ifdef _GAME
 extern qboolean FighterIsLanded(Vehicle_t* p_veh, playerState_t* parent_ps);
-extern void G_DamageFromKiller(gentity_t* p_ent, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage,
+extern void G_DamageFromKiller(gentity_t* pEnt, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage,
 	int dflags, int mod);
 #endif
 
 #define MAX_IMPACT_TURN_ANGLE 45.0f
 
-void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
+void PM_VehicleImpact(bgEntity_t* pEnt, trace_t* trace)
 {
 	// See if the vehicle has crashed into the ground.
-	Vehicle_t* p_self_veh = p_ent->m_pVehicle;
+	Vehicle_t* p_self_veh = pEnt->m_pVehicle;
 	float magnitude = VectorLength(pm->ps->velocity) * p_self_veh->m_pVehicleInfo->mass / 50.0f;
 	qboolean force_surf_destruction = qfalse;
 #ifdef _GAME
@@ -91,7 +91,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 		{
 			//hit another vehicle, explode!
 			//Give credit to whoever got me into this death spiral state
-			G_DamageFromKiller((gentity_t*)p_ent, (gentity_t*)p_self_veh->m_pParentEntity, hit_ent, pm->ps->origin, 999999,
+			G_DamageFromKiller((gentity_t*)pEnt, (gentity_t*)p_self_veh->m_pParentEntity, hit_ent, pm->ps->origin, 999999,
 				DAMAGE_NO_ARMOR, MOD_COLLISION);
 			return;
 		}
@@ -106,7 +106,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 			if (impactDot <= -0.7f) //hit rather head-on and hard
 			{
 				// Just DIE now
-				G_DamageFromKiller((gentity_t*)p_ent, (gentity_t*)p_self_veh->m_pParentEntity, hit_ent, pm->ps->origin,
+				G_DamageFromKiller((gentity_t*)pEnt, (gentity_t*)p_self_veh->m_pParentEntity, hit_ent, pm->ps->origin,
 					999999, DAMAGE_NO_ARMOR, MOD_FALLING);
 				return;
 			}
@@ -148,7 +148,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 		//this is kind of weird on tauntauns and atst's..
 		(magnitude >= 100 || force_surf_destruction))
 	{
-		if (p_ent->m_pVehicle->m_iHitDebounce < pm->cmd.serverTime
+		if (pEnt->m_pVehicle->m_iHitDebounce < pm->cmd.serverTime
 			|| force_surf_destruction)
 		{
 			//a bit of a hack, may conflict with getting shot, but...
@@ -410,9 +410,9 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 			AngleVectors(p_self_veh->m_vOrientation, NULL, NULL, vehUp);
 			if (p_self_veh->m_pVehicleInfo->iImpactFX)
 			{
-				G_AddEvent((gentity_t*)p_ent, EV_PLAY_EFFECT_ID, p_self_veh->m_pVehicleInfo->iImpactFX);
+				G_AddEvent((gentity_t*)pEnt, EV_PLAY_EFFECT_ID, p_self_veh->m_pVehicleInfo->iImpactFX);
 			}
-			p_ent->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
+			pEnt->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
 			magnitude /= p_self_veh->m_pVehicleInfo->toughness * 50.0f;
 
 			if (hit_ent && (hit_ent->s.eType != ET_TERRAIN || !(hit_ent->spawnflags & 1) || p_self_veh->m_pVehicleInfo->type
@@ -462,14 +462,14 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 				}
 				if (!noDamage)
 				{
-					G_Damage((gentity_t*)p_ent, hit_ent, killer != NULL ? killer : hit_ent, NULL, pm->ps->origin,
+					G_Damage((gentity_t*)pEnt, hit_ent, killer != NULL ? killer : hit_ent, NULL, pm->ps->origin,
 						magnitude * 5, DAMAGE_NO_ARMOR,
 						hit_ent->s.NPC_class == CLASS_VEHICLE ? MOD_COLLISION : MOD_FALLING);
 				}
 
 				if (p_self_veh->m_pVehicleInfo->surfDestruction)
 				{
-					G_FlyVehicleSurfaceDestruction((gentity_t*)p_ent, trace, magnitude, force_surf_destruction);
+					G_FlyVehicleSurfaceDestruction((gentity_t*)pEnt, trace, magnitude, force_surf_destruction);
 				}
 
 				p_self_veh->m_ulFlags |= VEH_CRASHING;
@@ -499,7 +499,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 
 					if (hit_ent->client &&
 						BG_KnockDownable(&hit_ent->client->ps) &&
-						G_CanBeEnemy((gentity_t*)p_ent, hit_ent))
+						G_CanBeEnemy((gentity_t*)pEnt, hit_ent))
 					{
 						//smash!
 						if (hit_ent->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
@@ -510,7 +510,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 							//this toggles between 1 and 0, when it's 1 we should play the get up anim
 						}
 
-						hit_ent->client->ps.otherKiller = p_ent->s.number;
+						hit_ent->client->ps.otherKiller = pEnt->s.number;
 						hit_ent->client->ps.otherKillerTime = pm->cmd.serverTime + 5000;
 						hit_ent->client->ps.otherKillerDebounceTime = pm->cmd.serverTime + 100;
 						hit_ent->client->otherKillerMOD = MOD_COLLISION;
@@ -530,7 +530,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 				}
 				else
 				{
-					attackEnt = (gentity_t*)p_ent;
+					attackEnt = (gentity_t*)pEnt;
 				}
 
 				int finalD = magnitude * pmult;
@@ -548,11 +548,11 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 			//it doesn't look bad though. could just use predicted events, but I'm too lazy.
 			hit_ent = PM_BGEntForNum(trace->entityNum);
 
-			if (!hit_ent || hit_ent->s.owner != p_ent->s.number)
+			if (!hit_ent || hit_ent->s.owner != pEnt->s.number)
 			{
 				//don't hit your own missiles!
 				AngleVectors(p_self_veh->m_vOrientation, NULL, NULL, vehUp);
-				p_ent->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
+				pEnt->m_pVehicle->m_iHitDebounce = pm->cmd.serverTime + 200;
 				trap->FX_PlayEffectID(p_self_veh->m_pVehicleInfo->iImpactFX, pm->ps->origin, vehUp, -1, -1, qfalse);
 
 				p_self_veh->m_ulFlags |= VEH_CRASHING;
@@ -702,7 +702,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 		VectorMA(pm->ps->origin, time_left, pm->ps->velocity, end);
 
 		// see if we can make it there
-		pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, end, pm->ps->client_num, pm->tracemask);
+		pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, end, pm->ps->clientNum, pm->tracemask);
 
 		if (trace.allsolid)
 		{
@@ -725,15 +725,15 @@ qboolean PM_SlideMove(const qboolean gravity)
 		// save entity for contact
 		PM_AddTouchEnt(trace.entityNum);
 
-		if (pm->ps->client_num >= MAX_CLIENTS)
+		if (pm->ps->clientNum >= MAX_CLIENTS)
 		{
-			bgEntity_t* p_ent = pm_entSelf;
+			bgEntity_t* pEnt = pm_entSelf;
 
-			if (p_ent && p_ent->s.eType == ET_NPC && p_ent->s.NPC_class == CLASS_VEHICLE &&
-				p_ent->m_pVehicle)
+			if (pEnt && pEnt->s.eType == ET_NPC && pEnt->s.NPC_class == CLASS_VEHICLE &&
+				pEnt->m_pVehicle)
 			{
 				//do vehicle impact stuff then
-				PM_VehicleImpact(p_ent, &trace);
+				PM_VehicleImpact(pEnt, &trace);
 			}
 		}
 #ifdef _GAME
@@ -917,12 +917,12 @@ void PM_StepSlideMove(qboolean gravity)
 		return; // we got exactly where we wanted to go first try
 	}
 
-	const bgEntity_t* p_ent = pm_entSelf;
+	const bgEntity_t* pEnt = pm_entSelf;
 
-	if (pm->ps->client_num >= MAX_CLIENTS)
+	if (pm->ps->clientNum >= MAX_CLIENTS)
 	{
-		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE &&
-			p_ent->m_pVehicle && p_ent->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
+		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE &&
+			pEnt->m_pVehicle && pEnt->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
 		{
 			return;
 		}
@@ -930,7 +930,7 @@ void PM_StepSlideMove(qboolean gravity)
 
 	VectorCopy(start_o, down);
 	down[2] -= STEPSIZE;
-	pm->trace(&trace, start_o, pm->mins, pm->maxs, down, pm->ps->client_num, pm->tracemask);
+	pm->trace(&trace, start_o, pm->mins, pm->maxs, down, pm->ps->clientNum, pm->tracemask);
 	VectorSet(up, 0, 0, 1);
 	// never step up when you still have up velocity
 	if (pm->ps->velocity[2] > 0 && (trace.fraction == 1.0 || DotProduct(trace.plane.normal, up) < 0.7))
@@ -943,19 +943,19 @@ void PM_StepSlideMove(qboolean gravity)
 
 	VectorCopy(start_o, up);
 
-	if (pm->ps->client_num >= MAX_CLIENTS)
+	if (pm->ps->clientNum >= MAX_CLIENTS)
 	{
 		// apply ground friction, even if on ladder
-		if (p_ent &&
-			(p_ent->s.NPC_class == CLASS_ATST ||
-				p_ent->s.NPC_class == CLASS_VEHICLE && p_ent->m_pVehicle && p_ent->m_pVehicle->m_pVehicleInfo->type ==
+		if (pEnt &&
+			(pEnt->s.NPC_class == CLASS_ATST ||
+				pEnt->s.NPC_class == CLASS_VEHICLE && pEnt->m_pVehicle && pEnt->m_pVehicle->m_pVehicleInfo->type ==
 				VH_WALKER))
 		{
 			//AT-STs can step high
 			up[2] += 66.0f;
 			is_giant = qtrue;
 		}
-		else if (p_ent && p_ent->s.NPC_class == CLASS_RANCOR)
+		else if (pEnt && pEnt->s.NPC_class == CLASS_RANCOR)
 		{
 			//also can step up high
 			up[2] += 64.0f;
@@ -969,7 +969,7 @@ void PM_StepSlideMove(qboolean gravity)
 	else
 	{
 #ifdef _GAME
-		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+		if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 		{
 			// BOTs get off easy - for the sake of lower CPU usage (routing) and looking better in general...
 			up[2] += STEPSIZE * 2;
@@ -984,7 +984,7 @@ void PM_StepSlideMove(qboolean gravity)
 	}
 
 	// test the player position if they were a step height higher
-	pm->trace(&trace, start_o, pm->mins, pm->maxs, up, pm->ps->client_num, pm->tracemask);
+	pm->trace(&trace, start_o, pm->mins, pm->maxs, up, pm->ps->clientNum, pm->tracemask);
 	if (trace.allsolid)
 	{
 		if (pm->debugLevel)
@@ -1004,11 +1004,11 @@ void PM_StepSlideMove(qboolean gravity)
 	// push down the final amount
 	VectorCopy(pm->ps->origin, down);
 	down[2] -= step_size;
-	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, down, pm->ps->client_num, pm->tracemask);
+	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, down, pm->ps->clientNum, pm->tracemask);
 
 	if (pm->stepSlideFix)
 	{
-		if (pm->ps->client_num < MAX_CLIENTS
+		if (pm->ps->clientNum < MAX_CLIENTS
 			&& trace.plane.normal[2] < MIN_WALK_NORMAL)
 		{
 			//normal players cannot step up slopes that are too steep to walk on!
@@ -1032,11 +1032,11 @@ void PM_StepSlideMove(qboolean gravity)
 	if (!trace.allsolid
 		&& !skip_step) //normal players cannot step up slopes that are too steep to walk on!
 	{
-		if (pm->ps->client_num >= MAX_CLIENTS //NPC
+		if (pm->ps->clientNum >= MAX_CLIENTS //NPC
 			&& is_giant
 			&& trace.entityNum < MAX_CLIENTS
-			&& p_ent
-			&& p_ent->s.NPC_class == CLASS_RANCOR)
+			&& pEnt
+			&& pEnt->s.NPC_class == CLASS_RANCOR)
 		{
 			//Rancor don't step on clients
 			if (pm->stepSlideFix)
@@ -1080,7 +1080,7 @@ void PM_StepSlideMove(qboolean gravity)
 
 #if 0
 	// if the down trace can trace back to the original position directly, don't step
-	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, start_o, pm->ps->client_num, pm->tracemask);
+	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, start_o, pm->ps->clientNum, pm->tracemask);
 	if (trace.fraction == 1.0) {
 		// use the original move
 		VectorCopy(down_o, pm->ps->origin);

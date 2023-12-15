@@ -80,7 +80,7 @@ All but the first will have the FL_TEAMSLAVE flag set and teammaster field set
 All but the last will have the teamchain field set to the next one
 ================
 */
-void G_FindTeams(void)
+static void G_FindTeams(void)
 {
 	gentity_t* e, * e2;
 	int i, j;
@@ -134,7 +134,7 @@ sharedBuffer_t gSharedBuffer;
 void WP_SaberLoadParms();
 void BG_VehicleLoadParms(void);
 
-void G_CacheGametype(void)
+static void G_CacheGametype(void)
 {
 	// check some things
 	if (g_gametype.string[0] && isalpha(g_gametype.string[0]))
@@ -160,10 +160,9 @@ void G_CacheGametype(void)
 	trap->Cvar_Update(&g_gametype);
 }
 
-void G_CacheMapname(const vmCvar_t* mapname)
+static void G_CacheMapname(const vmCvar_t* mapname)
 {
 	Com_sprintf(level.mapname, sizeof level.mapname, "maps/%s.bsp", mapname->string);
-	//Com_sprintf( level.rawmapname, sizeof( level.rawmapname ), "maps/%s", mapname->string );
 }
 
 // creates a ctf flag spawn point
@@ -172,7 +171,7 @@ extern void sje_spawn_entity(gentity_t* ent);
 extern void sje_main_set_entity_field(const gentity_t* ent, const char* key, const char* value);
 extern void sje_main_spawn_entity(gentity_t* ent);
 
-void sje_create_info_player_deathmatch(const int x, const int y, const int z, const int yaw)
+static void sje_create_info_player_deathmatch(const int x, const int y, const int z, const int yaw)
 {
 	gentity_t* spawn_ent = G_Spawn();
 	if (spawn_ent)
@@ -203,7 +202,7 @@ void sje_create_info_player_deathmatch(const int x, const int y, const int z, co
 	}
 }
 
-void sje_create_ctf_flag_spawn(const int x, const int y, const int z, const qboolean redteam)
+static void sje_create_ctf_flag_spawn(const int x, const int y, const int z, const qboolean redteam)
 {
 	gentity_t* spawn_ent = G_Spawn();
 	if (spawn_ent)
@@ -219,7 +218,7 @@ void sje_create_ctf_flag_spawn(const int x, const int y, const int z, const qboo
 }
 
 // creates a ctf player spawn point
-void sje_create_ctf_player_spawn(const int x, const int y, const int z, const int yaw, const qboolean redteam,
+static void sje_create_ctf_player_spawn(const int x, const int y, const int z, const int yaw, const qboolean redteam,
 	const qboolean team_begin_spawn_point)
 {
 	gentity_t* spawn_ent = G_Spawn();
@@ -248,7 +247,7 @@ void sje_create_ctf_player_spawn(const int x, const int y, const int z, const in
 }
 
 // used to fix func_door entities in SP maps that wont work and must be removed without causing the door glitch
-void fix_sp_func_door(gentity_t* ent)
+static void fix_sp_func_door(gentity_t* ent)
 {
 	ent->spawnflags = 0;
 	ent->flags = 0;
@@ -1701,7 +1700,7 @@ If there are less than two tournament players, put a
 spectator in the game and restart
 =============
 */
-void AddTournamentPlayer(void)
+static void AddTournamentPlayer(void)
 {
 	if (level.numPlayingClients >= 2)
 	{
@@ -1784,22 +1783,22 @@ RemoveTournamentLoser
 Make the loser a spectator at the back of the line
 =======================
 */
-void RemoveTournamentLoser(void)
+static void RemoveTournamentLoser(void)
 {
 	if (level.numPlayingClients != 2)
 	{
 		return;
 	}
 
-	const int client_num = level.sortedClients[1];
+	const int clientNum = level.sortedClients[1];
 
-	if (level.clients[client_num].pers.connected != CON_CONNECTED)
+	if (level.clients[clientNum].pers.connected != CON_CONNECTED)
 	{
 		return;
 	}
 
 	// make them a spectator
-	SetTeam(&g_entities[client_num], "s");
+	SetTeam(&g_entities[clientNum], "s");
 }
 
 void G_PowerDuelCount(int* loners, int* doubles, const qboolean countSpec)
@@ -1827,7 +1826,7 @@ void G_PowerDuelCount(int* loners, int* doubles, const qboolean countSpec)
 
 qboolean g_duelAssigning = qfalse;
 
-void AddPowerDuelPlayers(void)
+static void AddPowerDuelPlayers(void)
 {
 	int loners = 0;
 	int doubles = 0;
@@ -1913,7 +1912,7 @@ void AddPowerDuelPlayers(void)
 
 qboolean g_dontFrickinCheck = qfalse;
 
-void RemovePowerDuelLosers(void)
+static void RemovePowerDuelLosers(void)
 {
 	int remClients[3];
 	int remNum = 0;
@@ -1959,7 +1958,7 @@ void RemovePowerDuelLosers(void)
 	CalculateRanks();
 }
 
-void RemoveDuelDrawLoser(void)
+static void RemoveDuelDrawLoser(void)
 {
 	int cl_failure;
 
@@ -2008,22 +2007,22 @@ void RemoveDuelDrawLoser(void)
 RemoveTournamentWinner
 =======================
 */
-void RemoveTournamentWinner(void)
+static void RemoveTournamentWinner(void)
 {
 	if (level.numPlayingClients != 2)
 	{
 		return;
 	}
 
-	const int client_num = level.sortedClients[0];
+	const int clientNum = level.sortedClients[0];
 
-	if (level.clients[client_num].pers.connected != CON_CONNECTED)
+	if (level.clients[clientNum].pers.connected != CON_CONNECTED)
 	{
 		return;
 	}
 
 	// make them a spectator
-	SetTeam(&g_entities[client_num], "s");
+	SetTeam(&g_entities[clientNum], "s");
 }
 
 /*
@@ -2031,9 +2030,9 @@ void RemoveTournamentWinner(void)
 AdjustTournamentScores
 =======================
 */
-void AdjustTournamentScores(void)
+static void AdjustTournamentScores(void)
 {
-	int client_num;
+	int clientNum;
 
 	if (level.clients[level.sortedClients[0]].ps.persistant[PERS_SCORE] ==
 		level.clients[level.sortedClients[1]].ps.persistant[PERS_SCORE] &&
@@ -2065,50 +2064,50 @@ void AdjustTournamentScores(void)
 
 		if (cl_failure != 2)
 		{
-			client_num = level.sortedClients[cl_success];
+			clientNum = level.sortedClients[cl_success];
 
-			level.clients[client_num].sess.wins++;
-			client_userinfo_changed(client_num);
-			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", client_num));
+			level.clients[clientNum].sess.wins++;
+			client_userinfo_changed(clientNum);
+			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", clientNum));
 
-			client_num = level.sortedClients[cl_failure];
+			clientNum = level.sortedClients[cl_failure];
 
-			level.clients[client_num].sess.losses++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.losses++;
+			client_userinfo_changed(clientNum);
 		}
 		else
 		{
 			cl_success = 0;
 			cl_failure = 1;
 
-			client_num = level.sortedClients[cl_success];
+			clientNum = level.sortedClients[cl_success];
 
-			level.clients[client_num].sess.wins++;
-			client_userinfo_changed(client_num);
-			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", client_num));
+			level.clients[clientNum].sess.wins++;
+			client_userinfo_changed(clientNum);
+			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", clientNum));
 
-			client_num = level.sortedClients[cl_failure];
+			clientNum = level.sortedClients[cl_failure];
 
-			level.clients[client_num].sess.losses++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.losses++;
+			client_userinfo_changed(clientNum);
 		}
 	}
 	else
 	{
-		client_num = level.sortedClients[0];
-		if (level.clients[client_num].pers.connected == CON_CONNECTED)
+		clientNum = level.sortedClients[0];
+		if (level.clients[clientNum].pers.connected == CON_CONNECTED)
 		{
-			level.clients[client_num].sess.wins++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.wins++;
+			client_userinfo_changed(clientNum);
 
-			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", client_num));
+			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", clientNum));
 		}
 
-		client_num = level.sortedClients[1];
-		if (level.clients[client_num].pers.connected == CON_CONNECTED)
+		clientNum = level.sortedClients[1];
+		if (level.clients[clientNum].pers.connected == CON_CONNECTED)
 		{
-			level.clients[client_num].sess.losses++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.losses++;
+			client_userinfo_changed(clientNum);
 		}
 	}
 }
@@ -2199,7 +2198,7 @@ qboolean gQueueScoreMessage = qfalse;
 int gQueueScoreMessageTime = 0;
 
 //A new duel started so respawn everyone and make sure their stats are reset
-qboolean G_CanResetDuelists(void)
+static qboolean G_CanResetDuelists(void)
 {
 	int i = 0;
 	while (i < 3)
@@ -2221,7 +2220,7 @@ qboolean G_CanResetDuelists(void)
 
 qboolean g_noPDuelCheck = qfalse;
 
-void G_ResetDuelists(void)
+static void G_ResetDuelists(void)
 {
 	int i = 0;
 	while (i < 3)
@@ -2249,8 +2248,6 @@ and team change.
 void CalculateRanks(void)
 {
 	int i;
-	//	int		preNumSpec = 0;
-	//int		nonSpecIndex = -1;
 	gclient_t* cl;
 
 	//	preNumSpec = level.numNonSpectatorClients;
@@ -2634,7 +2631,7 @@ qboolean DuelLimitHit(void)
 	return qfalse;
 }
 
-void DuelResetWinsLosses(void)
+static void DuelResetWinsLosses(void)
 {
 	for (int i = 0; i < sv_maxclients.integer; i++)
 	{
@@ -2869,7 +2866,7 @@ If one or more players have not acknowledged the continue, the game will
 wait 10 seconds before going on.
 =================
 */
-void CheckIntermissionExit(void)
+static void CheckIntermissionExit(void)
 {
 	int i;
 	gclient_t* cl;
@@ -3133,7 +3130,7 @@ void CheckIntermissionExit(void)
 ScoreIsTied
 =============
 */
-qboolean ScoreIsTied(void)
+static qboolean ScoreIsTied(void)
 {
 	if (level.numPlayingClients < 2)
 	{
@@ -3155,7 +3152,7 @@ qboolean ScoreIsTied(void)
 qboolean LMSReset = qfalse;
 int LMSResetTime = 0;
 
-void CheckLMS()
+static void CheckLMS()
 {
 	int i;
 	if (!LMSReset //not already reseting
@@ -3499,7 +3496,7 @@ FUNCTIONS CALLED EVERY FRAME
 ========================================================================
 */
 
-void G_RemoveDuelist(const int team)
+static void G_RemoveDuelist(const int team)
 {
 	int i = 0;
 	while (i < MAX_CLIENTS)
@@ -3524,14 +3521,8 @@ Once a frame, check for changes in tournament player state
 */
 int g_duelPrintTimer = 0;
 
-void CheckTournament(void)
+static void CheckTournament(void)
 {
-	// check because we run 3 game frames before calling Connect and/or ClientBegin
-	// for clients on a map_restart
-	//	if ( level.numPlayingClients == 0 && (level.gametype != GT_MOVIEDUELS_POWERDUEL) ) {
-	//		return;
-	//	}
-
 	if (level.gametype == GT_MOVIEDUELS_POWERDUEL)
 	{
 		if (level.numPlayingClients >= 3 && level.numNonSpectatorClients >= 3)
@@ -3788,14 +3779,6 @@ void CheckTournament(void)
 			return;
 		}
 
-		// if the warmup is changed at the console, restart it
-		/*
-		if ( g_warmup.modificationCount != level.warmupModificationCount ) {
-			level.warmupModificationCount = g_warmup.modificationCount;
-			level.warmupTime = -1;
-		}
-		*/
-
 		// if all players have arrived, start the countdown
 		if (level.warmupTime < 0)
 		{
@@ -3824,7 +3807,7 @@ void CheckTournament(void)
 	}
 }
 
-void G_KickAllBots(void)
+static void G_KickAllBots(void)
 {
 	for (int i = 0; i < sv_maxclients.integer; i++)
 	{
@@ -3846,7 +3829,7 @@ void G_KickAllBots(void)
 CheckVote
 ==================
 */
-void CheckVote(void)
+static void CheckVote(void)
 {
 	if (level.voteExecuteTime && level.voteExecuteTime < level.time)
 	{
@@ -3950,7 +3933,7 @@ void CheckVote(void)
 PrintTeam
 ==================
 */
-void PrintTeam(const int team, const char* message)
+static void PrintTeam(const int team, const char* message)
 {
 	for (int i = 0; i < level.maxclients; i++)
 	{
@@ -4039,7 +4022,7 @@ void CheckTeamLeader(const int team)
 CheckTeamVote
 ==================
 */
-void CheckTeamVote(const int team)
+static void CheckTeamVote(const int team)
 {
 	int cs_offset;
 
@@ -4102,7 +4085,7 @@ void CheckTeamVote(const int team)
 CheckCvars
 ==================
 */
-void CheckCvars(void)
+static void CheckCvars(void)
 {
 	static int lastMod = -1;
 
@@ -4135,7 +4118,7 @@ void CheckCvars(void)
 }
 
 //This checks for the end of a sound script being played on this entity
-void ICARUS_SoundCheck(gentity_t* ent)
+static void ICARUS_SoundCheck(gentity_t* ent)
 {
 	if (trap->ICARUS_TaskIDPending((sharedEntity_t*)ent, TID_CHAN_VOICE) && ent->IcarusSoundTime < level.time)
 	{
@@ -4193,7 +4176,7 @@ int gSlowMoDuelTime = 0;
 
 //#define _G_FRAME_PERFANAL
 
-void NAV_CheckCalcPaths(void)
+static void NAV_CheckCalcPaths(void)
 {
 	if (navCalcPathTime && navCalcPathTime < level.time)
 	{

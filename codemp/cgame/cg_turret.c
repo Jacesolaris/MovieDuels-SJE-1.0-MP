@@ -198,7 +198,7 @@ void TurretClientRun(centity_t* ent)
 
 		if (cg.snap->ps.duelInProgress)
 		{ // this client is dueling
-			if (ent->currentState.otherEntityNum != cg.snap->ps.client_num && ent->currentState.otherEntityNum != cg.snap->ps.duelIndex)
+			if (ent->currentState.otherEntityNum != cg.snap->ps.clientNum && ent->currentState.otherEntityNum != cg.snap->ps.duelIndex)
 			{	// turret not owned by one of the duelers
 				doit = 0;
 			}

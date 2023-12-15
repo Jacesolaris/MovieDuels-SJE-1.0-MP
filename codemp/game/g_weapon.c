@@ -1737,7 +1737,7 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 			continue;
 		}
 
-		if (gent->client && gent->client->ps.duelInProgress && my_owner->client->ps.duelIndex != gent->client->ps.client_num)
+		if (gent->client && gent->client->ps.duelInProgress && my_owner->client->ps.duelIndex != gent->client->ps.clientNum)
 		{ // lmo: client entity in a duel and the owner of this weapon is not opponent
 			continue;
 		}

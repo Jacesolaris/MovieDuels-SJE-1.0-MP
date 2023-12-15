@@ -1042,7 +1042,7 @@ void WP_DeactivateSaber(gentity_t* self)
 {
 	const qboolean blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
 
 	if (!self || !self->client)
@@ -1050,7 +1050,7 @@ void WP_DeactivateSaber(gentity_t* self)
 		return;
 	}
 
-	if (blocking || active_blocking)
+	if (blocking || is_holding_block_button_and_attack)
 	{
 		return;
 	}
@@ -4886,7 +4886,7 @@ int wp_debug_saber_colour(const saber_colors_t saber_color)
 	}
 }
 
-extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
+extern saberInfo_t* BG_MySaber(int clientNum, int saber_num);
 
 #define MAX_SABER_VICTIMS 8192
 static int victimEntityNum[MAX_SABER_VICTIMS];
@@ -5008,7 +5008,7 @@ static qboolean saberDoClashEffect = qfalse;
 static vec3_t saberClashPos = { 0 };
 static vec3_t saberClashNorm = { 0 };
 static int saberClashEventParm = 1;
-static int saberClashOther = -1; //the client_num for the other player involved in the saber clash.
+static int saberClashOther = -1; //the clientNum for the other player involved in the saber clash.
 static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3_t impact_normal);
 static QINLINE void G_SetViewLockDebounce(const gentity_t* self);
 
@@ -5500,7 +5500,7 @@ static qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3
 	maxs[2] = 32;
 
 	//check for solids/or players in the way.
-	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.client_num, MASK_PLAYERSOLID, qfalse, 0,
+	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.clientNum, MASK_PLAYERSOLID, qfalse, 0,
 		0);
 
 	if (tr.fraction != 1 || tr.startsolid)
@@ -5514,7 +5514,7 @@ static qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3
 	//check for 20+ feet drops
 	traceto_mod[2] -= 200;
 
-	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.clientNum, MASK_SOLID, qfalse, 0, 0);
 	if (tr.fraction == 1 && !tr.startsolid)
 	{
 		//CLIFF!
@@ -8577,10 +8577,18 @@ static void DownedSaberThink(gentity_t* saberent)
 		//we want to pull the saber back.
 		pull_back = qtrue;
 	}
-	else if (saber_own->r.svFlags & SVF_BOT && level.time - saber_own->client->saberKnockedTime > MAX_BOT_LEAVE_TIME)
+	else if (saber_own->r.svFlags & SVF_BOT)
 	{
-		//we want to pull the saber back.
-		pull_back = qtrue;
+		if (saber_own->client->ps.fd.saber_anim_level != SS_DUAL && level.time - saber_own->client->saberKnockedTime > MAX_BOT_LEAVE_TIME)
+		{
+			//we want to pull the saber back.
+			pull_back = qtrue;
+		}
+		else
+		{
+			//we want to pull the saber back.
+			pull_back = qtrue;
+		}
 	}
 	else if (level.time - saber_own->client->saberKnockedTime > MAX_LEAVE_TIME)
 	{
@@ -9907,14 +9915,14 @@ extern qboolean BG_InKnockDown(int anim);
 
 static qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir)
 {
-	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
 	const qboolean is_holding_block_button = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean npc_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
 	//NPC Blocking
 
-	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || active_blocking) && !(hit_ent->r.svFlags & SVF_BOT))
+	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || is_holding_block_button_and_attack) && !(hit_ent->r.svFlags & SVF_BOT))
 		//player only
 	{
 		if (hit_ent->client->ps.fd.blockPoints > 50)
@@ -11731,7 +11739,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 	qboolean client_override;
 	gentity_t* veh_ent = NULL;
 
-	saberInfo_t* saber1 = BG_MySaber(self->client_num, 0);
+	saberInfo_t* saber1 = BG_MySaber(self->clientNum, 0);
 
 	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 
@@ -15471,7 +15479,7 @@ static void SaberBallisticsThink(gentity_t* saber_ent)
 void thrownSaberBallistics(gentity_t* saber_ent, const gentity_t* saber_own, const qboolean stuck)
 {
 	//this function converts the saber from thrown saber that's being held on course by the force into a saber that's just ballastically moving.
-	const saberInfo_t* saber1 = BG_MySaber(saber_own->client_num, 0);
+	const saberInfo_t* saber1 = BG_MySaber(saber_own->clientNum, 0);
 
 	if (stuck)
 	{
